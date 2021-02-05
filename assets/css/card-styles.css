@@ -1,0 +1,98 @@
+
+
+.card.custom-card{
+    background: #ffffff;
+    border: 1px solid #E2E2E2;
+    border-radius: 5px;
+    margin-bottom: 5px;
+}
+
+.card-header{
+    /* background: #e3f0f5 !important;
+    color: #00718f; */
+    font-weight: 600;
+    color: #002c77;
+    padding: 5px 15px;
+    border-left: 4px solid #4193CE;
+    font-size: 14px;    
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.card-header h3{
+    padding: 0;
+    margin: 0;
+    color: #002c77;
+    font-size: 14px;
+}
+.edit-update-alert{
+    text-align: right;
+}
+.custom-card .form-group, .card .form-group{
+    display: flex;
+    align-items: center;
+    min-height: 35px;
+}
+
+.page-content .card-body{
+    padding: 5px 0 0 0;
+}
+.form-row{
+    display: flex;
+    align-items: center;
+}
+.form-field{
+    display: flex;
+    min-height: 35px;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin: 5px 15px 1px 15px;
+    padding: 0 0 2px 0;
+    position: relative;
+}
+.form-field-label{
+    margin: 0 20px 0 0;
+    padding-top: 3px;
+    text-align: right;
+    min-width: 150px; 
+}
+.form-field-input{
+    width: 150px;
+    margin: 0 0 0 2px;
+}
+.error-msg{
+    width: 150px;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    text-align: left;
+    font-size: 11px;
+    color: #ff0000;
+}
+.form-field-input .form-control.field-input-text{
+    height: 30px;
+    line-height: normal;
+    padding: 2px;
+}
+
+
+.error-field{
+    border: 1px solid red !important;
+}
+.is-invalid{
+	border: 1px solid #ff0000 !important;
+}
+.form-field .form-field-input .invalid-feedback{
+	color: #ff0000 !important;
+    height: 20px;
+    display: block;
+    margin: 2px 0 0 0 !important;
+    padding: 0;
+    font-size: 11px;
+}
+.invalid-feedback *{
+    color: #ff0000;
+}
+.form-btns-area{
+	padding: 5px 20px 5px 15px !important;
+}
