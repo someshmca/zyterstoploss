@@ -1,0 +1,27 @@
+/* 
+.benefits-table-area{
+    width: 600px;
+} */
+.benefits-table-area{
+    margin: 5px 25px 5px 20px;
+}
+.benefits-table-area tr th:nth-child(1),
+.benefits-table-area tr td:nth-child(1){
+    width: 10%;
+}
+.benefits-table-area tr th:nth-child(2),
+.benefits-table-area tr td:nth-child(2){
+    width: 60%;
+}
+.benefits-table-area tr th:nth-child(3),
+.benefits-table-area tr td:nth-child(3){
+    width: 10%;
+}
+.benefits-table-area tr th:nth-child(4),
+.benefits-table-area tr td:nth-child(4){
+    width: 10%;
+}
+.benefits-table-area tr th:nth-child(4),
+.benefits-table-area tr td:nth-child(4){
+    width: 10%;
+}

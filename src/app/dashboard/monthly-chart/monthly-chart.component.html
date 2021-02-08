@@ -1,0 +1,17 @@
+
+<div class="chart-area">
+    <h2>Total Claim Count</h2>
+    <div class="chart-wrap">
+        <canvas mdbChart
+            [chartType]="chartType"
+            [datasets]="chartDatasets"
+            [labels]="chartLabels"
+            [colors]="chartColors"
+            [options]="chartOptions"
+            [legend]="false"
+            (chartHover)="chartHovered($event)"
+            (chartClick)="chartClicked($event)">
+        </canvas>
+    </div>
+</div>
+

@@ -1,0 +1,166 @@
+
+  <div class="page-content">
+    <div class="card custom-card">
+      <div class="card-header">
+         Rules
+         <alert></alert>
+      </div>
+      <div class="card-body">
+        <div class="select-grid-wrap rules-select-grid-wrap">
+              <div class="select-grid-header">
+                <div>
+                  <label class="form-field-label">
+                      Search Rule
+                  </label>
+                  <!-- <div class="form-field-input">
+                      <select class="form-control cselect-dropdown crules-select" name="rule" (change)="onChangeRule($event.target.value)">
+                          <option selected="selected" value="Select All">Select All</option>
+                                                
+                          <option *ngFor="let rul of ruleIDs" [value]="rul.ruleId">
+                              {{rul.ruleId}} - {{rul.description }}</option>      
+                      </select>
+                  </div> -->
+                  <div fxLayout fxLayoutAlign="center center">
+                    <mat-form-field fxFlex="40%">
+                      <input matInput type="text" (keyup)="doFilter($event.target.value)" placeholder="Search a Rule">
+                    </mat-form-field>
+                  </div>
+                </div>     
+                <!-- <div *ngIf="isRuleAdded" class="success-dialog-msg">
+                    <h2>New Rule added successfully</h2>
+                </div>
+                <div *ngIf="isRuleUpdated" class="success-dialog-msg">
+                    <h2>Rule updated successfully</h2>
+                </div> -->
+              </div>
+          <div class="card-table-area rules-table-area">
+          <div class="table-responsive">
+              <div class="cust-add-area">
+                  <span class="fa fa-plus-circle" (click)="openCustomModal(true, null)"></span>
+              </div>    
+              
+              <div class="mat-elevation-z8">
+                <table mat-table matSort [dataSource]="dataSource" class="table table-bordered table-striped card-table">
+              
+                  <ng-container matColumnDef="ruleID">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Rule ID</th>
+                    <td mat-cell *matCellDef="let element"> {{element.ruleID}} </td>
+                  </ng-container>
+                  <ng-container matColumnDef="description">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Description </th>
+                    <td mat-cell *matCellDef="let element"> {{element.description}} </td>
+                  </ng-container>
+                  <ng-container matColumnDef="ruleGroup">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Rule Group </th>
+                    <td mat-cell *matCellDef="let element"> {{element.ruleGroup}} </td>
+                  </ng-container>
+                  <ng-container matColumnDef="value">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Value </th>
+                    <td mat-cell *matCellDef="let element"> {{element.value}} </td>
+                  </ng-container>
+                  
+                  <!-- Action Column -->
+                  <ng-container matColumnDef="updateid">
+                    <th mat-header-cell *matHeaderCellDef> Action </th>
+                    <td mat-cell *matCellDef="let element" class="action-link"> 
+                      <span class="fa fa-edit" 
+                      (click)="openCustomModal(true, element.ruleID)"></span>
+                    </td>
+                  </ng-container>
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+                <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
+              </div> 
+          </div>
+      </div>
+        </div>
+      </div>
+  </div>
+</div>
+
+<!-- The Add/Update Modal -->
+<div class="modal fade" role="dialog" [ngStyle]="{'display': isCustomModalOpen ? 'block' : 'none', 'opacity': 1}">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">  
+        <h4 class="modal-title">
+            <span *ngIf="isAddMode">Add Rule</span>
+            <span *ngIf="!isAddMode">Update Rule</span>
+        </h4>
+        <a class="fa fa-2x fa-times-circle" (click)="openCustomModal(false, null)">
+        </a>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+          
+  <form [formGroup]="ruleForm" (ngSubmit)="onSubmit()"  autocomplete="off">
+
+          <!-- <div class="form-group">
+              <label for="ruleid">Rule ID</label>
+              <input type="email" class="form-control" placeholder="Enter RuleID" id="ruleid" formControlName="ruleId">
+            </div> -->
+            <div class="form-group">
+              <label for="descrip">Description 
+                <small class="starmark">*</small></label>
+              <input type="text" class="form-control" placeholder="Enter Description" id="descrip" formControlName="description" [ngClass]="{ 'is-invalid': submitted && f.description.errors }" />
+              <div class="invalid-feedback">
+                  <div *ngIf="submitted && f.description.errors">
+                      <div *ngIf="f.description.errors.required">
+                        Description is required</div>
+                  </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Rule Group 
+                <small class="starmark">*</small>
+              </label>
+              <select class="form-control" formControlName="ruleGroup" [ngClass]="{ 'is-invalid': submitted && f.ruleGroup.errors }">
+                <option value="Benefits">Benefits</option>
+                <option value="Contracts">Contracts</option>
+                <option value="Practitioners">Practitioners</option>
+                <option value="Suppliers">Suppliers</option>
+              </select>
+              <div class="invalid-feedback">
+                  <div *ngIf="submitted && f.ruleGroup.errors">
+                      <div *ngIf="f.ruleGroup.errors.required">
+                        Select any Rule Group </div>
+                  </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Value 
+                <small class="starmark">*</small>
+              </label>
+              <input type="text" class="form-control" placeholder="Enter Value" formControlName="value" [ngClass]="{ 'is-invalid': submitted && f.value.errors }">              
+              <div *ngIf="submitted && f.value.errors" class="invalid-feedback">
+                <div *ngIf="f.value.errors.required">
+                  Invalid Rule Value
+                </div>
+              </div>
+            </div>
+            <!-- <div class="card" [hidden]="!isRuleAdded">
+              <div class="card-header">.
+                <h4 class="text-success"></h4>
+              </div>
+              <div class="card-body">
+                <h4>{{ruleAddResponse.message}}</h4>
+              </div>
+            </div> -->      
+        
+            <div class="row form-btns-area">
+              <button [disabled]="loading" class="btn btn-primary">
+                  <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+                  Save
+              </button>
+              <a class="btn btn-link" (click)="openCustomModal(false, null)">Cancel</a>
+          </div>
+        </form>
+      </div>           
+      </div>
+    </div>
+  </div>
+  

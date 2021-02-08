@@ -1,0 +1,35 @@
+
+.about-role-h5{
+    font-weight: 600;
+    padding-left: 10px;
+    font-size: 15px;
+    color: #88898a;
+    margin-bottom: 15px;
+}
+.text-ellipsis{    
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.role-table-area table.card-table.mat-table tr th:nth-child(1),
+.role-table-area table.card-table.mat-table tr td:nth-child(1){  
+    width: 10%;
+}
+.role-table-area table.card-table.mat-table tr th:nth-child(2),
+.role-table-area table.card-table.mat-table tr th:nth-child(2){  
+    width: 40%;
+}
+.role-table-area table.card-table.mat-table tr th:nth-child(3)
+.role-table-area table.card-table.mat-table tr th:nth-child(3){  
+    width: 40%;
+}
+.role-table-area table.card-table.mat-table tr th:nth-child(4)
+.role-table-area table.card-table.mat-table tr th:nth-child(4){  
+    width: 10%;
+}
+.roles-checkboxes{
+    display: flex;
+}
+.roles-checkboxe{
+    margin: 0 10px 10px 0;
+}

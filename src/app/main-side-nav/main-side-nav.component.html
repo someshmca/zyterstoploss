@@ -1,0 +1,22 @@
+<div class="nav-side-menu">
+    <div class="brand">
+        <a routerLink="/dashboard">
+            <img src="../../assets/images/logo.png" class="img-responsive" />
+        </a>
+    </div>
+    <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
+    <div class="menu-list" *ngIf="isLoggedIn">  
+          <ul id="menu-content" class="menu-content collapse out">
+            <li  data-toggle="collapse" data-target="#admin" class="collapsed active">
+                <a>Configuration <span class="arrow"></span></a>
+            </li>
+             <ul class="sub-menu collapse show" id="admin">
+                <li *ngFor="let cnavitem of menu" [routerLink]="cnavitem.route" routerLinkActive="active">
+                    <a>
+                        {{cnavitem.name}}
+                    </a>
+                </li> 
+            </ul>
+        </ul>
+    </div>
+</div>

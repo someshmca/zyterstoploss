@@ -1,0 +1,30 @@
+/* 
+.dashboard-page{
+    box-shadow: 0 0 2px #ccc;
+    margin: 0;
+    padding: 0;
+}
+
+.dashboard-page>h2{
+    font-size: 18px;
+    padding: 8px 15px;
+    margin: 0;
+    text-align: left;
+}
+.card-deck{
+    margin: 5px 15px;
+}
+.card-text{
+    color: #ffffff;
+    font-size: 15px;
+} */
+.charts-container{
+    padding:0 15px;
+}
+.btns-area .btn{
+    margin-right: 15px;
+}
+.dashboard-iframe{
+    width:calc(100vw - 270px);
+    height:800px;
+}

@@ -1,0 +1,160 @@
+<div class="page-content">
+    <div class="card">
+        <div class="card-header claim-actions-header">
+            <h5>Actions </h5>
+            <a class="btn btn-primary" (click)="calculateClaimAmount()">Calculate</a>
+            <a class="refresh-link" (click)="refreshClaim()">
+                <span class="fa fa-refresh"></span> Refresh
+            </a>
+        </div>
+        <div class="card-body claim-form">
+            <div class="row">
+                <div class="col-md-4 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label>Claim ID</label>
+                        <input type="text" name="claimid" class="form-control" [value]="claimData.claimId" readonly/>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label>Client ID</label>
+                        <input type="text" name="claimid" class="form-control" [value]="claimData.clientId" readonly/>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label>Last Changed on</label>
+                        <input type="text" name="lastchanged" class="form-control" [value]="claimData.lastChangedOn | date:'MM/dd/yyyy'" readonly/>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label>Status</label>
+                        <input type="text" name="claimstatus" class="form-control" [value]="claimData.status" readonly/>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label>Adjudicated on</label>
+                        <input type="text" name="adjudicatedon" class="form-control" [value]="claimData.adjudicatedOn | date:'MM/dd/yyyy'" readonly/>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label>Claim Type</label>
+                        <input type="text" name="claimtype" class="form-control" [value]="claimData.claimType" readonly/>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6 col-12 pos-r">
+                    <div class="form-check-inline claim-form-checkbox">
+                        <label class="form-check-label">
+                            Manually Priced 
+                        <input type="checkbox" class="form-check-input" name="ismanuallypriced" [checked]="claimData.manuallyPriced" disabled readonly > 
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6 col-12 pos-r">
+                    <div class="form-check-inline claim-form-checkbox">
+                        <label class="form-check-label">
+                            Send to Review
+                        <input type="checkbox" class="form-check-input" name="sendtoreview" [value]="claimData.sentToReview" disabled readonly> 
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label>Benefit Plan Type</label>
+                        <input type="text" name="benefitplantype" class="form-control" [value]="claimData.benefitPlanType" readonly/>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6 col-12 pos-r">
+                    <div class="form-check-inline claim-form-checkbox">
+                        <label class="form-check-label">
+                            Capitated Service
+                        <input type="checkbox" class="form-check-input" name="capitatedservice" [checked]="claimData.capitatedService" disabled readonly> 
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6 col-12 pos-r">
+                    <div class="form-check-inline claim-form-checkbox">
+                        <label class="form-check-label">
+                            Removed Claim
+                        <input type="checkbox" class="form-check-input" name="removedclaim" [checked]="claimData.removedClaim" disabled readonly> 
+                        </label>
+                    </div>
+                </div>   
+                <div class="col-md-4 col-sm-6 col-12 pos-r">
+                    <div class="form-check-inline claim-form-checkbox">
+                        <label class="form-check-label">
+                            Voided Claim
+                        <input type="checkbox" class="form-check-input" name="voidedclaim" [checked]="claimData.voidedClaim" disabled readonly> 
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label>Calculated Benefit Plan</label>
+                        <input type="text" name="calculatedbenefitplan" class="form-control" [value]="claimData.calculatedBenefitPlan" disabled readonly/>
+                    </div>
+                </div>        
+                <div class="col-md-4 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label>Claim Source</label>
+                        <input type="text" name="claimsource" class="form-control" [value]="claimData.claimSource" readonly/>
+                    </div>
+                </div>  
+                <div class="col-md-4 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label>Claim Amount</label>
+                        <input type="text" name="claimAmount" class="form-control"  [value]="claimData.claimAmount |currency:'CAD':'symbol-narrow'" readonly/>
+                    </div>
+                </div>  
+                <div class="col-md-4 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label>Claim Start Date</label>
+                        <input type="text" name="startDate" [value]="claimData.startDate | date:'MM/dd/yyyy'" class="form-control" readonly/>
+                    </div>
+                </div>  
+                <div class="col-md-4 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label>Claim End Date</label>
+                        <input type="text" name="endDate" [value]="claimData.endDate | date:'MM/dd/yyyy'" class="form-control" readonly/>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6 col-12">
+                    <!-- <div class="form-group" [hidden]="!isCalculateClicked"> -->
+                    <div class="form-group"> 
+                        <label>Stop Loss Amount</label>
+                        <input type="text" name="stopLossAmount" [value]="stopLossAmount |currency:'CAD':'symbol-narrow'" class="form-control" readonly/>
+                    </div>
+                </div>    
+            </div>
+        </div>
+    </div>
+    <br/>
+
+    <!-- 
+    <ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+        <a class="nav-link active" data-toggle="tab" href="#home">Header</a>
+        </li>
+        <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#lines">Lines</a>
+        </li>
+        <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#summary">Summary</a>
+        </li>
+    </ul>
+
+    <div class="tab-content">
+        <div id="home" class="container tab-pane active"><br>
+            
+        </div>
+        <div id="menu1" class="container tab-pane fade"><br>
+        <h3>Lines</h3>
+        </div>
+        <div id="summary" class="container tab-pane fade"><br>
+        <h3>Summary</h3>
+        </div>
+    </div> -->
+</div>

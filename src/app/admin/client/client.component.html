@@ -1,0 +1,513 @@
+
+    
+    <div class="page-content">
+        <div class="card custom-card">
+            <div class="card-header">
+            Client
+            </div>
+            <div class="card-body">
+                <div class="select-grid-wrap">
+                    <div class="select-grid-header">
+                       <div>
+                        <label class="form-field-label">
+                            Client ID
+                        </label>
+                        <!-- <div class="form-field-input">
+                            <select class="form-control cselect-dropdown" name="clientId" (change)="onChangeClient($event.target.value)">
+                                <option selected="selected" value="Select All">Select All</option>
+                                <option *ngFor="let clin of clientIDs" [value]="clin.clientId">
+                                    {{clin.clientId}} - {{clin.description}}
+                                </option>
+                            </select>
+                        </div> -->
+                        <div fxLayout fxLayoutAlign="center center">
+                          <mat-form-field fxFlex="40%">
+                            <input matInput type="text" (keyup)="doFilter($event.target.value)" placeholder="Search a Client">
+                          </mat-form-field>
+                        </div>
+                    </div>                     
+                    <div *ngIf="isAddClientSuccess" class="success-dialog-msg">
+                      <h2 class="text-success">New Client added successfully</h2>
+                </div>  
+                <div *ngIf="isUpdateClientSuccess" class="success-dialog-msg">
+                  <h2 class="text-success">Client updated successfully</h2>
+                </div>
+              </div>
+                <div class="card-table-area clients-table-area">
+                    <div class="cust-add-area">
+                        <span class="fa fa-plus-circle" (click)="openClientAdd(true)"></span>
+                    </div>
+                    <div class="table-responsive">
+                         
+                    <div class="mat-elevation-z8">
+                        <table mat-table matSort #benefitTable [dataSource]="dataSource" class="table table-bordered table-striped card-table">
+                      
+                          <!-- Client ID Column -->
+                          <ng-container matColumnDef="clientId">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="c-id"> Client ID </th>
+                            <td mat-cell *matCellDef="let element" class="c-id"> {{element.clientId}} </td>
+                          </ng-container>
+                          <!-- Description Column -->
+                          <ng-container matColumnDef="description">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="c-desc"> Description </th>
+                            <td mat-cell *matCellDef="let element" class="c-desc"> {{element.description}} </td>
+                          </ng-container>
+  
+                          <!-- Action Column -->
+                          <ng-container matColumnDef="updateid">
+                            <th mat-header-cell *matHeaderCellDef class="c-action"> Action </th>
+                            <td mat-cell *matCellDef="let element" class="action-link c-action"> 
+                              <span class="fa fa-edit" 
+                                    (click)="openClientUpdateModal(element, true)"></span>
+                            </td>
+                          </ng-container>
+                          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                        </table>
+                        <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
+                      </div>
+
+
+                    </div>
+                </div>
+                </div>
+                <!-- <div class="client-row-data" *ngIf="isRowClicked">
+                    <div class="clField">                        
+                        <div class="cllabel">   
+                            Client ID                
+                        </div>
+                        <div class="clValue">
+                            {{clientInfo.id}}
+                        </div>
+                    </div>
+                    <div class="clField">                        
+                        <div class="cllabel">   
+                            Client Name               
+                        </div>
+                        <div class="clValue">
+                            {{clientInfo.cname}}
+                        </div>
+                    </div>
+                    <div class="clField">                        
+                        <div class="cllabel">   
+                            Contract ID                
+                        </div>
+                        <div class="clValue">
+                            {{clientInfo.contrid}}
+                        </div>
+                    </div>
+                    <div class="clField">                        
+                        <div class="cllabel">   
+                            Description                
+                        </div>
+                        <div class="clValue">
+                            {{clientInfo.desc}}
+                        </div>
+                    </div>
+                </div> -->
+            </div>
+        </div>
+    </div>
+
+
+
+<!-- The Add Modal -->
+<div id="clientAdd" class="modal fade custom-modal" role="dialog" [ngStyle]="{'display': isClientAddOpen ? 'block' : 'none', 'opacity': 1}">
+    <div class="modal-dialog modal-dialog-centered add-form-dialog">
+      <div class="modal-content">
+  
+        <!-- Modal Header -->
+        <div class="modal-header">
+            <h4 class="modal-title">
+                <span>Add Client</span>
+            </h4>
+            <a class="fa fa-2x fa-times-circle" (click)="openClientAdd(false)">
+            </a>
+        </div>
+  
+        <!-- Modal body -->
+        <div class="modal-body">
+            
+    <div class="add-rule-area">
+    <form  [formGroup]="clientAddForm" (ngSubmit)="addClient(clientAddForm)"  autocomplete="off">
+          <div class="row">
+              <div class="col-lg-3 col-md-4 col-sm-12 col-12">
+                <div class="form-group">
+                  <label>Client name 
+                    <small class="starmark">*</small>
+                  </label>
+                  <input type="text" class="form-control" placeholder="Client Name" formControlName="clientName">
+                  
+              </div>
+              <div class="form-group">
+                <label>Contract ID 
+                    <small class="starmark">*</small>
+                </label>
+                 <select formControlName="contractId" class="form-control">
+                     <option *ngFor="let cont of contractIDs" [value]="cont.contractsId">
+                         {{cont.contractsId}}
+                     </option>
+                 </select>
+            </div>
+                  <div class="form-group">
+                    <label for="descrip">Description 
+                        <small class="starmark">*</small>
+                    </label>
+                    <input type="text" class="form-control" placeholder="Enter Description" id="descrip" formControlName="description">
+                    
+                </div>
+                <div class="form-group">
+                    <label>Deductible 
+                        <small class="starmark">*</small>
+                    </label>
+                    <input type="number" class="form-control" formControlName="deductible">                
+                </div>
+                <div class="form-group">
+                  <label>Individual Deductible<small class="starmark">*</small></label>
+                  <input type="number" min="0" max="10" step="0.01" value="0.00" class="form-control" formControlName="individualDeductible">                
+                </div>
+                <div class="form-group">
+                  <label>Laser Amount<small class="starmark">*</small></label>
+                  <input type="number" step="0.01" value="0.00" class="form-control" formControlName="laserAmount">                
+                </div>
+                <div class="form-group">
+                    <label>Effective From <small class="starmark">*</small></label>
+                    <input type="date" class="form-control" formControlName="start">                
+                </div>
+              </div>
+                <div class="col-lg-3 col-md-4 col-sm-12 col-12">
+                <div class="form-group">
+                    <label>Termination Date  <small class="starmark">*</small></label>
+                    <input type="date" class="form-control" formControlName="end">                
+                </div>
+                  
+                    <div class="form-group">
+                        <label>ASL</label>
+                        <input type="text" class="form-control" formControlName="asl">                
+                      </div>
+                      <div class="form-group">
+                        <label>Run-In <small class="starmark">*</small></label>
+                        <input type="number" class="form-control" formControlName="runIn">                
+                      </div>
+                      <div class="form-group">
+                        <label>Run-Out <small class="starmark">*</small></label>
+                        <input type="number" class="form-control" formControlName="runOut">                
+                      </div>
+                    <div class="form-group">
+                        <label>Corridor</label>
+                        <input type="text" class="form-control" formControlName="corridor">                
+                    </div>
+                    <div class="form-group">
+                        <label>Max Attachment Point 
+                            <small class="starmark">*</small>
+                        </label>
+                        <input type="number" class="form-control" formControlName="maxAttachmentPoint">                
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-12 col-12">
+                    <div class="form-group">
+                        <label>Covered Benefit</label>
+                        <input type="text" class="form-control" formControlName="coveredBenefit">                
+                    </div>
+                    <div class="form-group">
+                        <label>Attachment Point</label>
+                        <input type="number" class="form-control" formControlName="attachmentPoint">                
+                    </div>
+                    <div class="form-group">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" formControlName="paid">
+                            <label class="custom-control-label">
+                                Paid 
+                            </label>
+                          </div>               
+                    </div>
+                    <div class="form-group">  
+                        Monthly Accomodation     
+                          <label class="switch ">
+                            <input type="checkbox" class="success" formControlName="monthlyAccomodation">
+                            <span class="slider round"></span>
+                          </label>         
+                    </div>
+                    <div class="form-group">
+                        Terminal Liability   
+                          <label class="switch ">
+                            <input type="checkbox" class="success" formControlName="terminalLiability">
+                            <span class="slider round"></span>
+                          </label>                  
+                    </div>
+                    <div class="form-group">
+						  Retirees Include
+                          <label class="switch ">
+                            <input type="checkbox" class="success" formControlName="retireesInclude">
+                            <span class="slider round"></span>
+                          </label>                  
+                    </div>                           
+                    <div class="form-group">
+                        <label>Annual Maximum</label>
+                        <input type="number" class="form-control" formControlName="annualMaximum">                
+                    </div>    
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-12 col-12">
+                    <div class="form-group">
+                        <label>Lifetime Maximum</label>
+                        <input type="number" class="form-control" formControlName="lifetimeMaximum">
+                    </div>  
+                    <div class="form-group">
+						  Specific User
+                          <label class="switch ">
+                            <input type="checkbox" class="success" formControlName="specificLaser">
+                            <span class="slider round"></span>
+                          </label>                  
+                    </div>
+                    <div class="form-group">
+						  Unlimited
+                          <label class="switch ">
+                            <input type="checkbox" class="success" formControlName="unlimited">
+                            <span class="slider round"></span>
+                          </label>                  
+                    </div>
+                    <div class="form-group">
+						  Contract
+                          <label class="switch ">
+                            <input type="checkbox" class="success" formControlName="contract">
+                            <span class="slider round"></span>
+                          </label>                  
+                    </div>
+                    <div class="form-group">
+						  Family Specific Deductibles
+                          <label class="switch ">
+                            <input type="checkbox" class="success" formControlName="familySpecificDeductibles">
+                            <span class="slider round"></span>
+                          </label>                  
+                    </div>
+                    <div class="form-group">
+						  Expected Refund
+                          <label class="switch ">
+                            <input type="checkbox" class="success" formControlName="expectedRefund">
+                            <span class="slider round"></span>
+                          </label>                  
+                    </div>
+                    <div class="form-group">
+                      <label>Monthly Claim Amount<small class="starmark">*</small></label>
+                      <input type="number" step="0.01" value="0.00" class="form-control" formControlName="monthlyClaimAmount">                
+                    </div>
+                    <div class="form-group">
+                      <label>Number of Employee<small class="starmark">*</small></label>
+                      <input type="number" step="0.01" value="0.00" class="form-control" formControlName="numOfEmployee">                
+                    </div>
+                </div>
+          </div>         
+              
+          <div class="modal-footer-btns">
+            <button type="button" class="btn btn-outline-success" (click)="openClientAdd(false)">Cancel</button>
+            <button type="submit" class="btn btn-success">Add</button>
+          </div>
+          </form>
+          </div>  <!-- end of add client area -->
+        </div>           
+        </div>
+      </div>
+    </div>
+    
+
+
+<!-- The Update Modal -->
+<div  id="clientUpdate" class="modal fade custom-modal" role="dialog" [ngStyle]="{'display': isClientUpdateOpen ? 'block' : 'none', 'opacity': 1}">
+    <div class="modal-dialog modal-dialog-centered update-form-dialog">
+      <div class="modal-content">
+  
+        <!-- Modal Header -->
+        <div class="modal-header">
+            <h4 class="modal-title">
+                <span>Update Client</span>
+            </h4>
+            <a class="fa fa-2x fa-times-circle" (click)="openClientUpdateModal(null, false)">
+            </a>
+        </div>
+  
+        <!-- Modal body -->
+        <div class="modal-body">
+            
+    <div class="update-rule-area">
+    <form [formGroup]="clientUpdateForm" (ngSubmit)="updateClient(clientUpdateForm)" autocomplete="off">
+          <div class="row">
+              <div class="col-lg-3 col-md-4 col-sm-12 col-12">
+                <div class="form-group">
+                  <label>Client name 
+                    <small class="starmark">*</small>
+                  </label>
+                  <input type="text" class="form-control" placeholder="Client Name" formControlName="clientName">
+                  
+              </div>
+              <div class="form-group">
+                <label>Contract ID 
+                    <small class="starmark">*</small>
+                </label>
+                 <select formControlName="contractId" class="form-control">
+                     <option *ngFor="let cont of contractIDs" [value]="cont.contractsId">
+                         {{cont.contractsId}}
+                     </option>
+                 </select>
+            </div>
+                  <div class="form-group">
+                    <label for="descrip">Description 
+                        <small class="starmark">*</small>
+                    </label>
+                    <input type="text" class="form-control" placeholder="Enter Description" id="descrip" formControlName="description">
+                    
+                </div>
+                <div class="form-group">
+                    <label>Deductible 
+                        <small class="starmark">*</small>
+                    </label>
+                    <input type="number" class="form-control" formControlName="deductible">                
+                </div>
+                <div class="form-group">
+                  <label>Individual Deductible<small class="starmark">*</small></label>
+                  <input type="number" min="0" max="10" step="0.01" value="0.00" class="form-control" formControlName="individualDeductible">                
+                </div>
+                <div class="form-group">
+                  <label>Laser Amount<small class="starmark">*</small></label>
+                  <input type="number" step="0.01" value="0.00" class="form-control" formControlName="laserAmount">                
+                </div>
+              </div>
+                <div class="col-lg-3 col-md-4 col-sm-12 col-12">
+                  <div class="form-group">
+                      <label>Start <small class="starmark">*</small></label>
+                      <input type="date" class="form-control" formControlName="start">                
+                  </div>
+                  <div class="form-group">
+                      <label>End <small class="starmark">*</small></label>
+                      <input type="date" class="form-control" formControlName="end">                
+                  </div>
+                    <div class="form-group">
+                        <label>ASL</label>
+                        <input type="text" class="form-control" formControlName="asl">                
+                      </div>
+                      <div class="form-group">
+                        <label>Run-In <small class="starmark">*</small></label>
+                        <input type="number" class="form-control" formControlName="runIn">                
+                      </div>
+                      <div class="form-group">
+                        <label>Run-Out <small class="starmark">*</small></label>
+                        <input type="number" class="form-control" formControlName="runOut">                
+                      </div>
+                      <div class="form-group">
+                          <label>Corridor</label>
+                          <input type="text" class="form-control" formControlName="corridor">                
+                      </div>
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-12 col-12">
+                  <div class="form-group">
+                      <label>Max Attachment Point 
+                          <small class="starmark">*</small>
+                      </label>
+                      <input type="number" class="form-control" formControlName="maxAttachmentPoint">                
+                  </div>
+                    <div class="form-group">
+                        <label>Covered Benefit</label>
+                        <input type="text" class="form-control" formControlName="coveredBenefit">                
+                    </div>
+                    <div class="form-group">
+                        <label>Attachment Point</label>
+                        <input type="number" class="form-control" formControlName="attachmentPoint">                
+                    </div>
+                    <div class="form-group">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" formControlName="paid">
+                            <label class="custom-control-label">
+                                Paid 
+                            </label>
+                          </div>               
+                    </div>
+                    <div class="form-group">  
+                        Monthly Accomodation     
+                          <label class="switch ">
+                            <input type="checkbox" class="success" formControlName="monthlyAccomodation">
+                            <span class="slider round"></span>
+                          </label>         
+                    </div>
+                    <div class="form-group">
+                        Terminal Liability   
+                          <label class="switch ">
+                            <input type="checkbox" class="success" formControlName="terminalLiability">
+                            <span class="slider round"></span>
+                          </label>                  
+                    </div>
+                    <div class="form-group">
+						  Retirees Include
+                          <label class="switch ">
+                            <input type="checkbox" class="success" formControlName="retireesInclude">
+                            <span class="slider round"></span>
+                          </label>                  
+                    </div>                           
+                    <div class="form-group">
+                        <label>Annual Maximum</label>
+                        <input type="number" class="form-control" formControlName="annualMaximum">                
+                    </div>    
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-12 col-12">
+                    <div class="form-group">
+                        <label>Lifetime Maximum</label>
+                        <input type="number" class="form-control" formControlName="lifetimeMaximum">
+                    </div>  
+                    <div class="form-group">
+						  Specific User
+                          <label class="switch ">
+                            <input type="checkbox" class="success" formControlName="specificLaser">
+                            <span class="slider round"></span>
+                          </label>                  
+                    </div>
+                    <div class="form-group">
+						  Unlimited
+                          <label class="switch ">
+                            <input type="checkbox" class="success" formControlName="unlimited">
+                            <span class="slider round"></span>
+                          </label>                  
+                    </div>
+                    <div class="form-group">
+						  Contract
+                          <label class="switch ">
+                            <input type="checkbox" class="success" formControlName="contract">
+                            <span class="slider round"></span>
+                          </label>                  
+                    </div>
+                    <div class="form-group">
+						  Family Specific Deductibles
+                          <label class="switch ">
+                            <input type="checkbox" class="success" formControlName="familySpecificDeductibles">
+                            <span class="slider round"></span>
+                          </label>                  
+                    </div>
+                    <div class="form-group">
+						  Expected Refund
+                          <label class="switch ">
+                            <input type="checkbox" class="success" formControlName="expectedRefund">
+                            <span class="slider round"></span>
+                          </label>                  
+                    </div>
+                    <div class="form-group">
+                      <label>Monthly Claim Amount<small class="starmark">*</small></label>
+                      <input type="number" step="0.01" value="0.00" class="form-control" formControlName="monthlyClaimAmount">                
+                    </div>
+                    <div class="form-group">
+                      <label>Number of Employee<small class="starmark">*</small></label>
+                      <input type="number" step="0.01" value="0.00" class="form-control" formControlName="numOfEmployee">                
+                    </div>
+                </div>
+          </div>         
+              
+          <div class="modal-footer-btns">
+            <button type="button" class="btn btn-outline-success" (click)="openClientUpdateModal(null, false)">Cancel</button>
+            <button type="submit" class="btn btn-success">Update</button>
+          </div>
+          </form>
+          </div>  <!-- end of update client area -->
+        </div>           
+        </div>
+      </div>
+    </div>
+    
+
+    
+    

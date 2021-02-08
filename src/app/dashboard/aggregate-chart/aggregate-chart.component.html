@@ -1,0 +1,15 @@
+<div class="chart-area">
+    <h2>Claim Distribution/Client</h2>
+    <div class="chart-wrap">
+        <canvas mdbChart
+            [chartType]="chartType"
+            [datasets]="chartDatasets"
+            [labels]="chartLabels"
+            [colors]="chartColors"
+            [options]="chartOptions"
+            [legend]="true"
+            (chartHover)="chartHovered($event)"
+            (chartClick)="chartClicked($event)">
+        </canvas>
+      </div>
+</div>

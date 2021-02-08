@@ -1,0 +1,136 @@
+
+<div class="page-content">
+
+    <form [formGroup]="claimSearchForm" (ngSubmit)="onSubmit(claimSearchForm)">
+        <div class="card custom-card">
+            <div class="card-header">
+                Member Details
+            </div>
+            <div class="card-body">
+                <div class="form-row">
+                <div class="form-field">
+                    <div class="form-field-label">
+                        <label>Claim ID                             
+                            <small class="starmark">*</small>
+                        </label>
+                    </div>
+                    <div class="form-field-input">
+                        <input type="text" class="form-control field-input-text" formControlName="ClaimId" [ngClass]="{ 'is-invalid': submitted && f.ClaimId.errors }" />
+                        <div class="invalid-feedback">
+                            <div *ngIf="submitted && f.ClaimId.errors">
+                                <div *ngIf="f.ClaimId.errors.required">Description is required</div>
+                            </div>
+                            <div *ngIf="submitted && noRecordFound && !f.ClaimId.errors">
+                                No Record Found
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-field">
+                    <label class="form-field-label">
+                        Member ID</label>
+                    <div class="form-field-input">
+                        <input type="text" class="form-control field-input-text" formControlName="MemberId"/>
+                    </div>
+                </div>
+                <div class="form-field">
+                    <label class="form-field-label">Member First Name</label>
+                    <div class="form-field-input">
+                        <input type="text" class="form-control field-input-text" formControlName="Fname"/>
+                    </div>
+                </div>
+                <div class="form-field">
+                    <label class="form-field-label">Member Last Name</label>
+                    <div class="form-field-input">
+                        <input type="text" class="form-control field-input-text" formControlName="Lname"/>
+                    </div>
+                </div>
+                <div class="form-field">
+                    <label class="form-field-label">Member Birth Date</label>
+                    <div class="form-field-input">
+                        <input type="date" class="form-control field-input-text" formControlName="DateOfBirth"/>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+        
+        <div class="card custom-card">
+            <div class="card-header">
+                Supplier
+            </div>
+            <div class="card-body">
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label class="form-field-label">Supplier Name</label>
+                            <div class="form-field-input">
+                                <input type="text" class="form-control field-input-text"  formControlName="SupplierName"/>
+                            </div>
+                        </div>
+                        <div class="form-field">
+                            <label class="form-field-label">Supplier ID</label>
+                            <div class="form-field-input">
+                                <input type="text" class="form-control field-input-text" formControlName="SupplierId"/>
+                            </div>
+                        </div>     
+                    </div>
+            </div>
+        </div>
+        
+        <div class="card custom-card">
+            <div class="card-header">
+                Service Dates
+            </div>
+            <div class="card-body">
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label class="form-field-label">From</label>
+                            <div class="form-field-input">
+                                <input type="date" class="form-control field-input-text" formControlName="ServiceDateFrom"/>
+                            </div>
+                        </div>
+                        <div class="form-field">
+                            <label class="form-field-label">To</label>
+                            <div class="form-field-input">
+                                <input type="date" class="form-control field-input-text" formControlName="ServiceDateTo"/>
+                            </div>
+                        </div>  
+                </div>
+        </div>
+        </div>
+
+        <div class="card custom-card">
+            <div class="card-header">
+                Rendering Practitioner
+            </div>
+            <div class="card-body">
+                <div class="form-row">
+                        <div class="form-field">
+                            <label class="form-field-label">Practitioner ID</label>
+                            <div class="form-field-input">
+                            <input type="text" class="form-control field-input-text" formControlName="PractitionerId"/>
+                            </div>
+                        </div>
+                        <div class="form-field">
+                            <label class="form-field-label">Last Name</label>
+                            <div class="form-field-input">
+                            <input type="text" class="form-control field-input-text" formControlName="LastName"/>
+                            </div>
+                        </div>   
+                        <div class="form-field">
+                            <label class="form-field-label">First Name</label>
+                            <div class="form-field-input">
+                            <input type="text" class="form-control field-input-text"  formControlName="FirstName"/>
+                            </div>
+                        </div>    
+                </div>
+            </div>
+        </div>
+
+            <div class="claim-search-btns-area">
+                <button class="btn btn-primary">Search</button>      
+                <button class="btn btn-outline-primary" type="reset">Reset</button>            
+            </div>
+        </form>
+ </div>
+ 

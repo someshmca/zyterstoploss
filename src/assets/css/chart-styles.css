@@ -1,0 +1,12 @@
+.chart-area{
+    padding: 5px 5px;
+    box-shadow: 0 0 5px #cccccc inset;
+    margin: 15px 2px;
+    min-height: 200px;
+}
+.chart-area h2{
+    text-align: center;
+    padding: 2px;
+    font-size: 15px;
+    font-weight: bold;
+}

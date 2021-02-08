@@ -1,0 +1,44 @@
+/* You can add global styles to this file, and also import other style files */
+/* @import "~bootstrap/dist/css/bootstrap.css";
+@import "./assets/css/dashboard.css";
+@import "./assets//css/styles.css"; */
+@import "../node_modules/ag-grid-community/dist/styles/ag-grid.css";
+@import "../node_modules/ag-grid-community/dist/styles/ag-theme-alpine.css";
+@import "./assets/css/styles.css"; 
+@import url("./assets/css/main-sidenav.css");
+@import url("./assets/css/card-styles.css");
+@import url("./assets/css/modal-styles.css");
+@import url("./assets/css/chart-styles.css");
+@import url("./assets/css/card-table-styles.css");
+@import url("./assets/css/bs4-custom-styles.css");
+/* 
+html, body { height: 100%;}
+body {
+     margin: 0; 
+    }
+p, div, table, tr, th, td, span{
+    font-size: 14px;
+}
+h1{
+    font-size: 18px;
+}
+h2{font-size: 17px;}
+h3{
+    font-size: 16px;
+}
+h4{
+    font-size: 15px;
+}
+h5, h6{
+    font-size: 14px;
+}*/
+.d-none{
+    display: none;
+} 
+.page-content{
+    padding: 15px;
+}
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+

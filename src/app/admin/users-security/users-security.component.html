@@ -1,0 +1,219 @@
+
+  <div class="page-content">
+    <div class="card custom-card">
+      <div class="card-header">
+         User Adminstration
+      </div>
+      <div class="card-body">
+        <div class="select-grid-wrap rules-select-grid-wrap">
+              <div class="select-grid-header">
+                <div>
+                  <label class="form-field-label">
+                     Select a User
+                  </label>
+                  <!-- <div class="form-field-input">
+                      <select class="form-control" name="user" (change)="getUserDetails($event.target.value)">
+                          <option selected="selected" value="Select All">Select All</option>
+                                               
+                          <option *ngFor="let userID of allUserIDs" [value]="userID.userId">
+                              {{userID.userName}}</option>      
+                      </select>
+                  </div> -->
+                        <div fxLayout fxLayoutAlign="center center">
+                          <mat-form-field fxFlex="40%">
+                            <input matInput type="text" (keyup)="doFilter($event.target.value)" placeholder="Search User">
+                          </mat-form-field>
+                        </div>
+              </div>   
+              </div>  
+          <div class="card-table-area rules-table-area">
+          <div class="table-responsive">
+              <div class="cust-add-area">
+                <span class="fa fa-plus-circle" (click)="openCustomModal(true, null)"></span>
+              </div> 
+               
+              <div class="mat-elevation-z8">
+                <table mat-table matSort [dataSource]="dataSource" class="table table-bordered table-striped card-table">
+              
+                  <ng-container matColumnDef="userId">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="c-id"> User ID </th>
+                    <td mat-cell *matCellDef="let element" class="c-id"> {{element.userId}} </td>
+                  </ng-container>
+                  <ng-container matColumnDef="userName">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="c-desc"> User Name </th>
+                    <td mat-cell *matCellDef="let element" class="c-desc"> {{element.userName}} </td>
+                  </ng-container>
+                  <ng-container matColumnDef="status">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header > Status </th>
+                    <td mat-cell *matCellDef="let element" class="c-desc"> {{element.status}} </td>
+                  </ng-container>
+
+                  <!-- Action Column -->
+                  <ng-container matColumnDef="updatedId">
+                    <th mat-header-cell *matHeaderCellDef class="c-action"> Action </th>
+                    <td mat-cell *matCellDef="let element" class="action-link c-action"> 
+                      <span class="fa fa-edit" 
+                            (click)="openCustomModal(true,element.userID)"></span>
+                    </td>
+                  </ng-container>
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+                <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
+              </div>                 
+          </div>
+      </div>
+        </div>
+      </div>
+  </div>
+</div>
+<div class="modal fade security-add-modal" role="dialog" [ngStyle]="{'display': isCustomModalOpen ? 'block' : 'none', 'opacity': 1}">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">  
+        <!-- Modal Header -->
+        <div class="modal-header">
+            <h4 class="modal-title">
+              <span *ngIf="isAddMode">Add User</span>
+              <span *ngIf="!isAddMode">Update User</span>
+            </h4>
+            <a class="fa fa-2x fa-times-circle" (click)="openCustomModal(false, null)">
+            </a>
+        </div>
+          <!-- Modal body -->
+      <div class="modal-body">          
+        <form [formGroup]="securityForm" (ngSubmit)="onSubmit()" autocomplete="off">                   
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">                     
+                      <label>First Name 
+                        <small class="starmark">*</small>
+                      </label>                     
+                      <input type="text" class="form-control"  placeholder="First Name" formControlName="firstName"  [ngClass]="{ 'is-invalid': submitted && f.firstName.errors }" />
+                        <div class="invalid-feedback">
+                            <div *ngIf="submitted && f.firstName.errors" >
+                                <div *ngIf="f.firstName.errors.required">First Name is required</div>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label>Middle Name 
+                        </label>
+                        <input type="text" class="form-control" placeholder=" Middle Name" formControlName="middleName" [ngClass]="{ 'is-invalid': submitted && f.middleName.errors }">
+                        
+                      </div>
+                    </div>  
+                  </div>                   
+                  <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group">                       
+                          <label>Last Name 
+                            <small class="starmark">*</small>
+                          </label>
+                          <input type="text" class="form-control" placeholder="Last Name" formControlName="lastName" [ngClass]="{ 'is-invalid': submitted && f.lastName.errors }">
+                          <div class="invalid-feedback">
+                            <div *ngIf="submitted && f.lastName.errors">
+                              <div *ngIf="f.lastName.errors.required">                      
+                                Invalid LastName
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">                       
+                        <label>User ID</label>         
+                        <input type="text" readonly class="form-control" formControlName="userId">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6"> 
+                    <div class="form-group">
+                      <label>Email Address</label>
+                      <small class="starmark">*</small>
+                      <input type="text" class="form-control"  formControlName="emailAddress" [ngClass]="{ 'is-invalid': submitted && f.emailAddress.errors }">
+                      <div class="invalid-feedback">
+                        <div *ngIf="submitted && f.emailAddress.errors" class="invalid-feedback">
+                          <div *ngIf="f.emailAddress.errors.required"> 
+                            Invalid Email Address
+                          </div>
+                            <div *ngIf="f.emailAddress.errors.email">
+                              Email must be a valid email address
+                            </div>  
+                        </div>
+                      </div>
+                    </div>        
+                                        
+                    </div>
+                  <div class="col-md-6">    
+                    <div class="form-group">                       
+                      <label>Effective From 
+                        <small class="starmark">*</small>
+                      </label>
+                      <input type="date" class="form-control" formControlName="effectiveFrom" [ngClass]="{ 'is-invalid': submitted && f.effectiveFrom.errors }">
+                      <div class="invalid-feedback">
+                        <div *ngIf="submitted && f.effectiveFrom.errors">
+                          <div *ngIf="f.effectiveFrom.errors.required">                      
+                            Invalid Effective From
+                          </div>
+                        </div> 
+                      </div>
+                    </div>          
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">                   
+                      <div class="form-group">
+                        <label for="department">Roles 
+                          <small class="starmark">*</small>
+                        </label>
+                          <select formControlName="deptId" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.deptId.errors }">
+                           
+                            <option *ngFor="let dep of roleNames" selected="selected" value="{{dep.roleId}}">
+                              {{dep.roleName}}</option>
+                        </select>
+                        <div class="invalid-feedback">
+                          <div *ngIf="submitted && f.deptId.errors">
+                            <div *ngIf="f.deptId.errors.required">                      
+                              Invalid Role
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label>Termination Date 
+                           <small class="starmark">*</small></label>
+                            <input type="date" class="form-control field-input-text" formControlName="effectiveTo" [ngClass]="{ 'is-invalid': submitted && f.effectiveTo.errors }"/>
+                            <div class="invalid-feedback">
+                            <div *ngIf="submitted && f.effectiveTo.errors">
+                                <div *ngIf="f.effectiveTo.errors.required">                      
+                                  Invalid Effective To
+                                </div>
+                              </div>
+                            </div>
+                      </div>
+                    </div>
+                  </div>
+                      <!-- <div class="form-group">
+                        <label *ngIf="addUserForm.errors">{{ addUserForm.errors?.dates | json }}</label>
+                      </div> -->     
+            <div class="row form-btns-area">
+              <button [disabled]="loading" class="btn btn-primary">
+                  <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+                  Save
+              </button>
+              <a class="btn btn-link" (click)="openCustomModal(false, null)">Cancel</a>
+          </div>
+            </form>
+            </div>
+            
+          </div>           
+          </div>
+        </div>
+
+      

@@ -1,0 +1,15 @@
+.claim-table-content{
+    padding: 15px;
+}
+.claim-table-content h2{
+    font-size: 18px;
+    padding: 8px 0;
+    font-weight: bold;
+}
+.claim-search-btns-area{
+    padding: 0;
+    margin: 5px 0;
+}
+.claim-search-btns-area .btn{
+    margin-right: 15px;
+}

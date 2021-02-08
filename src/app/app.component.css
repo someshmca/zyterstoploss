@@ -1,0 +1,52 @@
+.main-nav-area{
+    width: 200px;
+}
+.main-body-area{
+    width: calc(100vw - 220px);
+}
+
+.content-header{
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0;
+    /* background: #00718f; */
+    background: #002C77;
+    color: #ffffff;
+}
+.content-header h3{
+    margin: 0;
+    padding: 0;
+    font-size: 1.5rem;
+    padding-left: 15px;
+    color: #ffffff;
+}
+.content-header h3 span{
+    color: #ffffff;
+    font-size: 1.5rem;
+}
+.content-header .welcome-user{
+    font-size: 13px;
+    color: #ffffff;
+    padding: 0;
+    margin: 0 15px 0 0;
+}
+.content-header .welcome-user span{
+    color: #ffffff;
+}
+.content-header p{
+    line-height: normal;
+    padding: 0;
+    margin: 3px 0;
+    text-align: right;
+}
+.content-header p a{
+    color: #ffffff;
+    cursor: pointer;
+    font-size: 12px;
+}
+.main-content-area{
+    padding: 0;
+    margin: 0;
+}

@@ -1,0 +1,65 @@
+
+
+.modal{
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(1px);
+}
+
+.modal-content .fa{
+    cursor: pointer;
+    position: absolute;
+    top: -6px;
+    right: -2px;
+    color: #003847;
+    display: inline-block;
+    width: 20px;
+}
+.modal-content a:hover{
+    border: none;
+    outline: none;
+    text-decoration: none;
+}
+.modal-footer-btns{
+    text-align: right;
+    padding: 4px 0 4px 15px;
+}
+.modal-footer-btns .btn{
+    margin-left: 15px;
+}
+.select-grid-header{
+    display: flex;
+    justify-content: space-between;
+    padding: 0 20px;
+}
+.select-grid-header>div{
+    display: flex;
+    align-items: center;
+}
+.success-dialog-msg{
+    height: auto;
+    padding: 2px 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 30px;
+    animation: successFadeIn 5s linear;
+    opacity: 0;
+    animation-iteration-count: 1;
+}
+.success-dialog-msg h2{
+    padding: 0;
+    margin: 0;
+    font-size: 1.2rem;
+    text-align: center;
+    color: #397402;
+}
+@keyframes successFadeIn{
+    0%{
+        opacity: 0;
+    }
+    100%{
+        opacity: 1;
+    }
+}
+

@@ -1,0 +1,56 @@
+
+.claim-id-firstline{
+    padding-top: 15px;
+    padding-left: 20px;
+    clear: both;
+}
+.pos-r{
+    display: flex;
+}
+/*.col-md-3 .claim-form-checkbox,
+.col-sm-6 .claim-form-checkbox{
+    position: absolute;
+    bottom: 20px;
+}
+.col .claim-form-checkbox{
+    position: initial;
+    bottom: initial;
+}*/
+.claim-form{
+    padding: 15px;
+}
+.claim-form-checkbox .form-check-input{
+    position: relative;
+    left: 5px;
+    top: 2px;
+}
+.tab-pane{
+    padding-top: 15px;
+}
+
+.claim-actions-header{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+.claim-actions-header h5{
+    margin-right: 15px;
+}
+.claim-actions-header a{
+    margin-right: 15px;
+}
+.claim-form .form-group .form-control{
+    width: initial;
+    min-width: 60px;
+    max-width: 140px;
+}
+
+.claim-form .form-group label{
+    min-width: 140px;
+    max-width: 200px;
+    margin: 0 1px 0 0;
+}
+.refresh-link{
+    color: #555; margin-left: 8px; 
+    cursor: pointer;
+}

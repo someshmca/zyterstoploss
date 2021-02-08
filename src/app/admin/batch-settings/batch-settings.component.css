@@ -1,0 +1,111 @@
+.batch-process-screen select.form-control{
+    display: inline-block;
+    max-width: 140px;
+}
+.batch-actions-header{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+.batch-actions-header h5{
+    margin-right: 15px;
+}
+.batch-actions-header a{
+    margin-right: 15px;
+}
+.batch-process-table-area table.card-table tr.highlightRow td{
+    background: #c6f4ff;
+}
+.batch-process-table-area table.card-table tr:hover,
+.batch-process-table-area table.card-table tr:focus,
+.batch-process-table-area table.card-table tr:active td,
+.batch-process-table-area table.card-table tr:focus-visible td,
+.batch-process-table-area table.card-table tr:focus-within td{
+    cursor: pointer;
+}
+.batch-process-table-area table.card-table tr th:nth-child(1), 
+.batch-process-table-area table.card-table tr td:nth-child(1)
+{
+    width: 100px;
+} 
+.batch-process-table-area table.card-table tr th:nth-child(2), 
+.batch-process-table-area table.card-table tr td:nth-child(2)
+{
+    width: 120px;
+} 
+.batch-process-table-area table.card-table tr th:nth-child(3), 
+.batch-process-table-area table.card-table tr td:nth-child(3)
+{
+    width: 80px;
+} 
+.batch-process-table-area table.card-table tr th:nth-child(4), 
+.batch-process-table-area table.card-table tr td:nth-child(4)
+{
+    width: 90px;
+} 
+.batch-process-table-area table.card-table tr th:nth-child(5), 
+.batch-process-table-area table.card-table tr td:nth-child(5)
+{
+    width: 120px;
+} 
+.batch-process-table-area table.card-table tr th:nth-child(6), 
+.batch-process-table-area table.card-table tr td:nth-child(6)
+{
+    width: 130px;
+} 
+.batch-process-table-area table.card-table tr th:nth-child(7), 
+.batch-process-table-area table.card-table tr td:nth-child(7)
+{
+    width: 80px;
+}
+.batch-process-table-area table.card-table tr th:nth-child(8), 
+.batch-process-table-area table.card-table tr td:nth-child(8)
+{
+    width: 70px;
+} 
+.batch-process-table-area table.card-table tr th:nth-child(9), 
+.batch-process-table-area table.card-table tr td:nth-child(9)
+{
+    width: 70px;
+} 
+
+.batch-history-table-area table.card-table tr th:nth-child(1), 
+.batch-history-table-area table.card-table tr td:nth-child(1)
+{
+    width: 140px;
+}
+.batch-history-table-area table.card-table tr th:nth-child(2), 
+.batch-history-table-area table.card-table tr td:nth-child(2)
+{
+    width: 140px;
+}
+.batch-history-table-area table.card-table tr th:nth-child(3), 
+.batch-history-table-area table.card-table tr td:nth-child(3)
+{
+    width: 120px;
+}
+.batch-history-table-area table.card-table tr th:nth-child(4), 
+.batch-history-table-area table.card-table tr td:nth-child(4)
+{
+    width: 130px;
+}
+.batch-history-table-area table.card-table tr th:nth-child(5), 
+.batch-history-table-area table.card-table tr td:nth-child(5)
+{
+    width: 250px;
+}
+.c-action .btn.btn-primary{
+    cursor: pointer;
+}
+.no-history-found{
+    font-size: 1.3rem;
+    text-align: center;
+    color:#ff0000 ;
+    padding: 15px;
+}
+#startDemandModal .modal-body h1{
+    padding: 20px 15px;
+    color: #02a802;
+    font-size: 1.4rem;
+    text-align: center;
+}
