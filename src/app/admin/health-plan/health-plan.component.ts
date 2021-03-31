@@ -40,7 +40,7 @@ export class HealthPlanComponent implements OnInit {
 
   @ViewChild("focusElem") focusTag: ElementRef;
 
-  displayedColumns: string[] = ['clientName', 'planCode', 'planName', 'planID'];
+  displayedColumns: string[] = ['clientName', 'planCode', 'planName','planID'];
   dataSource: any;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -71,8 +71,8 @@ export class HealthPlanComponent implements OnInit {
       tier3Aggfactamt: 0,
       tier4Aggfactamt: 0,
       familySpecificDeductible: 0,
-      status: 1,
-      isTerminalExtCoverage: ''
+      status: 0,
+      isTerminalExtCoverage:''
     });
     this.isStatusChecked = true;
   }
@@ -150,7 +150,7 @@ export class HealthPlanComponent implements OnInit {
           tier3Aggfactamt: elem.tier3Aggfactamt,
           tier4Aggfactamt: elem.tier4Aggfactamt,
           familySpecificDeductible: elem.familySpecificDeductible,
-          status: true,
+          status: elem.status,
           isTerminalExtCoverage: elem.isTerminalExtCoverage
         });
         this.getClientByContract(String(this.planForm.get('clientId').value));
@@ -183,11 +183,10 @@ export class HealthPlanComponent implements OnInit {
   }
 
   private addPlan() {
-
     this.planForm.patchValue({
       userId:this.loginService.currentUserValue.name,
-      status:1,
-      isTerminalExtCoverage:'Y',
+      status:Boolean(this.planForm.get('status').value)==true?1:0,
+      isTerminalExtCoverage:this.planForm.get('isTerminalExtCoverage').value=='null'?'N':'Y',
       contractId:Number(this.planForm.get('contractId').value),
       planId:0
     });
@@ -211,7 +210,8 @@ export class HealthPlanComponent implements OnInit {
   private updatePlan() {
       this.planForm.patchValue({
       userId:this.loginService.currentUserValue.name,
-      status:1,
+      status:Boolean(this.planForm.get('status').value)==true?1:0,
+      isTerminalExtCoverage:this.planForm.get('isTerminalExtCoverage').value=='null'?'N':'Y',
       planId:this.planI,
       contractId:Number(this.planForm.get('contractId').value),
 

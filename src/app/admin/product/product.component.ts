@@ -62,6 +62,7 @@ export class ProductComponent implements OnInit {
   ngOnInit(): void {  
 
     this.productForm = this.formBuilder.group({
+      productId: 0,
       contractId:['', Validators.required],
       clientId:['', Validators.required],    
       sslIncurredStartDate:['', Validators.required],
@@ -91,10 +92,11 @@ export class ProductComponent implements OnInit {
       aslIsMonthlyAccomidation:"",
       aslTermCoverageExtEndDate:"",
       //aslCoveredBenefit: ['', Validators.required],
-      isMaxLiability:"",
+      isMaxLiability:false,
       ibnrPercentage:"",
       defferedFeePercentage:"",
-      status:""
+      status:"",
+      userId: ''
     });
     this.getAllProducts();
     this.getActiveClients();   
@@ -158,6 +160,7 @@ export class ProductComponent implements OnInit {
       }
     
 }
+  isMaxLiabilityChecked: boolean = false;
 
   openCustomModal(open: boolean, id:any) {    
     setTimeout(()=>{
@@ -166,20 +169,32 @@ export class ProductComponent implements OnInit {
     this.submitted = false;
     this.loading = false;
     if(open && id==null){
-      this.isAddMode = true;
-     
+      this.isAddMode = true; 
+      
+      this.productForm.get('isMaxLiability').valueChanges.subscribe(v => {
+        if (v) {
+            console.log(this.isMaxLiabilityChecked);
+            this.isMaxLiabilityChecked = true;
+        } else {
+          console.log(this.isMaxLiabilityChecked);
+          this.isMaxLiabilityChecked = false;
+        }
+      })
     }
     
+   
     this.isCustomModalOpen = open;
     if (!open && id==null) {
       this.getAllProducts();
       this.productForm.reset();
       this.isAddMode = false;
+      this.isMaxLiabilityChecked = false;
     }
     console.log("id inside modal: "+id);
     
     if(id!=null && open){
       this.isAddMode = false;
+      this.isMaxLiabilityChecked = this.productForm.get('isMaxLiability').value;
       this.productService.getProduct(id.productId).subscribe(x => {        
         console.log(x[0].productId);
             this.productForm.patchValue({
@@ -214,7 +229,8 @@ export class ProductComponent implements OnInit {
               isMaxLiability:x[0].isMaxLiability,
               ibnrPercentage:x[0].ibnrPercentage,
               defferedFeePercentage:x[0].defferedFeePercentage,
-              status:x[0].status         
+              status:x[0].status, 
+              userId: this.loginService.currentUserValue.name     
             });
           });
          }
@@ -223,6 +239,10 @@ export class ProductComponent implements OnInit {
       
 
 private addProduct() {    
+  this.productForm.patchValue({
+    status: this.productForm.get('status').value?1:0,
+    userId: this.loginService.currentUserValue.name
+  });
   console.log(this.productForm.value);
   
   this.productService.addProduct(this.productForm.value)
@@ -232,6 +252,7 @@ private addProduct() {
             
             this.openCustomModal(false, null);
             this.getAllProducts();
+            
             this.productForm.reset();                
               this.alertService.success('New Product added', { keepAfterRouteChange: true });
               //this.router.navigate(['../'], { relativeTo: this.route });
@@ -244,12 +265,13 @@ private addProduct() {
       
   }
 
-  private updateProduct() {
+  private updateProduct() {   
       this.productService.updateProduct(this.productForm.value)
           .pipe(first())
           .subscribe({
               next: () => {
                   this.getAllProducts();
+                  
                   this.openCustomModal(false,null); 
                   this.productForm.reset();
                   this.alertService.success('Product updated', { 

@@ -31,7 +31,7 @@
                 <div class="form-field">
                     <label class="form-field-label">Member Birth Date</label>
                     <div class="form-field-input">
-                        <input type="date" class="form-control field-input-text" formControlName="DateOfBirth" [max]="maxDate"/>
+                        <input type="date" class="form-control field-input-text" value="MM/DD/YYYY" formControlName="DateOfBirth" [max]="maxDate"/>
                         <!-- <mat-form-field class="form-control field-input-text">
                             <input matInput [matDatepicker]="picker" formControlName="DateOfBirth" [max]="maxDate">
                             <mat-datepicker-toggle matSuffix [for]="picker">
@@ -90,13 +90,13 @@
                         <div class="form-field">
                             <label class="form-field-label">From</label>
                             <div class="form-field-input">
-                                <input type="date" class="form-control field-input-text" [max]="maxDate" formControlName="ServiceDateFrom"/>
+                                <input type="date" class="form-control field-input-text" value="MM/DD/YYYY" [max]="maxDate" formControlName="ServiceDateFrom"/>
                             </div>
                         </div>
                         <div class="form-field">
                             <label class="form-field-label">To</label>
                             <div class="form-field-input">
-                                <input type="date" class="form-control field-input-text" [max]="maxDate" formControlName="ServiceDateTo"/>
+                                <input type="date" class="form-control field-input-text" value="MM/DD/YYYY" [max]="maxDate" formControlName="ServiceDateTo"/>
                             </div>
                         </div>  
                 </div>

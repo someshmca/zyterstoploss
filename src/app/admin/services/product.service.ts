@@ -23,13 +23,13 @@ export class ProductService {
   }
 
   getProduct(productId): Observable<IProduct[]> {
-    debugger;
+    
     return this.http.get<IProduct[]>(Paths.product+productId).pipe(catchError(this.handleError.bind(this)));
  }
  addProduct(formData:IProductAdd ): Observable<IProductAdd>{
  const body = JSON.stringify(formData);
- debugger;
- const headerOptions = new HttpHeaders({ 'Content-Type': 'application/json' });
+ 
+ const headerOptions = new HttpHeaders({ 'Content-Type': 'application/json', 'No-Auth': 'True' });
   return this.http.post<IProductAdd
   >(Paths.productAdd, body,{headers: headerOptions} ).pipe(catchError(this.handleError.bind(this)));
  
@@ -38,7 +38,7 @@ export class ProductService {
  updateProduct(formData:IProductUpdate ): Observable<IProductAdd>{
  
  const body = JSON.stringify(formData);
- debugger;
+ 
  const headerOptions = new HttpHeaders({ 'Content-Type': 'application/json' });
   return this.http.post<IProductUpdate>(Paths.productUpdate, body,{headers: headerOptions} ).pipe(catchError(this.handleError.bind(this)));
  

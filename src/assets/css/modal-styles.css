@@ -107,3 +107,6 @@
 .mat-select{
     border: 1px solid #a0a0a0;
 }
+select.form-control.is-invalid{
+    background-position: 91% center !important;
+}
