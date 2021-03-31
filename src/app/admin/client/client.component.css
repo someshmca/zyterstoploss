@@ -9,10 +9,22 @@
 }
 .clients-table-area tr th:nth-child(2),
 .clients-table-area tr td:nth-child(2){
-    width: 75%;
+    width: 30%;
 }
 .clients-table-area tr th:nth-child(3),
 .clients-table-area tr td:nth-child(3){
+    width: 15%;
+}
+.clients-table-area tr th:nth-child(4),
+.clients-table-area tr td:nth-child(4){
+    width: 15%;
+}
+.clients-table-area tr th:nth-child(5),
+.clients-table-area tr td:nth-child(5){
+    width: 20%;
+}
+.clients-table-area tr th:nth-child(6),
+.clients-table-area tr td:nth-child(6){
     width: 10%;
 }
 
@@ -66,4 +78,8 @@
 #clientUpdate .form-control{
     padding: 4px;
     height: 30px;
+}
+.clientChk{
+    width:20px;
+    height:20px;
 }

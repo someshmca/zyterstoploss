@@ -87,19 +87,23 @@
       <div class="modal-body">          
   <div class="add-role-area">
   <form [formGroup]="programForm" (ngSubmit)="onSubmit()">
+          <div class="mandate-fields">
+            <span *ngIf="submitted && !programForm.valid">Fields marked with * are mandatory</span>
+          </div>         
             <div class="form-group">
               <label>Description 
                 <small class="starmark">*</small></label>
-        <input type="text" formControlName="description" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.description.errors }" />
-              <div class="invalid-feedback">
+        <input type="text" #focusElem formControlName="description" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.description.errors }" />
+              <!-- <div class="invalid-feedback">
                   <div *ngIf="submitted && f.description.errors">
                       <div *ngIf="f.description.errors.required">Description is required</div>
                   </div>
-              </div>
+              </div> -->
             </div>
         <div class="modal-footer-btns">
-          <button type="button" class="btn btn-outline-success" (click)="openCustomModal(false, null)">Cancel</button>
-          <button type="submit" class="btn btn-success">Save</button>
+          <button type="button" class="btn btn-outline-primary" (click)="openCustomModal(false, null)">Cancel</button>
+          <button type="submit" class="btn btn-primary" *ngIf="!isAddMode">Update</button>
+          <button type="submit" class="btn btn-primary" *ngIf="isAddMode">Add</button>
         </div>
         </form>
         </div>  <!-- end of add-Program-area -->

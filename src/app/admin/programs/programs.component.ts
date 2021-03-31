@@ -12,6 +12,7 @@ import {MatPaginator} from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { first } from 'rxjs/operators';
+import { LoginService } from 'src/app/shared/services/login.service';
 
 @Component({
   selector: 'app-programs',
@@ -30,23 +31,23 @@ export class ProgramsComponent implements OnInit {
   program: IProgramIDRequest;
   isProgramDetailCalled: boolean = false;
   isCustomModalOpen: boolean = false;
-
+  @ViewChild("focusElem") focusTag: ElementRef;
 
   displayedColumns: string[] = ['programId', 'description', 'updateid'];
   dataSource: any;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  constructor(private programService: ProgramService, private fb: FormBuilder, private alertService: AlertService, private datePipe: DatePipe) { }
+  constructor(private programService: ProgramService, private loginService: LoginService, private fb: FormBuilder, private alertService: AlertService, private datePipe: DatePipe) { }
 
   ngOnInit() {
     this.getAllPrograms();
     this.programForm = this.fb.group({
       programId: "",
       description: ['', Validators.required],
-      createid: "ash",
-      createdOn: "2011-01-01",
-      updateid: "som",
-      lastupdate: new Date("2020-12-11")
+      createid: '',
+      createdOn: '',
+      updateid: '',
+      lastupdate: ''
     });
   }
   getAllPrograms(){    
@@ -66,6 +67,9 @@ export class ProgramsComponent implements OnInit {
 
   get f() { return this.programForm.controls; }
   openCustomModal(open: boolean, id:string) {
+    setTimeout(()=>{
+      this.focusTag.nativeElement.focus()
+    }, 100);
     this.submitted = false;
     if(open && id==null){
       this.isAddMode = true;
@@ -73,6 +77,7 @@ export class ProgramsComponent implements OnInit {
     this.isCustomModalOpen = open;
     if (!open) {
       this.programForm.reset();
+      this.getAllPrograms();
       this.isAddMode = false;
     }
     console.log("id inside modal: "+id);
@@ -83,7 +88,11 @@ export class ProgramsComponent implements OnInit {
         console.log(x[0].programId);
             this.programForm.patchValue({
               programId: x[0].programId,
-              description: x[0].description
+              description: x[0].description,
+              createid: this.loginService.currentUserValue.name,
+              createdOn: this.datePipe.transform(new Date(Date.now()), 'yyyy-MM-dd'),
+              updateid: this.loginService.currentUserValue.name,
+              lastupdate: this.datePipe.transform(new Date(Date.now()), 'yyyy-MM-dd') 
             });
           }
         );
@@ -110,6 +119,12 @@ export class ProgramsComponent implements OnInit {
   }
 
   private addProgram() {
+    this.programForm.patchValue({
+      createid: this.loginService.currentUserValue.name,
+      createdOn: this.datePipe.transform(new Date(Date.now()), 'yyyy-MM-dd'),
+      updateid: this.loginService.currentUserValue.name,
+      lastupdate: this.datePipe.transform(new Date(Date.now()), 'yyyy-MM-dd') 
+    });
       this.programService.addProgram(this.programForm.value)
           .pipe(first())
           .subscribe({
@@ -133,7 +148,7 @@ export class ProgramsComponent implements OnInit {
               next: () => {
                   this.alertService.success('Program updated', { 
                     keepAfterRouteChange: true });
-                    this.getAllPrograms();
+                    //this.getAllPrograms();
                     this.openCustomModal(false,null); 
                     this.programForm.reset();
               },

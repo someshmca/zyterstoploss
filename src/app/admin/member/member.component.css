@@ -3,9 +3,11 @@
 .member-search-btns-area{
     padding: 0;
     margin: 5px 0;
+    display: flex;
+    justify-content: flex-end;
 }
 .member-search-btns-area .btn{
-    margin-right: 15px;
+    margin-left: 15px;
 }
 .no-grid-results{
     padding: 30px 15px;
@@ -14,4 +16,7 @@
     text-align: center;
     color: #ff0000;
     font-size: 1.4rem;
+}
+.members-table-area{
+    margin-top: 35px;
 }

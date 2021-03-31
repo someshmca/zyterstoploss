@@ -3,6 +3,7 @@
         <div class="card custom-card">
             <div class="card-header">
             Attributes
+            <alert></alert>
             </div>
             <div class="card-body">
                 <div class="select-grid-wrap">
@@ -24,37 +25,36 @@
                               <input matInput type="text" (keyup)="doFilter($event.target.value)" placeholder="Search Attribute ID/Description">
                             </mat-form-field>
                           </div>
-                    </div>        
-                    <div *ngIf="isNewAttributeAdded" class="success-dialog-msg">
-                      <h2 class="text-success">New Attribute added successfully</h2>
-                 </div>
-                    <!-- <div *ngIf="isAttributeUpdated" class="success-dialog-msg">
-                      <h2 class="text-success">Attribute updated successfully</h2>
-                    </div>  -->
+                    </div>
                     </div>
                     <div class="card-table-area attributes-table-area">
                         <div class="cust-add-area">
-                            <span class="fa fa-plus-circle" (click)="openAddAttributeModal(true)"></span>
+                            <span class="fa fa-plus-circle" (click)="openCustomModal(true, null)"></span>
                         </div>    
                         <div class="table-responsive">
                           <div class="mat-elevation-z8">
                             <table mat-table matSort #attributeTable [dataSource]="dataSource" class="table table-bordered table-striped card-table">
                           
-                              <ng-container matColumnDef="attributeId">
+                              <ng-container matColumnDef="attributeID">
                                 <th mat-header-cell *matHeaderCellDef mat-sort-header class="c-id"> Attribute ID </th>
-                                <td mat-cell *matCellDef="let element" class="c-id"> {{element.attributeId}} </td>
+                                <td mat-cell *matCellDef="let element" class="c-id"> {{element.attributeID}} </td>
                               </ng-container>
-
                               <ng-container matColumnDef="description">
-                                <th mat-header-cell *matHeaderCellDef mat-sort-header class="c-desc"> Description </th>
-                                <td mat-cell *matCellDef="let element" class="c-desc"> {{element.description}} </td>
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Description </th>
+                                <td mat-cell *matCellDef="let element"> {{element.description}} </td>
                               </ng-container>
-      
-                              <!-- Action Column -->
+                              <ng-container matColumnDef="attributeGroup">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Attribute Group </th>
+                                <td mat-cell *matCellDef="let element"> {{element.attributeGroup}} </td>
+                              </ng-container>
+                              <ng-container matColumnDef="value">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Value </th>
+                                <td mat-cell *matCellDef="let element"> {{element.value}} </td>
+                              </ng-container>
                               <ng-container matColumnDef="updateid">
-                                <th mat-header-cell *matHeaderCellDef class="c-action"> Action </th>
+                                <th mat-header-cell *matHeaderCellDef> Action </th>
                                 <td mat-cell *matCellDef="let element" class="action-link c-action"> 
-                                  <span class="fa fa-edit" ></span>
+                                  <span class="fa fa-edit" (click)="openCustomModal(true, element.attributeID)"></span>
                                 </td>
                               </ng-container>
                               <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -70,31 +70,69 @@
     </div>
     
     
-<!-- The Add Modal -->
-<div id="addAttributeModal" class="modal fade" role="dialog" [ngStyle]="{'display': isAddAttributeModalOpen ? 'block' : 'none', 'opacity': 1}">
+<!-- The Add/Update Modal -->
+<div class="modal fade" role="dialog" [ngStyle]="{'display': isCustomModalOpen ? 'block' : 'none', 'opacity': 1}">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
   
         <!-- Modal Header -->
         <div class="modal-header">
             <h4 class="modal-title">
-                <span>Add Attribute</span>
+              <span *ngIf="isAddMode">Add Attribute</span>
+              <span *ngIf="!isAddMode">Update Attribute</span>
             </h4>
-            <a class="fa fa-2x fa-times-circle" (click)="openAddAttributeModal(false)">
+            <a class="fa fa-2x fa-times-circle" (click)="openCustomModal(false, null)">
             </a>
         </div>
         <!-- Modal body -->
         <div class="modal-body">          
     <div class="add-role-area">
-    <form [formGroup]="addAttributeForm" (ngSubmit)="addAttribute(addAttributeForm)"  autocomplete="off">
+    <form [formGroup]="attributeForm" (ngSubmit)="onSubmit()"  autocomplete="off">
+            <div class="mandate-fields">
+              <span *ngIf="submitted && !attributeForm.valid">Fields marked with * are mandatory</span>
+            </div>  
               <div class="form-group">
                 <label for="descrip">Description 
                   <small class="starmark">*</small></label>
-                <input type="text" class="form-control" id="descrip" formControlName="description" >  
+                <input type="text" #focusElem class="form-control" id="descrip" formControlName="description" [ngClass]="{ 'is-invalid': submitted && f.description.errors }" />
+                <!-- <div class="invalid-feedback">
+                    <div *ngIf="submitted && f.description.errors">
+                        <div *ngIf="f.description.errors.required">
+                          Description is required</div>
+                    </div>
+                </div>   -->
+              </div>
+              <div class="form-group">
+                <label>Attribute Group 
+                  <small class="starmark">*</small>
+                </label>
+                <select class="form-control" formControlName="attributeGroupID" [ngClass]="{ 'is-invalid': submitted && f.attributeGroupID.errors }">
+                  <option *ngFor="let attrGroup of attributeGroups" [value]="attrGroup.attributeGroupId">
+                    {{attrGroup.name}}
+                  </option>
+                </select>
+                <!-- <div class="invalid-feedback">
+                    <div *ngIf="submitted && f.attributeGroupID.errors">
+                        <div *ngIf="f.attributeGroupID.errors.required">
+                          Select any Attribute Group </div>
+                    </div>
+                </div> -->
+              </div>
+              <div class="form-group">
+                <label>Value 
+                  <small class="starmark">*</small>
+                </label>
+                <input type="text" class="form-control" placeholder="Enter Value" formControlName="value" [ngClass]="{ 'is-invalid': submitted && f.value.errors }">              
+                <!-- <div *ngIf="submitted && f.value.errors" class="invalid-feedback">
+                  <div *ngIf="f.value.errors.required">
+                    Attribute value is required
+                  </div>
+                </div> -->
               </div>
           <div class="modal-footer-btns">
-            <button type="button" class="btn btn-outline-success"  (click)="openAddAttributeModal(false)">Cancel</button>
-            <button type="submit" class="btn btn-success">Add</button>
+            <button type="button" class="btn btn-outline-primary"  (click)="openCustomModal(false, null)">Cancel</button>
+            <button type="submit" class="btn btn-primary" *ngIf="isAddMode">Add</button>
+            <button type="submit" class="btn btn-primary" *ngIf="!isAddMode">Update</button>
           </div>
           </form>
           </div>  <!-- end of add-Attribute-area -->

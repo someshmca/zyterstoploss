@@ -18,9 +18,9 @@ export class UserSecurityService {
     
     return this.http.get<IAllUserIDs[]>(Paths.UsersPath).pipe(catchError(this.handleError.bind(this)));
   }
-  getUserDetails(userID: string): Observable<IUserDetails> {
+  getUserDetails(userId: string): Observable<IUserDetails[]> {
     //const headerOptions = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.http.get<IUserDetails>(Paths.UserDetailPath+userID).pipe(catchError(this.handleError.bind(this)));
+    return this.http.get<IUserDetails[]>(Paths.UserDetailPath+userId).pipe(catchError(this.handleError.bind(this)));
  }
  addUser(formData: IUserAdd): Observable<IUserAddResponse>{
   const body = JSON.stringify(formData);
@@ -29,7 +29,7 @@ export class UserSecurityService {
  }
  updateUser(formData: IUserUpdate): Observable<IUserUpdateResponse>{
   const body = JSON.stringify(formData);  
-  debugger;
+  
   const headerOptions = new HttpHeaders({ 'Content-Type': 'application/json' });  
    return this.http.put<IUserUpdate>(Paths.userTerminate, body,{headers: headerOptions} ).pipe(catchError(this.handleError.bind(this)));
  }

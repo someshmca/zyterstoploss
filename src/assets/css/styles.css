@@ -69,3 +69,7 @@ select.crules-select option {
 .alert{
     margin-bottom: 0 !important;
 }
+.breadcrumb .breadcrumb-item a,
+.breadcrumb .breadcrumb-item a:hover{
+	color: #2d72bb;
+}

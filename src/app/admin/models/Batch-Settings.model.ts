@@ -5,11 +5,15 @@ export interface IBatchDetails{
     batchProcess: number;
     description:string;
     status:string;
+    batchStatusId: number;
     lastRun:Date;
     lastRunStatus:Date;
-    NextScheduleRun:Date;
-    frequency:string
-
+    nextScheduleRun:Date;
+    frequency:string;
+    createId: string;
+    createDate: string;
+    updateId: string;
+    lastUpdateDate: string;
 }
 export interface IAllBatchIDs{     
     batchId: string;
@@ -38,18 +42,19 @@ export interface IBatchHistoryDetails{
 }
 
 export interface IBatchPAdd{
-    //batchProcessId: 0;
+    batchProcessId: number;
     batchProcess: string;
     description: string;
     status: string;
-    //lastRun: Date;
-    //lastRunStatus: string;
-    nextScheduleRun: Date;
+    batchStatusId: number;
+    lastRun: string;
+    lastRunStatus: string;
+    nextScheduleRun: string;
     frequency: string;
     createId: string;
-    createDate: Date;
-    // updateId: string;
-    // lastUpdateDate: Date;
+    createDate: string;
+    updateId: string;
+    lastUpdateDate: string;
 }
 
 export interface IBatchPAddSuccess{
@@ -61,15 +66,15 @@ export interface IBatchPUpdate{
     batchProcessId: number;
     batchProcess: string;
     description: string;
-    status: string;
-    //lastRun: Date;
-    //lastRunStatus: string;
-    nextScheduleRun: Date;
+    batchStatusId: number;
+    lastRun: string;
+    lastRunStatus: string;
+    nextScheduleRun: string;
     frequency: string;
     createId: string;
-    createDate: Date;
+    createdOn: string;
     updateId: string;
-   lastUpdateDate: Date;
+    lastUpdateDate: string;
  
     // updateId: string;
     // lastUpdateDate: Date;

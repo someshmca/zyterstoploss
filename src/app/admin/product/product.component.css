@@ -1,0 +1,31 @@
+.healthChk{
+    width:20px;
+    height:20px;
+}
+::ng-deep .cdk-overlay-connected-position-bounding-box {
+    z-index: 10000 !important;
+    }
+    
+    ::ng-deep .cdk-global-overlay-wrapper {
+    z-index: 1000 !important;
+    }
+
+    ::ng-deep .cdk-overlay-pane{
+        z-index: 999999;
+    }
+
+    .product-form-wrap{
+        max-height: 65vh;
+        overflow-y: auto;
+    }
+    .product-form-wrap h1{
+        font-size: 1.3rem;
+        color: #0d377d !important;
+        background: #f0f0f0;
+        padding: 10px 3px;
+        font-weight: 600;        
+    }
+    .product-form-wrap .row{
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }

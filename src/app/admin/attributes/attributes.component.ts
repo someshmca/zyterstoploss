@@ -1,46 +1,63 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, ElementRef } from '@angular/core';
 import {AttributeService} from '../services/attributes.service';
 import {
   IAttribute, IAttributeIDRequest,
   IAttributeAdd, IAddAttributeSuccess,
-  IAttributeUpdate, IUpdateAttributeSuccess
+  IAttributeUpdate, IUpdateAttributeSuccess, IAttributeGroup
 } from '../models/attributes-model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
+import { first } from 'rxjs/operators';
+import { formatDate, DatePipe } from '@angular/common';
+import { AlertService } from '../services/alert.service';
 
 @Component({
   selector: 'app-attributes',
   templateUrl: './attributes.component.html',
-  styleUrls: ['./attributes.component.css']
+  styleUrls: ['./attributes.component.css'],
+  providers: [DatePipe]
 })
 export class AttributesComponent implements OnInit {
 
   attributes:IAttribute[] = [];
   attributeIDs:IAttribute[] = [];
-  attribute: IAttributeIDRequest;
+  attribute: IAttribute[];
   isAttributeDetailCalled: boolean = false;
-
-  isAddAttributeModalOpen: boolean = false;
-  isAddDescValid: boolean = false;
-  isNewAttributeAdded: boolean = false;
-  isAddAttributeSubmitted: boolean = false;
-  addAttributeForm: FormGroup;
-  addAttributeRequest: IAttributeAdd;
-  addAttributeResponse: IAddAttributeSuccess;
-  
-  displayedColumns: string[] = ['attributeId', 'description', 'updateid'];
+  attributeForm: FormGroup;
+  id: string;
+  isAddMode: boolean;
+  loading = false;
+  submitted = false;
+  isCustomModalOpen: boolean = false;
+  @ViewChild("focusElem") focusTag: ElementRef;
+  attributeGroups: IAttributeGroup[];
+  updateAttributeRequest: IAttributeUpdate;
+  displayedColumns: string[] = ['attributeID', 'description', 'attributeGroup', 'value', 'updateid'];
   dataSource: any;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  constructor(private attributeService: AttributeService, private fb: FormBuilder) { }
+  constructor(private attributeService: AttributeService, private fb: FormBuilder,
+    private alertService: AlertService,
+    private datePipe: DatePipe) { }
   
   ngOnInit() {
     this.getAllAttributes();
-    this.initAddAttributeForm();
+    this.initAttributeForm();
   }
-
+  initAttributeForm() {
+    this.attributeForm = this.fb.group({
+      attributeID: "",
+      attributeGroupID: [0, Validators.required],
+      description: ['', Validators.required],
+      value: ['', Validators.required],
+      createdid: "ash",
+      createdOn: "2021-01-10",
+      updateid: "sftr",
+      lastupdate: "2021-02-10"
+    });
+  }
   getAllAttributes(){    
     this.attributeService.getAllAttributes().subscribe(
       (data: IAttribute[]) => {
@@ -52,6 +69,12 @@ export class AttributesComponent implements OnInit {
       }
     )
   }  
+  getAttributeGroup(){
+    this.attributeService.getAttributeGroups().subscribe((data:IAttributeGroup[])=>{
+        this.attributeGroups = data;
+      }
+    )
+  }
   getAttribute(attributeId){
     this.attributeService.getAttribute(attributeId).subscribe(
       (data: IAttribute[]) => {
@@ -62,68 +85,121 @@ export class AttributesComponent implements OnInit {
   public doFilter = (value: string) => {
     this.dataSource.filter = value.trim().toLocaleLowerCase();
   }
-  onChangeAttribute(attributeOption: string){
-    if(attributeOption == "Select All"){
+  get f() { return this.attributeForm.controls; }
+  openCustomModal(open: boolean, id:string) {
+    setTimeout(()=>{
+      this.focusTag.nativeElement.focus()
+    }, 100);    
+    this.getAttributeGroup();
+    this.submitted = false;
+    this.loading = false;
+    if(open && id==null){
+      this.isAddMode = true;
+    }
+    this.isCustomModalOpen = open;
+    if (!open && id==null) {
       this.getAllAttributes();
+      this.attributeForm.reset();
+      this.isAddMode = false;
     }
-    else{
-      this.getAttribute(attributeOption);
-    }
-  }
-
-  initAddAttributeForm() {
-    this.addAttributeForm = this.fb.group({
-      attributeID: "",
-      attributeGroup: "",
-      description: "",
-      value: "",
-      createid: "",
-      createdby: "",
-      updateid: "",
-      lastupdate: new Date("2020-12-11")
-    });
-  }
-
-  openAddAttributeModal(open: boolean) {
-    this.isAddAttributeModalOpen = open;
-    this.isNewAttributeAdded = false;
-    if (!open) {
-      this.isNewAttributeAdded = false;
-      this.addAttributeForm.reset();
-    }
-  }
-
-  get f() { return this.addAttributeForm.controls; }
-
-  addAttribute(form: FormGroup) {
-    if(this.isAddDescValid){
-      this.addAttributeRequest = {
-        attributeID: "",
-        attributeGroup: "",
-        description: this.addAttributeForm.get('description').value,
-        value: "",      
-        createdid: "",
-        createdby: "",
-        updateid: "",
-        lastupdate: new Date("2020-12-11")
-      };
-      console.log("add Attribute request  : " + this.addAttributeRequest);
-      this.attributeService.addAttribute(this.addAttributeRequest).subscribe(
-        (data: IAddAttributeSuccess) => {
-          console.log("Add Attribute data : " + data);
-          this.addAttributeResponse = data;
-          console.log("add Rule Response : " + this.addAttributeResponse);
-          //debugger;
-          this.getAllAttributes();
-          this.openAddAttributeModal(false);
-          this.isNewAttributeAdded = true;
+    console.log("id inside modal: "+id);
+    
+    if(id!=null && open){
+      this.isAddMode = false;
+        this.attributeService.getAttribute(id)
+        .pipe(first())
+        .subscribe(x => {
+          this.attribute = x;
+          console.log(x[0].description);
+          console.log(x[0].attributeGroupID);
+          
+          this.attributeForm.patchValue({ 
+            attributeID: x[0].attributeID,
+            attributeGroupID: Number(x[0].attributeGroupID),
+            description: x[0].description,
+            value: x[0].value
+          });         
         }
       )
     }
-    else{
-      this.isNewAttributeAdded = false;
-      return this.isAddDescValid;
-    }
   }
+
+onSubmit() {
+  this.submitted = true;
+
+  // reset alerts on submit
+  this.alertService.clear();
+
+  // stop here if form is invalid
+  if (this.attributeForm.invalid) {
+      return;
+  }
+
+  this.loading = true;
+  if (this.isAddMode) {
+      this.addAttribute();
+  } else {
+      this.updateAttribute();
+      
+  }
+}
+
+private addAttribute() {
+this.attributeForm.patchValue({    
+  attributeGroupID: Number(this.attributeForm.get("attributeGroupID").value),
+  createdid: "ash",
+  createdOn: "2021-01-10",
+  updateid: "sftr",
+  lastupdate: "2021-02-10"
+});
+ 
+this.attributeService.addAttribute(this.attributeForm.value)
+    .pipe(first())
+    .subscribe({
+        next: () => {
+                     
+          this.openCustomModal(false, null); 
+            this.alertService.success('New Attribute added', { keepAfterRouteChange: true });
+            //this.router.navigate(['../'], { relativeTo: this.route });
+        },
+        error: error => {
+            this.alertService.error(error);
+            this.loading = false;
+        }
+    });
+    
+}
+
+private updateAttribute() {
+   
+  this.updateAttributeRequest = {
+    attributeId: this.attribute[0].attributeID,
+    attributeGroupID: Number(this.f.attributeGroupID.value),
+    description: this.f.description.value,
+    value: this.f.value.value,
+    createdid: this.attribute[0].createdid,
+    createdOn: this.datePipe.transform(this.attribute[0].createdOn,"yyyy-MM-dd"),
+    updateid: "sftr",
+    lastupdate: this.datePipe.transform(this.attribute[0].lastupdate,"yyyy-MM-dd")
+  }
+
+    this.attributeService.updateAttribute(this.updateAttributeRequest)
+        .pipe(first())
+        .subscribe({
+            next: () => {
+                
+                this.openCustomModal(false,null);                  
+                this.alertService.success('Attribute updated', { 
+                  keepAfterRouteChange: true });
+               // this.router.navigate(['../../'], { relativeTo: this.route });
+                
+            },
+            error: error => {
+                this.alertService.error(error);
+                this.loading = false;
+            }
+        });
+}
+
 
 }

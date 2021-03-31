@@ -11,6 +11,8 @@ export class ClaimComponent implements OnInit {
 
   claimData: IClaim;
   claimid : string;
+  MemberID: any;
+  isJobBatch: any = 0;
   //isCalculateClicked: boolean = false;
   stopLossAmount: number;
   constructor(private _claimService: ClaimService){
@@ -24,25 +26,32 @@ export class ClaimComponent implements OnInit {
     this.getClaim(this.claimid);
  }
   getClaim(id:string){
-    this._claimService.setClaimId(id);
+    this._claimService.setClaimId(id);                  
    // console.log("selected claim id  : "+this._claimService.selectedClaimID);
     this._claimService.getClaim(id).subscribe((data)=> {
       this.claimData = data;
+      this.MemberID = this.claimData.memberId;
+      
       console.log("claim page data "+this.claimData);
       this.stopLossAmount = this.claimData.stopLossAmount;
-     // debugger;
+     // 
     })
-    //debugger;
+    //
   }
  calculateClaimAmount(){
     console.log("Claim ID in cal func : "+this.claimid);
-    //debugger;
-    this._claimService.calculateClaimAmount(Number(this.claimid)).subscribe((data)=> {
+    
+    
+    this.getClaim(this.claimid);
+  
+    this._claimService.calculateClaimAmount(this.MemberID, this.isJobBatch).subscribe((data)=> {
+      
       //this.isCalculateClicked = true;
-      this.stopLossAmount = data;
+      this.stopLossAmount = data.stopLossAmount;
       console.log("calc stoploss amount kj : "+this.stopLossAmount);
     }) 
   }
+
   
   refreshClaim(){
     //this.isCalculateClicked = false;

@@ -9,7 +9,9 @@
 .claim-search-btns-area{
     padding: 0;
     margin: 5px 0;
+    display: flex;
+    justify-content: flex-end;
 }
 .claim-search-btns-area .btn{
-    margin-right: 15px;
+    margin-left: 15px;
 }

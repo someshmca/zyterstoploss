@@ -16,7 +16,7 @@ import { MatSort } from '@angular/material/sort';
 export class ClaimResultComponent implements OnInit  {
  
   claimResults = [];
-  displayedColumns: string[] = ['claimId', 'providerName', 'memberName', 'converted', 'billed', 'hccamount','allowed','capitated','lastChanged','workSheetState'];
+  displayedColumns: string[] = ['claimId', 'memberId', 'providerName', 'memberName', 'converted', 'billed', 'hccamount','allowed','capitated','lastChanged','workSheetState'];
   dataSource: any;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;

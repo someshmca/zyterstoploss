@@ -18,7 +18,21 @@ export class MemberService {
     console.log(params.toString());
     return this.http.get<IMemberSearchResponse[]>(Paths.memberSearch,{params}).pipe(catchError(this.handleError.bind(this)));
  }
+ addMember(formData: IMemberAdd) {
+  
+  const body = JSON.stringify(formData);
+  const headerOptions = new HttpHeaders({ 'Content-Type': 'application/json' });
+  
+   return this.http.post(Paths.memberAdd, body,{headers: headerOptions} ).pipe(catchError(this.handleError.bind(this)));
+ }
 
+ 
+ updateMember(formData: IMemberUpdate) {
+  const body = JSON.stringify(formData);
+  const headerOptions = new HttpHeaders({ 'Content-Type': 'application/json' });
+  return this.http.put<IMemberUpdate>(Paths.memberUpdate, body,{headers: headerOptions} ).pipe(catchError(this.handleError.bind(this)));
+  
+  }
   
   handleError(errorResponse: HttpErrorResponse) {
     if (errorResponse.error instanceof ErrorEvent) {

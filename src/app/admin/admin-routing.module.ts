@@ -14,6 +14,8 @@ import { UsersSecurityComponent } from './users-security/users-security.componen
 import { BatchSettingsComponent } from './batch-settings/batch-settings.component';
 import { AuthGuard } from '../shared/helpers/auth.guard'
 import { MemberComponent } from './member/member.component';
+import { HealthPlanComponent } from './health-plan/health-plan.component';
+import { ProductComponent } from './product/product.component';
 const routes: Routes = [
   {path: 'claim-search', component: ClaimSearchComponent, canActivate: [AuthGuard] },
   {path: 'claim-result', component: ClaimResultComponent, canActivate: [AuthGuard] },
@@ -29,7 +31,9 @@ const routes: Routes = [
   {path: 'batch-settings', component: BatchSettingsComponent, canActivate: [AuthGuard] },
   {path: 'roles', component: RoleComponent, canActivate: [AuthGuard] },
   {path: 'rules', component: RulesComponent, canActivate: [AuthGuard] },
-  {path: 'member', component: MemberComponent, canActivate: [AuthGuard]}
+  {path: 'member', component: MemberComponent, canActivate: [AuthGuard]},
+  {path: 'health-plan', component: HealthPlanComponent, canActivate: [AuthGuard]},
+  {path: 'product', component: ProductComponent, canActivate: [AuthGuard]}
 ];
 
 @NgModule({

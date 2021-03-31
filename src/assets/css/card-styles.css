@@ -90,9 +90,53 @@
     padding: 0;
     font-size: 11px;
 }
+.is-invalid~.invalid-feedback{
+    height: 15px;
+    display: block !important;
+}
 .invalid-feedback *{
     color: #ff0000;
 }
 .form-btns-area{
-	padding: 5px 20px 5px 15px !important;
+    padding: 5px 15px 5px 15px !important;
+    justify-content: flex-end;
+}
+.form-btns-area .btn{
+    margin-left: 15px;
+}
+input[type='date'].form-control{
+    text-transform:uppercase;
+}
+.form-group.switch-group{
+    display: flex;
+    justify-content: space-between;
+    padding: 3px;
+    border-radius: 5px;
+    margin-bottom: 10px !important;
+    background: #f4f5f4;
+}
+.form-group.switch-group .switch{
+    width: 40px;
+    height: 20px;
+    top: 0;
+    left: 0;
+}
+.form-group.switch-group .slider:before{
+    height: 15px;
+    width: 15px;
+}
+.form-group.switch-group input:checked + .slider:before {
+    transform: translateX(17px);
+}
+.mandate-fields{
+    height: 20px;
+    margin: 0;
+    text-align: left;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+.mandate-fields span{
+    color: #ff0000;
+    font-size: 12px;
 }

@@ -34,6 +34,7 @@ export class RolesService {
    >(Paths.roleAdd, body,{headers: headerOptions} ).pipe(catchError(this.handleError.bind(this)));
   }
   updateRole(formData:IUpdateRole ){
+    debugger;
     const body = JSON.stringify(formData);
     
     const headerOptions = new HttpHeaders({ 'Content-Type': 'application/json' });

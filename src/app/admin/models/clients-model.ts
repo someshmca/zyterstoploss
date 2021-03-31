@@ -1,38 +1,27 @@
 export interface IClient{
-    clientId: string ;
-    clientName: string;
-    contractId: string;
-    description: string;
-    isActive: boolean;
-    createdId: string;
-    createdBy: Date;
-    updatedId: string;
-    lastUpdate: Date;
-    deductible: number;
-    individualDeductible: number;    
-    start: Date;
-    end: Date;
-    asl: string;
-    contractType: string;
-    runIn: number;
-    runOut: number;
-    corridor: string;
-    maxAttachmentPoint: number;
-    coveredBenefit: string;
-    attachmentPoint: number;
-    paid: boolean;
-    monthlyAccomodation: boolean;
-    terminalLiability: boolean;
-    retireesInclude: boolean;
-    annualMaximum: number;
-    lifetimeMaximum: number;
-    specificLaser: boolean;
-    unlimited: boolean;
-    contract: boolean;
-    familySpecificDeductibles: boolean;
-    expectedRefund: boolean;
-  }
+  clientId: string;
+  clientName: string;
+  status: number;
+  startDate: Date;
+  endDate: Date;
+  parentID:string;
+  parentName:string;
+}
   
+
+export interface IActiveClient{
+  clientId: string;
+  clientName: string;
+}
+
+export interface IParentClient{
+  clientId:string;
+  parentID:string;
+  clientName: string;
+  parentName:string
+  
+  
+}
 
 export interface IClientIDRequest{
     clientId: string;
@@ -40,41 +29,14 @@ export interface IClientIDRequest{
 
 
 export interface IClientAdd{
-    clientId: string;
-    clientName: string;
-    contractId: string;
-    description: string;
-    isActive: boolean;
-    createdId: string;
-    createdBy: Date;
-    updatedId: string;
-    lastUpdate: Date;
-    deductible: number;
-    individualDeductible: number;
-    laserAmount: number;
-    start: Date;
-    end: Date;
-    asl: string;
-    contractType: string;
-    runIn: number;
-    runOut: number;
-    corridor: string;
-    maxAttachmentPoint: number;
-    coveredBenefit: string;
-    attachmentPoint: number;
-    paid: boolean;
-    monthlyAccomodation: boolean;
-    terminalLiability: boolean;
-    retireesInclude: boolean;
-    annualMaximum: number;
-    lifetimeMaximum: number;
-    specificLaser: boolean;
-    unlimited: boolean;
-    contract: boolean;
-    familySpecificDeductibles: boolean;
-    expectedRefund: boolean;
-    monthlyClaimAmount: number;
-    numOfEmployee: number;
+  clientID: string;
+  clientName: string;
+  status: number;
+  startDate: Date;
+  endDate: Date;
+  parentID:string;
+  userId:string;
+ 
 }
 
 export interface IClientAddSuccess{
@@ -83,42 +45,14 @@ export interface IClientAddSuccess{
 }
 
 export interface IClientUpdate{
-  clientId: string;
+  clientID: string;
   clientName: string;
-  contractId: string;
-  description: string;
-  isActive: boolean;
-  createdId: string;
-  createdBy: Date;
-  updatedId: string;
-  lastUpdate: Date;
-  deductible: number;
-  individualDeductible: number;
-  laserAmount: number;
-  start: Date;
-  end: Date;
-  asl: string;
-  contractType: string;
-  runIn: number;
-  runOut: number;
-  corridor: string;
-  maxAttachmentPoint: number;
-  coveredBenefit: string;
-  attachmentPoint: number;
-  paid: boolean;
-  monthlyAccomodation: boolean;
-  terminalLiability: boolean;
-  retireesInclude: boolean;
-  annualMaximum: number;
-  lifetimeMaximum: number;
-  specificLaser: boolean;
-  unlimited: boolean;
-  contract: boolean;
-  familySpecificDeductibles: boolean;
-  expectedRefund: boolean;
-  monthlyClaimAmount: number;
-  numOfEmployee: number;
-}
+  status: number;
+  startDate: Date;
+  endDate: Date;
+  parentID:string;
+  userId:string;
+ }
 
 export interface IClientUpdateSuccess{
   clientID: string;

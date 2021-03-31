@@ -15,7 +15,7 @@
                         </label>
                     </div>
                     <div class="form-field-input">
-                        <input type="text" class="form-control field-input-text" formControlName="MemberId"/>                        
+                        <input type="text" class="form-control field-input-text" #focusElem formControlName="MemberId"/>                        
                     </div>
                 </div>
                 <div class="form-field">
@@ -74,16 +74,16 @@
             </div>
         </div>
         
-            <div class="member-search-btns-area">
-                <button class="btn btn-primary">Search</button>      
-                <button class="btn btn-outline-primary" type="reset">Reset</button>            
+            <div class="member-search-btns-area">  
+                <button class="btn btn-outline-primary" type="reset">Reset</button>    
+                <button class="btn btn-primary">Search</button>            
             </div>
         </form>
 
         <div class="card-table-area members-table-area" >
             <div class="table-responsive" *ngIf="isSearchDataThere">
                 <div class="cust-add-area">
-                    <span class="fa fa-plus-circle" (click)="openAddMemberModal(true)"></span>
+                    <span class="fa fa-plus-circle" (click)="openCustomModal(true, null)"></span>
                 </div>    
                 <div class="mat-elevation-z8">
                   <table mat-table matSort #memberSearchTable [dataSource]="searchDataSource" class="table table-bordered table-striped card-table">
@@ -129,7 +129,7 @@
                       <th mat-header-cell *matHeaderCellDef> Action </th>
                       <td mat-cell *matCellDef="let element" class="action-link"> 
                         <span class="fa fa-edit" 
-                              (click)="openUpdateMemberModal(element, true)"></span>
+                        (click)="openCustomModal(true, element)"></span>
                       </td>
                     </ng-container>
                     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -143,4 +143,109 @@
             </div>
         </div>
  </div>
+ 
 
+
+
+<!-- The Add/Update Member Modal -->
+<div class="modal fade custom-modal" role="dialog" [ngStyle]="{'display': isCustomModalOpen ? 'block' : 'none', 'opacity': 1}">
+  
+     <div class="modal-dialog modal-dialog-centered" style="width: 600px;">
+       <div class="modal-content">        
+         <!-- Modal Header -->
+         <div class="modal-header">
+             <h4 class="modal-title">
+                 <span *ngIf="isAddMode">Add Member</span>
+                 <span *ngIf="!isAddMode">Update Member</span>
+             </h4>
+             <a class="fa fa-2x fa-times-circle" (click)="openCustomModal(false, null)">
+             </a>
+         </div>
+         <!-- Modal body -->
+         <div class="modal-body"> 
+     <div class="member-search-area">
+     <form [formGroup]="memberForm" (ngSubmit)="onSubmit()">
+              <div class="mandate-fields">
+                <span *ngIf="submitted && memberForm.valid">Fields marked with * are mandatory</span>
+                         </div>  
+              <div class="row">
+               <div class="col-md-4">
+                  <div class="form-group">
+                    <label>Member ID</label>
+              <input #focusElem type="text" formControlName="memberId" readonly="true" class="form-control" />
+                  </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                      <label>First Name<small class="starmark">*</small></label>
+                <input type="text" formControlName="fname" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.fname.errors }" />
+                    </div> 
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label>Last Name<small class="starmark">*</small></label>
+              <input type="text" formControlName="lname" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.lname.errors }" />
+                  </div>   
+                </div>                                       
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label>Middle Name</label>
+              <input type="text" formControlName="mname" class="form-control" />
+                  </div> 
+                </div>
+               <div class="col-md-4">
+                <div class="form-group">
+                  <label>Subscription ID</label>
+                    <input type="text" formControlName="subscriptionID" class="form-control" />
+                </div> 
+            </div>
+            <div class="col-md-4">
+                 <div class="form-group">
+                    <label>Gender<small class="starmark">*</small></label>  
+                    <mat-select formControlName="gender" [ngClass]="{ 'is-invalid': submitted && f.gender.errors }">
+                      <mat-option value="Male">Male</mat-option>
+                      <mat-option value="Female">Female</mat-option>
+                    </mat-select>
+                  </div>
+            </div>
+               </div>
+               <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group switch-group">
+                            Active
+                              <label class="switch">
+                                <input type="checkbox" class="success" formControlName="status">
+                                <span class="slider round"></span>
+                              </label>                  
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                         <div class="form-group">
+                            <label>Member Start Date<small class="starmark">*</small></label> 
+                            <input type="date" value="MM/DD/YYYY" formControlName="memberStartDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.memberStartDate.errors }"/>
+                            
+                          </div>
+                    </div>
+                    <div class="col-md-4">
+                         <div class="form-group">
+                            <label>Date of Birth<small class="starmark">*</small></label> 
+                            <input type="date" value="MM/DD/YYYY" formControlName="dateOfBirth" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.dateOfBirth.errors }" />                            
+                          </div>
+                    </div>
+               </div>
+              
+           <div class="modal-footer-btns">
+             <button type="button" class="btn btn-outline-primary" (click)="openCustomModal(false, null)">Cancel</button>
+             <button type="submit" class="btn btn-primary" *ngIf="!isAddMode">Update</button>
+             <button type="submit" class="btn btn-primary" *ngIf="isAddMode">Add</button>
+           </div>
+           </form>
+        </div>
+           </div> 
+         </div>           
+         </div>
+       </div>
+   
+ 

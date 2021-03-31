@@ -98,7 +98,9 @@
       <div class="modal-body">
           
   <form [formGroup]="ruleForm" (ngSubmit)="onSubmit()"  autocomplete="off">
-
+          <div class="mandate-fields">
+            <span *ngIf="submitted && !ruleForm.valid">Fields marked with * are mandatory</span>
+          </div>  
           <!-- <div class="form-group">
               <label for="ruleid">Rule ID</label>
               <input type="email" class="form-control" placeholder="Enter RuleID" id="ruleid" formControlName="ruleId">
@@ -106,41 +108,40 @@
             <div class="form-group">
               <label for="descrip">Description 
                 <small class="starmark">*</small></label>
-              <input type="text" class="form-control" placeholder="Enter Description" id="descrip" formControlName="description" [ngClass]="{ 'is-invalid': submitted && f.description.errors }" />
-              <div class="invalid-feedback">
+              <input type="text" class="form-control" #focusElem placeholder="Enter Description" id="descrip" formControlName="description" [ngClass]="{ 'is-invalid': submitted && f.description.errors }" />
+              <!-- <div class="invalid-feedback">
                   <div *ngIf="submitted && f.description.errors">
                       <div *ngIf="f.description.errors.required">
                         Description is required</div>
                   </div>
-              </div>
+              </div> -->
             </div>
             <div class="form-group">
               <label>Rule Group 
                 <small class="starmark">*</small>
               </label>
               <select class="form-control" formControlName="ruleGroup" [ngClass]="{ 'is-invalid': submitted && f.ruleGroup.errors }">
-                <option value="Benefits">Benefits</option>
-                <option value="Contracts">Contracts</option>
-                <option value="Practitioners">Practitioners</option>
-                <option value="Suppliers">Suppliers</option>
+               <option *ngFor="let ruleGroup of ruleGroups" [value]="ruleGroup.id">
+                 {{ruleGroup.name}}
+               </option>
               </select>
-              <div class="invalid-feedback">
+              <!-- <div class="invalid-feedback">
                   <div *ngIf="submitted && f.ruleGroup.errors">
                       <div *ngIf="f.ruleGroup.errors.required">
                         Select any Rule Group </div>
                   </div>
-              </div>
+              </div> -->
             </div>
             <div class="form-group">
               <label>Value 
                 <small class="starmark">*</small>
               </label>
               <input type="text" class="form-control" placeholder="Enter Value" formControlName="value" [ngClass]="{ 'is-invalid': submitted && f.value.errors }">              
-              <div *ngIf="submitted && f.value.errors" class="invalid-feedback">
+              <!-- <div *ngIf="submitted && f.value.errors" class="invalid-feedback">
                 <div *ngIf="f.value.errors.required">
-                  Invalid Rule Value
+                  Rule Value is required
                 </div>
-              </div>
+              </div> -->
             </div>
             <!-- <div class="card" [hidden]="!isRuleAdded">
               <div class="card-header">.
@@ -152,11 +153,15 @@
             </div> -->      
         
             <div class="row form-btns-area">
-              <button [disabled]="loading" class="btn btn-primary">
+              <button class="btn btn-outline-primary" (click)="openCustomModal(false, null)">Cancel</button>
+              <button [disabled]="loading" class="btn btn-primary" *ngIf="isAddMode">
                   <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
-                  Save
+                  Add
               </button>
-              <a class="btn btn-link" (click)="openCustomModal(false, null)">Cancel</a>
+              <button [disabled]="loading" class="btn btn-primary" *ngIf="!isAddMode">
+                  <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+                  Update
+              </button>
           </div>
         </form>
       </div>           

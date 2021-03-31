@@ -13,178 +13,179 @@
                   <label class="form-field-label">
                       Search a Contract
                   </label>
-                  <!-- <div class="form-field-input">
-                      <select class="form-control cselect-dropdown" name="contractId" (change)="onChangeContract($event.target.value)">
-                          <option selected="selected" value="Select All">Select All</option>
-                          <option *ngFor="let contract of contractIDs" [value]="contract.contractsId">
-                              {{contract.contractsId}}
-                          </option>
-                      </select>
-                  </div> -->
+              
                   <div fxLayout fxLayoutAlign="center center">
                     <mat-form-field fxFlex="40%">
                       <input matInput type="text" (keyup)="doFilter($event.target.value)" placeholder="Search a Contract">
                     </mat-form-field>
                   </div>  
               </div>  
-                  <!-- <div *ngIf="isNewContractAdded" class="success-dialog-msg">
-                       <h2>New Contract added successfully</h2>
-                  </div>
-              <div *ngIf="isContractUpdated" class="success-dialog-msg">
-                <h2>Contract updated successfully</h2>
-              </div>  -->
+               
             </div>
   
-              <div class="card-table-area contracts-table-area">
-          <div class="table-responsive">
-              <div class="cust-add-area">
-                  <span class="fa fa-plus-circle" (click)="openCustomModal(true, null)"></span>
-              </div>  
-              <div class="mat-elevation-z8">
-                <table mat-table matSort [dataSource]="dataSource" class="table table-bordered table-striped card-table">
-              
-                  <!-- Contract ID Column -->
-                  <ng-container matColumnDef="contractsId">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Contract ID </th>
-                    <td mat-cell *matCellDef="let element"> {{element.contractsId}} </td>
-                  </ng-container>
-                  <ng-container matColumnDef="contractEffectiveDate">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Effective Date </th>
-                    <td mat-cell *matCellDef="let element"> {{element.contractEffectiveDate | date:'MM-dd-yyyy'}} </td>
-                  </ng-container>
-                  <ng-container matColumnDef="contractEndDate">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> End Date </th>
-                    <td mat-cell *matCellDef="let element"> 
-                      {{element.contractEndDate | date:'MM-dd-yyyy'}} </td>
-                  </ng-container>
-                  <ng-container matColumnDef="contractStatus">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
-                    <td mat-cell *matCellDef="let element"> 
-                      {{element.contractStatus}} </td>
-                  </ng-container>
-                  <ng-container matColumnDef="contractType">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Contract Type </th>
-                    <td mat-cell *matCellDef="let element"> {{element.contractType}} </td>
-                  </ng-container>
-                  <ng-container matColumnDef="description">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Description </th>
-                    <td mat-cell *matCellDef="let element"> {{element.description}} </td>
-                  </ng-container>
-  
-                  <!-- Action Column -->
-                  <ng-container matColumnDef="updateid">
-                    <th mat-header-cell *matHeaderCellDef> Action </th>
-                    <td mat-cell *matCellDef="let element" class="action-link"> 
-                      <span class="fa fa-edit" (click)="openCustomModal(true, element.contractsId)"></span>
-                    </td>
-                  </ng-container>
-                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-                </table>
-                <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
+            <div class="card-table-area">
+              <div class="table-responsive">
+                  <div class="cust-add-area">
+                      <span class="fa fa-plus-circle" (click)="openCustomModal(true, null)"></span>
+                  </div>    
+                  <div class="mat-elevation-z8">
+                    <table mat-table matSort #contractTable [dataSource]="dataSource" class="table table-bordered table-striped table-hover card-table">
+                  
+                      <ng-container matColumnDef="clientName">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header > Client Name </th>
+                        <td mat-cell *matCellDef="let element"> {{element.clientName}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="contractId">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header > Contract ID </th>
+                        <td mat-cell *matCellDef="let element"> {{element.contractId}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="effectiveDate">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header > Effective Date </th>
+                        <td mat-cell *matCellDef="let element"> {{element.effectiveDate | date:'MM/dd/yyyy'}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="endDate">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header > End Date </th>
+                        <td mat-cell *matCellDef="let element"> {{element.endDate | date:'MM/dd/yyyy'}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="clientId">
+                        <th mat-header-cell *matHeaderCellDef> Action </th>
+                        <td mat-cell *matCellDef="let element" class="action-link"> 
+                          <span class="fa fa-edit" 
+                                (click)="openCustomModal(true, element)"></span>
+                        </td>
+                      </ng-container>
+                      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                    </table>
+                    <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
+                  </div>
               </div>
-  
-          </div>
               </div>
               </div>
       </div>
   </div>
 </div>
+<!-- Add/Update Plans Modal -->
+<div class="modal fade contract-modal" role="dialog" [ngStyle]="{'display': isCustomModalOpen ? 'block' : 'none', 'opacity': 1}">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">        
+      <!-- Modal Header -->
+      <div class="modal-header">
+          <h4 class="modal-title">
+              <span *ngIf="isAddMode">Add Contract</span>
+              <span *ngIf="!isAddMode">Update Contract</span>
+          </h4>
+          <a class="fa fa-2x fa-times-circle" (click)="openCustomModal(false, null)">
+          </a>
+      </div>
+      <!-- Modal body -->
+      <div class="modal-body"> 
+        
+  <form [formGroup]="contractForm" (ngSubmit)="onSubmit()">
+  <div class="contract-form-area">
+           <div class="mandate-fields">
+            <span *ngIf="submitted && (!contractForm.valid && !contractForm.errors?.dates)">Fields marked with * are mandatory</span>
+            <span *ngIf="contractForm.errors">{{ contractForm.errors?.dates | json }}</span>
+
+           </div>  
+           <div class="row">
+             <div class="col-md-4">
+              <div class="form-group">
+                <label>Contract ID</label>
+                  <input #focusElem type="text" readonly="true"  formControlName="contractId" class="form-control"/>
+              </div>
+             </div>
+             <div class="col-md-4">
+              <div class="form-group">
+                <label>Client<small class="starmark">*</small> </label>
+                <select formControlName="clientId" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.clientId.errors }">
+                  <option *ngFor="let client of activeClients" [value]="client.clientId">
+                    {{client.clientName}}
+                  </option>
+               </select>                 
+              </div>       
+             </div>
+             <div class="col-md-4">
+              <div class="form-group">
+                <label>Claim Adminstrator </label>
+                <input type="text" formControlName="claimsAdministrator" class="form-control" />
+              </div>
+             </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                 <label>Pharmacy Claims Administrator  </label>
+                 <input type="text" formControlName="pharmacyClaimsAdministrator" class="form-control" />
+               </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Contract Start Date<small class="starmark">*</small></label>
+                  <input type="date" value="MM/dd/yyyy" formControlName="effectiveDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.effectiveDate.errors }" /> 
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Contract End Date<small class="starmark">*</small></label>
+                  <input type="date" value="MM/dd/yyyy" formControlName="endDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.endDate.errors }"/> 
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Run In Start Date<small class="starmark">*</small></label>
+                  <input type="date" value="MM/dd/yyyy" formControlName="runInStartDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.runInStartDate.errors }"/> 
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Run In End Date<small class="starmark">*</small></label>
+                  <input type="date" value="MM/dd/yyyy" formControlName="runInEndDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.runInEndDate.errors }"/> 
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Run Out Start Date<small class="starmark">*</small></label>
+                  <input type="date" value="MM/dd/yyyy" formControlName="runOutStartDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.runOutStartDate.errors }" /> 
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Run Out End Date<small class="starmark">*</small></label>
+                  <input type="date" value="MM/dd/yyyy" formControlName="runOutEndDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.runOutEndDate.errors }"/> 
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Termination Date<small class="starmark">*</small></label>
+                  <input type="date" value="MM/dd/yyyy" formControlName="terminationDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.terminationDate.errors }" /> 
+                </div>  
+              </div>
+              <div class="col-md-4">
+                  <div class="form-group switch-group">
+                    Active
+                      <label class="switch">
+                        <input type="checkbox" class="success" formControlName="status">
+                        <span class="slider round"></span>
+                      </label>                  
+                </div> 
+              </div>
+            </div>
+           </div>
+           
+        <div class="modal-footer-btns">
+          <button type="button" class="btn btn-outline-primary" (click)="openCustomModal(false, null)">Cancel</button>
+          <button type="submit" class="btn btn-primary" *ngIf="!isAddMode">Update</button>
+          <button type="submit" class="btn btn-primary" *ngIf="isAddMode">Add</button>
+        </div>
+        </form>
+        </div> 
+      </div>           
+      </div>
+    </div>
 
 
-<div class="modal fade" role="dialog" [ngStyle]="{'display': isCustomModalOpen ? 'block' : 'none', 'opacity': 1}">
-   <div class="modal-dialog modal-dialog-centered">
-     <div class="modal-content">  
-       <!-- Modal Header -->
-       <div class="modal-header">
-           <h4 class="modal-title">
-               <span *ngIf="isAddMode">Add Contract</span>
-           <span *ngIf="!isAddMode">Update Contract</span>
-           </h4>
-           <a class="fa fa-2x fa-times-circle" (click)="openCustomModal(false, null)">
-           </a>
-       </div>
-       <!-- Modal body -->
-       <div class="modal-body">
-         <form [formGroup]="contractForm" (ngSubmit)="onSubmit()">
-            <div class="row"> 
-               <div class="col-md-6">     
-                <div class="form-group">
-                        
-                        <label>Effective Date<small class="starmark">*</small></label>
-                        
-                        <input type="date" value="MM/DD/YYYY" formControlName="contractEffectiveDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.contractEffectiveDate.errors }" />
-                        <div class="invalid-feedback">
-                            <div *ngIf="submitted && f.contractEffectiveDate.errors" >
-                                <div *ngIf="f.contractEffectiveDate.errors.required">Effective Date is required</div>
-                                <div *ngIf="f.contractEffectiveDate.errors.pattern">Effective Date must be Valid</div>
-                            </div>
-                        </div>
-                </div>   
-                <div class="form-group">
-                        <label>End Date<small class="starmark">*</small></label>
-                        <input type="date" formControlName="contractEndDate" class="form-control form-control-date" [ngClass]="{ 'is-invalid': submitted && f.contractEndDate.errors }" />
-                        <div class="invalid-feedback">
-                            <div *ngIf="submitted && f.contractEndDate.errors">
-                                <div *ngIf="f.contractEndDate.errors.required">End Date is required</div>
-                                <div *ngIf="f.contractEndDate.errors.pattern">End Date must be Valid</div>
-                            </div>
-                        </div>
-                </div>
-                <div class="form-group">
-                        <label>Status</label>
-                        <input type="text" formControlName="contractStatus" class="form-control" value="Active" disabled />
-                        <!-- <div *ngIf="submitted && f.status.errors" class="invalid-feedback">
-                            <div *ngIf="f.status.errors.required">Status is required</div>
-                        </div> -->
-                        <div class="invalid-feedback">&nbsp;</div>
-               </div>
-               </div>
-               <div class="col-md-6">
-                <div class="form-group">
-                        <label>Contract Type<small class="starmark">*</small></label>
-                        <select formControlName="contractType" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.contractType.errors }">
-                            <option value=""></option>
-                            <option value="12/12">12/12</option>
-                            <option value="12/18">12/18</option>
-                        </select>
-                        <div class="invalid-feedback">
-                            <div *ngIf="submitted && f.contractType.errors">
-                                <div *ngIf="f.contractType.errors.required">Contract Type is required</div>
-                            </div>
-                        </div>
-                </div>
-                <div class="form-group">
-                        <label>Description<small class="starmark">*</small></label>
-                   
-                        <input type="text" formControlName="description" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.description.errors }" />
-                        <div class="invalid-feedback">
-                            <div *ngIf="submitted && f.description.errors">
-                                <div *ngIf="f.description.errors.required">Description is required</div>
-                            </div>
-                        </div>
-                </div>
-                <div class="form-group">
-                        <label>Max Allowed Period</label>
-                        <input type="number" formControlName="maxAllowedPeriod" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.maxAllowedPeriod.errors }" />
-                        <div class="invalid-feedback">
-                            <div *ngIf="submitted && f.maxAllowedPeriod.errors">
-                                <div *ngIf="f.maxAllowedPeriod.errors.required">
-                                    Max Allowed Period is required</div>
-                            </div>
-                        </div>
-                </div>
-               </div>
-            </div>
-            <div class="row form-btns-area">
-                <button [disabled]="loading" class="btn btn-primary">
-                    <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
-                    Save
-                </button>
-                <a class="btn btn-link" (click)="openCustomModal(false, null)">Cancel</a>
-            </div>
-        </form>  
-       </div>          
-       </div>
-     </div>
-   </div>

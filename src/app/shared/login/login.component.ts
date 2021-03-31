@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import {Observable } from 'rxjs';
 import {LoginService} from '../services/login.service';
@@ -33,13 +33,17 @@ export class LoginComponent implements OnInit {
   invalidLogin: boolean = false;
   invalidPassword: boolean = false;
   currentToken: any;
+  @ViewChild("focusElem") focusTag: ElementRef;
+
   ngOnInit(): void {
     localStorage.setItem('loginStatus',"false");
     this.loginStatus = false;
     //debugger;
     console.log(this.loginStatus);
     this.loginService.setLoginStatus(this.loginStatus);
-
+    setTimeout(()=>{
+      this.focusTag.nativeElement.focus()
+    }, 100);
   }
 
   // getLoginDetails(){

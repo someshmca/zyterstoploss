@@ -3,9 +3,9 @@
         <div class="card-header claim-actions-header">
             <h5>Actions </h5>
             <a class="btn btn-primary" (click)="calculateClaimAmount()">Calculate</a>
-            <a class="refresh-link" (click)="refreshClaim()">
+            <!-- <a class="refresh-link" (click)="refreshClaim()">
                 <span class="fa fa-refresh"></span> Refresh
-            </a>
+            </a> -->
         </div>
         <div class="card-body claim-form">
             <div class="row">
@@ -125,7 +125,7 @@
                     <!-- <div class="form-group" [hidden]="!isCalculateClicked"> -->
                     <div class="form-group"> 
                         <label>Stop Loss Amount</label>
-                        <input type="text" name="stopLossAmount" [value]="stopLossAmount |currency:'CAD':'symbol-narrow'" class="form-control" readonly/>
+                        <input type="text" name="stopLossAmount" [value]="stopLossAmount" class="form-control" readonly/>
                     </div>
                 </div>    
             </div>

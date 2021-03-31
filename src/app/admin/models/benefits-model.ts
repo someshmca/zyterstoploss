@@ -4,9 +4,9 @@ export interface IBenefit{
     code: string;
     codeType: string;
     createid: string;
-    createdOn: Date;
+    createdOn: string;
     updateid: string;
-    lastupdate: Date
+    lastupdate: string;
 }
 
 export interface IBenefitIDRequest{
@@ -17,11 +17,11 @@ export interface IBenefitAdd{
     benefitId: string;
     description: string;
     code: string;
-    codeType: string;
+    codeType: string;   
     createid: string;
-    createdOn: Date;
+    createdOn: string;
     updateid: string;
-    lastupdate: Date;     
+    lastupdate: string;
 }
 export interface IAddBenefitSuccess{
     id: string;
@@ -31,11 +31,11 @@ export interface IBenefitUpdate{
     benefitId: string;
     description: string;
     code: string;
-    codeType: string;
+    codeType: string; 
     createid: string;
-    createdOn: Date;
+    createdOn: string;
     updateid: string;
-    lastupdate: Date; 
+    lastupdate: string;
 }
 export interface IUpdateBenefitSuccess{
     id: string;

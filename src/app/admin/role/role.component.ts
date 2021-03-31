@@ -34,6 +34,7 @@ export class RoleComponent implements OnInit {
   loading = false;
   submitted = false;
   isCustomModalOpen: boolean = false;
+  @ViewChild("focusElem") focusTag: ElementRef;
 
   displayedColumns: string[] = ['roleName', 'description', 'menueAccess', 'roleId'];
   dataSource: any;
@@ -79,34 +80,41 @@ export class RoleComponent implements OnInit {
     this.dataSource.filter = value.trim().toLocaleLowerCase();
   }
   
-  openCustomModal(open: boolean, id:string) {
+  openCustomModal(open: boolean, elem:any) {
+    setTimeout(()=>{
+      this.focusTag.nativeElement.focus()
+    }, 100);
     this.submitted = false;
     this.loading = false;
-    if(open && id==null){
+    if(open && elem==null){
       this.isAddMode = true;
     }
     this.isCustomModalOpen = open;
-    if (!open && id==null) {
+    if (!open && elem==null) {
+      this.getAllRoles();
       this.roleForm.reset();
       this.isAddMode = false;
     }
-    console.log("id inside modal: "+id);
-    
-    if(id!=null && open){
+    console.log("elem inside modal: "+elem);
+    if(elem!=null && open){
       this.isAddMode = false;
       //dfdfdfdf
-         this.rolesService.getRole(id)
-         .pipe(first())
-         .subscribe(x => {
-           console.log(x[0].roleId);
+        //  this.rolesService.getRole(id)
+        //  .pipe(first())
+        //  .subscribe(x => {
+           console.log(elem.roleId);
            this.roleForm.patchValue({ 
-            roleId: x[0].roleId,
-            roleName: x[0].roleName,
-            description: x[0].description
+            roleId: elem.roleId,
+            roleName:elem.roleName,
+            description: elem.description,            
+            createid: "johnwatson",
+            createdOn: "2020-01-01",
+            updateid: "williamsmith",  
+            lastupdate: this.datePipe.transform(new Date(Date.now()), 'yyyy-MM-dd')
            });
           
-         }
-      );
+      //    }
+      // );
       //dfdfddfdfdfdf
     }
   }
@@ -132,14 +140,21 @@ export class RoleComponent implements OnInit {
       }
   }
   
-  private addRole() {
+  private addRole() {    
+    this.roleForm.patchValue({  
+      roleId: 0,
+      createid: "johnwatson",
+      createdOn: "2021-01-01",
+      updateid: "williamsmith",  
+      lastupdate: this.datePipe.transform(new Date(Date.now()), 'yyyy-MM-dd')
+     });
     this.rolesService.addRole(this.roleForm.value)
         .pipe(first())
         .subscribe({
             next: () => {
-              this.openCustomModal(false, null);
               this.getAllRoles();
-              this.roleForm.reset();                
+              this.openCustomModal(false, null);
+              this.roleForm.reset();              
                 this.alertService.success('New Role added', { keepAfterRouteChange: true });
                 //this.router.navigate(['../'], { relativeTo: this.route });
             },
@@ -152,13 +167,10 @@ export class RoleComponent implements OnInit {
     }
 
     private updateRole() {
-      debugger;
         this.rolesService.updateRole(this.roleForm.value)
             .pipe(first())
             .subscribe({
                 next: () => {
-                    this.getAllRoles();
-                    debugger;
                     this.openCustomModal(false,null); 
                     this.roleForm.reset();
                     this.alertService.success('Role updated', { 

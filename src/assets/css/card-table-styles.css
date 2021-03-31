@@ -118,10 +118,12 @@
     cursor: pointer;
 
 }
-.action-items .fa.fa-edit:hover{
-    color: #0148b3;
+.card .fa.fa-edit:hover{
+    color: #0148b3;    
+    font-weight: bold;
+    transform: scale(1.5);
 }
-.action-items .fa.fa-trash:hover{
+.card .fa.fa-trash:hover{
     color: #b80202;
 }
 

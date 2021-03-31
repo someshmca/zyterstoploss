@@ -13,6 +13,15 @@
 .batch-actions-header a{
     margin-right: 15px;
 }
+.card-header .col1{
+    display: flex;
+    justify-content: flex-start;
+    min-width: 50%;
+    align-items: center;
+}
+.card-header .col1 select{
+    margin: 0 15px;
+}
 .batch-process-table-area table.card-table tr.highlightRow td{
     background: #c6f4ff;
 }

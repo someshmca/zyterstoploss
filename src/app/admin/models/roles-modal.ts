@@ -14,7 +14,7 @@ export interface IAddRole{
     roleName: string;
     description: string;
     createid: string;
-    createdby: string;
+    createdOn: string;
     updateid: string;
     lastupdate: Date;
 }
@@ -29,7 +29,7 @@ export interface IUpdateRole{
     roleName: string;
     description: string;
     createid: string;
-    createdby: string;
+    createdOn: string;
     updateid: string;
     lastupdate: Date;
 }

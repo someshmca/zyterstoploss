@@ -41,7 +41,7 @@
               <span class="fa fa-plus-circle" (click)="openCustomModal(true, null)"></span>
           </div>    
           <div class="mat-elevation-z8">
-            <table mat-table matSort #benefitTable [dataSource]="dataSource" class="table table-bordered table-striped card-table">
+            <table mat-table matSort #benefitTable [dataSource]="dataSource" class="table table-bordered table-striped table-hover card-table">
           
               <ng-container matColumnDef="benefitId">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header > Benefit ID </th>
@@ -56,7 +56,7 @@
                 <td mat-cell *matCellDef="let element"> {{element.code}} </td>
               </ng-container>
               <ng-container matColumnDef="codeType">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header > Code type</th>
+                <th mat-header-cell *matHeaderCellDef mat-sort-header > Code Type</th>
                 <td mat-cell *matCellDef="let element"> {{element.codeType}} </td>
               </ng-container>
               <ng-container matColumnDef="updateid">
@@ -93,42 +93,46 @@
          </a>
      </div>
      <!-- Modal body -->
-     <div class="modal-body">          
+     <div class="modal-body"> 
  <div class="add-role-area">
  <form [formGroup]="benefitForm" (ngSubmit)="onSubmit()">
+          <div class="mandate-fields">
+            <span *ngIf="submitted && !benefitForm.valid">Fields marked with * are mandatory</span>
+          </div>         
            <div class="form-group">
              <label>Description 
                <small class="starmark">*</small></label>
-       <input type="text" formControlName="description" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.description.errors }" />
-             <div class="invalid-feedback">
+       <input type="text" #focusElem formControlName="description" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.description.errors }" />
+             <!-- <div class="invalid-feedback">
                  <div *ngIf="submitted && f.description.errors">
                      <div *ngIf="f.description.errors.required">Description is required</div>
                  </div>
-             </div>
+             </div> -->
            </div>
            <div class="form-group">
             <label>Code 
               <small class="starmark">*</small></label>
       <input type="text" formControlName="code" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.code.errors }" />
-            <div class="invalid-feedback">
+            <!-- <div class="invalid-feedback">
                 <div *ngIf="submitted && f.code.errors">
                     <div *ngIf="f.code.errors.required">Code is required</div>
                 </div>
-            </div>
+            </div> -->
           </div>
           <div class="form-group">
             <label>Code Type 
               <small class="starmark">*</small></label>
       <input type="text" formControlName="codeType" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.codeType.errors }" />
-            <div class="invalid-feedback">
+            <!-- <div class="invalid-feedback">
                 <div *ngIf="submitted && f.codeType.errors">
                     <div *ngIf="f.codeType.errors.required">Code Type is required</div>
                 </div>
-            </div>
+            </div> -->
           </div>
        <div class="modal-footer-btns">
-         <button type="button" class="btn btn-outline-success" (click)="openCustomModal(false, null)">Cancel</button>
-         <button type="submit" class="btn btn-success">Save</button>
+         <button type="button" class="btn btn-outline-primary" (click)="openCustomModal(false, null)">Cancel</button>
+         <button type="submit" class="btn btn-primary" *ngIf="!isAddMode">Update</button>
+         <button type="submit" class="btn btn-primary" *ngIf="isAddMode">Add</button>
        </div>
        </form>
        </div>  <!-- end of add-Program-area -->

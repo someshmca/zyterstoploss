@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnInit, AfterViewInit, ViewChild  } from '@angular/core';
 import {RulesService} from '../services/rules.service';
-import {IRule, IRuleIDRequest, IRuleAddRequest, IAddRuleSuccess, IUpdateRuleSuccess} from '../models/rules-model';
+import {IRule, IRuleIDRequest, IRuleAddRequest, IAddRuleSuccess, IUpdateRuleSuccess, IRuleUpdateRequest} from '../models/rules-model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
@@ -27,9 +27,10 @@ export class RulesComponent implements OnInit {
   loading = false;
   submitted = false;
   isCustomModalOpen: boolean = false;
- 
+uRuleID: string;
+  @ViewChild("focusElem") focusTag: ElementRef;
 
-  displayedColumns: string[] = ['ruleID','ruleGroup', 'description', 'value', 'updateid'];
+  displayedColumns: string[] = ['ruleID', 'ruleGroup', 'description', 'value', 'updateid'];
   dataSource: any;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -39,24 +40,24 @@ export class RulesComponent implements OnInit {
 
   ngOnInit() {
    this.getAllRules();
-   this.ruleForm = this.fb.group({   
-    ruleID: '',
-    ruleGroup:  ['', Validators.required],
+   this.ruleForm = this.fb.group({ 
     description:  ['', Validators.required],
-    ruleGroupId: 0,
-    value: ['', Validators.required],
-    createdid: "som",
-    createdOn: "2011-10-10",
-    updateid: "ash",
-    lastupdate: "2011-03-10"
+    ruleGroup: ['', Validators.required],
+    value: ['', Validators.required]
    });  
-    
-    this.rulesService.getRuleGroups().subscribe(
-      (data) => {
-        this.ruleGroups = data;
-        console.log("Rule group list "+this.ruleGroups);
-      }
-    )
+    this.ruleGroups = [
+      {id: 1, name: 'Benefit'},
+      {id: 2, name: 'Program'},
+      {id: 3, name: 'Contracts'},
+      {id: 4, name: 'Suppliers'}
+    ];
+    // this.rulesService.getRuleGroups().subscribe(
+    //   (data) => {
+    //     this.ruleGroups = data;
+    //     
+    //     console.log("Rule group list "+this.ruleGroups);
+    //   }
+    // )
   }
   getAllRules(){
     this.rulesService.getAllRules().subscribe(
@@ -98,6 +99,9 @@ export class RulesComponent implements OnInit {
   get f() { return this.ruleForm.controls; }
 
   openCustomModal(open: boolean, id:string) {
+    setTimeout(()=>{
+      this.focusTag.nativeElement.focus()
+    }, 100);
     this.submitted = false;
     this.loading = false;
     if(open && id==null){
@@ -105,6 +109,7 @@ export class RulesComponent implements OnInit {
     }
     this.isCustomModalOpen = open;
     if (!open && id==null) {
+      this.getAllRules();
       this.ruleForm.reset();
       this.isAddMode = false;
     }
@@ -116,19 +121,15 @@ export class RulesComponent implements OnInit {
          .pipe(first())
          .subscribe(x => {
            console.log(x[0].ruleID);
+           this.uRuleID = x[0].ruleID;
            this.ruleForm.patchValue({ 
             ruleID: x[0].ruleID,
+            ruleGroup: this.ruleGroups[x[0].ruleGroupId-1].id,
             description: x[0].description,
-            value: x[0].value,
-            isActive: true,
-            ruleGroup: {
-              ruleGroupId: 0,
-              name: x[0].ruleGroup,
-              tblRules: [
-                null
-              ]
-            }
-           });          
+            value: x[0].value
+           });  
+           console.log(x[0].ruleID);
+                    
          }
       );
     }
@@ -155,13 +156,33 @@ export class RulesComponent implements OnInit {
 }
 
 private addRule() {
-  this.rulesService.addRule(this.ruleForm.value)
+  // this.ruleForm.patchValue({    
+  //   ruleID: '',
+  //   ruleGroupId: Number(this.ruleForm.get('ruleGroup').value),
+  //   createdid: "kshdwra", 
+  //   createdOn: "2021-01-01",
+  //   updateid: "xhwadr",  
+  //   lastupdate: this.datePipe.transform(new Date(Date.now()), 'yyyy-MM-dd')
+  // });
+  
+  let ruleAddRequest:IRuleAddRequest = {
+    ruleID: '',    
+    ruleGroup: this.ruleGroups[this.ruleForm.get('ruleGroup').value].name,
+    ruleGroupId: Number(this.ruleForm.get('ruleGroup').value),
+    description: this.ruleForm.get('description').value,
+    value: this.ruleForm.get('value').value,        
+    createdid: "kshdwra", 
+    createdOn: "2021-01-01",
+    updateid: "xhwadr",  
+    lastupdate: "2021-02-09"
+  }
+  
+  this.rulesService.addRule(ruleAddRequest)
       .pipe(first())
       .subscribe({
           next: () => {
             this.openCustomModal(false, null);
-            this.getAllRules();
-            this.ruleForm.reset();                
+            this.getAllRules();            
               this.alertService.success('New Rule added', { keepAfterRouteChange: true });
               //this.router.navigate(['../'], { relativeTo: this.route });
           },
@@ -169,24 +190,30 @@ private addRule() {
               this.alertService.error(error);
               this.loading = false;
           }
-      });
-      
+      });      
   }
 
   private updateRule() {
-    debugger;
-      this.rulesService.updateRule(this.ruleForm.value)
+    
+      let ruleUpdateRequest:IRuleUpdateRequest = {
+        ruleID: this.uRuleID,
+        description: this.ruleForm.get('description').value,
+        value: this.ruleForm.get('value').value,        
+        createdid: "kshdwra", 
+        createdOn: "2021-01-01",
+        updateid: "xhwadr",  
+        lastupdate: "2021-02-09",
+        ruleGroupId: Number(this.ruleForm.get('ruleGroup').value),
+        isActive: true
+      }
+      this.rulesService.updateRule(ruleUpdateRequest)
           .pipe(first())
           .subscribe({
               next: () => {
-                  this.getAllRules();
-                  debugger;
-                  this.openCustomModal(false,null); 
-                  this.ruleForm.reset();
+                  this.openCustomModal(false,null);                  
                   this.alertService.success('Rule updated', { 
                     keepAfterRouteChange: true });
-                 // this.router.navigate(['../../'], { relativeTo: this.route });
-                  
+                 // this.router.navigate(['../../'], { relativeTo: this.route });                  
               },
               error: error => {
                   this.alertService.error(error);

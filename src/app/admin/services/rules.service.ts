@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import {IRule, IRuleIDRequest, IRuleAddRequest, IAddRuleSuccess, IUpdateRuleSuccess} from '../models/rules-model';
+import {IRule, IRuleIDRequest, IRuleAddRequest, IAddRuleSuccess, IUpdateRuleSuccess, IRuleUpdateRequest} from '../models/rules-model';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
@@ -18,7 +18,6 @@ export class RulesService {
   }
   getRule(ruleID: string): Observable<IRule[]> {
     //const headerOptions = new HttpHeaders({ 'Content-Type': 'application/json' });
-    debugger;
     return this.http.get<IRule[]>(Paths.rule+ruleID).pipe(catchError(this.handleError.bind(this)));
  }
    addRule(formData: IRuleAddRequest): Observable<IAddRuleSuccess>{
@@ -27,7 +26,8 @@ export class RulesService {
      return this.http.post<IRuleAddRequest
      >(Paths.ruleAdd, body,{headers: headerOptions} ).pipe(catchError(this.handleError.bind(this)));
    }
-   updateRule(formData: IRule): Observable<IUpdateRuleSuccess>{
+   updateRule(formData: IRuleUpdateRequest): Observable<IUpdateRuleSuccess>{
+     
     const body = JSON.stringify(formData);
     const headerOptions = new HttpHeaders({ 'Content-Type': 'application/json' });
      return this.http.put<IRule>(Paths.ruleUpdate, body,{headers: headerOptions} ).pipe(catchError(this.handleError.bind(this)));

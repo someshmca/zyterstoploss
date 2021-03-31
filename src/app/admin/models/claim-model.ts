@@ -17,7 +17,9 @@ export interface IClaim{
     claimAmount: number,
     startDate: Date,
     endDate: Date,
-    stopLossAmount: number
+    stopLossAmount: number,
+    memberId: number,
+    isJobBatch: number
 }
 
 

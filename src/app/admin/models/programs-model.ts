@@ -2,7 +2,7 @@ export interface IProgram{
     programId: string;
     description: string;
     createid: string;
-    createdOn: Date;
+    createdOn: string;
     updateid: string;
     lastupdate: Date;
 }
@@ -15,7 +15,7 @@ export interface IProgramAdd{
     programId: string;
     description: string;
     createid: string;
-    createdOn: Date;
+    createdOn: string;
     updateid: string;
     lastupdate: Date;
 }
@@ -29,7 +29,7 @@ export interface IProgramUpdate{
     programId: string;
     description: string;
     createid: string;
-    createdOn: Date;
+    createdOn: string;
     updateid: string;
     lastupdate: Date;
 }

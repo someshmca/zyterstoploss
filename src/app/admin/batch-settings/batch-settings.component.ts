@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ViewChild  } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, ElementRef  } from '@angular/core';
 import { IBatchDetails,IAllBatchIDs,IBatchStatus, IBatchHistoryDetails, IBatchPAdd, IBatchPAddSuccess, IBatchPUpdate, IBatchPUpdateSuccess} from '../models/Batch-Settings.model';
 import {BatchSettingService} from '../services/batch-setting.service';
 import { FormGroup, FormArray, FormBuilder,
@@ -6,7 +6,10 @@ import { FormGroup, FormArray, FormBuilder,
   import {MatPaginator} from '@angular/material/paginator';
   import {MatTableDataSource} from '@angular/material/table';
   import { MatSort } from '@angular/material/sort';
-  import {DatePipe} from '@angular/common'
+  import { first } from 'rxjs/operators';
+  import { formatDate, DatePipe } from '@angular/common';
+  import { AlertService } from '../services/alert.service';
+import { LoginService } from 'src/app/shared/services/login.service';
 @Component({
   selector: 'app-batch-settings',
   templateUrl: './batch-settings.component.html',
@@ -14,7 +17,7 @@ import { FormGroup, FormArray, FormBuilder,
   providers: [DatePipe]
 })
 export class BatchSettingsComponent implements OnInit {
-  allBatchStatus: IBatchStatus[] = [];
+  batchStatusList: IBatchStatus[] = [];
   allBatchIDDetails: IBatchDetails[] = [];
   batchDetails: IBatchDetails;  
   batchHistroyDetails:IBatchHistoryDetails;
@@ -24,26 +27,26 @@ export class BatchSettingsComponent implements OnInit {
   isHistoryPresent: boolean = false;
   isHistoryNotPresent: boolean = false;
 
+  batchProcessForm: FormGroup;
+
   locBatchProcessID: boolean = false;
 
   isStartDemandModalOpen: boolean = false;
-
-  isAddBatchPModalOpen: boolean = false;
-  isNewBatchPAdded: boolean = false;
-  isAddBatchPSubmitted: boolean = false;
-  addBatchPForm: FormGroup;
-  addBatchPRequest: IBatchPAdd ;
-  addBatchPResponse: IBatchPAddSuccess;
-
-  isUpdateBatchPModalOpen: boolean = false;
-  isBatchPUpdated: boolean = false;
-  isUpdateBatchPSubmitted: boolean = false;
-  updateBatchPForm: FormGroup;
-  updateBatchPRequest: IBatchPUpdate ;
-  updateBatchPResponse: IBatchPUpdateSuccess;
+  
+  id: string;
+  isAddMode: boolean;
+  loading = false;
+  submitted = false;
+  isCustomModalOpen: boolean = false;
+  fLastRun: any = '';
+  updateBatchObj: IBatchPUpdate;
   uBatchProcessId: number;
-
-  batchProcessColumns: string[] = ['batchProcess', 'description', 'status', 'lastRun','lastRunStatus','nextScheduleRun','frequency','batchProcessId','updateId'];
+  ulastRun: string;  
+  uCreatedOn: any;
+  @ViewChild("focusElem") focusTag: ElementRef;
+  
+  batchProcessColumns: string[] = ['batchProcess', 'description', 'status', 'lastRun','lastRunStatus','nextScheduleRun','frequency', 'createId','batchProcessId'];
+  //batchProcessColumns: string[] = ['batchProcess', 'description', 'status', 'lastRun','lastRunStatus','nextScheduleRun','frequency','batchProcessId', 'batchStatusId','createId','createDate', 'updateId','lastUpdateDate'];
   batchProcessGridSource: any;
   @ViewChild(MatPaginator) paginator1: MatPaginator;
   @ViewChild(MatSort) sort1: MatSort;
@@ -60,21 +63,23 @@ export class BatchSettingsComponent implements OnInit {
 
   selectedRow : Number;
   //setClickedRow : Function;
-  constructor(private batchSettingService: BatchSettingService,private fb: FormBuilder, public datePipe: DatePipe) { 
+  constructor(private batchSettingService: BatchSettingService,private fb: FormBuilder, private alertService: AlertService, private datePipe: DatePipe, private loginService: LoginService) { 
     
     
   }
   ngOnInit(): void {    
-    this.getBatchSelectDropdown();
+    this.getBatchStatusList();
     this.listBatchProcessGrid();
-    this.initAddBatchProcess();
-    this.initUpdateBatchProcess();
+    this.initBatchProcessForm();
     
   }
-  getBatchSelectDropdown(){
+  getBatchStatusList(){
+    
     this.batchSettingService.getBatchStatusList().subscribe(
       (data: IBatchStatus[]) => {          
-         this.allBatchStatus = data;      
+         this.batchStatusList = data;  
+         console.log(this.batchStatusList[1].batchStatus)
+             
       }
     );
   }
@@ -115,7 +120,7 @@ export class BatchSettingsComponent implements OnInit {
     ); 
   }
   refreshBatchProcess(){
-    this.getBatchSelectDropdown();
+    this.getBatchStatusList();
     this.listBatchProcessGrid();
     this.isHistoryPresent = false;
     this.isHistoryNotPresent = false;
@@ -127,47 +132,36 @@ export class BatchSettingsComponent implements OnInit {
     let lastRunTime = this.datePipe.transform(elem.lastRun, 'yyyy-MM-dd, h:mm:ss');
     let frequency = elem.frequency;
     let nextScheduleRun =this.datePipe.transform(elem.nextScheduleRun, 'yyyy-MM-dd, h:mm:ss');
-    //debugger;
     this.isStartDemandModalOpen = true;
     this.batchSettingService.calculateOnStart(batchid,userid,startDate,lastRunTime,frequency,nextScheduleRun).subscribe(
-      (data)=>{
-        
+      (data)=>{        
         console.log(data);
-      // debugger;
       }, (error) => {
         console.log("Start Demand Error : "+error.message);
-       //debugger;
       }
     )
   }
   openStartDemandModal(open: boolean) {
     this.isStartDemandModalOpen = open;
   }
-  initAddBatchProcess() {
-    this.addBatchPForm = this.fb.group({
-      batchProcess: "",
-      description: "",
-      status: "",
+  initBatchProcessForm() {
+    this.batchProcessForm = this.fb.group({
+      batchProcessId: '',
+      batchProcess: ['', Validators.required],
+      description: ['', Validators.required],
+      status: '',
       lastRunStatus: "Active",
-      lastRun: new Date("2020-12-11"),
-      nextScheduleRun: new Date("2020-12-11"),
-      frequency: ""
+      lastRun: '',
+      nextScheduleRun: '',
+      frequency: '',
+      createId: '',
+      createDate: '',
+      updateId: '',
+      lastUpdateDate: ''
     });
-    
-    // let dp = new DatePipe(navigator.language);
-    // let p = 'y-MM-dd';
-    // let dtr = dp.transform(new Date(), p );
-    // this.addBatchPForm.setValue({lastRun: dtr});
   }
-  openAddBatchPModal(open: boolean) {
-    this.isAddBatchPModalOpen = open;
-    this.isNewBatchPAdded = false;
-    if (!open) {
-      this.isNewBatchPAdded = false;
-      this.addBatchPForm.reset();
-    }
-  }
-  getBatchDetails(status: string){      
+  getBatchDetails(statusVal){   
+    let status: string = this.batchStatusList[statusVal].batchStatus;   
     this.batchSettingService.getBatchProcessDetails(status).subscribe(
       (data: IBatchDetails[]) => {       
          this.allBatchIDDetails = data;    
@@ -177,90 +171,162 @@ export class BatchSettingsComponent implements OnInit {
       }
     ); 
   }
-
-  addBatchProcess(form: FormGroup){
-    this.addBatchPRequest = {
-      batchProcess: this.addBatchPForm.get("batchProcess").value,
-      description: this.addBatchPForm.get("description").value,
-      status: this.addBatchPForm.get("status").value,
-      nextScheduleRun: this.addBatchPForm.get("nextScheduleRun").value,
-      frequency: this.addBatchPForm.get("frequency").value,
-      createId: "",
-      createDate: new Date("2020-12-11")
-    };
-    this.batchSettingService.addBatchProcess(this.addBatchPRequest).subscribe(
-      (data: IBatchPAddSuccess) => {
-        
-        console.log("Add Batch Process data : " + data);        
-        console.log("Add Batch Process Response : " + data.message);
-        
-        this.listBatchProcessGrid();
-         this.openAddBatchPModal(false);
-         this.isNewBatchPAdded = true;
-      }
-    )
-  }
-  initUpdateBatchProcess() {
-    this.updateBatchPForm = this.fb.group({
-      batchProcess: "",
-      description: "",
-      status: "",
-      lastRunStatus: "Active",
-      lastRun: new Date("2020-12-11"),
-      nextScheduleRun: new Date("2020-12-11"),
-      frequency: ""
-    });
-  }
-  openUpdateBatchPModal(elem, open: boolean) {
-    this.isUpdateBatchPModalOpen = open;    
-    this.isBatchPUpdated = false;
-    if(open){
+  
+  get f() { return this.batchProcessForm.controls; }
+   
+  openCustomModal(open: boolean, id:string) {
+   setTimeout(()=>{
+     this.focusTag.nativeElement.focus()
+   }, 100);
+    this.submitted = false;
+    this.loading = false;
+    if(open && id==null){
+      this.isAddMode = true;
+     // this.fLastRun= this.datePipe.transform(new Date('02/25/2021'), 'yyyy-MM-dd');
+      this.batchProcessForm.patchValue({
+        lastRun: this.fLastRun
+      })
+    }
+    this.isCustomModalOpen = open;
+    if (!open && id==null) {
+     this.listBatchProcessGrid();
+      this.batchProcessForm.reset();
+      this.isAddMode = false;
+    }
+    console.log("id inside modal: "+id);
+    
+    if(id!=null && open){
+      this.isAddMode = false;
+      //    this.batchSettingService.getBatchProcessDetails(elem)
+      //    .pipe(first()) 
+      //    .subscribe(elem => {
+      //      console.log(elem);
+           
+      //    }
+      // );
+      let elem:any = id;
+      console.log(id);
+     // this.fLastRun= this.datePipe.transform(new Date('02/25/2021'), 'yyyy-MM-dd');
       this.uBatchProcessId = elem.batchProcessId;
-      //capture the current row value on form using ben object
-      if (elem != null) {
-        this.updateBatchPForm = this.fb.group({
-          batchProcess: [elem.batchProcess],
-          description: [elem.description, Validators.required],
-          status: elem.status,
-          lastRunStatus: elem.lastRunStatus,
-          lastRun: elem.lastRun,
-          nextScheduleRun: elem.nextScheduleRun,
-          frequency: elem.frequency,
-          createid: [elem.createid],
-          createdby: [elem.createdby],
-          updateid: [elem.updateid],
-          lastupdate: [elem.lastupdate]
-        });
-      }      
-    }
-    else{
-      this.isBatchPUpdated = false;
-      this.isUpdateBatchPModalOpen = false;
-      this.updateBatchPForm.reset();
+      this.ulastRun = this.datePipe.transform(elem.lastRun, 'yyyy-MM-dd');
+      this.uCreatedOn = this.datePipe.transform(new Date('02/25/2021'), 'yyyy-MM-dd');
+      
+      this.batchProcessForm.patchValue({
+        batchProcess: elem.batchProcess,
+        description: elem.description,
+        status: elem.batchStatusId,
+        lastRun: this.ulastRun,
+        lastRunStatus: elem.batchStatusId,
+        nextScheduleRun: this.datePipe.transform(elem.nextScheduleRun, 'yyyy-MM-dd'),
+        frequency: elem.frequency
+      })      
+      
+      
     }
   }
-  updateBatchProcess(form: FormGroup){
-    this.updateBatchPRequest = {
-      batchProcessId: this.uBatchProcessId, 
-      batchProcess: this.updateBatchPForm.get("batchProcess").value,
-      description: this.updateBatchPForm.get("description").value,
-      status: this.updateBatchPForm.get("status").value,
-      nextScheduleRun: this.updateBatchPForm.get("nextScheduleRun").value,
-      frequency: this.updateBatchPForm.get("frequency").value,
-      createId: "",
-      createDate: new Date("2020-12-11"),
-      updateId: "",
-      lastUpdateDate: new Date("2020-12-11")
-    };
-    this.batchSettingService.updateBatchProcess(this.updateBatchPRequest).subscribe(
-      (data: IBatchPUpdateSuccess) => {
+  
+  onSubmit() {
+    this.submitted = true;
+
+    // reset alerts on submit
+    this.alertService.clear();
+
+    // stop here if form is invalid
+    if (this.batchProcessForm.invalid) {
+        return;
+    }
+
+    this.loading = true;
+    if (this.isAddMode) {
+      
+        this.addBatchProcess();
+    } else {
+        this.updateBatchProcess();
         
-        console.log("Update Batch Process Response  " + data);        
-        
-        this.listBatchProcessGrid();
-         this.openUpdateBatchPModal(null, false);
-        this.isBatchPUpdated = true;
-      }
-    )
+    }
+}
+
+private addBatchProcess() {
+  console.log(this.batchStatusList.length);
+  console.log(this.batchStatusList[2].batchStatus);
+  console.log(this.f.status.value);
+  console.log(this.f.status);
+  
+  let addBatchObj:IBatchPAdd = {
+    batchProcessId: 0,
+    batchProcess: this.f.batchProcess.value,
+    description: this.f.description.value,
+    status: '',
+    batchStatusId: Number(this.f.status.value),
+    lastRun: this.fLastRun,
+    lastRunStatus: '',
+    nextScheduleRun: this.datePipe.transform(this.f.nextScheduleRun.value, 'yyyy-MM-dd'),
+    frequency: this.f.frequency.value,
+    createId: this.loginService.currentUserValue.name,
+    createDate: this.datePipe.transform(new Date(Date.now()), 'yyyy-MM-dd'),
+    updateId: this.loginService.currentUserValue.name,  
+    lastUpdateDate: this.datePipe.transform(new Date(Date.now()), 'yyyy-MM-dd')
   }
+  // this.batchProcessForm.patchValue({
+  //  createId: this.loginService.currentUserValue.name,
+  //  createDate: this.datePipe.transform(new Date(Date.now()), 'yyyy-MM-dd'),
+  //  updateId: this.loginService.currentUserValue.name,  
+  //  lastUpdateDate: this.datePipe.transform(new Date(Date.now()), 'yyyy-MM-dd')
+  // });
+  
+  this.batchSettingService.addBatchProcess(addBatchObj)
+      .pipe(first())
+      .subscribe({
+          next: () => {
+            this.listBatchProcessGrid();
+            this.openCustomModal(false, null);
+            this.batchProcessForm.reset();                
+             this.alertService.success('New Batch Process added', { keepAfterRouteChange: true });
+             //this.router.navigate(['../'], { relativeTo: this.route });
+          },
+          error: error => {
+              this.alertService.error(error);
+              this.loading = false;
+          }
+      });
+      
+  }
+
+  private updateBatchProcess() {
+    
+    this.updateBatchObj = {
+      batchProcessId: this.uBatchProcessId,
+      batchProcess: this.f.batchProcess.value,
+      description: this.f.description.value,
+      batchStatusId: Number(this.f.status.value),
+      lastRun: this.f.lastRun.value,
+      lastRunStatus: this.batchStatusList[this.f.lastRunStatus.value].batchStatus,
+      nextScheduleRun: this.datePipe.transform(this.f.nextScheduleRun.value, 'yyyy-MM-dd'),
+      frequency: this.f.frequency.value,
+      createId: this.loginService.currentUserValue.name,
+      createdOn: this.uCreatedOn,
+      updateId: this.loginService.currentUserValue.name,  
+      lastUpdateDate: this.datePipe.transform(new Date(Date.now()), 'yyyy-MM-dd')
+    }
+    console.log(this.updateBatchObj);
+    
+      this.batchSettingService.updateBatchProcess(this.updateBatchObj)
+          .pipe(first())
+          .subscribe({
+              next: () => {                
+                  this.openCustomModal(false,null); 
+                  this.batchProcessForm.reset();
+                  this.listBatchProcessGrid();
+                  this.alertService.success('Batch Process updated', { 
+                    keepAfterRouteChange: true });
+                 // this.router.navigate(['../../'], { relativeTo: this.route });
+                  
+              },
+              error: error => {
+                  this.alertService.error(error);
+                  this.loading = false;
+              }
+          });
+  }
+ 
 }

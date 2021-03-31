@@ -62,7 +62,7 @@
                         <th mat-header-cell *matHeaderCellDef> Action </th>
                         <td mat-cell *matCellDef="let element" class="action-link"> 
                           <span class="fa fa-edit" 
-                          (click)="openCustomModal(true, element.roleId)"></span>
+                          (click)="openCustomModal(true, element)"></span>
                         </td>
                       </ng-container>
                       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -93,36 +93,43 @@
       <!-- Modal body -->
       <div class="modal-body">
         <form [formGroup]="roleForm" (ngSubmit)="onSubmit()">
+          <div class="mandate-fields">
+            <span *ngIf="submitted && !roleForm.valid">Fields marked with * are mandatory</span>
+          </div>  
            <div class="row"> 
               <div class="col-md-12">  
                 <div class="form-group">
                     <label>Role Name<small class="starmark">*</small></label>                   
-                    <input type="text" formControlName="roleName" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.roleName.errors }" />
-                    <div class="invalid-feedback">
+                    <input type="text" formControlName="roleName" #focusElem class="form-control" [ngClass]="{ 'is-invalid': submitted && f.roleName.errors }" />
+                    <!-- <div class="invalid-feedback">
                         <div *ngIf="submitted && f.roleName.errors">
                             <div *ngIf="f.roleName.errors.required">
                               Role Name is required</div>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
                 <div class="form-group">
                     <label>Description<small class="starmark">*</small></label>                   
                     <input type="text" formControlName="description" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.description.errors }" />
-                    <div class="invalid-feedback">
+                    <!-- <div class="invalid-feedback">
                         <div *ngIf="submitted && f.description.errors">
                             <div *ngIf="f.description.errors.required">
                               Description is required</div>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
               </div>
            </div>
            <div class="row form-btns-area">
-               <button [disabled]="loading" class="btn btn-primary">
+            <button class="btn btn-outline-primary" (click)="openCustomModal(false, null)">Cancel</button>
+               <button [disabled]="loading" class="btn btn-primary" *ngIf="!isAddMode">
                    <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
-                   Save
+                   Update
                </button>
-               <a class="btn btn-link" (click)="openCustomModal(false, null)">Cancel</a>
+               <button [disabled]="loading" class="btn btn-primary" *ngIf="isAddMode">
+                   <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+                   Add
+               </button>
            </div>
        </form>  
       </div>          

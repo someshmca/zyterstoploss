@@ -1,44 +1,45 @@
 
 export interface IAttribute{
-    attributeId: string;
+    attributeID: string;
+    attributeGroupID: number;
     description: string;
     value: string;
     createdid: string;
-    createdBy: string;
+    createdOn: string;
     updateid: string;
-    lastupdate: Date;
-    isActive: boolean;
-    attributeGroup: string;
+    lastupdate: string;
 }
 
 export interface IAttributeIDRequest{
     attributeId: string;
 }
-
+export interface IAttributeGroup{
+    attributeGroupID: number;
+    name: string;
+}
 export interface IAttributeAdd{ 
     attributeID: string;
-    attributeGroup: string;
+    attributeGroupID: number;
     description: string;
     value: string;
     createdid: string;
-    createdby: string;
+    createdOn: string;
     updateid: string;
-    lastupdate: Date;
+    lastupdate: string;
 }
 export interface IAddAttributeSuccess{
     id: string;
     message: string;
 }
 export interface IAttributeUpdate{    
-  attributeId: string;
-  description: string;
-  value: string;
-  createdid: string;
-  createdBy: string;
-  updateid: string;
-  lastupdate: Date;
-  isActive: boolean;
-  attributeGroup: string;
+    attributeId: string;
+    attributeGroupID: number;
+    description: string;
+    value: string;
+    createdid: string;
+    createdOn: string;
+    updateid: string;
+    lastupdate: string;
 }
 export interface IUpdateAttributeSuccess{
     id: string;

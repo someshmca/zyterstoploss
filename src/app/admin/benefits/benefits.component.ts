@@ -13,6 +13,7 @@ import { first } from 'rxjs/operators';
 
 import { AlertService } from '../services/alert.service';
 import { DatePipe } from '@angular/common';
+import { LoginService } from 'src/app/shared/services/login.service';
 
 
 @Component({
@@ -33,6 +34,13 @@ export class BenefitsComponent implements OnInit{
   isAddMode: boolean;
   loading = false;
   submitted = false;
+  
+  createid: '';
+  createdOn: '';
+  updateid: ''; 
+  lastupdate: '';
+
+  @ViewChild("focusElem") focusTag: ElementRef;
 
   displayedColumns: string[] = ['benefitId', 'description', 'code', 'codeType', 'updateid'];
   dataSource: any;
@@ -41,21 +49,24 @@ export class BenefitsComponent implements OnInit{
   constructor(
     private formBuilder: FormBuilder,
     private benefitService: BenefitService,
+    private loginService: LoginService,
     private alertService: AlertService,
     private datePipe: DatePipe
   ) { }
 
   ngOnInit() {
+    console.log(this.loginService.currentUserValue.name);
+    
     this.getAllBenefits();
     this.benefitForm = this.formBuilder.group({
       benefitId: "",
       description: ['', Validators.required],
       code: ['', Validators.required],
       codeType: ['', Validators.required],
-      createid: "ash",
-      createdOn: ["2021-01-01"],
-      updateid: "som",
-      lastupdate: new Date("2020-12-11")
+      createid: '',
+      createdOn: '',
+      updateid: '',
+      lastupdate: ''    
     });
   }
   
@@ -67,8 +78,7 @@ export class BenefitsComponent implements OnInit{
         //this.rowData = this.benefits;
         this.dataSource = new MatTableDataSource(this.benefits);
         this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
-        
+        this.dataSource.sort = this.sort;        
       }
     )
   }
@@ -78,6 +88,9 @@ export class BenefitsComponent implements OnInit{
   }
 
   openCustomModal(open: boolean, id:string) {
+    setTimeout(()=>{
+      this.focusTag.nativeElement.focus()
+    }, 100)
     this.submitted = false;
     if(open && id==null){
       this.isAddMode = true;
@@ -85,6 +98,7 @@ export class BenefitsComponent implements OnInit{
     this.isCustomModalOpen = open;
     if (!open) {
       this.benefitForm.reset();
+      this.getAllBenefits();
       this.isAddMode = false;
     }
     console.log("id inside modal: "+id);
@@ -97,7 +111,11 @@ export class BenefitsComponent implements OnInit{
               benefitId: x[0].benefitId,
               description: x[0].description,
               code: x[0].code,
-              codeType: x[0].codeType  
+              codeType: x[0].codeType,
+              createid: this.loginService.currentUserValue.name,
+              createdOn: this.datePipe.transform(new Date(Date.now()), 'yyyy-MM-dd'),
+              updateid: this.loginService.currentUserValue.name,
+              lastupdate: this.datePipe.transform(new Date(Date.now()), 'yyyy-MM-dd') 
             });
           }
         );
@@ -109,7 +127,8 @@ export class BenefitsComponent implements OnInit{
 
   onSubmit() {
       this.submitted = true;
-
+      console.log("isAddMode : "+this.isAddMode);
+      console.log("submitted "+this.submitted);
       // reset alerts on submit
       this.alertService.clear();
 
@@ -119,7 +138,6 @@ export class BenefitsComponent implements OnInit{
       }
 
       this.loading = true;
-      ;
       if (this.isAddMode) {
           this.addBenefit();
       } else {
@@ -128,6 +146,14 @@ export class BenefitsComponent implements OnInit{
   }
 
   private addBenefit() {
+    
+    this.benefitForm.patchValue({
+      createid: this.loginService.currentUserValue.name,
+      createdOn: this.datePipe.transform(new Date(Date.now()), 'yyyy-MM-dd'),
+      updateid: this.loginService.currentUserValue.name,
+      lastupdate: this.datePipe.transform(new Date(Date.now()), 'yyyy-MM-dd') 
+    });
+    
       this.benefitService.addBenefit(this.benefitForm.value)
           .pipe(first())
           .subscribe({
@@ -145,13 +171,13 @@ export class BenefitsComponent implements OnInit{
   }
 
   private updateBenefit() {
+    
       this.benefitService.updateBenefit(this.benefitForm.value)
           .pipe(first())
           .subscribe({
               next: () => {
                   this.alertService.success('Benefit updated', { 
                     keepAfterRouteChange: true });
-                    this.getAllBenefits();
                     this.openCustomModal(false,null); 
                     this.benefitForm.reset();
               },

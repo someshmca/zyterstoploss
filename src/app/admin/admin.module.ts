@@ -16,6 +16,7 @@ import { BenefitsComponent } from './benefits/benefits.component';
 import { ProgramsComponent } from './programs/programs.component';
 import { ContractsComponent } from './contracts/contracts.component';
 import { RoleComponent } from './role/role.component';
+import { FormsModule } from '@angular/forms'; 
 import { ReactiveFormsModule } from '@angular/forms';
 import { ClaimReportService } from './services/claim-report.service';
 import { BenefitService} from './services/benefit.service';
@@ -25,25 +26,38 @@ import { AttributesComponent } from './attributes/attributes.component';
 import {  UsersSecurityComponent} from './users-security/users-security.component';
 import { BatchSettingsComponent } from './batch-settings/batch-settings.component';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatFormFieldControl, MatFormFieldModule } from '@angular/material/form-field';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import {MatStepperModule} from '@angular/material/stepper';
+import { MatNativeDateModule } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import {MatIconModule} from '@angular/material/icon';
 import { MemberComponent } from './member/member.component';
 import { AlertComponent } from './alert/alert.component';
+import { HealthPlanComponent } from './health-plan/health-plan.component';
+import { ProductComponent } from './product/product.component';
+import { MatSelectModule } from '@angular/material/select';
 @NgModule({
-  declarations: [BatchSettingsComponent, ClaimSearchComponent, ClaimResultComponent, ClaimComponent, BenefitsComponent, ProgramsComponent, ContractsComponent, RoleComponent, RulesComponent, ClientComponent, AttributesComponent, UsersSecurityComponent, MemberComponent, AlertComponent],
+  declarations: [BatchSettingsComponent, ClaimSearchComponent, ClaimResultComponent, ClaimComponent, BenefitsComponent, ProgramsComponent, ContractsComponent, RoleComponent, RulesComponent, ClientComponent, AttributesComponent, UsersSecurityComponent, MemberComponent, AlertComponent, HealthPlanComponent, ProductComponent],
   imports: [
     CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
     MatTableModule,
     MatSortModule,
     MatFormFieldModule,
     MatInputModule,
+    MatSelectModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
     MatPaginatorModule,
     MatDialogModule,
     MatButtonModule,
     MatTooltipModule,
-    AdminRoutingModule,
-    ReactiveFormsModule
+    MatStepperModule,
+    MatIconModule,
+    AdminRoutingModule
   ],
   providers: [
     ClaimReportService,

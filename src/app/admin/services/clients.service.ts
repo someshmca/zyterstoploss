@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import {IClient, IClientIDRequest, IClientAdd, IClientAddSuccess, IClientUpdate, IClientUpdateSuccess} from '../models/clients-model';
+import {IClient, IClientIDRequest, IClientAdd, IClientAddSuccess, IClientUpdate,IParentClient, IClientUpdateSuccess, IActiveClient} from '../models/clients-model';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import {Paths} from '../admin-paths';
@@ -14,24 +14,32 @@ export class ClientsService {
     return this.http.get<IClient[]>(Paths.clients
       ).pipe(catchError(this.handleError.bind(this)));
   }
-  getClient(val: IClientIDRequest): Observable<IClient[]> {
+  getClient(val: string): Observable<IClient[]> {
+    debugger;
     return this.http.get<IClient[]>(Paths.client+val).pipe(catchError(this.handleError.bind(this)));
  }
 
+ getActiveClients(){
+  return this.http.get<IActiveClient[]>(Paths.activeClients);
+}
+
+getParentClient(){
+  return this.http.get<IParentClient[]>(Paths.parentClient);
+}
  addClient(formData: IClientAdd) {
+  
   const body = JSON.stringify(formData);
   const headerOptions = new HttpHeaders({ 'Content-Type': 'application/json' });
-  //debugger;
+  //
    return this.http.post(Paths.clientAdd, body,{headers: headerOptions} ).pipe(catchError(this.handleError.bind(this)));
  }
 
  
  updateClient(formData: IClientUpdate) {
-   debugger;
   const body = JSON.stringify(formData);
   const headerOptions = new HttpHeaders({ 'Content-Type': 'application/json' });
-   return this.http.put<IClientUpdate>(Paths.clientUpdate, body,{headers: headerOptions} ).pipe(catchError(this.handleError.bind(this)));
-  debugger;
+  return this.http.put<IClientUpdate>(Paths.clientUpdate, body,{headers: headerOptions} ).pipe(catchError(this.handleError.bind(this)));
+  
   }
 
   handleError(errorResponse: HttpErrorResponse) {

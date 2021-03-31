@@ -14,10 +14,20 @@
     display: inline-block;
     width: 20px;
 }
+.modal-content .fa.fa-times-circle{
+    color: #ffffff;
+}
 .modal-content a:hover{
     border: none;
     outline: none;
     text-decoration: none;
+}
+.modal-header{
+    background: #002C77;
+}
+.modal-title, .modal-title span{
+    color: #ffffff;
+    font-size: 1.2rem;
 }
 .modal-footer-btns{
     text-align: right;
@@ -63,3 +73,37 @@
     }
 }
 
+@media (min-width: 576px){ 
+    .contract-modal .modal-dialog{
+        max-width: 700px;
+    }
+}
+.cdk-overlay-container, .cdk-overlay-pane {
+    z-index: 99999 !important;
+}
+.mat-step-header .mat-step-icon-selected div span, 
+.mat-step-header span,
+.mat-step-icon .mat-icon{
+    color: #ffffff;
+}
+.form-group>label{
+    height: 20px;
+}
+.btn.btn-primary span{
+    color: #ffffff !important;
+}
+
+.chkbox-inline{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+.chkbox-inline label{
+    margin-bottom: 0;
+}
+.chkbox-inline input[type='checkbox']{
+    margin-left: 10px;
+}
+.mat-select{
+    border: 1px solid #a0a0a0;
+}

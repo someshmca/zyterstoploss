@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import {IContract, IContractIDRequest, IContractAdd, IAddContractSuccess, IContractUpdate, IUpdateContractSuccess} from '../models/contracts-model';
+import {IContract, IContractIDRequest, IContractsByClient, IContractAdd, IAddContractSuccess, IContractUpdate, IUpdateContractSuccess, IActiveClient} from '../models/contracts-model';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import {Paths} from '../admin-paths';
@@ -12,14 +12,22 @@ export class ContractService {
 
   constructor(private http: HttpClient) { }
  
+  getAllClients(){
+    return this.http.get<IActiveClient[]>(Paths.activeClients
+      ).pipe(catchError(this.handleError.bind(this)));
+  }
   getAllContracts(){
-    return this.http.get<IContract[]>(Paths.contracts
+    return this.http.get<IContract[]>(Paths.contractAll
       ).pipe(catchError(this.handleError.bind(this)));
   }
   getContract(val): Observable<IContract[]> {
     return this.http.get<IContract[]>(Paths.contract+val).pipe(catchError(this.handleError.bind(this)));
  }
+ getContractsByClientID(clientId){
+   return this.http.get<IContractsByClient[]>(Paths.contractsByClientPath+clientId);
+ }
  addContract(formData:IContractAdd ): Observable<IAddContractSuccess>{
+   
   const body = JSON.stringify(formData);
   const headerOptions = new HttpHeaders({ 'Content-Type': 'application/json' });
    return this.http.post<IContractAdd

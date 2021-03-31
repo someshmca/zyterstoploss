@@ -10,27 +10,37 @@
                 <div class="form-row">
                 <div class="form-field">
                     <div class="form-field-label">
-                        <label>Claim ID                             
-                            <small class="starmark">*</small>
-                        </label>
+                        <label>Claim ID </label>
                     </div>
                     <div class="form-field-input">
-                        <input type="text" class="form-control field-input-text" formControlName="ClaimId" [ngClass]="{ 'is-invalid': submitted && f.ClaimId.errors }" />
-                        <div class="invalid-feedback">
+                        <input type="text" #focusElem class="form-control field-input-text" formControlName="ClaimId" />
+                        <!-- <div class="invalid-feedback">
                             <div *ngIf="submitted && f.ClaimId.errors">
-                                <div *ngIf="f.ClaimId.errors.required">Description is required</div>
+                                <div *ngIf="f.ClaimId.errors.required">Claim ID is required</div>
                             </div>
-                            <div *ngIf="submitted && noRecordFound && !f.ClaimId.errors">
-                                No Record Found
-                            </div>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
                 <div class="form-field">
                     <label class="form-field-label">
                         Member ID</label>
                     <div class="form-field-input">
-                        <input type="text" class="form-control field-input-text" formControlName="MemberId"/>
+                        <input type="text" class="form-control field-input-text" formControlName="memberId"/>
+                    </div>
+                </div>
+                <div class="form-field">
+                    <label class="form-field-label">Member Birth Date</label>
+                    <div class="form-field-input">
+                        <input type="date" class="form-control field-input-text" formControlName="DateOfBirth" [max]="maxDate"/>
+                        <!-- <mat-form-field class="form-control field-input-text">
+                            <input matInput [matDatepicker]="picker" formControlName="DateOfBirth" [max]="maxDate">
+                            <mat-datepicker-toggle matSuffix [for]="picker">
+                                <mat-icon matDatepickerToggleIcon>
+                                    <span class="fa fa-calendar"></span>
+                                </mat-icon>
+                            </mat-datepicker-toggle>
+                            <mat-datepicker #picker ></mat-datepicker>
+                          </mat-form-field> -->
                     </div>
                 </div>
                 <div class="form-field">
@@ -43,12 +53,6 @@
                     <label class="form-field-label">Member Last Name</label>
                     <div class="form-field-input">
                         <input type="text" class="form-control field-input-text" formControlName="Lname"/>
-                    </div>
-                </div>
-                <div class="form-field">
-                    <label class="form-field-label">Member Birth Date</label>
-                    <div class="form-field-input">
-                        <input type="date" class="form-control field-input-text" formControlName="DateOfBirth"/>
                     </div>
                 </div>
             </div>
@@ -86,13 +90,13 @@
                         <div class="form-field">
                             <label class="form-field-label">From</label>
                             <div class="form-field-input">
-                                <input type="date" class="form-control field-input-text" formControlName="ServiceDateFrom"/>
+                                <input type="date" class="form-control field-input-text" [max]="maxDate" formControlName="ServiceDateFrom"/>
                             </div>
                         </div>
                         <div class="form-field">
                             <label class="form-field-label">To</label>
                             <div class="form-field-input">
-                                <input type="date" class="form-control field-input-text" formControlName="ServiceDateTo"/>
+                                <input type="date" class="form-control field-input-text" [max]="maxDate" formControlName="ServiceDateTo"/>
                             </div>
                         </div>  
                 </div>
@@ -128,8 +132,8 @@
         </div>
 
             <div class="claim-search-btns-area">
-                <button class="btn btn-primary">Search</button>      
-                <button class="btn btn-outline-primary" type="reset">Reset</button>            
+                <button class="btn btn-outline-primary" type="reset">Reset</button>
+                <button class="btn btn-primary">Search</button>                  
             </div>
         </form>
  </div>

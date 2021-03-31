@@ -1,15 +1,10 @@
 export interface IContract{
-    contractsId: string;
-    contractEffectiveDate: Date;
-    contractEndDate: Date;
-    contractStatus: string;
-    contractType: string;
-    description: string;
-    maxAllowedPeriod: number;
-    createid: string;
-    createdOn: Date;
-    updateid: string;
-    lastupdate: Date;
+    clientId:string;
+    contractId: number;
+    effectiveDate: Date;
+    endDate: Date;
+    clientName:string;
+   userId:string;
 }
 
 export interface IContractIDRequest{
@@ -17,19 +12,37 @@ export interface IContractIDRequest{
 }
 
 
+export interface IContractsByClient{
+    contractId: number;
+    clientId: string;
+    effectiveDate: string;
+    endDate: string;
+    claimsAdministrator: string;
+    pharmacyClaimsAdministrator: string;
+    runInStartDate: string;
+    runInEndDate: string;
+    runOutStartDate: string;
+    runOutEndDate: string;
+    terminationDate: string;
+    status: number;
+    userId: string;
+    clientName: string;
+}
 
 export interface IContractAdd{
-    contractsId: string;
-    contractEffectiveDate: Date;
-    contractEndDate: Date;
-    contractStatus: string;
-    contractType: string;
-    description: string;
-    maxAllowedPeriod: number;
-    createid: string;
-    createdOn: Date;
-    updateid: string;
-    lastupdate: Date;
+    contractId: number;
+    clientId:string;
+    effectiveDate: Date;
+    endDate: Date;
+    claimsAdministrator: string;
+    pharmacyClaimsAdministrator: string;
+    runInStartDate: Date;
+    runInEndDate: Date;
+    runOutStartDate: Date;
+    runOutEndDate: Date;
+    terminationDate: Date;
+    status: number;
+    userId:string;
 }
 
 export interface IAddContractSuccess{
@@ -38,18 +51,24 @@ export interface IAddContractSuccess{
 }
 
 export interface IContractUpdate{
-    contractsId: string;
-    contractEffectiveDate: Date;
-    contractEndDate: Date;
-    contractStatus: string;
-    contractType: string;
-    description: string;
-    maxAllowedPeriod: number;
-    createid: string;
-    createdOn: Date;
-    updateid: string;
-    lastupdate: Date;
+    contractId: number;
+    clientId:string;
+    effectiveDate: Date;
+    endDate: Date;
+    claimsAdministrator: string;
+    pharmacyClaimsAdministrator: string;
+    runInStartDate: Date;
+    runInEndDate: Date;
+    runOutStartDate: Date;
+    runOutEndDate: Date;
+    terminationDate: Date;
+    status: number;
+    userId:string;
 }
+export interface IActiveClient{
+    clientId: string;
+    clientName: string;
+  }
 
 export interface IUpdateContractSuccess{
     id: string;
