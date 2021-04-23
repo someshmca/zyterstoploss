@@ -118,3 +118,6 @@
     font-size: 1.4rem;
     text-align: center;
 }
+#startDemandModal .modal-content .fa.fa-times-circle{
+    color: #2d2727;
+}

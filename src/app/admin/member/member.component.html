@@ -4,31 +4,27 @@
     <form [formGroup]="memberSearchForm" (ngSubmit)="searchMember(memberSearchForm)">
         <div class="card custom-card">
             <div class="card-header">
-                Member Details
+                Member Search
             </div>
             <div class="card-body">
+              <div class="mandate-fields">
+                <span *ngIf="memSearchSubmitted && !memberSearchForm.valid">Please enter atleast one field</span>
+                <span *ngIf="memSearchError">Please enter atleast one field</span>
+              </div>  
                 <div class="form-row">
                 <div class="form-field">
                     <div class="form-field-label">
-                        <label>Member ID                             
-                            <small class="starmark">*</small>
-                        </label>
+                        <label>Member ID</label>
                     </div>
                     <div class="form-field-input">
-                        <input type="text" class="form-control field-input-text" #focusElem formControlName="MemberId"/>                        
+                        <input #focusMemSearch type="text" class="form-control field-input-text" formControlName="MemberId"/>                        
                     </div>
                 </div>
                 <div class="form-field">
                     <label class="form-field-label">
-                        Subscription ID</label>
+                        Subscriber ID</label>
                     <div class="form-field-input">
-                        <input type="text" class="form-control field-input-text" formControlName="subscriptionID"/>
-                    </div>
-                </div>
-                <div class="form-field">
-                    <label class="form-field-label">Member Start Date</label>
-                    <div class="form-field-input">
-                        <input type="date" value="MM/DD/YYYY" class="form-control field-input-text" formControlName="memberStartDate"/>
+                        <input type="text" class="form-control field-input-text" formControlName="SubscriberId" />
                     </div>
                 </div>
                 <div class="form-field">
@@ -46,7 +42,28 @@
                 <div class="form-field">
                     <label class="form-field-label">Member Middle Name</label>
                     <div class="form-field-input">
-                        <input type="text" class="form-control field-input-text" formControlName="mname"/>
+                        <input type="text" class="form-control field-input-text" formControlName="Mname"/>
+                    </div>
+                </div>
+                <div class="form-field">
+                    <label class="form-field-label">Gender</label>
+                    <div class="form-field-input">
+                        <select class="form-control" formControlName="Gender">
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-field">
+                    <label class="form-field-label">Member Start Date</label>
+                    <div class="form-field-input">
+                        <input type="date" value="MM/DD/YYYY" class="form-control field-input-text" formControlName="MemberStartDate"/>
+                    </div>
+                </div>
+                <div class="form-field">
+                    <label class="form-field-label">Member End Date</label>
+                    <div class="form-field-input">
+                        <input type="date" value="MM/DD/YYYY" class="form-control field-input-text" formControlName="MemberEndDate"/>
                     </div>
                 </div>
                 <div class="form-field">
@@ -55,28 +72,20 @@
                         <input type="date" value="MM/DD/YYYY" class="form-control field-input-text" formControlName="DateOfBirth"/>
                     </div>
                 </div>
-                <div class="form-field">
-                    <label class="form-field-label">Gender</label>
-                    <div class="form-field-input">
-                        <select class="form-control" formControlName="gender">
-                            <option value="Male">Male</option>
-                            <option value="Female">Female</option>
-                        </select>
-                    </div>
-                </div>
                 <!-- <div class="form-field">
                     <label class="form-field-label">Status</label>
                     <div class="form-field-input">
                         <input type="text" class="form-control field-input-text" formControlName="status"/>
                     </div>
                 </div> -->
-                <div class="form-group switch-group">
+                <!-- <div class="form-field" style="width: 200px; left: 11%;">
+                <div class="form-group switch-group" style="width: 100%">
                     Active
                       <label class="switch">
-                        <input type="checkbox" class="success" formControlName="status">
+                        <input type="checkbox" class="success" formControlName="Status">
                         <span class="slider round"></span>
                       </label>                  
-                </div> 
+                </div> </div> -->
             </div>
             </div>
         </div>
@@ -86,70 +95,80 @@
                 <button class="btn btn-primary">Search</button>            
             </div>
         </form>
-
-        <div class="card-table-area members-table-area" >
-            <div class="table-responsive" *ngIf="isSearchDataThere">
-                <div class="cust-add-area">
-                    <span class="fa fa-plus-circle" (click)="openCustomModal(true, null)"></span>
-                </div>    
-                <div class="mat-elevation-z8">
-                  <table mat-table matSort #memberSearchTable [dataSource]="searchDataSource" class="table table-bordered table-striped card-table">
-                
-                    <ng-container matColumnDef="memberId">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header >Member ID </th>
-                      <td mat-cell *matCellDef="let element"> {{element.memberId}} </td>
-                    </ng-container>
-                    <ng-container matColumnDef="subscriptionID">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header >Subscription ID </th>
-                      <td mat-cell *matCellDef="let element"> {{element.subscriptionID}} </td>
-                    </ng-container>
-                    <ng-container matColumnDef="fname">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header >First Name </th>
-                      <td mat-cell *matCellDef="let element"> {{element.fname}} </td>
-                    </ng-container>
-                    <ng-container matColumnDef="lname">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header >Last Name </th>
-                      <td mat-cell *matCellDef="let element"> {{element.lname}} </td>
-                    </ng-container>
-                    <ng-container matColumnDef="mname">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header >Middle Name </th>
-                      <td mat-cell *matCellDef="let element"> {{element.mname}} </td>
-                    </ng-container>
-                    <ng-container matColumnDef="memberStartDate">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header >Member Start Date </th>
-                      <td mat-cell *matCellDef="let element"> {{element.memberStartDate}} </td>
-                    </ng-container>
-                    <ng-container matColumnDef="dateOfBirth">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header >Date of Birth </th>
-                      <td mat-cell *matCellDef="let element"> {{element.dateOfBirth | date:'MM-dd-yyyy'}} </td>
-                    </ng-container>
-                    <ng-container matColumnDef="gender">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header >Gender </th>
-                      <td mat-cell *matCellDef="let element"> {{element.gender}} </td>
-                    </ng-container>
-                    <ng-container matColumnDef="status">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header >Status </th>
-                      <td mat-cell *matCellDef="let element"> {{element.status}} </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="updateid">
-                      <th mat-header-cell *matHeaderCellDef> Action </th>
-                      <td mat-cell *matCellDef="let element" class="action-link"> 
-                        <span class="fa fa-edit" 
-                        (click)="openCustomModal(true, element)"></span>
-                      </td>
-                    </ng-container>
-                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-                  </table>
-                  <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
-                </div>
-            </div>
-            <div class="no-grid-results" *ngIf="noSearchResultsFound">
-                <h3>Could not find the Search Results. Please try again</h3>
-            </div>
+        
+      <div class="card custom-card" *ngIf="isSearchDataThere">
+        <div class="card-header">
+              <h3>Member Table</h3>
+              <div class="edit-update-alert">
+                  <alert></alert>
+              </div>
         </div>
- </div>
+        <div class="card-body">
+          <div class="card-table-area members-table-area" >
+              <div class="table-responsive">
+                  <div class="cust-add-area">
+                      <span class="fa fa-plus-circle" (click)="openCustomModal(true, null)"></span>
+                  </div>    
+                  <div class="mat-elevation-z8">
+                    <table mat-table matSort #memberSearchTable [dataSource]="searchDataSource" class="table table-bordered table-striped card-table">
+                  
+                      <ng-container matColumnDef="memberId">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header >Member ID </th>
+                        <td mat-cell *matCellDef="let element"> {{element.memberId}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="subscriberId">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header >Subscriber ID </th>
+                        <td mat-cell *matCellDef="let element"> {{element.subscriberId}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="fname">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header >First Name </th>
+                        <td mat-cell *matCellDef="let element"> {{element.fname}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="lname">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header >Last Name </th>
+                        <td mat-cell *matCellDef="let element"> {{element.lname}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="mname">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header >Middle Name </th>
+                        <td mat-cell *matCellDef="let element"> {{element.mname}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="memberStartDate">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header >Member Start Date </th>
+                        <td mat-cell *matCellDef="let element"> {{element.memberStartDate | date:'MM/dd/yyyy'}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="dateOfBirth">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header >Date of Birth </th>
+                        <td mat-cell *matCellDef="let element"> {{element.dateOfBirth | date:'MM/dd/yyyy'}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="gender">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header >Gender </th>
+                        <td mat-cell *matCellDef="let element"> {{element.gender=='M'?'Male':'Female'}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="status">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header >Status </th>
+                        <td mat-cell *matCellDef="let element"> {{element.status==1?'Active':'Inactive'}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="userId">
+                        <th mat-header-cell *matHeaderCellDef> Action </th>
+                        <td mat-cell *matCellDef="let element" class="action-link"> 
+                          <span class="fa fa-edit" 
+                          (click)="openCustomModal(true, element)"></span>
+                        </td>
+                      </ng-container>
+                      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                    </table>
+                    <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
+                  </div>
+              </div>
+              <div class="no-grid-results" *ngIf="noSearchResultsFound">
+                  <h3>Could not find the Search Results. Please try again</h3>
+              </div>
+          </div>
+        </div>
+      </div>
+ </div> <!-- end of page-content-->
  
 
 
@@ -157,7 +176,7 @@
 <!-- The Add/Update Member Modal -->
 <div class="modal fade custom-modal" role="dialog" [ngStyle]="{'display': isCustomModalOpen ? 'block' : 'none', 'opacity': 1}">
   
-     <div class="modal-dialog modal-dialog-centered" style="width: 600px;">
+     <div class="modal-dialog modal-dialog-centered" style="max-width: 690px; top: 7vh;">
        <div class="modal-content">        
          <!-- Modal Header -->
          <div class="modal-header">
@@ -167,82 +186,167 @@
              </h4>
              <a class="fa fa-2x fa-times-circle" (click)="openCustomModal(false, null)">
              </a>
-         </div>
+         </div> 
          <!-- Modal body -->
          <div class="modal-body"> 
      <div class="member-search-area">
      <form [formGroup]="memberForm" (ngSubmit)="onSubmit()">
               <div class="mandate-fields">
-                <span *ngIf="submitted && memberForm.valid">Fields marked with * are mandatory</span>
-                         </div>  
-              <div class="row">
+                <span *ngIf="submitted && !memberForm.valid">Fields marked with * are mandatory</span>
+              </div>
+          <div class="member-form-wrap">
+              <div class="row">                
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label>Account<small class="starmark">*</small></label>
+                    <select #focusElem formControlName="clientId" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.clientId.errors }">
+                      <option>1001</option>
+                      <option>1002</option>
+                    </select>
+                  </div>
+                </div>            
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label>Contract<small class="starmark">*</small></label>
+                    <select formControlName="contractId" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.contractId.errors }">
+                      <option>1101</option>
+                      <option>1102</option>
+                    </select>
+                  </div>
+                </div>            
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label>Plan<small class="starmark">*</small></label>
+                    <select formControlName="planId" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.planId.errors }">
+                      <option>1201</option>
+                      <option>1202</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="row">          
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label>Tier<small class="starmark">*</small></label>
+                    <select formControlName="tierId" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.tierId.errors }">
+                      <option>1201</option>
+                      <option>1202</option>
+                    </select>
+                  </div>
+                </div>
                <div class="col-md-4">
                   <div class="form-group">
-                    <label>Member ID</label>
-              <input #focusElem type="text" formControlName="memberId" readonly="true" class="form-control" />
+                    <label>Member ID<small class="starmark">*</small></label>
+                    <input type="text" formControlName="memberHrid" maxlength="20"  class="form-control" [ngClass]="{ 'is-invalid': submitted && f.memberHrid.errors }"/>
                   </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="form-group">
-                      <label>First Name<small class="starmark">*</small></label>
-                <input type="text" formControlName="fname" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.fname.errors }" />
-                    </div> 
-                </div>
-                <div class="col-md-4">
-                  <div class="form-group">
-                    <label>Last Name<small class="starmark">*</small></label>
-              <input type="text" formControlName="lname" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.lname.errors }" />
-                  </div>   
-                </div>                                       
+                   <div class="form-group">
+                     <label>Alternate ID</label>
+                     <input type="text" formControlName="alternateId" maxlength="20" class="form-control" />
+                   </div>
+                 </div>                                  
             </div>
             <div class="row">
+              <div class="col-md-4">
+                  <div class="form-group">
+                    <label>First Name<small class="starmark">*</small></label>
+              <input type="text" formControlName="fname" maxlength="50" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.fname.errors }" />
+                  </div> 
+              </div>  
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Last Name<small class="starmark">*</small></label>
+            <input type="text" formControlName="lname" maxlength="50" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.lname.errors }" />
+                </div>   
+              </div>   
                 <div class="col-md-4">
                   <div class="form-group">
                     <label>Middle Name</label>
-              <input type="text" formControlName="mname" class="form-control" />
+              <input type="text" formControlName="mname" maxlength="50" class="form-control" />
                   </div> 
                 </div>
-               <div class="col-md-4">
-                <div class="form-group">
-                  <label>Subscription ID</label>
-                    <input type="text" formControlName="subscriptionID" class="form-control" />
-                </div> 
             </div>
-            <div class="col-md-4">
-                 <div class="form-group">
-                    <label>Gender<small class="starmark">*</small></label>  
-                    <mat-select formControlName="gender" [ngClass]="{ 'is-invalid': submitted && f.gender.errors }">
-                      <mat-option value="Male">Male</mat-option>
-                      <mat-option value="Female">Female</mat-option>
-                    </mat-select>
-                  </div>
-            </div>
+               <div class="row">
+                <div class="col-md-4">
+                     <div class="form-group">
+                        <label>Date of Birth<small class="starmark">*</small></label> 
+                        <input type="date" value="MM/DD/YYYY" formControlName="dateOfBirth" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.dateOfBirth.errors }" />                            
+                      </div>
+                </div>  
+                <div class="col-md-4">
+                     <div class="form-group">
+                        <label>Member Start Date<small class="starmark">*</small></label> 
+                        <input type="date" value="MM/DD/YYYY" formControlName="memberStartDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.memberStartDate.errors }"/>
+                        
+                      </div>
+                </div>
+                <div class="col-md-4">
+                     <div class="form-group">
+                        <label>Member End Date<small class="starmark">*</small></label> 
+                        <input type="date" value="MM/DD/YYYY" formControlName="memberEndDate" class="form-control"/>
+                        
+                      </div>
+                </div>
                </div>
                <div class="row">
-                    <div class="col-md-4">
-                        <div class="form-group switch-group">
-                            Active
-                              <label class="switch">
-                                <input type="checkbox" class="success" formControlName="status">
-                                <span class="slider round"></span>
-                              </label>                  
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                         <div class="form-group">
-                            <label>Member Start Date<small class="starmark">*</small></label> 
-                            <input type="date" value="MM/DD/YYYY" formControlName="memberStartDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.memberStartDate.errors }"/>
-                            
-                          </div>
-                    </div>
-                    <div class="col-md-4">
-                         <div class="form-group">
-                            <label>Date of Birth<small class="starmark">*</small></label> 
-                            <input type="date" value="MM/DD/YYYY" formControlName="dateOfBirth" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.dateOfBirth.errors }" />                            
-                          </div>
-                    </div>
+                <div class="col-md-4">
+                     <div class="form-group">
+                        <label>Subscriber ID</label> 
+                        <input type="text" formControlName="subscriberId" maxlength="20" class="form-control"/>                        
+                      </div>
+                </div>
+                <div class="col-md-4">
+                     <div class="form-group">
+                        <label>Subscriber First Name</label> 
+                        <input type="text" formControlName="subscriberFname" maxlength="50" class="form-control"/>                        
+                      </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                     <label>Subscriber Last Name</label> 
+                     <input type="text" formControlName="subscriberLname" maxlength="50" class="form-control"/>                        
+                   </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4">
+                   <div class="form-group switch-group">
+                    Is Unlimited
+                      <label class="switch">
+                        <input type="checkbox" class="success" formControlName="isUnlimited">
+                        <span class="slider round"></span>
+                      </label>                  
+                </div>
+                </div>    
+                <div class="col-md-4">
+                     <div class="form-group">
+                        <label>Gender<small class="starmark">*</small></label>  
+                        <select class="form-control" formControlName="gender" [ngClass]="{ 'is-invalid': submitted && f.gender.errors }">
+                          <option value="M">Male</option>
+                          <option value="F">Female</option>
+                        </select>
+                      </div>
+                </div>    
+                <div class="col-md-4">
+                  <div class="form-group">
+                     <label>Laser Value</label> 
+                     <input type="text" formControlName="laserValue" maxlength="20" class="form-control"/>                        
+                   </div>
+                </div>    
                </div>
-              
+               <div class="row">
+                <div class="col-md-4" *ngIf="!isAddMode">
+                    <div class="form-group switch-group">
+                        Active
+                          <label class="switch">
+                            <input type="checkbox" class="success" formControlName="status">
+                            <span class="slider round"></span>
+                          </label>                  
+                    </div>
+                </div>                    
+               </div>
+          </div>   
            <div class="modal-footer-btns">
              <button type="button" class="btn btn-outline-primary" (click)="openCustomModal(false, null)">Cancel</button>
              <button type="submit" class="btn btn-primary" *ngIf="!isAddMode">Update</button>

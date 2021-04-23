@@ -38,7 +38,6 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
     localStorage.setItem('loginStatus',"false");
     this.loginStatus = false;
-    //debugger;
     console.log(this.loginStatus);
     this.loginService.setLoginStatus(this.loginStatus);
     setTimeout(()=>{
@@ -86,14 +85,15 @@ export class LoginComponent implements OnInit {
      this.loginService.getLoginDetails(this.userName, this.password).subscribe(
             (data:LoginResponseModel ) =>  {
               if(data){
+                
                 this.loginData = data;
-                this.loginService.setMenu(this.loginData.menus); 
+                this.loginService.setMenu(this.loginData.menuDetails); 
                 this.loginService.setToken(this.loginData.token);
                 this.loginService.curToken.subscribe(d => {                    
                   console.log("cur token value : "+d);
                   this.currentToken = d;
                 });
-                //debugger;
+                //
                 this.responseName = this.loginData.name;
                 this.responseRoleName = this.loginData.roleName;
                 this.loginService.setLoggedInUser(this.responseName);
@@ -112,9 +112,9 @@ export class LoginComponent implements OnInit {
                   this.loginService.setLoginStatus(this.loginStatus);
                   this.loginService.loginStatus.subscribe(d => {
                     console.log(" login status "+d);
-                  //  debugger;
+                  //  
                   });
-                  //debugger;
+                  //
                   this.router.navigate(['/dashboard'])
                 //}         
               }

@@ -9,8 +9,15 @@ export interface LoginResponseModel{
     emailID: string;
     password: string;
     token: string;
-    menus:menus[]; 
+    menuDetails:menus[]; 
 }
+
+export interface menuDetails{
+    menuGroupID: number;
+        name: string;
+        menuGroup: number;
+       menus:menus[];
+} 
 export interface menus{
         id: number;
         name: string;

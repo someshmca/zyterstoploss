@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import {IPlanTires, IPlanAll, IPlanAdd, IPlanUpdate, IActiveClient, IContracts} from '../models/health-plan.model';
+import {ITire, IPlanAll, IPlanAdd, IPlanUpdate, IActiveClient, IContracts} from '../models/health-plan.model';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
@@ -17,27 +17,28 @@ export class HealthPlanService {
   getAllPlans(){
     return this.http.get<IPlanAll[]>(Paths.planAll).pipe(catchError(this.handleError.bind(this)));
   }
-  getPlanTires(): Observable<IPlanTires[]> {
-    return this.http.get<IPlanTires[]>(Paths.planTires).pipe(catchError(this.handleError.bind(this)));
+  getTires(): Observable<ITire[]> {
+    return this.http.get<ITire[]>(Paths.planTires).pipe(catchError(this.handleError.bind(this)));
  }
  getActiveClients(): Observable<IActiveClient[]>{
    return this.http.get<IActiveClient[]>(Paths.activeClients);
  }
 
- getClientByContract(clientId:string): Observable<IContracts[]>{
+ getContractsByClient(clientId:string): Observable<IContracts[]>{
   
   return this.http.get<IContracts[]>(Paths.contracts+clientId);
 }
- addPlan(formData:IPlanAdd ){
-   debugger;
+ addPlan(formData:IPlanAdd){
+   
   const body = JSON.stringify(formData);
+  console.log(body);
+  
   const headerOptions = new HttpHeaders({ 'Content-Type': 'application/json' });
-   return this.http.post<IPlanAdd
-   >(Paths.planAdd, body,{headers: headerOptions} ).pipe(catchError(this.handleError.bind(this)));  
+   return this.http.post<IPlanAdd>(Paths.planAdd, body,{headers: headerOptions}).pipe(catchError(this.handleError.bind(this)));  
   }
   
  updatePlan(formData:IPlanUpdate ){
-   debugger;
+   
   const body = JSON.stringify(formData);
   const headerOptions = new HttpHeaders({ 'Content-Type': 'application/json' });
    return this.http.put<IPlanUpdate

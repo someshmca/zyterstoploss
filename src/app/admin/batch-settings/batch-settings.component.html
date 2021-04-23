@@ -54,12 +54,19 @@
                   <td mat-cell *matCellDef="let element"> 
                     {{element.frequency}} </td>
                 </ng-container>
-
+                <ng-container matColumnDef="batchType" >
+                  <mat-header-cell [hidden]="show" *matHeaderCellDef> 
+                    Batch Type 
+                  </mat-header-cell>
+                  <mat-cell [hidden]="show" *matCellDef="let element">
+                    {{element.batchType}}
+                  </mat-cell>
+                </ng-container>
                 <!-- Action Column -->
                 <ng-container matColumnDef="createId">
-                  <th mat-header-cell *matHeaderCellDef class="c-action"> Action </th>
+                  <th mat-header-cell *matHeaderCellDef class="c-action"> Start </th>
                   <td mat-cell *matCellDef="let element" class="action-link c-action"> 
-                    <button [ngClass]="element.frequency!='Demand'?'btn btn-secondary':'btn btn-primary'" [disabled]="element.frequency!='Demand'" (click)="startDemand(element)">Start</button>  
+                    <button [ngClass]="element.frequency!='Demand'?'btn btn-secondary':'btn btn-primary'" [disabled]="element.frequency!='Demand'" (click)="startDemand(element, element.batchType); $event.stopPropagation();">Start</button>  
                     <!-- <button *ngIf="element.frequency=='Demand' || element.frequency=='On Demand'" class="btn btn-primary" (click)="startDemand()">
                       Start
                     </button>
@@ -73,7 +80,7 @@
                   <th mat-header-cell *matHeaderCellDef class="c-action"> Action </th>
                   <td mat-cell *matCellDef="let element" class="action-link c-action"> 
                     <span class="fa fa-edit" 
-                          (click)="openCustomModal(true, element)"></span>
+                          (click)="openCustomModal(true, element); $event.stopPropagation();"></span>
                   </td>
                 </ng-container>
                 <tr mat-header-row *matHeaderRowDef="batchProcessColumns"></tr>
@@ -181,7 +188,7 @@
           <input type="text" class="form-control" formControlName="description" tabindex="2"  [ngClass]="{ 'is-invalid': submitted && f.description.errors }">  
         </div>
         <div class="form-group">
-          <label >Status
+          <label >Batch Type
             </label>
             <!-- <select formControlName="status" tabindex="3" class="form-control">
               <option value="Active">Active</option>
@@ -190,13 +197,19 @@
               <option value="Completed">Completed</option>
             </select>  -->
                      
-          <select class="form-control" formControlName="status" tabindex="3" >                            
-            <option *ngFor="let batchStatusObj of batchStatusList" [value]="batchStatusObj.batchStatusId">
-                {{batchStatusObj.batchStatus}}</option>      
-          </select>  
+            <select class="form-control" formControlName="batchType" >       
+                        
+              <!-- <option *ngFor="let batchStatus of allBatchStatus" [value]="batchStatus.batchStatus">
+                  {{batchStatus.batchStatus}}</option>      
+              </select>  -->
+              <option value="SSL">SSL</option>    
+              <option value="ASL">ASL</option>  
+              <option value="MaxLiability">Max Liability</option>    
+              <option value="All">All</option>
+            </select> 
         </div>
         <div class="form-group">
-          <label > Last Run Status
+          <label> Last Run Status
             </label>
           <!-- <select formControlName="lastRunStatus" tabindex="4" class="form-control" disabled>
             <option value="Active">Active</option>
@@ -204,8 +217,8 @@
             <option value="Running">Running</option>
             <option value="Completed">Completed</option>
           </select>  -->
-          <select class="form-control" formControlName="status" tabindex="3" >                            
-            <option *ngFor="let batchStatusObj of batchStatusList" [value]="batchStatusObj.batchStatusId">
+          <select class="form-control" formControlName="lastRunStatus" tabindex="3" disabled>                            
+            <option *ngFor="let batchStatusObj of batchStatusList; let index as i" [attr.selected]="index == 1 ? true : null" [value]="batchStatusObj.batchStatus">
                 {{batchStatusObj.batchStatus}}</option>      
           </select>  
         </div>
@@ -213,7 +226,7 @@
       <div class="col-md-6">
         <div class="form-group">
           <label >Last Run </label>
-          <input type="date" class="form-control" formControlName="lastRun" tabindex="5" [ngModel]="fLastRun" disabled>  
+          <input type="date" class="form-control" formControlName="lastRun" tabindex="5"  disabled>  
         </div>
         <div class="form-group">
           <label >Next Schedule Run </label>
@@ -224,7 +237,7 @@
             </label>
           <select formControlName="frequency" tabindex="7" class="form-control">
             <option value="Demand">Demand</option>
-            <option value="Daily">Daily</option>
+            <option value="Daily" selected>Daily</option>
             <option value="Weekly">Weekly</option>
             <option value="Monthly">Monthly</option>
           </select> 

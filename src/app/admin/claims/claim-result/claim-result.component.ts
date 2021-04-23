@@ -1,5 +1,6 @@
 import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { ClaimReportService } from '../../services/claim-report.service';
+import {IClaimReportsModel} from '../../models/claim-reports.model';
 import { ClaimService } from '../../services/claim.service';
 import {Router} from '@angular/router'
 import { Route } from '@angular/compiler/src/core';
@@ -13,10 +14,10 @@ import { MatSort } from '@angular/material/sort';
   templateUrl: './claim-result.component.html',
   styleUrls: ['./claim-result.component.css']
 })
-export class ClaimResultComponent implements OnInit  {
+export class ClaimResultComponent implements OnInit, AfterViewInit  {
  
-  claimResults = [];
-  displayedColumns: string[] = ['claimId', 'memberId', 'providerName', 'memberName', 'converted', 'billed', 'hccamount','allowed','capitated','lastChanged','workSheetState'];
+  claimResults: IClaimReportsModel[] = [];
+  displayedColumns: any[] = ['claimId', 'clientName', 'memberId', 'firstName', 'lastName', 'paidAmount', 'climReceivedOn','paidDate'];
   dataSource: any;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -24,6 +25,9 @@ export class ClaimResultComponent implements OnInit  {
 
   }
   ngOnInit(){
+  }
+
+  ngAfterViewInit(){    
     this._claimReportService.claimResultsVal.subscribe(
       (data) =>{
         this.claimResults = data;
@@ -33,8 +37,6 @@ export class ClaimResultComponent implements OnInit  {
       }
     );
   }
-
-  
   setClaimId(id: string){
     this._claimService.setClaimId(id);
     console.log("Id : "+id);

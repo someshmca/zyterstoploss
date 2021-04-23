@@ -20,3 +20,13 @@
 .members-table-area{
     margin-top: 35px;
 }
+.mandate-fields{
+    padding-left: 20px;
+}
+.member-form-wrap{
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 9px 0;
+    height: 65vh;
+    max-height: 650px;
+}

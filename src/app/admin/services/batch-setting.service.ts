@@ -43,13 +43,19 @@ getBatchProcessDetails(status: string): Observable<IBatchDetails[]> {
      >(Paths.BatchProcessUpdate, body,{headers: headerOptions} ).pipe(catchError(this.handleError.bind(this)));
     
     }
-    calculateOnStart(batchid:any,userid:string,startDate:any,lastRunTime:any,frequency:string,nextScheduleRun:any){ 
+    calculateOnStart(batchid:any,userid:string,startDate:any,lastRunTime:any,frequency:string,nextScheduleRun:any, batchType: string){ 
+      
       let params = new HttpParams();
-      params=params.set('batchId',batchid).set('userId',userid).set('startDate',startDate).set('lastRunTime',lastRunTime).set('frequency',frequency).set('nextScheduleRun',nextScheduleRun);
-      console.log(params.toString());
-   
-      return this.http.get(Paths.BatchProcessCalculate,{params}).pipe(catchError(this.handleError.bind(this)));
-      debugger;
+      params=params.set('batchId',batchid).set('userId',userid).set('startDate',startDate).set('lastRunTime',lastRunTime).set('frequency',frequency).set('nextScheduleRun',nextScheduleRun).set('SLType',batchType);
+      console.log(params);
+      
+      let calPath=Paths.BatchProcessCalculate+"batchId="+batchid+"&userId="+userid+"&startDate="+startDate+"&lastRunTime="+lastRunTime+"&frequency="+frequency+"&nextScheduleRun="+nextScheduleRun+"&SLType="+batchType;      
+      
+      //params=params.set('batchId',batchid).set('userId',userid).set('startDate',startDate).set('lastRunTime',lastRunTime).set('frequency',frequency).set('nextScheduleRun',nextScheduleRun).set('SLType',batchType);
+
+      
+      return this.http.get(calPath).pipe(catchError(this.handleError.bind(this)));
+      
     }
  handleError(errorResponse: HttpErrorResponse) {
   if (errorResponse.error instanceof ErrorEvent) {

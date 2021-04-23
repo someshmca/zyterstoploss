@@ -1,8 +1,9 @@
 <div class="page-content">
     <div class="card">
         <div class="card-header claim-actions-header">
-            <h5>Actions </h5>
-            <a class="btn btn-primary" (click)="calculateClaimAmount()">Calculate</a>
+            <h5>Claim Details</h5>
+           <!-- <h5>Actions </h5>
+             <a class="btn btn-primary" (click)="calculateClaimAmount()">Calculate</a> -->
             <!-- <a class="refresh-link" (click)="refreshClaim()">
                 <span class="fa fa-refresh"></span> Refresh
             </a> -->
@@ -11,150 +12,122 @@
             <div class="row">
                 <div class="col-md-4 col-sm-6 col-12">
                     <div class="form-group">
-                        <label>Claim ID</label>
-                        <input type="text" name="claimid" class="form-control" [value]="claimData.claimId" readonly/>
+                        <label>Member ID</label>
+                        <input type="text" class="form-control" [value]="claimData.memberId" readonly/>
                     </div>
                 </div>
                 <div class="col-md-4 col-sm-6 col-12">
                     <div class="form-group">
-                        <label>Client ID</label>
-                        <input type="text" name="claimid" class="form-control" [value]="claimData.clientId" readonly/>
+                        <label>First Name</label>
+                        <input type="text" class="form-control" [value]="claimData.fname" readonly/>
                     </div>
                 </div>
                 <div class="col-md-4 col-sm-6 col-12">
                     <div class="form-group">
-                        <label>Last Changed on</label>
-                        <input type="text" name="lastchanged" class="form-control" [value]="claimData.lastChangedOn | date:'MM/dd/yyyy'" readonly/>
+                        <label>Last Name</label>
+                        <input type="text" class="form-control" [value]="claimData.lname" readonly/>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label>Date of Birth</label>
+                        <input type="text" class="form-control" [value]="claimData.dateOfBirth | date:'MM/dd/yyyy'" readonly/>
                     </div>
                 </div>
                 <div class="col-md-4 col-sm-6 col-12">
                     <div class="form-group">
-                        <label>Status</label>
-                        <input type="text" name="claimstatus" class="form-control" [value]="claimData.status" readonly/>
+                        <label>Paid Date</label>
+                        <input type="text" class="form-control" [value]="claimData.paidDate | date:'MM/dd/yyyy'" readonly/>
                     </div>
                 </div>
                 <div class="col-md-4 col-sm-6 col-12">
                     <div class="form-group">
-                        <label>Adjudicated on</label>
-                        <input type="text" name="adjudicatedon" class="form-control" [value]="claimData.adjudicatedOn | date:'MM/dd/yyyy'" readonly/>
+                        <label>Paid Amount</label>
+                        <input type="text"  class="form-control" [value]="claimData.paidAmount" readonly/>
                     </div>
                 </div>
-                <div class="col-md-4 col-sm-6 col-12">
-                    <div class="form-group">
-                        <label>Claim Type</label>
-                        <input type="text" name="claimtype" class="form-control" [value]="claimData.claimType" readonly/>
-                    </div>
-                </div>
+            </div>
+            <div class="row">
                 <div class="col-md-4 col-sm-6 col-12 pos-r">
-                    <div class="form-check-inline claim-form-checkbox">
+                    <div class="form-group">
+                        <label>Received On</label>
+                        <input type="text" class="form-control" [value]="claimData.climReceivedOn | date:'MM/dd/yyyy'" readonly/>
+                    </div>
+                    <!-- <div class="form-check-inline claim-form-checkbox">
                         <label class="form-check-label">
-                            Manually Priced 
+                           Received On
                         <input type="checkbox" class="form-check-input" name="ismanuallypriced" [checked]="claimData.manuallyPriced" disabled readonly > 
                         </label>
-                    </div>
+                    </div> -->
                 </div>
-                <div class="col-md-4 col-sm-6 col-12 pos-r">
-                    <div class="form-check-inline claim-form-checkbox">
-                        <label class="form-check-label">
-                            Send to Review
-                        <input type="checkbox" class="form-check-input" name="sendtoreview" [value]="claimData.sentToReview" disabled readonly> 
-                        </label>
+                <div class="col-md-4 col-sm-6 col-12 pos-r">                   
+                    <div class="form-group">
+                        <label>Adjudicate Date</label>
+                        <input type="text" class="form-control" [value]="claimData.adjudicatedOn | date:'MM/dd/yyyy'" readonly/>
                     </div>
                 </div>
                 <div class="col-md-4 col-sm-6 col-12">
                     <div class="form-group">
-                        <label>Benefit Plan Type</label>
-                        <input type="text" name="benefitplantype" class="form-control" [value]="claimData.benefitPlanType" readonly/>
+                        <label>Laser Value</label>
+                        <input type="text" class="form-control" [value]="claimData.laserValue" readonly/>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 col-sm-6 col-12 pos-r">
+                    <div class="custom-control custom-checkbox checkbox-wrap">
+                        <div class="chk-1">
+                            <label >Is Unlimited</label>     
+                        </div>
+                        <div class="chk-2">                       
+                            <input type="checkbox" class="form-control" disabled checked [value]="locIsUnlimited">
+                        </div>
                     </div>
                 </div>
                 <div class="col-md-4 col-sm-6 col-12 pos-r">
-                    <div class="form-check-inline claim-form-checkbox">
-                        <label class="form-check-label">
-                            Capitated Service
-                        <input type="checkbox" class="form-check-input" name="capitatedservice" [checked]="claimData.capitatedService" disabled readonly> 
-                        </label>
-                    </div>
-                </div>
-                <div class="col-md-4 col-sm-6 col-12 pos-r">
-                    <div class="form-check-inline claim-form-checkbox">
-                        <label class="form-check-label">
-                            Removed Claim
-                        <input type="checkbox" class="form-check-input" name="removedclaim" [checked]="claimData.removedClaim" disabled readonly> 
-                        </label>
+                    <div class="form-group">
+                        <label>Client Name</label>
+                        <input type="text" class="form-control" [value]="claimData.clientName" readonly/>
                     </div>
                 </div>   
                 <div class="col-md-4 col-sm-6 col-12 pos-r">
-                    <div class="form-check-inline claim-form-checkbox">
-                        <label class="form-check-label">
-                            Voided Claim
-                        <input type="checkbox" class="form-check-input" name="voidedclaim" [checked]="claimData.voidedClaim" disabled readonly> 
-                        </label>
+                    <div class="form-group">
+                        <label>Contract ID</label>
+                        <input type="text" class="form-control" [value]="claimData.contractId" readonly/>
                     </div>
                 </div>
+            </div>
+            <div class="row">
                 <div class="col-md-4 col-sm-6 col-12">
                     <div class="form-group">
-                        <label>Calculated Benefit Plan</label>
-                        <input type="text" name="calculatedbenefitplan" class="form-control" [value]="claimData.calculatedBenefitPlan" disabled readonly/>
+                        <label>Plan Name</label>
+                        <input type="text" class="form-control" [value]="claimData.planName" readonly/>
                     </div>
                 </div>        
                 <div class="col-md-4 col-sm-6 col-12">
                     <div class="form-group">
-                        <label>Claim Source</label>
-                        <input type="text" name="claimsource" class="form-control" [value]="claimData.claimSource" readonly/>
+                        <label>Member start Date </label>
+                        <input type="text" class="form-control"  [value]="claimData.memberStartDate | date:'MM/dd/yyyy'" readonly/>
                     </div>
                 </div>  
                 <div class="col-md-4 col-sm-6 col-12">
                     <div class="form-group">
-                        <label>Claim Amount</label>
-                        <input type="text" name="claimAmount" class="form-control"  [value]="claimData.claimAmount |currency:'CAD':'symbol-narrow'" readonly/>
+                        <label>Member End Date </label>
+                        <input type="text"  class="form-control"  [value]="claimData.memberEndDate | date:'MM/dd/yyyy'" readonly/>
                     </div>
                 </div>  
-                <div class="col-md-4 col-sm-6 col-12">
-                    <div class="form-group">
-                        <label>Claim Start Date</label>
-                        <input type="text" name="startDate" [value]="claimData.startDate | date:'MM/dd/yyyy'" class="form-control" readonly/>
-                    </div>
-                </div>  
-                <div class="col-md-4 col-sm-6 col-12">
-                    <div class="form-group">
-                        <label>Claim End Date</label>
-                        <input type="text" name="endDate" [value]="claimData.endDate | date:'MM/dd/yyyy'" class="form-control" readonly/>
-                    </div>
-                </div>
-                <div class="col-md-4 col-sm-6 col-12">
-                    <!-- <div class="form-group" [hidden]="!isCalculateClicked"> -->
-                    <div class="form-group"> 
-                        <label>Stop Loss Amount</label>
-                        <input type="text" name="stopLossAmount" [value]="stopLossAmount" class="form-control" readonly/>
-                    </div>
-                </div>    
             </div>
+            <!-- <div class="row">
+                <div class="col-md-4 col-sm-6 col-12">
+                    <div class="form-group">
+                        <label>Stop Loss Amount</label>
+                        <input type="text" class="form-control" [value]="stopLossAmount" readonly/>
+                    </div> 
+                </div> 
+            </div>  -->
+            </div>
+            <!-- <h1 class="coming-soon">Claim Screen is in Progress. It will render as soon as possible.</h1> -->
         </div>
     </div>
-    <br/>
-
-    <!-- 
-    <ul class="nav nav-tabs" role="tablist">
-        <li class="nav-item">
-        <a class="nav-link active" data-toggle="tab" href="#home">Header</a>
-        </li>
-        <li class="nav-item">
-        <a class="nav-link" data-toggle="tab" href="#lines">Lines</a>
-        </li>
-        <li class="nav-item">
-        <a class="nav-link" data-toggle="tab" href="#summary">Summary</a>
-        </li>
-    </ul>
-
-    <div class="tab-content">
-        <div id="home" class="container tab-pane active"><br>
-            
-        </div>
-        <div id="menu1" class="container tab-pane fade"><br>
-        <h3>Lines</h3>
-        </div>
-        <div id="summary" class="container tab-pane fade"><br>
-        <h3>Summary</h3>
-        </div>
-    </div> -->
-</div>

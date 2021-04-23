@@ -11,7 +11,7 @@
             <div class="select-grid-header">
               <div>
                   <label class="form-field-label">
-                      Search a Contract
+                      Search Contract
                   </label>
               
                   <div fxLayout fxLayoutAlign="center center">
@@ -32,16 +32,16 @@
                     <table mat-table matSort #contractTable [dataSource]="dataSource" class="table table-bordered table-striped table-hover card-table">
                   
                       <ng-container matColumnDef="clientName">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header > Client Name </th>
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header > Account Name </th>
                         <td mat-cell *matCellDef="let element"> {{element.clientName}} </td>
                       </ng-container>
                       <ng-container matColumnDef="contractId">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header > Contract ID </th>
                         <td mat-cell *matCellDef="let element"> {{element.contractId}} </td>
                       </ng-container>
-                      <ng-container matColumnDef="effectiveDate">
+                      <ng-container matColumnDef="startDate">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header > Effective Date </th>
-                        <td mat-cell *matCellDef="let element"> {{element.effectiveDate | date:'MM/dd/yyyy'}} </td>
+                        <td mat-cell *matCellDef="let element"> {{element.startDate | date:'MM/dd/yyyy'}} </td>
                       </ng-container>
                       <ng-container matColumnDef="endDate">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header > End Date </th>
@@ -51,7 +51,7 @@
                         <th mat-header-cell *matHeaderCellDef> Action </th>
                         <td mat-cell *matCellDef="let element" class="action-link"> 
                           <span class="fa fa-edit" 
-                                (click)="openCustomModal(true, element)"></span>
+                                (click)="openCustomModal(true, element.contractId)"></span>
                         </td>
                       </ng-container>
                       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -86,19 +86,20 @@
            <div class="mandate-fields">
             <span *ngIf="submitted && (!contractForm.valid && !contractForm.errors?.dates)">Fields marked with * are mandatory</span>
             <span *ngIf="contractForm.errors">{{ contractForm.errors?.dates | json }}</span>
-
+            <span *ngIf="runInStartEndErr.isDateErr">{{runInStartEndErr.dateErrMsg}}</span>
+            <span *ngIf="runOutStartEndErr.isDateErr">{{runOutStartEndErr.dateErrMsg}}</span>
            </div>  
            <div class="row">
              <div class="col-md-4">
               <div class="form-group">
                 <label>Contract ID</label>
-                  <input #focusElem type="text" readonly="true"  formControlName="contractId" class="form-control"/>
+                  <input type="text" readonly="true"  formControlName="contractId" class="form-control"/>
               </div>
              </div>
              <div class="col-md-4">
               <div class="form-group">
-                <label>Client<small class="starmark">*</small> </label>
-                <select formControlName="clientId" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.clientId.errors }">
+                <label>Account<small class="starmark">*</small> </label>
+                <select #focusElem formControlName="clientId" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.clientId.errors }">
                   <option *ngFor="let client of activeClients" [value]="client.clientId">
                     {{client.clientName}}
                   </option>
@@ -122,7 +123,7 @@
               <div class="col-md-4">
                 <div class="form-group">
                   <label>Contract Start Date<small class="starmark">*</small></label>
-                  <input type="date" value="MM/dd/yyyy" formControlName="effectiveDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.effectiveDate.errors }" /> 
+                  <input type="date" value="MM/dd/yyyy" formControlName="startDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.startDate.errors }" /> 
                 </div>
               </div>
               <div class="col-md-4">
@@ -135,41 +136,41 @@
             <div class="row">
               <div class="col-md-4">
                 <div class="form-group">
-                  <label>Run In Start Date<small class="starmark">*</small></label>
-                  <input type="date" value="MM/dd/yyyy" formControlName="runInStartDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.runInStartDate.errors }"/> 
+                  <label>Run In Start Date</label>
+                  <input type="date" value="MM/dd/yyyy" formControlName="runInStartDate" class="form-control" /> 
                 </div>
               </div>
               <div class="col-md-4">
                 <div class="form-group">
-                  <label>Run In End Date<small class="starmark">*</small></label>
-                  <input type="date" value="MM/dd/yyyy" formControlName="runInEndDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.runInEndDate.errors }"/> 
+                  <label>Run In End Date</label>
+                  <input type="date" value="MM/dd/yyyy" formControlName="runInEndDate" class="form-control"/> 
                 </div>
               </div>
               <div class="col-md-4">
                 <div class="form-group">
-                  <label>Run Out Start Date<small class="starmark">*</small></label>
-                  <input type="date" value="MM/dd/yyyy" formControlName="runOutStartDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.runOutStartDate.errors }" /> 
+                  <label>Run Out Start Date</label>
+                  <input type="date" value="MM/dd/yyyy" formControlName="runOutStartDate" class="form-control" /> 
                 </div>
               </div>
             </div>
             <div class="row">
               <div class="col-md-4">
                 <div class="form-group">
-                  <label>Run Out End Date<small class="starmark">*</small></label>
-                  <input type="date" value="MM/dd/yyyy" formControlName="runOutEndDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.runOutEndDate.errors }"/> 
+                  <label>Run Out End Date</label>
+                  <input type="date" value="MM/dd/yyyy" formControlName="runOutEndDate" class="form-control" /> 
                 </div>
               </div>
               <div class="col-md-4">
                 <div class="form-group">
-                  <label>Termination Date<small class="starmark">*</small></label>
-                  <input type="date" value="MM/dd/yyyy" formControlName="terminationDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.terminationDate.errors }" /> 
+                  <label>Termination Date</label>
+                  <input type="date" value="MM/dd/yyyy" formControlName="terminationDate" class="form-control"  /> 
                 </div>  
               </div>
-              <div class="col-md-4">
+              <div class="col-md-4" *ngIf="!isAddMode">
                   <div class="form-group switch-group">
                     Active
                       <label class="switch">
-                        <input type="checkbox" class="success" formControlName="status">
+                        <input type="checkbox" class="success" formControlName="status" checked>
                         <span class="slider round"></span>
                       </label>                  
                 </div> 

@@ -34,7 +34,6 @@ export class MainSideNavComponent implements OnInit, AfterViewInit {
     this.loginService.menuD.subscribe((data) => {
           console.log(" menuD status"+data);
         this.menu=data;
-      //debugger;
       }
       ); 
         

@@ -25,9 +25,11 @@ export class ClaimService {
     //const headerOptions = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.http.get<IClaim>(Paths.claimPath+'/'+claimid).pipe(catchError(this.handleError.bind(this)));
  }
- calculateClaimAmount(MemberID, isJobBatch): Observable<any> {
+ calculateClaimAmount(MemberID) {
   //const headerOptions = new HttpHeaders({ 'Content-Type': 'application/json' });
-  return this.http.get(Paths.claimCalculate+MemberID+'/'+isJobBatch).pipe(catchError(this.handleError.bind(this)));
+  console.log(Paths.claimCalculate+MemberID);
+  
+  return this.http.get(Paths.claimCalculate+MemberID);
 }
   handleError(errorResponse: HttpErrorResponse) {
     if (errorResponse.error instanceof ErrorEvent) {

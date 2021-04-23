@@ -46,7 +46,7 @@ export interface IProductAdd{
     sslAggDeductible: number;
     sslAnnualLimit: number;
     sslLifetimeLimit: number;
-    sslTermCoverageExtEndDate: number;
+    sslTermCoverageExtEndDate: string;
     sslIsImmediateReimbursement: boolean;
     aslClaimBasis: string;
     aslDeductible: number;

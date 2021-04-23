@@ -6,17 +6,16 @@
     </div>
     <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
     <div class="menu-list" *ngIf="isLoggedIn">  
-          <ul id="menu-content" class="menu-content collapse out">
-            <li  data-toggle="collapse" data-target="#admin" class="collapsed active">
-                <a>Configuration <span class="arrow"></span></a>
+          <ul *ngFor="let cnavitem of menu"  id="menu-content" class="menu-content collapse out">
+            <li  data-toggle="collapse" [attr.data-target]="'#a' + cnavitem.menuGroup" class="collapsed active">
+                <a>{{cnavitem.name}} <span class="arrow"></span></a>
             </li>
-             <ul class="sub-menu collapse show" id="admin">
-                <li *ngFor="let cnavitem of menu" [routerLink]="cnavitem.route" routerLinkActive="active">
+             <ul class="sub-menu collapse show" [attr.id]="'a'+cnavitem.menuGroup">
+                <li *ngFor="let itms of cnavitem.menus" [routerLink]="itms.route" routerLinkActive="active">
                     <a>
-                        {{cnavitem.name}}
+                        {{itms.name}}
                     </a>
-                </li> 
-               
+                </li>                
             </ul>
         </ul>
     </div>

@@ -39,6 +39,8 @@ export class ProductComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   coveredBenefits: any[] = [];
+  contractIDsAll: any[] = [];
+  addObj:IProductAdd;
   //isClientSelected:boolean = false;
   // sslForm: FormGroup;
   // aslForm: FormGroup;
@@ -63,44 +65,52 @@ export class ProductComponent implements OnInit {
 
     this.productForm = this.formBuilder.group({
       productId: 0,
-      contractId:['', Validators.required],
-      clientId:['', Validators.required],    
-      sslIncurredStartDate:['', Validators.required],
-      sslIncurredEndDate:['', Validators.required],
-      sslPaidStartDate:['', Validators.required],
-      sslPaidEndDate:['', Validators.required],
-      sslRunInLimit:"",
-      sslClaimBasis:['', Validators.required],
-      sslDeductible:"",
-      sslAggDeductible:"",
-      sslAnnualLimit:"",
-      sslLifetimeLimit:"",
-      sslIsImmediateReimbursement:"",
-      sslTermCoverageExtEndDate:"",
-      //sslCoveredBenefit: ['', Validators.required],
-      aslDeductible:"",
-      aslMinDeductible:['', Validators.required],
-      aslExpectedClaimLiability:"",
-      aslIncurrredStartDate:['', Validators.required],
-      aslIncurredEndDate:['', Validators.required],
+      clientId: ['', Validators.required],
+      contractId:0,     
+      sslClaimBasis: ['', Validators.required],     
+      sslIncurredStartDate: ['', Validators.required],
+      sslIncurredEndDate: ['', Validators.required],
+      sslPaidStartDate: ['', Validators.required],
+      sslPaidEndDate: ['', Validators.required],
+      //below from sslRunInLimit to sslLifetimeLimit are number fields
+      sslRunInLimit:0,
+      sslDeductible: [0, Validators.required],
+      sslAggDeductible:0,
+      sslAnnualLimit:0,
+      sslLifetimeLimit:0,
+
+      sslIsImmediateReimbursement:false,
+      sslTermCoverageExtEndDate:'',
+      //below from aslDeductible to aslExpecteddClaimLiability are number fields
+      aslDeductible: [0, Validators.required],
+      aslMinDeductible:0,
+      aslExpectedClaimLiability:0,
+
+      aslIncurrredStartDate: ['', Validators.required],
+      aslIncurredEndDate: ['', Validators.required],
       aslPaidStartDate:['', Validators.required],
       aslPaidEndDate:['', Validators.required],
-      aslRunInLimit:"",
+      // below aslRunInLimit is a number field
+      aslRunInLimit:0,
       aslClaimBasis:['', Validators.required],
-      aslAnnualLimit:"",
-      aslLifeTimeLimit:"",
-      aslIsMonthlyAccomidation:"",
-      aslTermCoverageExtEndDate:"",
-      //aslCoveredBenefit: ['', Validators.required],
+
+      aslAnnualLimit:0,  // this is a number field
+      aslLifeTimeLimit:0, // this is a number field
+
+      aslIsMonthlyAccomidation:false,
+      aslTermCoverageExtEndDate:'',
+
       isMaxLiability:false,
-      ibnrPercentage:"",
-      defferedFeePercentage:"",
-      status:"",
-      userId: ''
+      ibnrPercentage:0, // this is a number field
+      defferedFeePercentage:0, // this is a number field
+
+      status:false,
+      userId: this.loginService.currentUserValue.name
     });
     this.getAllProducts();
     this.getActiveClients();   
     this.getCoveredClaims();
+    //this.getAllContracts();
     //this.isClientSelected = false;
   }
 
@@ -124,7 +134,11 @@ export class ProductComponent implements OnInit {
     clientId = Number(clientId);
     this.contractService.getContractsByClientID(clientId).subscribe((data)=>{
       this.contractsByClientId = data;
-      //this.isClientSelected = true;
+    })
+  }
+  getAllContracts(){
+    this.contractService.getAllContracts().subscribe((data)=>{
+        this.contractIDsAll = data;
     })
   }
   getAllProducts(){    
@@ -160,7 +174,6 @@ export class ProductComponent implements OnInit {
       }
     
 }
-  isMaxLiabilityChecked: boolean = false;
 
   openCustomModal(open: boolean, id:any) {    
     setTimeout(()=>{
@@ -169,17 +182,7 @@ export class ProductComponent implements OnInit {
     this.submitted = false;
     this.loading = false;
     if(open && id==null){
-      this.isAddMode = true; 
-      
-      this.productForm.get('isMaxLiability').valueChanges.subscribe(v => {
-        if (v) {
-            console.log(this.isMaxLiabilityChecked);
-            this.isMaxLiabilityChecked = true;
-        } else {
-          console.log(this.isMaxLiabilityChecked);
-          this.isMaxLiabilityChecked = false;
-        }
-      })
+      this.isAddMode = true;    
     }
     
    
@@ -188,19 +191,16 @@ export class ProductComponent implements OnInit {
       this.getAllProducts();
       this.productForm.reset();
       this.isAddMode = false;
-      this.isMaxLiabilityChecked = false;
     }
     console.log("id inside modal: "+id);
     
     if(id!=null && open){
       this.isAddMode = false;
-      this.isMaxLiabilityChecked = this.productForm.get('isMaxLiability').value;
       this.productService.getProduct(id.productId).subscribe(x => {        
         console.log(x[0].productId);
             this.productForm.patchValue({
               productId:x[0].productId,
               contractId:x[0].contractId,
-              clientId:x[0].clientId,
               sslIncurredStartDate:this.datePipe.transform(new Date(x[0].sslIncurredStartDate), 'yyyy-MM-dd'),
               sslIncurredEndDate:this.datePipe.transform(new Date(x[0].sslIncurredEndDate), 'yyyy-MM-dd'),
               sslPaidStartDate:this.datePipe.transform(new Date(x[0].sslPaidStartDate), 'yyyy-MM-dd'),
@@ -239,12 +239,89 @@ export class ProductComponent implements OnInit {
       
 
 private addProduct() {    
+  //  this.addObj={
+  //   productId: 0,
+  //   contractId:1001,
+
+  //   sslClaimBasis:this.f.sslClaimBasis.value,
+  //   sslIncurredStartDate: this.f.sslIncurredStartDate.value,
+  //   sslIncurredEndDate: this.f.sslIncurredEndDate.value,
+  //   sslPaidStartDate: this.f.sslPaidStartDate.value,
+  //   sslPaidEndDate: this.f.sslPaidEndDate.value,
+
+  //   sslRunInLimit: Number(this.f.sslRunInLimit.value),
+  //   sslDeductible: Number(this.f.sslDeductible.value),
+  //   sslAggDeductible: Number(this.f.sslAggDeductible.value),
+  //   sslAnnualLimit: Number(this.f.sslAnnualLimit.value),
+
+  //   sslLifetimeLimit: Number(this.f.sslLifetimeLimit.value),
+  //   sslTermCoverageExtEndDate: this.f.sslTermCoverageExtEndDate.value,
+  //   sslIsImmediateReimbursement: false,
+
+  //   aslClaimBasis: this.f.aslClaimBasis.value,
+  //   aslDeductible: Number(this.f.aslDeductible.value),
+  //   aslMinDeductible: Number(this.f.aslMinDeductible.value),
+  //   aslExpectedClaimLiability: Number(this.f.aslExpectedClaimLiability.value),
+
+  //   aslIncurrredStartDate: this.f.aslIncurrredStartDate.value,
+  //   aslIncurredEndDate: this.f.aslIncurredEndDate.value,
+  //   aslPaidStartDate: this.f.aslPaidStartDate.value,
+  //   aslPaidEndDate: this.f.aslPaidEndDate.value,
+
+  //   aslRunInLimit: Number(this.f.aslRunInLimit.value),
+  //   aslAnnualLimit: Number(this.f.aslAnnualLimit.value),
+  //   aslLifeTimeLimit: Number(this.f.aslLifeTimeLimit.value),
+  //   aslIsMonthlyAccomidation: false,
+  //   aslTermCoverageExtEndDate: "2012-09-09",
+
+  //   isMaxLiability: this.f.isMaxLiability.value,
+  //   ibnrPercentage: Number(this.f.ibnrPercentage.value),
+  //   defferedFeePercentage: Number(this.f.defferedFeePercentage.value),
+
+  //   status: this.f.status.value==true?1:0,
+  //   userId: this.loginService.currentUserValue.name
+  // }
+  this.addObj = {
+    productId: 0,
+    contractId: 1001,
+    sslClaimBasis: "KA",
+    sslIncurredStartDate: "2001-09-09",
+    sslIncurredEndDate: "2002-09-09",
+    sslPaidStartDate: "2001-09-09",
+    sslPaidEndDate: "2002-09-09",
+    sslRunInLimit: 0,
+    sslDeductible: 0,
+    sslAggDeductible: 0,
+    sslAnnualLimit: 0,
+    sslLifetimeLimit: 0,
+    sslTermCoverageExtEndDate: "2002-09-09",
+    sslIsImmediateReimbursement: false,
+    aslClaimBasis: "JJ",
+    aslDeductible: 0,
+    aslMinDeductible: 0,
+    aslExpectedClaimLiability: 0,
+    aslIncurrredStartDate: "2001-09-09",
+    aslIncurredEndDate: "2002-04-09",
+    aslPaidStartDate: "2001-04-09",
+    aslPaidEndDate: "2002-04-09",
+    aslRunInLimit: 0,
+    aslAnnualLimit: 0,
+    aslLifeTimeLimit: 0,
+    aslIsMonthlyAccomidation: false,
+    aslTermCoverageExtEndDate: "2002-09-09",
+    isMaxLiability: false,
+    ibnrPercentage: 0,
+    defferedFeePercentage: 0,
+    status: 0,
+    userId: "Somesh"
+  }
+  console.log(this.addObj);
+  debugger;
   this.productForm.patchValue({
-    status: this.productForm.get('status').value?1:0,
-    userId: this.loginService.currentUserValue.name
-  });
+    status:this.f.status.value==true?1:0
+  })
   console.log(this.productForm.value);
-  
+  debugger;
   this.productService.addProduct(this.productForm.value)
       .pipe(first())
       .subscribe({

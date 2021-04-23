@@ -1,14 +1,12 @@
 export interface IClaimReportsModel{
-        billId: string;
-        claimId: string;
-        providerName: string;
-        memberName: string;
-        converted: boolean;
-        billed: number;
-        memberId: string;
-        hccamount: number;
-        allowed: number;
-        capitated: boolean;
-        lastChanged: Date;
-        workSheetState: string
+        claimId: string,
+        clientName: string,
+        memberId: string,
+        firstName: string,
+        lastName: string,
+        paidAmount: number,
+        climReceivedOn: string,
+        paidDate: string,
+        dateOfBirth: string
 }
+

@@ -26,6 +26,7 @@ export class ContractsComponent implements OnInit {
   clients: IClient[] = [];
   contract: IContractIDRequest;
   activeClients: IActiveClient[]=[];
+  updateObj: IContract[]=[];
   ustartDate:string;
   uendDate:string;
   uRunInStartDate:string;
@@ -41,10 +42,22 @@ export class ContractsComponent implements OnInit {
     loading = false;
     submitted = false;
     isCustomModalOpen: boolean = false;
-     
+    uContractId: number;
+    startEndDateErr = {
+      isDateErr: false,
+      dateErrMsg: ''
+    };
+    runInStartEndErr = {
+      isDateErr: false,
+      dateErrMsg: ''
+    };
+    runOutStartEndErr = {
+      isDateErr: false,
+      dateErrMsg: ''
+    };
     @ViewChild("focusElem") focusTag: ElementRef;
 
-  displayedColumns: string[] = ['clientName','contractId', 'effectiveDate','endDate','clientId'];
+  displayedColumns: string[] = ['clientName','contractId', 'startDate','endDate','clientId'];
   dataSource: any;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -63,21 +76,25 @@ export class ContractsComponent implements OnInit {
     this.getAllContracts();
     this.getActiveClients();   
     this.contractForm = this.formBuilder.group({
-   clientId:['', Validators.required],
-   effectiveDate:['', Validators.required],
-   endDate:['', Validators.required],
-   claimsAdministrator:"",
-   pharmacyClaimsAdministrator:"",
-   runInStartDate:['', Validators.required],
-   runInEndDate:['', Validators.required],
-   runOutStartDate:['', Validators.required],
-   runOutEndDate:['', Validators.required],
-   terminationDate:['', Validators.required],
-   status:0,
-   userId:"",
-   contractId:""
-    },{validator: this.dateLessThan('effectiveDate', 'endDate')}   
-    );    
+      contractId: 0,
+      clientId:['', Validators.required],
+      startDate:['', Validators.required],
+      endDate:['', Validators.required],
+      claimsAdministrator:"",
+      pharmacyClaimsAdministrator:"",
+      runInStartDate:[''],
+      runInEndDate:[''],
+      runOutStartDate:[''],
+      runOutEndDate:[''],
+      terminationDate:[''],
+      status:0,
+      userId:this.loginService.currentUserValue.name,
+      ftn: '',
+      ftnName: '',
+      policyYear: 0,
+    },{validators: this.dateLessThan('startDate', 'endDate')}
+      
+     );    
   }
 
   getAllContracts(){    
@@ -101,6 +118,29 @@ export class ContractsComponent implements OnInit {
       }
     )
   }
+  getContract(contractId){
+    this.contractService.getContract(contractId).subscribe((data)=>{
+      this.updateObj = data;
+      console.log(this.updateObj[0].clientId);
+      console.log(this.updateObj[0].contractId);
+      this.uContractId = this.updateObj[0].contractId;
+      this.contractForm.patchValue({
+        contractId: Number(this.uContractId),
+        clientId: this.updateObj[0].clientId,
+        startDate: this.datePipe.transform(this.updateObj[0].startDate, 'yyyy-MM-dd'),
+        endDate: this.datePipe.transform(this.updateObj[0].endDate, 'yyyy-MM-dd'),
+        claimsAdministrator:this.updateObj[0].claimsAdministrator,
+        pharmacyClaimsAdministrator:this.updateObj[0].pharmacyClaimsAdministrator,            
+        runInStartDate:this.datePipe.transform(this.updateObj[0].runInStartDate, 'yyyy-MM-dd'),
+        runInEndDate:this.datePipe.transform(this.updateObj[0].runInEndDate, 'yyyy-MM-dd'),
+        runOutStartDate: this.datePipe.transform(this.updateObj[0].runOutStartDate, 'yyyy-MM-dd'),
+        runOutEndDate: this.datePipe.transform(this.updateObj[0].runOutEndDate, 'yyyy-MM-dd'),
+        terminationDate:this.datePipe.transform(this.updateObj[0].terminationDate, 'yyyy-MM-dd'),
+        status:this.updateObj[0].status  
+      });
+      
+    })
+  }
   dateLessThan(from: string, to: string) {
   
     return (group: FormGroup): {[key: string]: any} => {
@@ -108,16 +148,16 @@ export class ContractsComponent implements OnInit {
       let t = group.controls[to];
       if (f.value > t.value) {
         this.isDateValid=false;
-        return {
-          dates: from+' '+"should be greater than" +' '+to
-        };
+          return { 
+            dates: "Start Date should not be greater than End Date"
+          }; 
       }
       return {};
     }
 }
   openCustomModal(open: boolean, id:any) {
     setTimeout(()=>{
-      this.focusTag.nativeElement.focus()
+      this.focusTag.nativeElement.focus();
     }, 100);
     this.submitted = false;
     this.loading = false;
@@ -135,37 +175,9 @@ export class ContractsComponent implements OnInit {
     //this.contId=id.contractId==0?"":id.contractId;
     if(id!=null && open){
       this.isAddMode = false;
-      if(id!=null){
-        //this.selectedValue=id.parentID;
-        this.isAddMode = false;
-        this.ustartDate = this.datePipe.transform(id.effectiveDate, 'yyyy-MM-dd');
-        this.uendDate = this.datePipe.transform(id.endDate, 'yyyy-MM-dd');
-        this.uRunInStartDate= this.datePipe.transform(id.runInStartDate, 'yyyy-MM-dd');
-        this.uRunInEndDate= this.datePipe.transform(id.runInEndDate, 'yyyy-MM-dd');
-        this.uRunOutStartDate= this.datePipe.transform(id.runOutStartDate, 'yyyy-MM-dd');
-        this.uRunOutEndDate= this.datePipe.transform(id.runOutEndDate, 'yyyy-MM-dd');
-        this.uTerminationDate= this.datePipe.transform(id.terminationDate, 'yyyy-MM-dd');
-          this.contractForm.patchValue({
-            contractId:Number.parseInt(id.contractId),
-            clientId: id.clientId,
-            clientName: id.clientName,
-            //status: id.status,
-            effectiveDate: this.ustartDate,
-            endDate: this.uendDate,
-            claimsAdministrator:id.claimsAdministrator,
-            pharmacyClaimsAdministrator:id.pharmacyClaimsAdministrator,            
-            runInStartDate:this.uRunInStartDate,
-           runInEndDate:this.uRunInEndDate,
-           runOutStartDate:this.uRunOutStartDate,
-           runOutEndDate:this.uRunOutEndDate,
-           terminationDate:this.uTerminationDate,
-           status:id.status
-          
-            //: id.clientId
-          });
-         
-          
-         }
+      this.getContract(id);
+      console.log(this.updateObj);
+           
           
     }
   }
@@ -179,11 +191,28 @@ export class ContractsComponent implements OnInit {
 
       // reset alerts on submit
       this.alertService.clear();
+      this.runInStartEndErr.isDateErr=false;
+      this.runInStartEndErr.dateErrMsg='';
+      this.runOutStartEndErr.isDateErr=false;
+      this.runOutStartEndErr.dateErrMsg='';
 
       // stop here if form is invalid
      if (this.contractForm.invalid) {
       return;
      }
+     if(this.contractForm.valid && this.f.runInStartDate.value > this.f.runInEndDate.value){
+       this.runInStartEndErr.isDateErr=true;
+       this.runInStartEndErr.dateErrMsg = 'Run-In Start date should not be greater than Run-In End date';
+       
+       return;
+     }
+     
+     if(this.contractForm.valid && this.f.runOutStartDate.value > this.f.runOutEndDate.value){
+      this.runOutStartEndErr.isDateErr=true;
+      this.runOutStartEndErr.dateErrMsg = 'Run-Out Start date should not be greater than Run-Out End date';
+      
+      return;
+    }
      //this.contractForm.valid;
       this.loading = true;
       if (this.isAddMode) {
@@ -196,19 +225,37 @@ export class ContractsComponent implements OnInit {
   
   private addContract() {
    
-    this.contractForm.patchValue({
-      userId:this.loginService.currentUserValue.name,
-      contractId:0,
-      status:Boolean(this.contractForm.get('status').value)==true?1:0,
-      runInStartDate:String(this.contractForm.get('runInStartDate').value)==""?null: String(this.contractForm.get('runInStartDate').value),
-      runInEndDate:String(this.contractForm.get('runInEndDate').value)==""?null: String(this.contractForm.get('runInEndDate').value),
-      runOutStartDate:String(this.contractForm.get('runOutStartDate').value)==""?null: String(this.contractForm.get('runOutStartDate').value),
-      runOutEndDate:String(this.contractForm.get('runOutEndDate').value)==""?null: String(this.contractForm.get('runOutEndDate').value),
-      terminationDate:String(this.contractForm.get('terminationDate').value)==""?null: String(this.contractForm.get('terminationDate').value),
-     
-    //: id.clientId
-    });
-    this.contractService.addContract(this.contractForm.value)
+    console.log(this.contractForm.value);
+    let addObj = {
+      contractId: 0,
+      clientId: this.contractForm.get('clientId').value,
+      startDate: this.contractForm.get('startDate').value,
+      endDate: this.contractForm.get('endDate').value,
+      claimsAdministrator:this.contractForm.get('claimsAdministrator').value,
+      pharmacyClaimsAdministrator:this.contractForm.get('pharmacyClaimsAdministrator').value,          
+      runInStartDate:this.datePipe.transform(this.f.runInStartDate.value, 'yyyy-MM-dd'),
+      runInEndDate:this.datePipe.transform(this.f.runInEndDate.value, 'yyyy-MM-dd'),
+      runOutStartDate: this.datePipe.transform(this.f.runOutStartDate.value, 'yyyy-MM-dd'),
+      runOutEndDate: this.datePipe.transform(this.f.runOutEndDate.value, 'yyyy-MM-dd'),
+      terminationDate:this.datePipe.transform(this.f.terminationDate.value,  'yyyy-MM-dd'),
+      status: 1,
+      userId: this.loginService.currentUserValue.name,
+      ftn: '',
+      ftnName: '',
+      policyYear: 0,
+    }
+    if(addObj.runInStartDate=='')
+      addObj.runInStartDate = "2010-01-01";
+    if(addObj.runInEndDate=='')
+      addObj.runInEndDate = "2011-01-01";
+    if(addObj.runOutStartDate=='')
+      addObj.runOutStartDate = "2010-01-01";
+    if(addObj.runOutEndDate=='')
+      addObj.runOutEndDate = "2011-01-01";
+    if(addObj.terminationDate=='')
+      addObj.terminationDate = "2012-01-01";
+    console.log(addObj);
+    this.contractService.addContract(addObj)
         .pipe(first())
         .subscribe({
             next: () => {
@@ -226,25 +273,46 @@ export class ContractsComponent implements OnInit {
     }
 
     private updateContract() {
-      
-      this.contractForm.patchValue({
-        userId:this.loginService.currentUserValue.name,
-        status:Boolean(this.contractForm.get('status').value)==true?1:0,
-      
-      runInStartDate:String(this.contractForm.get('runInStartDate').value)=="null"?null: String(this.contractForm.get('runInStartDate').value),
-      runInEndDate:String(this.contractForm.get('runInEndDate').value)=="null"?null: String(this.contractForm.get('runInEndDate').value),
-      runOutStartDate:String(this.contractForm.get('runOutStartDate').value)=="null"?null: String(this.contractForm.get('runOutStartDate').value),
-      runOutEndDate:String(this.contractForm.get('runOutEndDate').value)=="null"?null: String(this.contractForm.get('runOutEndDate').value),
-      terminationDate:String(this.contractForm.get('terminationDate').value)=="null"?null: String(this.contractForm.get('terminationDate').value),
-     
-        //: id.clientId
-      });
-        this.contractService.updateContract(this.contractForm.value)
+        let updateConObj={
+          contractId: this.uContractId,
+          clientId: this.contractForm.get('clientId').value,
+          startDate: this.datePipe.transform(this.contractForm.get('startDate').value, 'yyyy-MM-dd'),
+          endDate: this.datePipe.transform(this.contractForm.get('endDate').value, 'yyyy-MM-dd'),
+          claimsAdministrator:this.contractForm.get('claimsAdministrator').value,
+          pharmacyClaimsAdministrator:this.contractForm.get('pharmacyClaimsAdministrator').value,            
+          runInStartDate:this.datePipe.transform(this.f.runInStartDate.value, 'yyyy-MM-dd'),
+          runInEndDate:this.datePipe.transform(this.f.runInEndDate.value, 'yyyy-MM-dd'),
+          runOutStartDate: this.datePipe.transform(this.f.runOutStartDate.value, 'yyyy-MM-dd'),
+          runOutEndDate: this.datePipe.transform(this.f.runOutEndDate.value, 'yyyy-MM-dd'),
+          terminationDate:this.datePipe.transform(this.f.terminationDate.value,  'yyyy-MM-dd'),
+          status:this.contractForm.get('status').value==true?1:0,
+          userId: this.loginService.currentUserValue.name,
+          ftn: '',
+          ftnName: '',
+          policyYear: 0,   
+        };
+        if(updateConObj.runInStartDate=='')
+          updateConObj.runInStartDate = "2009-10-10";
+        if(updateConObj.runInEndDate=='')
+          updateConObj.runInEndDate = "2009-11-11";
+        if(updateConObj.runOutStartDate=='')
+          updateConObj.runOutStartDate = "2009-10-10";
+        if(updateConObj.runOutEndDate=='')
+          updateConObj.runOutEndDate = "2009-11-11";
+        if(updateConObj.terminationDate=='')
+          updateConObj.terminationDate = "2010-10-10";
+        if(updateConObj.runInStartDate > updateConObj.runInEndDate){
+          console.log("start date should not be greater than end date");
+          
+        }
+        this.contractService.updateContract(updateConObj)
             .pipe(first())
             .subscribe({
                 next: () => {
                     this.openCustomModal(false,null); 
                     this.contractForm.reset();
+                    
+                    this.getAllContracts();
                     this.alertService.success('Contract updated', { 
                       keepAfterRouteChange: true });
                    // this.router.navigate(['../../'], { relativeTo: this.route });

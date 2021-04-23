@@ -14,6 +14,7 @@ export interface IBatchDetails{
     createDate: string;
     updateId: string;
     lastUpdateDate: string;
+    batchType:string;
 }
 export interface IAllBatchIDs{     
     batchId: string;
@@ -55,6 +56,7 @@ export interface IBatchPAdd{
     createDate: string;
     updateId: string;
     lastUpdateDate: string;
+    batchType:string;
 }
 
 export interface IBatchPAddSuccess{
@@ -75,7 +77,7 @@ export interface IBatchPUpdate{
     createdOn: string;
     updateId: string;
     lastUpdateDate: string;
- 
+ batchType:string;
     // updateId: string;
     // lastUpdateDate: Date;
 }

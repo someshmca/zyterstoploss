@@ -1,10 +1,18 @@
 export interface IContract{
-    clientId:string;
     contractId: number;
-    effectiveDate: Date;
-    endDate: Date;
-    clientName:string;
-   userId:string;
+    clientId: string;
+    startDate: string;
+    endDate: string;
+    claimsAdministrator: string;
+    pharmacyClaimsAdministrator: string;
+    runInStartDate: string;
+    runInEndDate: string;
+    runOutStartDate: string;
+    runOutEndDate: string;
+    terminationDate: string;
+    status: number;
+    userId: string;
+    clientName: string;
 }
 
 export interface IContractIDRequest{
@@ -15,7 +23,7 @@ export interface IContractIDRequest{
 export interface IContractsByClient{
     contractId: number;
     clientId: string;
-    effectiveDate: string;
+    startDate: string;
     endDate: string;
     claimsAdministrator: string;
     pharmacyClaimsAdministrator: string;
@@ -32,17 +40,20 @@ export interface IContractsByClient{
 export interface IContractAdd{
     contractId: number;
     clientId:string;
-    effectiveDate: Date;
-    endDate: Date;
+    startDate: string;
+    endDate: string;
     claimsAdministrator: string;
     pharmacyClaimsAdministrator: string;
-    runInStartDate: Date;
-    runInEndDate: Date;
-    runOutStartDate: Date;
-    runOutEndDate: Date;
-    terminationDate: Date;
+    runInStartDate: string;
+    runInEndDate: string;
+    runOutStartDate: string;
+    runOutEndDate: string;
+    terminationDate: string;
     status: number;
     userId:string;
+    ftn: string;
+    ftnName: string;
+    policyYear: number;
 }
 
 export interface IAddContractSuccess{
@@ -53,15 +64,15 @@ export interface IAddContractSuccess{
 export interface IContractUpdate{
     contractId: number;
     clientId:string;
-    effectiveDate: Date;
-    endDate: Date;
+    startDate: string;
+    endDate: string;
     claimsAdministrator: string;
     pharmacyClaimsAdministrator: string;
-    runInStartDate: Date;
-    runInEndDate: Date;
-    runOutStartDate: Date;
-    runOutEndDate: Date;
-    terminationDate: Date;
+    runInStartDate: string;
+    runInEndDate: string;
+    runOutStartDate: string;
+    runOutEndDate: string;
+    terminationDate: string;
     status: number;
     userId:string;
 }

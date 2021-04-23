@@ -32,6 +32,7 @@ export class BatchSettingsComponent implements OnInit {
   locBatchProcessID: boolean = false;
 
   isStartDemandModalOpen: boolean = false;
+  locLastRunStatus: string;
   
   id: string;
   isAddMode: boolean;
@@ -44,8 +45,9 @@ export class BatchSettingsComponent implements OnInit {
   ulastRun: string;  
   uCreatedOn: any;
   @ViewChild("focusElem") focusTag: ElementRef;
+  show: boolean=true;
   
-  batchProcessColumns: string[] = ['batchProcess', 'description', 'status', 'lastRun','lastRunStatus','nextScheduleRun','frequency', 'createId','batchProcessId'];
+  batchProcessColumns: string[] = ['batchProcess', 'description', 'status', 'lastRun','lastRunStatus','nextScheduleRun','frequency', 'batchType', 'createId','batchProcessId'];
   //batchProcessColumns: string[] = ['batchProcess', 'description', 'status', 'lastRun','lastRunStatus','nextScheduleRun','frequency','batchProcessId', 'batchStatusId','createId','createDate', 'updateId','lastUpdateDate'];
   batchProcessGridSource: any;
   @ViewChild(MatPaginator) paginator1: MatPaginator;
@@ -79,7 +81,7 @@ export class BatchSettingsComponent implements OnInit {
       (data: IBatchStatus[]) => {          
          this.batchStatusList = data;  
          console.log(this.batchStatusList[1].batchStatus)
-             
+        this.locLastRunStatus = this.batchStatusList[1].batchStatus;
       }
     );
   }
@@ -111,7 +113,9 @@ export class BatchSettingsComponent implements OnInit {
   }
   listBatchProcessGrid(){    
     this.batchSettingService.getBatchProcessDetails('All').subscribe(
-      (data: IBatchDetails[]) => {       
+      (data: IBatchDetails[]) => {   
+            
+    
          this.allBatchIDDetails = data;   
          this.batchProcessGridSource = new MatTableDataSource(this.allBatchIDDetails);
          this.batchProcessGridSource.paginator = this.batchProcessPaginator;
@@ -125,16 +129,19 @@ export class BatchSettingsComponent implements OnInit {
     this.isHistoryPresent = false;
     this.isHistoryNotPresent = false;
   }
-  startDemand(elem){
+  startDemand(elem, batchType){
+    console.log(batchType);
+    
     let batchid=elem.batchProcessId;
-    let userid='admin@infinite.com';
+    let userid= this.loginService.currentUserValue.emailID;
     let startDate = this.datePipe.transform(new Date(Date.now()), 'yyyy-MM-dd, h:mm:ss');
     let lastRunTime = this.datePipe.transform(elem.lastRun, 'yyyy-MM-dd, h:mm:ss');
     let frequency = elem.frequency;
-    let nextScheduleRun =this.datePipe.transform(elem.nextScheduleRun, 'yyyy-MM-dd, h:mm:ss');
+    let nextScheduleRun = "";
     this.isStartDemandModalOpen = true;
-    this.batchSettingService.calculateOnStart(batchid,userid,startDate,lastRunTime,frequency,nextScheduleRun).subscribe(
+    this.batchSettingService.calculateOnStart(batchid,userid,startDate,lastRunTime,frequency,nextScheduleRun,batchType).subscribe(
       (data)=>{        
+        
         console.log(data);
       }, (error) => {
         console.log("Start Demand Error : "+error.message);
@@ -146,24 +153,26 @@ export class BatchSettingsComponent implements OnInit {
   }
   initBatchProcessForm() {
     this.batchProcessForm = this.fb.group({
-      batchProcessId: '',
+      batchProcessId: 1,
       batchProcess: ['', Validators.required],
       description: ['', Validators.required],
       status: '',
-      lastRunStatus: "Active",
+      lastRunStatus: "Completed",
       lastRun: '',
       nextScheduleRun: '',
-      frequency: '',
+      frequency: "Daily",
       createId: '',
       createDate: '',
       updateId: '',
-      lastUpdateDate: ''
+      lastUpdateDate: '',
+      batchType:"ASL"
     });
   }
   getBatchDetails(statusVal){   
     let status: string = this.batchStatusList[statusVal].batchStatus;   
     this.batchSettingService.getBatchProcessDetails(status).subscribe(
-      (data: IBatchDetails[]) => {       
+      (data: IBatchDetails[]) => {   
+            
          this.allBatchIDDetails = data;    
          this.batchProcessGridSource = new MatTableDataSource(this.allBatchIDDetails);
          this.batchProcessGridSource.paginator = this.batchProcessPaginator;
@@ -175,17 +184,20 @@ export class BatchSettingsComponent implements OnInit {
   get f() { return this.batchProcessForm.controls; }
    
   openCustomModal(open: boolean, id:string) {
+
    setTimeout(()=>{
      this.focusTag.nativeElement.focus()
    }, 100);
     this.submitted = false;
     this.loading = false;
     if(open && id==null){
-      this.isAddMode = true;
-     // this.fLastRun= this.datePipe.transform(new Date('02/25/2021'), 'yyyy-MM-dd');
-      this.batchProcessForm.patchValue({
-        lastRun: this.fLastRun
-      })
+      this.batchProcessForm.patchValue({        
+        lastRunStatus: "Completed",
+        frequency: "Daily",
+        batchType:"ASL",
+        lastRun: this.datePipe.transform(new Date('02/25/2021'), 'yyyy-MM-dd')
+      });
+      this.isAddMode = true;   
     }
     this.isCustomModalOpen = open;
     if (!open && id==null) {
@@ -197,16 +209,8 @@ export class BatchSettingsComponent implements OnInit {
     
     if(id!=null && open){
       this.isAddMode = false;
-      //    this.batchSettingService.getBatchProcessDetails(elem)
-      //    .pipe(first()) 
-      //    .subscribe(elem => {
-      //      console.log(elem);
-           
-      //    }
-      // );
       let elem:any = id;
       console.log(id);
-     // this.fLastRun= this.datePipe.transform(new Date('02/25/2021'), 'yyyy-MM-dd');
       this.uBatchProcessId = elem.batchProcessId;
       this.ulastRun = this.datePipe.transform(elem.lastRun, 'yyyy-MM-dd');
       this.uCreatedOn = this.datePipe.transform(new Date('02/25/2021'), 'yyyy-MM-dd');
@@ -216,10 +220,18 @@ export class BatchSettingsComponent implements OnInit {
         description: elem.description,
         status: elem.batchStatusId,
         lastRun: this.ulastRun,
-        lastRunStatus: elem.batchStatusId,
+        lastRunStatus: elem.lastRunStatus,
         nextScheduleRun: this.datePipe.transform(elem.nextScheduleRun, 'yyyy-MM-dd'),
-        frequency: elem.frequency
-      })      
+        frequency: elem.frequency,
+        batchType:elem.batchType
+      });      
+      
+      // this.batchProcessForm.patchValue({        
+      //   lastRunStatus: this.f.lastRunStatus.value==''?'Completed':this.f.lastRunStatus.value,
+      //   frequency: this.f.frequency.value==''?'Daily':this.f.frequency.value,
+      //   batchType:this.f.batchType.value==''?'ASL':this.f.batchType.value
+      // });
+      console.log(this.batchProcessForm.value);
       
       
     }
@@ -247,32 +259,27 @@ export class BatchSettingsComponent implements OnInit {
 }
 
 private addBatchProcess() {
+  
   console.log(this.batchStatusList.length);
   console.log(this.batchStatusList[2].batchStatus);
   console.log(this.f.status.value);
   console.log(this.f.status);
-  
   let addBatchObj:IBatchPAdd = {
     batchProcessId: 0,
     batchProcess: this.f.batchProcess.value,
     description: this.f.description.value,
     status: '',
-    batchStatusId: Number(this.f.status.value),
-    lastRun: this.fLastRun,
-    lastRunStatus: '',
+    batchStatusId: 5,
+    lastRun: this.datePipe.transform(new Date('02/25/2021'), 'yyyy-MM-dd'),
+    lastRunStatus: 'Active',
     nextScheduleRun: this.datePipe.transform(this.f.nextScheduleRun.value, 'yyyy-MM-dd'),
     frequency: this.f.frequency.value,
     createId: this.loginService.currentUserValue.name,
     createDate: this.datePipe.transform(new Date(Date.now()), 'yyyy-MM-dd'),
     updateId: this.loginService.currentUserValue.name,  
-    lastUpdateDate: this.datePipe.transform(new Date(Date.now()), 'yyyy-MM-dd')
+    lastUpdateDate: this.datePipe.transform(new Date(Date.now()), 'yyyy-MM-dd'),
+    batchType:this.f.batchType.value
   }
-  // this.batchProcessForm.patchValue({
-  //  createId: this.loginService.currentUserValue.name,
-  //  createDate: this.datePipe.transform(new Date(Date.now()), 'yyyy-MM-dd'),
-  //  updateId: this.loginService.currentUserValue.name,  
-  //  lastUpdateDate: this.datePipe.transform(new Date(Date.now()), 'yyyy-MM-dd')
-  // });
   
   this.batchSettingService.addBatchProcess(addBatchObj)
       .pipe(first())
@@ -280,6 +287,7 @@ private addBatchProcess() {
           next: () => {
             this.listBatchProcessGrid();
             this.openCustomModal(false, null);
+            
             this.batchProcessForm.reset();                
              this.alertService.success('New Batch Process added', { keepAfterRouteChange: true });
              //this.router.navigate(['../'], { relativeTo: this.route });
@@ -298,15 +306,17 @@ private addBatchProcess() {
       batchProcessId: this.uBatchProcessId,
       batchProcess: this.f.batchProcess.value,
       description: this.f.description.value,
-      batchStatusId: Number(this.f.status.value),
-      lastRun: this.f.lastRun.value,
-      lastRunStatus: this.batchStatusList[this.f.lastRunStatus.value].batchStatus,
+      batchStatusId: 4,
+      lastRun: this.datePipe.transform(this.f.lastRun.value, 'yyyy-MM-dd'),
+     // lastRunStatus: this.batchStatusList[this.f.lastRunStatus.value].batchStatus,
+      lastRunStatus: this.f.lastRunStatus.value,
       nextScheduleRun: this.datePipe.transform(this.f.nextScheduleRun.value, 'yyyy-MM-dd'),
       frequency: this.f.frequency.value,
       createId: this.loginService.currentUserValue.name,
       createdOn: this.uCreatedOn,
       updateId: this.loginService.currentUserValue.name,  
-      lastUpdateDate: this.datePipe.transform(new Date(Date.now()), 'yyyy-MM-dd')
+      lastUpdateDate: this.datePipe.transform(new Date(Date.now()), 'yyyy-MM-dd'),
+      batchType: this.f.batchType.value
     }
     console.log(this.updateBatchObj);
     

@@ -14,7 +14,8 @@ export class ClaimComponent implements OnInit {
   MemberID: any;
   isJobBatch: any = 0;
   //isCalculateClicked: boolean = false;
-  stopLossAmount: number;
+  stopLossAmount: any;
+  locIsUnlimited: boolean;
   constructor(private _claimService: ClaimService){
 
   }
@@ -22,16 +23,19 @@ export class ClaimComponent implements OnInit {
  ngOnInit(){
     this._claimService.selectedClaimID.subscribe((no) => {
       this.claimid = no;
-    })
-    this.getClaim(this.claimid);
+    });
+    setTimeout(()=>{
+      this.getClaim(this.claimid);
+    },600);
  }
   getClaim(id:string){
     this._claimService.setClaimId(id);                  
    // console.log("selected claim id  : "+this._claimService.selectedClaimID);
     this._claimService.getClaim(id).subscribe((data)=> {
       this.claimData = data;
-      this.MemberID = this.claimData.memberId;
       
+      this.MemberID = this.claimData.memberId;
+      this.locIsUnlimited = this.claimData.isUnlimited=='Y'?true:false;
       console.log("claim page data "+this.claimData);
       this.stopLossAmount = this.claimData.stopLossAmount;
      // 
@@ -44,10 +48,11 @@ export class ClaimComponent implements OnInit {
     
     this.getClaim(this.claimid);
   
-    this._claimService.calculateClaimAmount(this.MemberID, this.isJobBatch).subscribe((data)=> {
+    this._claimService.calculateClaimAmount(this.MemberID).subscribe((data:any)=> {
       
-      //this.isCalculateClicked = true;
+      //this.isCalculateClicked = true; 
       this.stopLossAmount = data.stopLossAmount;
+      
       console.log("calc stoploss amount kj : "+this.stopLossAmount);
     }) 
   }

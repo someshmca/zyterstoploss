@@ -8,76 +8,52 @@
             <div class="card-table-area ">
     <div class="table-responsive">
       <div class="mat-elevation-z8">
-        <table mat-table matSort #claimResultsTable [dataSource]="dataSource" class="table table-bordered table-striped card-table">
+        <table mat-table matSort #claimResultTable [dataSource]="dataSource" class="table table-bordered table-striped card-table">
 
           <ng-container matColumnDef="claimId">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Claim ID </th>
-            <td mat-cell *matCellDef="let element" class="c-id"> 
+            <td mat-cell *matCellDef="let element"> 
               {{element.claimId}} </td>
+          </ng-container>
+          <ng-container matColumnDef="clientName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Client Name </th>
+            <td mat-cell *matCellDef="let element"> 
+              {{element.clientName}} </td>
           </ng-container>
           <ng-container matColumnDef="memberId">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Member ID </th>
-            <td mat-cell *matCellDef="let element" class="c-id"> 
+            <td mat-cell *matCellDef="let element"> 
               {{element.memberId}} </td>
           </ng-container>
-          <ng-container matColumnDef="providerName">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header > Provider Name </th>
-            <td mat-cell *matCellDef="let element"> {{element.providerName}} </td>
+          <ng-container matColumnDef="firstName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header > First Name </th>
+            <td mat-cell *matCellDef="let element"> {{element.firstName}} </td>
           </ng-container>
-          <ng-container matColumnDef="memberName">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header >
-Member Name
-</th>
-            <td mat-cell *matCellDef="let element"> {{element.memberName}} </td>
+          <ng-container matColumnDef="lastName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header >Last Name</th>
+            <td mat-cell *matCellDef="let element"> {{element.lastName}} </td>
           </ng-container>
-          <ng-container matColumnDef="converted">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header >
-Converted
-</th>
+          <ng-container matColumnDef="paidAmount">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header >Paid Amount</th>
+            <td mat-cell *matCellDef="let element" style="text-align: right; padding-right: 15px;"> 
+              {{element.paidAmount}} </td>
+          </ng-container>
+          <ng-container matColumnDef="climReceivedOn">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Claim Received On</th>
+            <td mat-cell *matCellDef="let element"> {{element.climReceivedOn | date:'MM/dd/yyyy'}} </td>
+          </ng-container>
+          <ng-container matColumnDef="paidDate">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Paid Date</th>
             <td mat-cell *matCellDef="let element"> 
-<input type="checkbox" [checked]="element.converted"/>
-</td>
+              {{element.paidDate | date:'MM/dd/yyyy'}} </td>
           </ng-container>
-          <ng-container matColumnDef="billed">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header >
-Billed
-</th>
-            <td mat-cell *matCellDef="let element"> {{element.billed}} </td>
-          </ng-container>
-          <ng-container matColumnDef="hccamount">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header >
-Hccamount
-</th>
+          <!-- <ng-container matColumnDef="dateOfBirth">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header >Date of Birth</th>
             <td mat-cell *matCellDef="let element"> 
-{{element.hccamount | currency:'CAD':'symbol-narrow'}} </td>
-          </ng-container>
-          <ng-container matColumnDef="allowed">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header >
-Allowed
-</th>
-            <td mat-cell *matCellDef="let element"> 
-<input type="checkbox" [checked]="element.allowed"/>
-</td>
-          </ng-container>
-          <ng-container matColumnDef="capitated">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header >
-Capitated
-</th>
-            <td mat-cell *matCellDef="let element"> {{element.capitated}} </td>
-          </ng-container>
-          <ng-container matColumnDef="lastChanged">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header >
-Last Changed
-</th>
-            <td mat-cell *matCellDef="let element"> 
-{{element.lastChanged | date:'MM/dd/yyyy'}} </td>
-          </ng-container>
-          <ng-container matColumnDef="workSheetState">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header >
-Worksheet State
-</th>
-            <td mat-cell *matCellDef="let element"> {{element.workSheetState}} </td>
-          </ng-container>
+              {{element.dateOfBirth | date:'MM/dd/yyyy'}}
+            </td>
+
+          </ng-container> -->
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
           <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="setClaimId(row.claimId)"></tr>
         </table>

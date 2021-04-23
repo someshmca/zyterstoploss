@@ -19,6 +19,12 @@
     justify-content: space-between;
     align-items: center;
 }
+.card-header.card-header-in {
+    background-color: rgb(162 213 236 / 3%);
+    color: #4b8794;
+    padding: 5px 15px;
+    border-left: 2px solid #6ac5e8;
+}
 .card-header h3{
     padding: 0;
     margin: 0;
@@ -135,8 +141,16 @@ input[type='date'].form-control{
     display: flex;
     justify-content: flex-start;
     align-items: center;
+    padding: 5px 20px 15px 0;
 }
 .mandate-fields span{
     color: #ff0000;
     font-size: 12px;
 }
+.card-header h5{
+    margin-bottom: 0;
+}
+.select-grid-header .mat-form-field-infix{
+    border: 1px solid #cccccc !;
+}
+

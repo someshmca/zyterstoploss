@@ -3,7 +3,7 @@
     <div class="page-content">
       <div class="card custom-card">
           <div class="card-header">
-          Client
+          Account
           <alert></alert>
           </div>
           <div class="card-body">
@@ -11,7 +11,7 @@
                   <div class="select-grid-header">
                      <div>
                       <label class="form-field-label">
-                          Client ID
+                          Search Account
                       </label>
                       <!-- <div class="form-field-input">
                           <select class="form-control cselect-dropdown" name="clientId" (change)="onChangeClient($event.target.value)">
@@ -23,7 +23,7 @@
                       </div> -->
                       <div fxLayout fxLayoutAlign="center center">
                         <mat-form-field fxFlex="40%">
-                          <input matInput type="text" (keyup)="doFilter($event.target.value)" placeholder="Search a Client">
+                          <input matInput type="text" (keyup)="doFilter($event.target.value)" placeholder="Search a Account">
                         </mat-form-field>
                       </div>
                   </div>  
@@ -35,14 +35,14 @@
                   <div class="table-responsive">
                        
                   <div class="mat-elevation-z8">
-                    <table mat-table matSort #benefitTable [dataSource]="dataSource" class="table table-bordered table-striped card-table">
+                    <table mat-table matSort [dataSource]="dataSource" class="table table-bordered table-striped card-table">
                   
                      <ng-container matColumnDef="clientId">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Client ID </th>
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Account ID </th>
                         <td mat-cell *matCellDef="let element"> {{element.clientId}} </td>
                       </ng-container>
                       <ng-container matColumnDef="clientName">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header > Client Name </th>
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header > Account Name </th>
                         <td mat-cell *matCellDef="let element"> {{element.clientName}} </td>
                       </ng-container>
                       <ng-container matColumnDef="startDate">
@@ -53,13 +53,13 @@
                         <th mat-header-cell *matHeaderCellDef mat-sort-header> End Date </th>
                         <td mat-cell *matCellDef="let element"> {{element.endDate | date:'MM/dd/yyyy'}} </td>
                       </ng-container>
-                      <ng-container matColumnDef="parentName">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Sub Account Off </th>
+                      <ng-container matColumnDef="parentID">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Sub Account of </th>
                         <td mat-cell *matCellDef="let element"> {{element.parentName}} </td>
                       </ng-container>
 
                       <!-- Action Column -->
-                      <ng-container matColumnDef="clientID">
+                      <ng-container matColumnDef="userId">
                         <th mat-header-cell *matHeaderCellDef class="c-action"> Action </th>
                         <td mat-cell *matCellDef="let element" class="action-link c-action"> 
                           <span class="fa fa-edit" 
@@ -91,58 +91,70 @@
         <!-- Modal Header -->
         <div class="modal-header">
             <h4 class="modal-title">
-                <span *ngIf="isAddMode">Add Client</span>
-                <span *ngIf="!isAddMode">Update Client</span>
+                <span *ngIf="isAddMode">Add Account</span>
+                <span *ngIf="!isAddMode">Update Account</span>
             </h4>
             <a class="fa fa-2x fa-times-circle" (click)="openCustomModal(false, null)">
             </a>
         </div>
         <!-- Modal body -->
         <div class="modal-body"> 
-    <div class="add-role-area">
-    <form [formGroup]="clientForm" (ngSubmit)="onSubmit()">
+          <div class="client-form-area">
+          <form [formGroup]="clientForm" (ngSubmit)="onSubmit()">
              <div class="mandate-fields">
                <span *ngIf="submitted && (!clientForm.valid && !clientForm.errors?.dates)">Fields marked with * are mandatory</span>
                <span *ngIf="clientForm.errors">{{ clientForm.errors?.dates | json }}</span>
-                        </div>  
+            </div>  
              <div class="row">
               <div class="col-md-6">
                  <div class="form-group">
-                   <label>Client ID</label>
-             <input #focusElem type="text" formControlName="clientId" readonly="true" class="form-control" />
+                   <label>Account ID<small *ngIf="isAddMode" class="starmark">*</small></label>
+             <input #focusElem type="text" maxlength="15" formControlName="clientId" [readonly]="!isAddMode" class="form-control" />
                  </div>
+                </div>
+                <div class="col-md-6">
                  <div class="form-group">
-                   <label>Client Name<small class="starmark">*</small></label>
+                   <label>Account Name<small class="starmark">*</small></label>
              <input type="text" formControlName="clientName" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.clientName.errors }" />
                  </div>  
-                      
-                      <div class="form-group switch-group">
-                        Active
-                          <label class="switch">
-                            <input type="checkbox" class="success" formControlName="status">
-                            <span class="slider round"></span>
-                          </label>                  
+                </div>
+              </div>     
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">                          
+                    <label>Start Date<small class="starmark">*</small></label>                          
+                    <input type="date" value="MM/dd/yyyy" formControlName="startDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.startDate.errors }"/>                      
+                </div> 
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">                          
+                    <label>End Date<small class="starmark">*</small></label>                          
+                    <input type="date" value="MM/dd/yyyy" formControlName="endDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.endDate.errors }" />                      
+                   </div>
+                </div>
+              </div>   
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label>Sub Account of<small class="starmark">*</small></label>
+                    <select formControlName="parentID" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.parentID.errors }" >
+                      <option *ngFor="let client of parentClientIds; let index=i" [selected]="i==2?true:null" [value]="client.parentID">
+                        {{client.parentName}}
+                      </option>
+                    </select>
+                  </div>  
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group switch-group" *ngIf="!isAddMode">
+                    Active
+                      <label class="switch">
+                        <input type="checkbox" class="success" formControlName="status">
+                        <span class="slider round"></span>
+                      </label>                  
                     </div> 
-                                 
-              </div>
-              <div class="col-md-6">
-                <div class="form-group">                          
-                  <label>Start Date<small class="starmark">*</small></label>                          
-                  <input type="date" value="MM/dd/yyyy" formControlName="startDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.startDate.errors }"/>                      
-              </div> 
-              <div class="form-group">                          
-                <label>End Date<small class="starmark">*</small></label>                          
-                <input type="date" value="MM/dd/yyyy" formControlName="endDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.endDate.errors }" />                      
-               </div>
-            <div class="form-group">
-              <label>SubAccount Off </label>
-        <select formControlName="parentID" class="form-control">
-          <option *ngFor="let client of parentClientIds" selected="selected" [value]="client.parentID">
-            {{client.parentName}}</option>
-            </select>
-            </div>   
-              </div>
-          </div>
+                </div>
+              </div>                      
+               
              
           <div class="modal-footer-btns">
             <button type="button" class="btn btn-outline-primary" (click)="openCustomModal(false, null)">Cancel</button>

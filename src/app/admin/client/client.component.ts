@@ -8,7 +8,7 @@ import { formatDate } from '@angular/common';
 import { first } from 'rxjs/operators';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, Sort } from '@angular/material/sort';
 import {DatePipe} from '@angular/common';
 import { AlertService } from '../services/alert.service';
 import { LoginService } from 'src/app/shared/services/login.service';
@@ -21,7 +21,7 @@ let p = 'y-MM-dd'; // YYYY-MM-DD
   providers: [DatePipe]
 })
 export class ClientComponent implements OnInit {  
-  displayedColumns: string[] = ['clientId','clientName','startDate','endDate','parentName','clientID'];
+  displayedColumns: string[] = ['clientId','clientName','startDate','endDate','parentID','userId'];
   dataSource: any;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -41,14 +41,15 @@ export class ClientComponent implements OnInit {
   submitted = false;
   ustartDate:string;
   uendDate:string;
-  parentCLientId:string
-select:boolean;
+  parentCLientId:string;
+  select:boolean;
   parentClientIds: IParentClient[];
-selectedValue:any;
-isDateValid:boolean;
+  selectedValue:any;
+  isDateValid:boolean;
 
   isCustomModalOpen: boolean = false;
   @ViewChild("focusElem") focusTag: ElementRef;
+  
 
   ngOnInit() {
     this.getAllClients();
@@ -68,7 +69,7 @@ isDateValid:boolean;
       startDate:['', [Validators.required, Validators.pattern(/^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/)]],
       endDate:['', [Validators.required, Validators.pattern(/^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/)]],
       parentID:[''],
-      status:0,
+      status:false,
       userId:""//this.loginService.currentUserValue.name
   },{validator: this.dateLessThan('startDate', 'endDate')});    
   }
@@ -76,10 +77,15 @@ isDateValid:boolean;
     this.clientsService.getAllClients().subscribe(
       (data: IClient[]) => {
           this.clientIDs =  data;
-          this.clients = data;
+          this.clients = data; 
           this.dataSource = new MatTableDataSource(this.clients);
           this.dataSource.paginator = this.paginator;
           this.dataSource.sort = this.sort;
+      
+          const sortState: Sort = {active: 'clientId', direction: 'asc'};
+          this.sort.active = sortState.active;
+          this.sort.direction = sortState.direction;
+          this.sort.sortChange.emit(sortState);
       }
     )
   } 
@@ -219,8 +225,8 @@ isDateValid:boolean;
     
     this.clientForm.patchValue({
       userId:this.loginService.currentUserValue.name,
-      status:Boolean(this.clientForm.get('status').value==true)?1:0,
-      parentID:String(this.clientForm.get('parentID').value)
+      status:this.clientForm.get('status').value==true?1:0,
+      parentID:this.clientForm.get('parentID').value
       //: id.clientId
     });
  //   console.log(this.clientForm.get('status').value);

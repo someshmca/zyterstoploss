@@ -4,62 +4,73 @@
     <form [formGroup]="claimSearchForm" (ngSubmit)="onSubmit(claimSearchForm)">
         <div class="card custom-card">
             <div class="card-header">
-                Member Details
+                Claim Search
             </div>
+        </div>      
+        <div class="card custom-card">
+            <!-- <div class="card-header card-header-in">
+                Member Details
+            </div> -->
             <div class="card-body">
+                <div class="mandate-fields">
+                  <!-- <span *ngIf="submitted && !claimSearchForm.valid"></span> -->
+                  <span *ngIf="isClaimSearchErr">Please enter atleast one field</span>
+                  <span *ngIf="dateErr.fromDateErr">{{dateErrorMessage}}</span>
+                  <span *ngIf="dateErr.fromDateInvalid">{{dateErrorMessage}}</span>
+                  <span *ngIf="dateErr.toDateInvalid">{{dateErrorMessage}}</span>
+                </div> 
                 <div class="form-row">
-                <div class="form-field">
-                    <div class="form-field-label">
-                        <label>Claim ID </label>
-                    </div>
-                    <div class="form-field-input">
-                        <input type="text" #focusElem class="form-control field-input-text" formControlName="ClaimId" />
-                        <!-- <div class="invalid-feedback">
-                            <div *ngIf="submitted && f.ClaimId.errors">
-                                <div *ngIf="f.ClaimId.errors.required">Claim ID is required</div>
-                            </div>
-                        </div> -->
-                    </div>
-                </div>
                 <div class="form-field">
                     <label class="form-field-label">
                         Member ID</label>
                     <div class="form-field-input">
-                        <input type="text" class="form-control field-input-text" formControlName="memberId"/>
-                    </div>
-                </div>
-                <div class="form-field">
-                    <label class="form-field-label">Member Birth Date</label>
-                    <div class="form-field-input">
-                        <input type="date" class="form-control field-input-text" value="MM/DD/YYYY" formControlName="DateOfBirth" [max]="maxDate"/>
-                        <!-- <mat-form-field class="form-control field-input-text">
-                            <input matInput [matDatepicker]="picker" formControlName="DateOfBirth" [max]="maxDate">
-                            <mat-datepicker-toggle matSuffix [for]="picker">
-                                <mat-icon matDatepickerToggleIcon>
-                                    <span class="fa fa-calendar"></span>
-                                </mat-icon>
-                            </mat-datepicker-toggle>
-                            <mat-datepicker #picker ></mat-datepicker>
-                          </mat-form-field> -->
+                        <input type="text" #focusElem class="form-control field-input-text" formControlName="memberId"/>
                     </div>
                 </div>
                 <div class="form-field">
                     <label class="form-field-label">Member First Name</label>
                     <div class="form-field-input">
-                        <input type="text" class="form-control field-input-text" formControlName="Fname"/>
+                        <input type="text" class="form-control field-input-text" formControlName="firstName"/>
                     </div>
                 </div>
                 <div class="form-field">
                     <label class="form-field-label">Member Last Name</label>
                     <div class="form-field-input">
-                        <input type="text" class="form-control field-input-text" formControlName="Lname"/>
+                        <input type="text" class="form-control field-input-text" formControlName="lastName"/>
+                    </div>
+                </div>
+                <div class="form-field">
+                    <label class="form-field-label">Member Birth Date</label>
+                    <div class="form-field-input">
+                        <input type="date" class="form-control field-input-text" value="MM/DD/YYYY" formControlName="dateOfBirth" [max]="maxDate"/>
+                    </div>
+                </div>
+                <div class="form-field">
+                    <label class="form-field-label">Service Start Date</label>
+                    <div class="form-field-input">
+                        <input type="date" class="form-control field-input-text" value="MM/DD/YYYY" [max]="maxDate" formControlName="fromDate"/>
+                    </div>
+                </div>
+                <div class="form-field">
+                    <label class="form-field-label">Service End Date</label>
+                    <div class="form-field-input">
+                        <input type="date" class="form-control field-input-text" value="MM/DD/YYYY" [max]="maxDate" formControlName="toDate"/>
+                    </div>
+                </div>  
+                <div class="form-field">
+                    <div class="form-field-label">
+                        <label>Claim ID</label>
+                    </div>
+                    <div class="form-field-input">
+                        <input type="text" class="form-control field-input-text" formControlName="claimId" />
+                        
                     </div>
                 </div>
             </div>
             </div>
         </div>
         
-        <div class="card custom-card">
+        <!-- <div class="card custom-card">
             <div class="card-header">
                 Supplier
             </div>
@@ -79,31 +90,19 @@
                         </div>     
                     </div>
             </div>
-        </div>
+        </div> -->
         
-        <div class="card custom-card">
-            <div class="card-header">
+        <!-- <div class="card custom-card">
+            <div class="card-header card-header-in">
                 Service Dates
             </div>
             <div class="card-body">
                     <div class="form-row">
-                        <div class="form-field">
-                            <label class="form-field-label">From</label>
-                            <div class="form-field-input">
-                                <input type="date" class="form-control field-input-text" value="MM/DD/YYYY" [max]="maxDate" formControlName="ServiceDateFrom"/>
-                            </div>
-                        </div>
-                        <div class="form-field">
-                            <label class="form-field-label">To</label>
-                            <div class="form-field-input">
-                                <input type="date" class="form-control field-input-text" value="MM/DD/YYYY" [max]="maxDate" formControlName="ServiceDateTo"/>
-                            </div>
-                        </div>  
                 </div>
         </div>
-        </div>
+        </div> -->
 
-        <div class="card custom-card">
+        <!-- <div class="card custom-card">
             <div class="card-header">
                 Rendering Practitioner
             </div>
@@ -129,7 +128,7 @@
                         </div>    
                 </div>
             </div>
-        </div>
+        </div> -->
 
             <div class="claim-search-btns-area">
                 <button class="btn btn-outline-primary" type="reset">Reset</button>

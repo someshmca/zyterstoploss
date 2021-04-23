@@ -110,3 +110,17 @@
 select.form-control.is-invalid{
     background-position: 91% center !important;
 }
+
+.custom-control-label::before {
+    top: 1px;
+    left: -20px;
+    width: 18px;
+    height: 18px;
+}
+.custom-control-label::after {
+    top: 2px;
+    left: -19px;
+    width: 16px;
+    height: 16px;
+}
+

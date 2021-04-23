@@ -29,7 +29,7 @@ export class ProductService {
  addProduct(formData:IProductAdd ): Observable<IProductAdd>{
  const body = JSON.stringify(formData);
  
- const headerOptions = new HttpHeaders({ 'Content-Type': 'application/json', 'No-Auth': 'True' });
+ const headerOptions = new HttpHeaders({ 'Content-Type': 'application/json'});
   return this.http.post<IProductAdd
   >(Paths.productAdd, body,{headers: headerOptions} ).pipe(catchError(this.handleError.bind(this)));
  

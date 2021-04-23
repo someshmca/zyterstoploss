@@ -1,25 +1,23 @@
 
 export interface IClaim{
-    claimId: string,
-    clientId: string,
-    lastChangedOn: Date,
-    status: boolean,
-    adjudicatedOn: Date,
-    claimType: string,
-    manuallyPriced: boolean,
-    sentToReview: boolean,
-    benefitPlanType: string,
-    capitatedService: boolean,
-    removedClaim: boolean,
-    voidedClaim: boolean,
-    calculatedBenefitPlan: string,
-    claimSource: string,
-    claimAmount: number,
-    startDate: Date,
-    endDate: Date,
-    stopLossAmount: number,
-    memberId: number,
-    isJobBatch: number
+    claimId: string;                                                            
+    memberId: string;
+    memberHrid: string;
+    fname: string;
+    lname: string;
+    dateOfBirth: string;
+    climReceivedOn: string;
+    adjudicatedOn: string;
+    paidDate: string;
+    paidAmount: number;
+    laserValue: number;
+    isUnlimited: string;
+    contractId: number;
+    clientName: string;
+    planName: string;
+    memberStartDate: string;
+    memberEndDate: string;
+    stopLossAmount: number
 }
 
 

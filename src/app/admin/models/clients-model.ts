@@ -2,10 +2,10 @@ export interface IClient{
   clientId: string;
   clientName: string;
   status: number;
-  startDate: Date;
-  endDate: Date;
+  userId: string;
+  startDate: string;
+  endDate: string;
   parentID:string;
-  parentName:string;
 }
   
 
@@ -35,8 +35,7 @@ export interface IClientAdd{
   startDate: Date;
   endDate: Date;
   parentID:string;
-  userId:string;
- 
+  userId:string; 
 }
 
 export interface IClientAddSuccess{

@@ -54,3 +54,20 @@
     color: #555; margin-left: 8px; 
     cursor: pointer;
 }
+.checkbox-wrap{
+    display: flex;
+    position: relative;
+    width: 100%;
+    padding-left: 0;
+}
+.checkbox-wrap .chk-1{
+    width: 40%;
+}
+.checkbox-wrap .chk-2{
+    position: relative;
+    width: 60%;
+}
+.checkbox-wrap input[type="checkbox"]{
+    width: 18px;
+    margin-left: 6px;
+}

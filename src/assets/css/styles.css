@@ -73,3 +73,21 @@ select.crules-select option {
 .breadcrumb .breadcrumb-item a:hover{
 	color: #2d72bb;
 }
+.coming-soon{
+	color: #ff0000;
+	font-size: 1.5rem;
+	padding: 3rem 20px;
+	text-align: center;
+	clear: both;
+}
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
