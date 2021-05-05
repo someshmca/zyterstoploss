@@ -36,6 +36,7 @@ export interface IProductAll{
 export interface IProductAdd{
     productId: number;
     contractId: number;
+    clientId: string;
     sslClaimBasis: string;
     sslIncurredStartDate: string;
     sslIncurredEndDate: string;

@@ -86,6 +86,9 @@
                 <tr mat-header-row *matHeaderRowDef="batchProcessColumns"></tr>
                 <tr mat-row *matRowDef="let row; columns: batchProcessColumns; let i = index" (click)="showRowHistory(row, i)" [class.highlightRow]="i == selectedRow"></tr>
               </table>
+              <div *ngIf="noRecsFoundBatchDetails" class="batch-details-not-found">
+                <h3>No Records found for the selected Status <strong>{{selectedStatus}}</strong></h3>
+              </div>
               <mat-paginator #BatchProcessPaginator="matPaginator" [pageSizeOptions]="[5, 10, 15, 30, 50]" showFirstLastButtons></mat-paginator>
             </div> 
         </div>
@@ -169,8 +172,7 @@
           </a>
       </div>
       <!-- Modal body -->
-      <div class="modal-body">          
-  <div class="add-role-area">
+      <div class="modal-body">   
   <form [formGroup]="batchProcessForm" (ngSubmit)="onSubmit()"  autocomplete="off">
     <div class="mandate-fields">
       <span *ngIf="submitted && !batchProcessForm.valid">Fields marked with * are mandatory</span>
@@ -180,77 +182,72 @@
         <div class="form-group">
           <label >Batch Process 
             <small class="starmark">*</small></label>
-          <input type="text" #focusElem class="form-control" formControlName="batchProcess" tabindex="1"  [ngClass]="{ 'is-invalid': submitted && f.batchProcess.errors }" >  
+          <input type="text" #focusElem class="form-control" formControlName="batchProcess" [ngClass]="{ 'is-invalid': submitted && f.batchProcess.errors }" >  
         </div>
+      </div>
+      <div class="col-md-6">
         <div class="form-group">
           <label >Description
             <small class="starmark">*</small></label>
-          <input type="text" class="form-control" formControlName="description" tabindex="2"  [ngClass]="{ 'is-invalid': submitted && f.description.errors }">  
+          <input type="text" class="form-control" formControlName="description" [ngClass]="{ 'is-invalid': submitted && f.description.errors }">  
         </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
         <div class="form-group">
           <label >Batch Type
             </label>
-            <!-- <select formControlName="status" tabindex="3" class="form-control">
-              <option value="Active">Active</option>
-              <option value="Inactive">Inactive</option>
-              <option value="Running">Running</option>
-              <option value="Completed">Completed</option>
-            </select>  -->
-                     
-            <select class="form-control" formControlName="batchType" >       
-                        
-              <!-- <option *ngFor="let batchStatus of allBatchStatus" [value]="batchStatus.batchStatus">
-                  {{batchStatus.batchStatus}}</option>      
-              </select>  -->
+            <select class="form-control" formControlName="batchType" >    
               <option value="SSL">SSL</option>    
               <option value="ASL">ASL</option>  
               <option value="MaxLiability">Max Liability</option>    
               <option value="All">All</option>
             </select> 
         </div>
+      </div>
+      <div class="col-md-6">
         <div class="form-group">
-          <label> Last Run Status
-            </label>
-          <!-- <select formControlName="lastRunStatus" tabindex="4" class="form-control" disabled>
-            <option value="Active">Active</option>
-            <option value="Inactive">Inactive</option>
-            <option value="Running">Running</option>
-            <option value="Completed">Completed</option>
-          </select>  -->
-          <select class="form-control" formControlName="lastRunStatus" tabindex="3" disabled>                            
+          <label>Next Schedule Run<small class="starmark">*</small> </label>
+          <input type="date" class="form-control" formControlName="nextScheduleRun">  
+        </div>
+      </div>
+      <!-- <div class="col-md-6">
+        <div class="form-group">
+          <label> Last Run Status</label>
+          <select class="form-control" formControlName="lastRunStatus" disabled>                            
             <option *ngFor="let batchStatusObj of batchStatusList; let index as i" [attr.selected]="index == 1 ? true : null" [value]="batchStatusObj.batchStatus">
                 {{batchStatusObj.batchStatus}}</option>      
           </select>  
         </div>
+      </div> -->
       </div>
-      <div class="col-md-6">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label >Frequency
+              </label>
+            <select formControlName="frequency" class="form-control">
+              <option value="Demand">Demand</option>
+              <option value="Daily" selected>Daily</option>
+              <option value="Weekly">Weekly</option>
+              <option value="Monthly">Monthly</option>
+            </select> 
+          </div>
+        </div>
+      <!-- <div class="col-md-6">
         <div class="form-group">
           <label >Last Run </label>
-          <input type="date" class="form-control" formControlName="lastRun" tabindex="5"  disabled>  
+          <input type="date" class="form-control" formControlName="lastRun" disabled>  
         </div>
-        <div class="form-group">
-          <label >Next Schedule Run </label>
-          <input type="date" class="form-control" formControlName="nextScheduleRun" tabindex="6">  
-        </div>
-        <div class="form-group">
-          <label >Frequency
-            </label>
-          <select formControlName="frequency" tabindex="7" class="form-control">
-            <option value="Demand">Demand</option>
-            <option value="Daily" selected>Daily</option>
-            <option value="Weekly">Weekly</option>
-            <option value="Monthly">Monthly</option>
-          </select> 
-        </div>
-      </div>
+      </div> -->
     </div> 
     <div class="modal-footer-btns">
           <button type="button" class="btn btn-outline-primary" tabindex="9" (click)="openCustomModal(false, null)">Cancel</button>
-          <button type="submit" class="btn btn-primary" tabindex="8" *ngIf="isAddMode">Add</button>
-          <button type="submit" class="btn btn-primary" tabindex="8" *ngIf="!isAddMode">Update</button>
+          <button type="submit" class="btn btn-primary" *ngIf="isAddMode">Add</button>
+          <button type="submit" class="btn btn-primary" *ngIf="!isAddMode">Update</button>
         </div>
         </form>
-        </div>  
       </div>           
       </div>
     </div>

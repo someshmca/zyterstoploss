@@ -8,6 +8,7 @@ import { MatSort } from '@angular/material/sort';
 import { first } from 'rxjs/operators';
 import { formatDate, DatePipe } from '@angular/common';
 import { AlertService } from '../services/alert.service';
+import { LoginService } from 'src/app/shared/services/login.service';
 
 @Component({
   selector: 'app-rules',
@@ -36,11 +37,12 @@ uRuleID: string;
   @ViewChild(MatSort) sort: MatSort;
   constructor(private rulesService: RulesService, private fb: FormBuilder,
     private alertService: AlertService,
-    private datePipe: DatePipe ) { }
+    private datePipe: DatePipe, private loginService: LoginService) { }
 
   ngOnInit() {
    this.getAllRules();
    this.ruleForm = this.fb.group({ 
+    ruleId: [''],
     description:  ['', Validators.required],
     ruleGroup: ['', Validators.required],
     value: ['', Validators.required]
@@ -98,7 +100,7 @@ uRuleID: string;
   }
   get f() { return this.ruleForm.controls; }
 
-  openCustomModal(open: boolean, id:string) {
+  openCustomModal(open: boolean, id:any) {
     setTimeout(()=>{
       this.focusTag.nativeElement.focus()
     }, 100);
@@ -117,21 +119,35 @@ uRuleID: string;
     
     if(id!=null && open){
       this.isAddMode = false;
-         this.rulesService.getRule(id)
-         .pipe(first())
-         .subscribe(x => {
-           console.log(x[0].ruleID);
-           this.uRuleID = x[0].ruleID;
-           this.ruleForm.patchValue({ 
-            ruleID: x[0].ruleID,
-            ruleGroup: this.ruleGroups[x[0].ruleGroupId-1].id,
-            description: x[0].description,
-            value: x[0].value
-           });  
-           console.log(x[0].ruleID);
-                    
-         }
-      );
+      this.uRuleID = id.ruleID;
+      if(id.ruleGroup=='Benefit'){
+        this.ruleForm.patchValue({
+          ruleGroup: 1
+        })
+      }
+      if(id.ruleGroup=='Program'){
+        this.ruleForm.patchValue({
+          ruleGroup: 2
+        })
+      }
+      if(id.ruleGroup=='Contracts'){
+        this.ruleForm.patchValue({
+          ruleGroup: 3
+        })
+      }
+      if(id.ruleGroup=='Suppliers'){
+        this.ruleForm.patchValue({
+          ruleGroup: 4
+        })
+      }
+      this.ruleForm.patchValue({
+        ruleId: this.uRuleID,
+        description:  id.description,
+        value: id.value  
+      })
+      console.log(this.ruleForm.value);
+      console.log(id.ruleGroup);
+      
     }
   }
   
@@ -167,14 +183,11 @@ private addRule() {
   
   let ruleAddRequest:IRuleAddRequest = {
     ruleID: '',    
-    ruleGroup: this.ruleGroups[this.ruleForm.get('ruleGroup').value].name,
-    ruleGroupId: Number(this.ruleForm.get('ruleGroup').value),
-    description: this.ruleForm.get('description').value,
-    value: this.ruleForm.get('value').value,        
-    createdid: "kshdwra", 
-    createdOn: "2021-01-01",
-    updateid: "xhwadr",  
-    lastupdate: "2021-02-09"
+    ruleGroup: this.ruleGroups[this.f.ruleGroup.value].name,
+    ruleGroupId: Number(this.f.ruleGroup.value),
+    description: this.f.description.value,
+    value: this.f.value.value,      
+    userId: this.loginService.currentUserValue.name
   }
   
   this.rulesService.addRule(ruleAddRequest)
@@ -196,14 +209,11 @@ private addRule() {
   private updateRule() {
     
       let ruleUpdateRequest:IRuleUpdateRequest = {
-        ruleID: this.uRuleID,
-        description: this.ruleForm.get('description').value,
-        value: this.ruleForm.get('value').value,        
-        createdid: "kshdwra", 
-        createdOn: "2021-01-01",
-        updateid: "xhwadr",  
-        lastupdate: "2021-02-09",
-        ruleGroupId: Number(this.ruleForm.get('ruleGroup').value),
+        ruleId: this.uRuleID,
+        description: this.f.description.value,
+        value: this.f.value.value,   
+        userId: this.loginService.currentUserValue.name,
+        ruleGroupId: Number(this.f.ruleGroup.value),
         isActive: true
       }
       this.rulesService.updateRule(ruleUpdateRequest)

@@ -13,9 +13,15 @@ a{
       align-items: center;
       display: flex;
       padding-left: 20px;
+      background: rgb(231 240 255);
+      border-radius: 50%;    
+      position: relative;  
+      top: 5px;
     }
     .nav-side-menu .brand img{
-        max-width: 200px;
+        max-width: 150px;
+        position: relative;
+        left: 6px;
     }
     .nav-side-menu .toggle-btn {
       display: none;

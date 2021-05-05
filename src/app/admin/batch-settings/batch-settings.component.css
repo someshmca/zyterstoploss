@@ -121,3 +121,13 @@
 #startDemandModal .modal-content .fa.fa-times-circle{
     color: #2d2727;
 }
+.batch-details-not-found{
+    height: 70px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.batch-details-not-found h3{
+    color: #ff0000;
+    font-size: 1.3rem;
+}

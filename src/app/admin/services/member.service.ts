@@ -12,9 +12,9 @@ import {Paths} from '../admin-paths';
 export class MemberService {
 
   constructor(private http: HttpClient) { }
-  memberSearch(memId: string, fname: string, lname: string, dob: string): Observable<IMemberSearchResponse[]> {
+  memberSearch(memId: string, fname: string, mname: string, lname: string, subscriberId: string, dob: string,gender: string,memberStartDate:string,memberEndDate: string ): Observable<IMemberSearchResponse[]> {
     let params = new HttpParams();
-    params=params.set('MemberId',memId).set('Fname',fname).set('Lname',lname).set('DateOfBirth',dob);
+    params=params.set('MemberId',memId).set('Fname',fname).set('Mname',mname).set('Lname',lname).set('SubscriberId',subscriberId).set('DateOfBirth',dob).set('Gender',gender).set('MemberStartDate', memberStartDate).set('MemberEndDate', memberEndDate);
     console.log(params.toString());
     return this.http.get<IMemberSearchResponse[]>(Paths.memberSearch,{params}).pipe(catchError(this.handleError.bind(this)));
  }

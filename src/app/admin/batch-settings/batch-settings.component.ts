@@ -46,7 +46,9 @@ export class BatchSettingsComponent implements OnInit {
   uCreatedOn: any;
   @ViewChild("focusElem") focusTag: ElementRef;
   show: boolean=true;
-  
+  noRecsFoundBatchDetails: boolean = false;
+  selectedStatus: string = '';
+
   batchProcessColumns: string[] = ['batchProcess', 'description', 'status', 'lastRun','lastRunStatus','nextScheduleRun','frequency', 'batchType', 'createId','batchProcessId'];
   //batchProcessColumns: string[] = ['batchProcess', 'description', 'status', 'lastRun','lastRunStatus','nextScheduleRun','frequency','batchProcessId', 'batchStatusId','createId','createDate', 'updateId','lastUpdateDate'];
   batchProcessGridSource: any;
@@ -113,8 +115,7 @@ export class BatchSettingsComponent implements OnInit {
   }
   listBatchProcessGrid(){    
     this.batchSettingService.getBatchProcessDetails('All').subscribe(
-      (data: IBatchDetails[]) => {   
-            
+      (data: IBatchDetails[]) => {               
     
          this.allBatchIDDetails = data;   
          this.batchProcessGridSource = new MatTableDataSource(this.allBatchIDDetails);
@@ -169,9 +170,19 @@ export class BatchSettingsComponent implements OnInit {
     });
   }
   getBatchDetails(statusVal){   
-    let status: string = this.batchStatusList[statusVal].batchStatus;   
+    let status: string = this.batchStatusList[statusVal-1].batchStatus;   
+    console.log(status);
+    console.log(this.batchStatusList[statusVal]);
+    
+    this.noRecsFoundBatchDetails = false;
     this.batchSettingService.getBatchProcessDetails(status).subscribe(
       (data: IBatchDetails[]) => {   
+            console.log(data.length);
+            
+            if(data.length==0){
+              this.noRecsFoundBatchDetails=true;
+              this.selectedStatus = status;
+            }
             
          this.allBatchIDDetails = data;    
          this.batchProcessGridSource = new MatTableDataSource(this.allBatchIDDetails);
@@ -264,15 +275,16 @@ private addBatchProcess() {
   console.log(this.batchStatusList[2].batchStatus);
   console.log(this.f.status.value);
   console.log(this.f.status);
+  let nextScheduleRunValue = this.f.nextScheduleRun.value == ""? this.datePipe.transform(new Date('04/04/2021'), 'yyyy-MM-dd'):this.datePipe.transform(this.f.nextScheduleRun.value, 'yyyy-MM-dd');
   let addBatchObj:IBatchPAdd = {
     batchProcessId: 0,
     batchProcess: this.f.batchProcess.value,
     description: this.f.description.value,
     status: '',
-    batchStatusId: 5,
+    batchStatusId: 1,
     lastRun: this.datePipe.transform(new Date('02/25/2021'), 'yyyy-MM-dd'),
     lastRunStatus: 'Active',
-    nextScheduleRun: this.datePipe.transform(this.f.nextScheduleRun.value, 'yyyy-MM-dd'),
+    nextScheduleRun: nextScheduleRunValue,
     frequency: this.f.frequency.value,
     createId: this.loginService.currentUserValue.name,
     createDate: this.datePipe.transform(new Date(Date.now()), 'yyyy-MM-dd'),
@@ -302,15 +314,17 @@ private addBatchProcess() {
 
   private updateBatchProcess() {
     
+  let nextScheduleRunValue = this.f.nextScheduleRun.value == ""? this.datePipe.transform(new Date('04/04/2021'), 'yyyy-MM-dd'):this.datePipe.transform(this.f.nextScheduleRun.value, 'yyyy-MM-dd');
+  
     this.updateBatchObj = {
       batchProcessId: this.uBatchProcessId,
       batchProcess: this.f.batchProcess.value,
       description: this.f.description.value,
-      batchStatusId: 4,
+      batchStatusId: 1,
       lastRun: this.datePipe.transform(this.f.lastRun.value, 'yyyy-MM-dd'),
      // lastRunStatus: this.batchStatusList[this.f.lastRunStatus.value].batchStatus,
       lastRunStatus: this.f.lastRunStatus.value,
-      nextScheduleRun: this.datePipe.transform(this.f.nextScheduleRun.value, 'yyyy-MM-dd'),
+      nextScheduleRun: nextScheduleRunValue,
       frequency: this.f.frequency.value,
       createId: this.loginService.currentUserValue.name,
       createdOn: this.uCreatedOn,

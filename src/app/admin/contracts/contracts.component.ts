@@ -229,8 +229,8 @@ export class ContractsComponent implements OnInit {
     let addObj = {
       contractId: 0,
       clientId: this.contractForm.get('clientId').value,
-      startDate: this.contractForm.get('startDate').value,
-      endDate: this.contractForm.get('endDate').value,
+      startDate: this.datePipe.transform(this.f.startDate.value, 'yyyy-MM-dd'),
+      endDate: this.datePipe.transform(this.f.endDate.value, 'yyyy-MM-dd'),
       claimsAdministrator:this.contractForm.get('claimsAdministrator').value,
       pharmacyClaimsAdministrator:this.contractForm.get('pharmacyClaimsAdministrator').value,          
       runInStartDate:this.datePipe.transform(this.f.runInStartDate.value, 'yyyy-MM-dd'),
@@ -242,7 +242,7 @@ export class ContractsComponent implements OnInit {
       userId: this.loginService.currentUserValue.name,
       ftn: '',
       ftnName: '',
-      policyYear: 0,
+      policyYear: null
     }
     if(addObj.runInStartDate=='')
       addObj.runInStartDate = "2010-01-01";
@@ -255,6 +255,7 @@ export class ContractsComponent implements OnInit {
     if(addObj.terminationDate=='')
       addObj.terminationDate = "2012-01-01";
     console.log(addObj);
+    debugger;
     this.contractService.addContract(addObj)
         .pipe(first())
         .subscribe({
@@ -289,7 +290,7 @@ export class ContractsComponent implements OnInit {
           userId: this.loginService.currentUserValue.name,
           ftn: '',
           ftnName: '',
-          policyYear: 0,   
+          policyYear: null,   
         };
         if(updateConObj.runInStartDate=='')
           updateConObj.runInStartDate = "2009-10-10";

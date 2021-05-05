@@ -122,22 +122,22 @@
               <div class="row">
                 <div class="col-md-6">
                   <div class="form-group">                          
-                    <label>Start Date<small class="starmark">*</small></label>                          
-                    <input type="date" value="MM/dd/yyyy" formControlName="startDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.startDate.errors }"/>                      
+                    <label>Start Date</label>                          
+                    <input type="date" value="MM/dd/yyyy" formControlName="startDate" class="form-control"/>                      
                 </div> 
                 </div>
                 <div class="col-md-6">
                   <div class="form-group">                          
-                    <label>End Date<small class="starmark">*</small></label>                          
-                    <input type="date" value="MM/dd/yyyy" formControlName="endDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.endDate.errors }" />                      
+                    <label>End Date</label>                          
+                    <input type="date" value="MM/dd/yyyy" formControlName="endDate" class="form-control" />                      
                    </div>
                 </div>
               </div>   
               <div class="row">
                 <div class="col-md-6">
                   <div class="form-group">
-                    <label>Sub Account of<small class="starmark">*</small></label>
-                    <select formControlName="parentID" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.parentID.errors }" >
+                    <label>Sub Account of</label>
+                    <select formControlName="parentID" class="form-control"s >
                       <option *ngFor="let client of parentClientIds; let index=i" [selected]="i==2?true:null" [value]="client.parentID">
                         {{client.parentName}}
                       </option>

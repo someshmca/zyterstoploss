@@ -100,6 +100,7 @@ getAllRoles(){
   this.rolesService.getAllRoles().subscribe(
     (data: IRole[]) => {
         this.roles = data;
+        debugger;
         //this.roles = data;
     }
   )

@@ -42,6 +42,7 @@ export interface IPlanTierChild{
         planId: number;
         tierId: number;
         tierAmount: number;    
+        expectedClaimsRate: number;
 }
 export interface IPlanUpdate{
     planID: number;

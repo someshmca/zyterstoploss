@@ -40,10 +40,10 @@ export class ClaimSearchComponent implements OnInit {
       memberId:  [''],
       firstName:'',
       lastName:'',
-      dateOfBirth:null,
+      dateOfBirth:[''],
       claimId: [''],
-      fromDate:null,
-      toDate: null
+      fromDate:[''],
+      toDate: ['']
     },{validator: this.dateLessThan('fromDate', 'toDate')});
     this.maxDate = this.datePipe.transform(new Date(Date.now()), 'yyyy-MM-dd');
     setTimeout(()=>{
@@ -86,6 +86,7 @@ export class ClaimSearchComponent implements OnInit {
     this.dateErr.toDateInvalid=false;
     this.dateErrorMessage='';
     if(this.claimSearchForm.invalid){
+      this.dateErrorMessage='';
       if(this.dateErr.fromDateErr)  
         this.dateErrorMessage = "From date should not be greater than To date";
       return;
@@ -94,12 +95,14 @@ export class ClaimSearchComponent implements OnInit {
    
     if(this.dateErr.fromDateErr)
     {      
+      this.dateErrorMessage='';
       this.dateErrorMessage = "From date should not be greater than To date";
       this.isClaimSearchErr = false;
       return;
     }
     if(this.f.fromDate.value!=null && (this.f.toDate.invalid || this.f.toDate.value==null)){
-      this.dateErrorMessage = "To date is invalid. Enter valid To date";
+      this.dateErrorMessage='';
+      this.dateErrorMessage = "End date is invalid. Enter valid End date";
       this.dateErr.toDateInvalid=true;
       this.isClaimSearchErr = false;
       return;      
@@ -108,6 +111,7 @@ export class ClaimSearchComponent implements OnInit {
     // if(this.f.fromDate.valueChanges.subscribe((data)=>{
     // }))
     if(this.f.toDate.value!=null && (this.f.fromDate.invalid || this.f.fromDate.value==null)){
+      this.dateErrorMessage='';
       this.dateErrorMessage = "From date is invalid. Enter valid From date";
       this.dateErr.fromDateInvalid=true;
       this.isClaimSearchErr = false;
@@ -133,7 +137,8 @@ export class ClaimSearchComponent implements OnInit {
       fromDate:  this.f.fromDate.value==''?null: this.datePipe.transform(this.f.fromDate.value, 'yyyy-MM-dd'),
       toDate:  this.f.toDate.value==''?null: this.datePipe.transform(this.f.toDate.value, 'yyyy-MM-dd')    
     }
-    
+    console.log(claimRequestObj);
+    debugger;
     this._claimReportService.getClaimReport(claimRequestObj).subscribe(
       (data) => {
         this.isClaimSearchErr=false;

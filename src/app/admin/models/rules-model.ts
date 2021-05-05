@@ -1,14 +1,13 @@
 
+
+
 export interface IRule{
     ruleID: string;
     ruleGroup: string;
     ruleGroupId:number;
     description: string;
     value: string;
-    createdid: string;
-    createdOn: string;
-    updateid: string;
-    lastupdate: string;
+    userId: string;
 }
 
 export interface IRuleIDRequest{     
@@ -21,22 +20,16 @@ export interface IRuleAddRequest{
     ruleGroupId: number;
     description: string;
     value: string;
-    createdid: string;
-    createdOn: string;
-    updateid: string;
-    lastupdate: string;
+    userId: string;
 }
 
 export interface IRuleUpdateRequest{
-    ruleID: string;
+    ruleId: string;
     description: string;
-    value: string;
-    createdid: string;
-    createdOn: string;
-    updateid: string;
-    lastupdate: string;    
+    value: string;  
     ruleGroupId: number;
     isActive: boolean;
+    userId: string;
 }
 
 export interface IAddRuleSuccess{

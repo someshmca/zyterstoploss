@@ -80,7 +80,8 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
         {
           planId: 0,
           tierId: 0,
-          tierAmount:0
+          tierAmount:0,
+          expectedClaimsRate: 0
         }
       ])
     });
@@ -274,28 +275,28 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
       let tAmount = Number(this.f.tier1Aggfactamt.value);
       let tId=1;
       this.addPlanObj.lstTblPlanTier.push({
-        planId: 0, tierId: tId, tierAmount: tAmount
+        planId: 0, tierId: tId, tierAmount: tAmount, expectedClaimsRate: 0
       });
     }
     if(this.f.tier2Aggfactamt.value.trim()!='' || this.f.tier2Aggfactamt.value!=null){
       let tAmount = Number(this.f.tier2Aggfactamt.value);
       let tId=2;
       this.addPlanObj.lstTblPlanTier.push({
-        planId: 0, tierId: tId, tierAmount: tAmount
+        planId: 0, tierId: tId, tierAmount: tAmount, expectedClaimsRate: 0
       });
     }
     if(this.f.tier3Aggfactamt.value.trim()!='' || this.f.tier3Aggfactamt.value!=null){
       let tAmount = Number(this.f.tier3Aggfactamt.value);
       let tId=3;
       this.addPlanObj.lstTblPlanTier.push({
-        planId: 0, tierId: tId, tierAmount: tAmount
+        planId: 0, tierId: tId, tierAmount: tAmount, expectedClaimsRate: 0
       });
     }
     if(this.f.tier4Aggfactamt.value.trim()!='' || this.f.tier4Aggfactamt.value!=null){
       let tAmount = Number(this.f.tier4Aggfactamt.value);
       let tId=4;
       this.addPlanObj.lstTblPlanTier.push({
-        planId: 0, tierId: tId, tierAmount: tAmount
+        planId: 0, tierId: tId, tierAmount: tAmount, expectedClaimsRate: 0
       });
     }
       console.log(this.addPlanObj);
@@ -339,28 +340,28 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
       let tAmount = Number(this.f.tier1Aggfactamt.value);
       let tId=1;
       this.updatePlanObj.lstTblPlanTier.push({
-        planId: this.updatePlanID, tierId: tId, tierAmount: tAmount
+        planId: this.updatePlanID, tierId: tId, tierAmount: tAmount, expectedClaimsRate: 0
       });
     }
     if(this.f.tier2Aggfactamt.value!='' || this.f.tier2Aggfactamt.value!=null){
       let tAmount = Number(this.f.tier2Aggfactamt.value);
       let tId=2;
       this.updatePlanObj.lstTblPlanTier.push({
-        planId: this.updatePlanID, tierId: tId, tierAmount: tAmount
+        planId: this.updatePlanID, tierId: tId, tierAmount: tAmount, expectedClaimsRate: 0
       });
     }
     if(this.f.tier3Aggfactamt.value!='' || this.f.tier3Aggfactamt.value!=null){
       let tAmount = Number(this.f.tier3Aggfactamt.value);
       let tId=3;
       this.updatePlanObj.lstTblPlanTier.push({
-        planId: this.updatePlanID, tierId: tId, tierAmount: tAmount
-      });
+        planId: this.updatePlanID, tierId: tId, tierAmount: tAmount, expectedClaimsRate: 0
+      }); 
     }
     if(this.f.tier4Aggfactamt.value!='' || this.f.tier4Aggfactamt.value!=null){
       let tAmount = Number(this.f.tier4Aggfactamt.value);
       let tId=4;
       this.updatePlanObj.lstTblPlanTier.push({
-        planId: this.updatePlanID, tierId: tId, tierAmount: tAmount
+        planId: this.updatePlanID, tierId: tId, tierAmount: tAmount, expectedClaimsRate: 0
       });
     }
     

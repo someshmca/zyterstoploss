@@ -5,18 +5,57 @@
         </a>
     </div>
     <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
-    <div class="menu-list" *ngIf="isLoggedIn">  
+    <div class="menu-list accordion" *ngIf="isLoggedIn" id="accordionExample">  
           <ul *ngFor="let cnavitem of menu"  id="menu-content" class="menu-content collapse out">
             <li  data-toggle="collapse" [attr.data-target]="'#a' + cnavitem.menuGroup" class="collapsed active">
                 <a>{{cnavitem.name}} <span class="arrow"></span></a>
             </li>
-             <ul class="sub-menu collapse show" [attr.id]="'a'+cnavitem.menuGroup">
+             <ul class="sub-menu collapse" [attr.id]="'a'+cnavitem.menuGroup" data-parent="#accordionExample">
                 <li *ngFor="let itms of cnavitem.menus" [routerLink]="itms.route" routerLinkActive="active">
                     <a>
                         {{itms.name}}
                     </a>
-                </li>                
+                </li> 
             </ul>
         </ul>
+        <!-- <div class="accordion" id="accordionExample">
+            <div class="card">
+              <div class="card-head" id="headingOne">
+                <h2 class="mb-0" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    Collapsible Group Item #1
+                </h2>
+              </div>
+          
+              <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+                <div class="card-body">
+                  Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. 
+                </div>
+              </div>
+            </div>
+            <div class="card">
+                <div class="card-head" id="headingTwo">
+                    <h2 class="mb-0 collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                        Collapsible Group Item #2
+                    </h2>
+                  </div>
+                  <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                    <div class="card-body">
+                      Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod.
+                    </div>
+                  </div>
+                </div>
+                <div class="card">
+                  <div class="card-head" id="headingThree">
+                    <h2 class="mb-0 collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                        Collapsible Group Item #3
+                    </h2>
+                  </div>
+                  <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+                    <div class="card-body">
+                      Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. 
+                    </div>
+                  </div>
+                </div>
+              </div> -->
     </div>
 </div>

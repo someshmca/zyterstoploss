@@ -32,8 +32,8 @@ export interface IClientAdd{
   clientID: string;
   clientName: string;
   status: number;
-  startDate: Date;
-  endDate: Date;
+  startDate: string;
+  endDate: string;
   parentID:string;
   userId:string; 
 }

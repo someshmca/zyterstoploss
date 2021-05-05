@@ -1,6 +1,9 @@
 import { Component, OnInit, ViewChild, AfterViewInit, ElementRef } from '@angular/core';
 import {IMemberSearch, IMemberSearchResponse, IMemberAdd} from '../models/member-model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { IActiveClient } from '../models/clients-model';
+import {IContract} from '../models/contracts-model';
+import {IPlanAll, ITire} from '../models/health-plan.model';
 import {MemberService} from '../services/member.service';
 import {Paths} from '../admin-paths';
 import {MatPaginator} from '@angular/material/paginator';
@@ -11,6 +14,9 @@ import {DatePipe} from '@angular/common';
 import { AlertService } from '../services/alert.service';
 import { LoginService } from 'src/app/shared/services/login.service';
 import { from } from 'rxjs';
+import { ClientsService } from '../services/clients.service';
+import { ContractService } from '../services/contract.service';
+import { HealthPlanService } from '../services/health-plan.service';
 @Component({
   selector: 'app-member',
   templateUrl: './member.component.html',
@@ -22,7 +28,7 @@ export class MemberComponent implements OnInit {
   searchResult: any;
   memberForm: FormGroup;
   searchErrorMessage: string;
-  displayedColumns: string[] = ['memberId','subscriberId', 'fname', 'lname', 'mname', 'gender','memberStartDate','dateOfBirth','status', 'userId'];
+  displayedColumns: string[] = ['memberId','subscriberId', 'fname', 'lname', 'mname', 'gender','memberStartDate', 'memberEndDate','dateOfBirth','status', 'userId'];
   searchDataSource: any;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -35,11 +41,17 @@ export class MemberComponent implements OnInit {
   submitted = false;
   isCustomModalOpen: boolean = false;
   memSearchError: boolean = false;
+  
+  activeClients: IActiveClient[] = [];
+  activeContracts: IContract[]=[];
+  plans: IPlanAll[]=[];
+  tires: ITire[] = [];
 
   memberSearchErr: any;
   isSearchDataThere: boolean = false;
   noSearchResultsFound: boolean = false;
-  constructor(private mb: FormBuilder, private fb: FormBuilder, private memberService:MemberService, private alertService: AlertService, private datePipe: DatePipe,private loginService: LoginService) { }
+
+  constructor(private mb: FormBuilder, private fb: FormBuilder, private memberService:MemberService, private alertService: AlertService, private datePipe: DatePipe, private loginService: LoginService, private clientService: ClientsService, private contractService: ContractService, private planService: HealthPlanService) { }
 
   ngOnInit() {
     this.memberSearchForm = this.mb.group({
@@ -83,15 +95,53 @@ export class MemberComponent implements OnInit {
       this.focusMSTag.nativeElement.focus();
       //this.focusTag.nativeElement.focus();
     }, 200);
+    this.getActiveClients();
+  }  // end of ngOnInit 
+
+  getActiveClients(){
+    this.clientService.getActiveClients().subscribe(
+      (data)=>{
+        this.activeClients = data;
+        debugger;
+      }
+    )
   }
+
+  getContractsByClientId(clientId){
+    this.contractService.getContractsByClientID(clientId).subscribe(
+      (data)=>{
+        this.activeContracts = data;
+      }
+    )
+  }
+  getPlans(){
+    this.planService.getAllPlans().subscribe(
+      (data)=>{
+        this.plans = data;
+      }
+    )
+  }
+  getTires(){
+    this.planService.getTires().subscribe(
+      (data)=>{
+        this.tires=data;
+      }
+    )
+  }
+
   searchMember(formData: FormGroup){
     this.memSearchSubmitted = true;
     this.memSearchError=false;
    // console.log(formData.get());
    let memberId = this.memberSearchForm.get('MemberId').value;
    let fname=this.memberSearchForm.get("Fname").value;
+   let mname=this.memberSearchForm.get("Mname").value;   
    let lname=this.memberSearchForm.get("Lname").value;
+   let subscriberId=this.memberSearchForm.get("SubscriberId").value;
+   let Gender=this.memberSearchForm.get("Gender").value;
    let dob=this.memberSearchForm.get("DateOfBirth").value;
+   let memberStartDate=this.memberSearchForm.get("MemberStartDate").value;
+   let memberEndDate=this.memberSearchForm.get("MemberEndDate").value;
     console.log(this.memberSearchForm.value);
     
    // stop here if form is invalid
@@ -99,12 +149,14 @@ export class MemberComponent implements OnInit {
      this.memSearchError=true;
        return;
    }
-   if(memberId=='' && fname=='' && lname=='' && dob==''){
+   if(memberId=='' && fname=='' && mname=='' && lname=='' && subscriberId=='' && dob=='' && Gender=='' && memberStartDate=='' && memberEndDate==''){
     this.memSearchError = true;
      return;
    }
    console.log(JSON.stringify(formData.value));
-   this.memberService.memberSearch(memberId,fname,lname,dob).subscribe(
+   console.log(this.m.Gender.value);
+   debugger;
+   this.memberService.memberSearch(memberId,fname,mname, lname, subscriberId, dob, Gender, memberStartDate, memberEndDate).subscribe(
      (data:IMemberSearchResponse[])=>{
        console.log(data);
        setTimeout(()=>{

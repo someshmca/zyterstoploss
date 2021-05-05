@@ -284,6 +284,7 @@ private addProduct() {
   this.addObj = {
     productId: 0,
     contractId: 1001,
+    clientId: "Medica",
     sslClaimBasis: "KA",
     sslIncurredStartDate: "2001-09-09",
     sslIncurredEndDate: "2002-09-09",
@@ -318,18 +319,19 @@ private addProduct() {
   console.log(this.addObj);
   debugger;
   this.productForm.patchValue({
-    status:this.f.status.value==true?1:0
+    contractId: Number(this.f.contractId.value),
+    status:this.f.status.value==true?1:1
   })
   console.log(this.productForm.value);
   debugger;
   this.productService.addProduct(this.productForm.value)
       .pipe(first())
-      .subscribe({
+      .subscribe({ 
           next: () => {
             
             this.openCustomModal(false, null);
             this.getAllProducts();
-            
+            debugger;
             this.productForm.reset();                
               this.alertService.success('New Product added', { keepAfterRouteChange: true });
               //this.router.navigate(['../'], { relativeTo: this.route });

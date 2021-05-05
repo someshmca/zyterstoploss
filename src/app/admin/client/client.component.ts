@@ -66,9 +66,9 @@ export class ClientComponent implements OnInit {
     this.clientForm = this.fb.group({   
       clientId: [''],
       clientName:  ['', Validators.required],
-      startDate:['', [Validators.required, Validators.pattern(/^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/)]],
-      endDate:['', [Validators.required, Validators.pattern(/^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/)]],
-      parentID:[''],
+      startDate: null,
+      endDate:null,
+      parentID:'',
       status:false,
       userId:""//this.loginService.currentUserValue.name
   },{validator: this.dateLessThan('startDate', 'endDate')});    
@@ -225,7 +225,7 @@ export class ClientComponent implements OnInit {
     
     this.clientForm.patchValue({
       userId:this.loginService.currentUserValue.name,
-      status:this.clientForm.get('status').value==true?1:0,
+      status:this.clientForm.get('status').value==true?1:1,
       parentID:this.clientForm.get('parentID').value
       //: id.clientId
     });
