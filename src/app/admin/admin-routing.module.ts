@@ -16,6 +16,9 @@ import { AuthGuard } from '../shared/helpers/auth.guard'
 import { MemberComponent } from './member/member.component';
 import { HealthPlanComponent } from './health-plan/health-plan.component';
 import { ProductComponent } from './product/product.component';
+import { SSLReportComponent } from '../reports/ssl-report/ssl-report.component';
+import { ASLReportComponent } from '../reports/asl-report/asl-report.component';
+import { MAXLiabilityReportComponent } from '../reports/max-liability-report/max-liability-report.component';
 const routes: Routes = [
   {path: 'claim-search', component: ClaimSearchComponent, canActivate: [AuthGuard] },
   {path: 'claim-result', component: ClaimResultComponent, canActivate: [AuthGuard] },
@@ -33,7 +36,10 @@ const routes: Routes = [
   {path: 'rules', component: RulesComponent, canActivate: [AuthGuard] },
   {path: 'member', component: MemberComponent, canActivate: [AuthGuard]},
   {path: 'health-plan', component: HealthPlanComponent, canActivate: [AuthGuard]},
-  {path: 'product', component: ProductComponent, canActivate: [AuthGuard]}
+  {path: 'product', component: ProductComponent, canActivate: [AuthGuard]},
+  {path: 'specific-stoploss-report', component: SSLReportComponent},
+  {path: 'aggregate-stoploss-report', component: ASLReportComponent, canActivate: [AuthGuard]},
+  {path: 'max-liability-report', component: MAXLiabilityReportComponent, canActivate: [AuthGuard]}
 ];
 
 @NgModule({

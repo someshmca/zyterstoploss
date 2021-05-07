@@ -20,6 +20,9 @@ import { AggregateChartComponent } from './dashboard/aggregate-chart/aggregate-c
 import { MonthlyChartComponent } from './dashboard/monthly-chart/monthly-chart.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { JwtInterceptor } from './shared/helpers/jwt.interceptor';
+import { SSLReportComponent } from './reports/ssl-report/ssl-report.component';
+import { ASLReportComponent } from './reports/asl-report/asl-report.component';
+import { MAXLiabilityReportComponent } from './reports/max-liability-report/max-liability-report.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -29,6 +32,9 @@ import { JwtInterceptor } from './shared/helpers/jwt.interceptor';
     BarChartComponent,
     AggregateChartComponent,
     MonthlyChartComponent,
+    SSLReportComponent,
+    ASLReportComponent,
+    MAXLiabilityReportComponent,
   ],
   imports: [
     BrowserModule,  

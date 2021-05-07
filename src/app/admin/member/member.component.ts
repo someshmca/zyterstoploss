@@ -28,7 +28,7 @@ export class MemberComponent implements OnInit {
   searchResult: any;
   memberForm: FormGroup;
   searchErrorMessage: string;
-  displayedColumns: string[] = ['memberId','subscriberId', 'fname', 'lname', 'mname', 'gender','memberStartDate', 'memberEndDate','dateOfBirth','status', 'userId'];
+  displayedColumns: string[] = ['memberId','subscriberId', 'fname', 'lname', 'mname', 'gender','memberStartDate', 'memberEndDate','dateOfBirth','status'];
   searchDataSource: any;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -54,19 +54,8 @@ export class MemberComponent implements OnInit {
   constructor(private mb: FormBuilder, private fb: FormBuilder, private memberService:MemberService, private alertService: AlertService, private datePipe: DatePipe, private loginService: LoginService, private clientService: ClientsService, private contractService: ContractService, private planService: HealthPlanService) { }
 
   ngOnInit() {
-    this.memberSearchForm = this.mb.group({
-      MemberId: [''],
-      SubscriberId:[''],
-      MemberStartDate: [''],
-      MemberEndDate: [''],
-      Fname:[''],
-      Lname: [''],
-      Mname: '',
-      DateOfBirth:[''],
-      Gender: ['']
-    });
     
-
+    this.initMemberSearchForm();
     this.memberForm = this.fb.group({
       memberId: [''],
       fname: ['', Validators.required],
@@ -98,11 +87,25 @@ export class MemberComponent implements OnInit {
     this.getActiveClients();
   }  // end of ngOnInit 
 
+  initMemberSearchForm(){    
+    this.memberSearchForm = this.mb.group({
+      MemberId: [''],
+      SubscriberId:[''],
+      MemberStartDate: [''],
+      MemberEndDate: [''],
+      Fname:[''],
+      Lname: [''],
+      Mname: '',
+      DateOfBirth:[''],
+      Gender: ['']
+    });
+  }
+
   getActiveClients(){
     this.clientService.getActiveClients().subscribe(
       (data)=>{
         this.activeClients = data;
-        debugger;
+        
       }
     )
   }
@@ -125,19 +128,25 @@ export class MemberComponent implements OnInit {
     this.planService.getTires().subscribe(
       (data)=>{
         this.tires=data;
+
       }
     )
   }
-
+  resetMemberSearch(){
+    this.initMemberSearchForm();
+    this.isSearchDataThere= false;
+    this.memSearchError=false;
+    
+  }
   searchMember(formData: FormGroup){
     this.memSearchSubmitted = true;
     this.memSearchError=false;
    // console.log(formData.get());
-   let memberId = this.memberSearchForm.get('MemberId').value;
-   let fname=this.memberSearchForm.get("Fname").value;
-   let mname=this.memberSearchForm.get("Mname").value;   
-   let lname=this.memberSearchForm.get("Lname").value;
-   let subscriberId=this.memberSearchForm.get("SubscriberId").value;
+   let memberId = this.memberSearchForm.get('MemberId').value.trim();
+   let fname=this.memberSearchForm.get("Fname").value.trim();
+   let mname=this.memberSearchForm.get("Mname").value.trim();   
+   let lname=this.memberSearchForm.get("Lname").value.trim();
+   let subscriberId=this.memberSearchForm.get("SubscriberId").value.trim();
    let Gender=this.memberSearchForm.get("Gender").value;
    let dob=this.memberSearchForm.get("DateOfBirth").value;
    let memberStartDate=this.memberSearchForm.get("MemberStartDate").value;
@@ -155,7 +164,7 @@ export class MemberComponent implements OnInit {
    }
    console.log(JSON.stringify(formData.value));
    console.log(this.m.Gender.value);
-   debugger;
+   
    this.memberService.memberSearch(memberId,fname,mname, lname, subscriberId, dob, Gender, memberStartDate, memberEndDate).subscribe(
      (data:IMemberSearchResponse[])=>{
        console.log(data);

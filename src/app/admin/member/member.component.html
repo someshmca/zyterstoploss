@@ -92,24 +92,18 @@
         </div>
         
             <div class="member-search-btns-area">  
-                <button class="btn btn-outline-primary" type="reset">Reset</button>    
+                <button class="btn btn-outline-primary" type="button" (click)="resetMemberSearch()">Reset</button>    
                 <button class="btn btn-primary">Search</button>            
             </div>
         </form>
         
-      <div class="card custom-card" *ngIf="isSearchDataThere">
-        <div class="card-header">
-              <h3>Member Table</h3>
-              <div class="edit-update-alert">
-                  <alert></alert>
-              </div>
-        </div>
-        <div class="card-body">
+     
+        <div *ngIf="isSearchDataThere">
           <div class="card-table-area members-table-area" >
               <div class="table-responsive">
-                  <div class="cust-add-area">
+                  <!-- <div class="cust-add-area">
                       <span class="fa fa-plus-circle" (click)="openCustomModal(true, null)"></span>
-                  </div>    
+                  </div>     -->
                   <div class="mat-elevation-z8">
                     <table mat-table matSort #memberSearchTable [dataSource]="searchDataSource" class="table table-bordered table-striped card-table">
                   
@@ -154,13 +148,13 @@
                         <td mat-cell *matCellDef="let element"> {{element.status==1?'Active':'Inactive'}} </td>
                       </ng-container>
 
-                      <ng-container matColumnDef="userId">
+                      <!-- <ng-container matColumnDef="userId">
                         <th mat-header-cell *matHeaderCellDef> Action </th>
                         <td mat-cell *matCellDef="let element" class="action-link"> 
                           <span class="fa fa-edit" 
                           (click)="openCustomModal(true, element)"></span>
                         </td>
-                      </ng-container>
+                      </ng-container> -->
                       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
                     </table>
@@ -172,7 +166,6 @@
               </div>
           </div>
         </div>
-      </div>
  </div> <!-- end of page-content-->
  
 

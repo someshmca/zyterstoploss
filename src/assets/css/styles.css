@@ -91,3 +91,17 @@ input::-webkit-inner-spin-button {
 input[type=number] {
   -moz-appearance: textfield;
 }
+.report-wrap{
+	padding: 10px;
+	border: 1px solid #c5c9ce;
+	border-radius: 5px;
+	width: 95%;
+	margin: 10px auto;
+}
+.report-iframe{
+	margin: 0;
+	display: block;
+	height: 74vh;
+	width: 100%;
+	border: none;
+}
