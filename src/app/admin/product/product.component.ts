@@ -41,6 +41,25 @@ export class ProductComponent implements OnInit {
   coveredBenefits: any[] = [];
   contractIDsAll: any[] = [];
   addObj:IProductAdd;
+  sslIncurredEndErr = {
+    isDateErr: false,
+    dateErrMsg: ''
+  };
+  sslPaidEndErr = {
+    isDateErr: false,
+    dateErrMsg: ''
+  };
+  contractIds:number;
+
+  aslIncurredEndErr = {
+    isDateErr: false,
+    dateErrMsg: ''
+  };
+  aslPaidEndErr = {
+    isDateErr: false,
+    dateErrMsg: ''
+  };
+  isDisabled = true;
   //isClientSelected:boolean = false;
   // sslForm: FormGroup;
   // aslForm: FormGroup;
@@ -112,10 +131,23 @@ export class ProductComponent implements OnInit {
     this.getCoveredClaims();
     //this.getAllContracts();
     //this.isClientSelected = false;
+    this.checkMaxLiability();
   }
 
   get f() { return this.productForm.controls; }
 
+  checkMaxLiability(){
+    
+    console.log(this.f.isMaxLiability.value);
+    if(this.f.isMaxLiability.value==true){
+      this.f.ibnrPercentage.enable();
+      this.f.defferedFeePercentage.enable();
+    }
+    else{
+      this.f.ibnrPercentage.disable();
+      this.f.defferedFeePercentage.disable();
+    }
+  }
   getActiveClients(){
     
     this.productService.getAllClients().subscribe(
@@ -132,9 +164,11 @@ export class ProductComponent implements OnInit {
   }
   getContractIDs(clientId){
     clientId = Number(clientId);
+   
     this.contractService.getContractsByClientID(clientId).subscribe((data)=>{
       this.contractsByClientId = data;
     })
+    
   }
   getAllContracts(){
     this.contractService.getAllContracts().subscribe((data)=>{
@@ -156,17 +190,56 @@ export class ProductComponent implements OnInit {
   public doFilter = (value: string) => {
     this.dataSource.filter = value.trim().toLocaleLowerCase();
   }
+  
+ 
   onSubmit() {
     this.submitted = true;
 
     // reset alerts on submit
     this.alertService.clear();
-
+    this.sslIncurredEndErr.isDateErr=false;
+    this.sslIncurredEndErr.dateErrMsg='';
+    this.sslPaidEndErr.isDateErr=false;
+    this.sslPaidEndErr.dateErrMsg='';
+    this.aslIncurredEndErr.isDateErr=false;
+    this.aslIncurredEndErr.dateErrMsg='';
+    this.aslPaidEndErr.isDateErr=false;
+    this.aslPaidEndErr.dateErrMsg='';
+    
     // stop here if form is invalid
    if (this.productForm.invalid) {
      return;
    }
+
+   if(this.productForm.valid && this.f.sslIncurredStartDate.value > this.f.sslIncurredEndDate.value){
+    this.sslIncurredEndErr.isDateErr=true;
+    this.sslIncurredEndErr.dateErrMsg = 'SSL Incurred start date should not be greater than SSL Incurred End date';
+    
+    return;
+  }
+  
+  if(this.productForm.valid && this.f.sslPaidStartDate.value > this.f.sslPaidEndDate.value){
+   this.sslPaidEndErr.isDateErr=true;
+   this.sslPaidEndErr.dateErrMsg = 'SSL Paid Start date should not be greater than SSL Paid End date';
+   
+   return;
+ }
+
+ if(this.productForm.valid && this.f.aslIncurrredStartDate.value > this.f.aslIncurredEndDate.value){
+  this.aslIncurredEndErr.isDateErr=true;
+  this.aslIncurredEndErr.dateErrMsg = 'ASL Incurred start date should not be greater than ASL Incurred End date';
+  
+  return;
+}
+
+if(this.productForm.valid && this.f.aslPaidStartDate.value > this.f.aslPaidEndDate.value){
+ this.aslPaidEndErr.isDateErr=true;
+ this.aslPaidEndErr.dateErrMsg = 'ASL Paid Start date should not be greater than ASL Paid End date';
+ 
+ return;
+}
    this.loading = true;
+   
       if (this.isAddMode) {
           this.addProduct();
       } else {
@@ -197,26 +270,28 @@ export class ProductComponent implements OnInit {
     if(id!=null && open){
       this.isAddMode = false;
       this.productService.getProduct(id.productId).subscribe(x => {        
-        console.log(x[0].productId);
+        console.log(x[0].productId);       
+        this.getContractIDs(x[0].clientId);
             this.productForm.patchValue({
               productId:x[0].productId,
               contractId:x[0].contractId,
+              clientId:x[0].clientId,
               sslIncurredStartDate:this.datePipe.transform(new Date(x[0].sslIncurredStartDate), 'yyyy-MM-dd'),
               sslIncurredEndDate:this.datePipe.transform(new Date(x[0].sslIncurredEndDate), 'yyyy-MM-dd'),
               sslPaidStartDate:this.datePipe.transform(new Date(x[0].sslPaidStartDate), 'yyyy-MM-dd'),
               sslPaidEndDate:this.datePipe.transform(new Date(x[0].sslPaidEndDate), 'yyyy-MM-dd'),
               sslRunInLimit:x[0].sslRunInLimit,
               sslClaimBasis:x[0].aslClaimBasis,
-              sslDeductible:x[0].aslDeductible,
+              sslDeductible:x[0].sslDeductible,
               sslAggDeductible:x[0].sslAggDeductible,
               sslAnnualLimit:x[0].sslAnnualLimit,
               sslLifetimeLimit:x[0].sslLifetimeLimit,
               sslIsImmediateReimbursement:x[0].sslIsImmediateReimbursement,
-              sslTermCoverageExtEndDate:this.datePipe.transform(new Date(x[0].sslTermCoverageExtEndDate), 'yyyy-MM-dd'),
+              sslTermCoverageExtEndDate:x[0].sslTermCoverageExtEndDate==null?"":this.datePipe.transform(new Date(x[0].sslTermCoverageExtEndDate), 'yyyy-MM-dd'),
               aslDeductible:x[0].aslDeductible,
               aslMinDeductible:x[0].aslMinDeductible,
               aslExpectedClaimLiability:x[0].aslExpectedClaimLiability,
-              aslIncurredStartDate:this.datePipe.transform(new Date(x[0].aslIncurrredStartDate), 'yyyy-MM-dd'),
+              aslIncurrredStartDate:this.datePipe.transform(new Date(x[0].aslIncurrredStartDate), 'yyyy-MM-dd'),
               aslIncurredEndDate:this.datePipe.transform(new Date(x[0].aslIncurredEndDate), 'yyyy-MM-dd'),
               aslPaidStartDate:this.datePipe.transform(new Date(x[0].aslPaidStartDate), 'yyyy-MM-dd'),
               aslPaidEndDate:this.datePipe.transform(new Date(x[0].aslPaidEndDate), 'yyyy-MM-dd'),
@@ -225,7 +300,7 @@ export class ProductComponent implements OnInit {
               aslAnnualLimit:x[0].aslAnnualLimit,
               aslLifeTimeLimit:x[0].aslLifeTimeLimit,
               aslIsMonthlyAccomidation:x[0].aslIsMonthlyAccomidation,
-              aslTermCoverageExtEndDate:this.datePipe.transform(new Date(x[0].aslTermCoverageExtEndDate), 'yyyy-MM-dd'),
+              aslTermCoverageExtEndDate:x[0].aslTermCoverageExtEndDate==null?"":this.datePipe.transform(new Date(x[0].aslTermCoverageExtEndDate), 'yyyy-MM-dd'),
               isMaxLiability:x[0].isMaxLiability,
               ibnrPercentage:x[0].ibnrPercentage,
               defferedFeePercentage:x[0].defferedFeePercentage,
@@ -238,92 +313,30 @@ export class ProductComponent implements OnInit {
 
       
 
-private addProduct() {    
-  //  this.addObj={
-  //   productId: 0,
-  //   contractId:1001,
-
-  //   sslClaimBasis:this.f.sslClaimBasis.value,
-  //   sslIncurredStartDate: this.f.sslIncurredStartDate.value,
-  //   sslIncurredEndDate: this.f.sslIncurredEndDate.value,
-  //   sslPaidStartDate: this.f.sslPaidStartDate.value,
-  //   sslPaidEndDate: this.f.sslPaidEndDate.value,
-
-  //   sslRunInLimit: Number(this.f.sslRunInLimit.value),
-  //   sslDeductible: Number(this.f.sslDeductible.value),
-  //   sslAggDeductible: Number(this.f.sslAggDeductible.value),
-  //   sslAnnualLimit: Number(this.f.sslAnnualLimit.value),
-
-  //   sslLifetimeLimit: Number(this.f.sslLifetimeLimit.value),
-  //   sslTermCoverageExtEndDate: this.f.sslTermCoverageExtEndDate.value,
-  //   sslIsImmediateReimbursement: false,
-
-  //   aslClaimBasis: this.f.aslClaimBasis.value,
-  //   aslDeductible: Number(this.f.aslDeductible.value),
-  //   aslMinDeductible: Number(this.f.aslMinDeductible.value),
-  //   aslExpectedClaimLiability: Number(this.f.aslExpectedClaimLiability.value),
-
-  //   aslIncurrredStartDate: this.f.aslIncurrredStartDate.value,
-  //   aslIncurredEndDate: this.f.aslIncurredEndDate.value,
-  //   aslPaidStartDate: this.f.aslPaidStartDate.value,
-  //   aslPaidEndDate: this.f.aslPaidEndDate.value,
-
-  //   aslRunInLimit: Number(this.f.aslRunInLimit.value),
-  //   aslAnnualLimit: Number(this.f.aslAnnualLimit.value),
-  //   aslLifeTimeLimit: Number(this.f.aslLifeTimeLimit.value),
-  //   aslIsMonthlyAccomidation: false,
-  //   aslTermCoverageExtEndDate: "2012-09-09",
-
-  //   isMaxLiability: this.f.isMaxLiability.value,
-  //   ibnrPercentage: Number(this.f.ibnrPercentage.value),
-  //   defferedFeePercentage: Number(this.f.defferedFeePercentage.value),
-
-  //   status: this.f.status.value==true?1:0,
-  //   userId: this.loginService.currentUserValue.name
+private addProduct() {   
+  
+  // this.addObj = {
+    
   // }
-  this.addObj = {
-    productId: 0,
-    contractId: 1001,
-    clientId: "Medica",
-    sslClaimBasis: "KA",
-    sslIncurredStartDate: "2001-09-09",
-    sslIncurredEndDate: "2002-09-09",
-    sslPaidStartDate: "2001-09-09",
-    sslPaidEndDate: "2002-09-09",
-    sslRunInLimit: 0,
-    sslDeductible: 0,
-    sslAggDeductible: 0,
-    sslAnnualLimit: 0,
-    sslLifetimeLimit: 0,
-    sslTermCoverageExtEndDate: "2002-09-09",
-    sslIsImmediateReimbursement: false,
-    aslClaimBasis: "JJ",
-    aslDeductible: 0,
-    aslMinDeductible: 0,
-    aslExpectedClaimLiability: 0,
-    aslIncurrredStartDate: "2001-09-09",
-    aslIncurredEndDate: "2002-04-09",
-    aslPaidStartDate: "2001-04-09",
-    aslPaidEndDate: "2002-04-09",
-    aslRunInLimit: 0,
-    aslAnnualLimit: 0,
-    aslLifeTimeLimit: 0,
-    aslIsMonthlyAccomidation: false,
-    aslTermCoverageExtEndDate: "2002-09-09",
-    isMaxLiability: false,
-    ibnrPercentage: 0,
-    defferedFeePercentage: 0,
-    status: 0,
-    userId: "Somesh"
-  }
   console.log(this.addObj);
-  debugger;
+  
   this.productForm.patchValue({
-    contractId: Number(this.f.contractId.value),
-    status:this.f.status.value==true?1:1
+    contractId: this.contractsByClientId[0].contractId,
+    status:this.f.status.value==true?1:1,
+    aslIncurrredStartDate: this.productForm.get('aslIncurrredStartDate').value==""?null:this.datePipe.transform(this.f.aslIncurrredStartDate.value, 'yyyy-MM-dd'),
+    aslIncurredEndDate: this.productForm.get('aslIncurredEndDate').value==""?null:this.datePipe.transform(this.f.aslIncurredEndDate.value, 'yyyy-MM-dd'),
+    aslPaidStartDate: this.productForm.get('aslPaidStartDate').value==""?null:this.datePipe.transform(this.f.aslPaidStartDate.value, 'yyyy-MM-dd'),
+    aslPaidEndDate: this.productForm.get('aslPaidEndDate').value==""?null:this.datePipe.transform(this.f.aslPaidEndDate.value, 'yyyy-MM-dd'),
+    aslTermCoverageExtEndDate: this.productForm.get('aslTermCoverageExtEndDate').value==""?null:this.datePipe.transform(this.f.aslPaidEndDate.value, 'yyyy-MM-dd'),
+    sslIncurredStartDate:this.productForm.get('sslIncurredStartDate').value==""?null:this.datePipe.transform(this.f.sslIncurredStartDate.value, 'yyyy-MM-dd'),
+    sslIncurredEndDate: this.productForm.get('sslIncurredEndDate').value==""?null:this.datePipe.transform(this.f.sslIncurredEndDate.value, 'yyyy-MM-dd'),
+    sslPaidStartDate: this.productForm.get('sslPaidStartDate').value==""?null:this.datePipe.transform(this.f.sslPaidStartDate.value, 'yyyy-MM-dd'),
+    sslPaidEndDate: this.productForm.get('sslPaidEndDate').value==""?null:this.datePipe.transform(this.f.sslPaidEndDate.value, 'yyyy-MM-dd'),
+    sslTermCoverageExtEndDate: this.productForm.get('sslTermCoverageExtEndDate').value==""?null:this.datePipe.transform(this.f.sslTermCoverageExtEndDate.value, 'yyyy-MM-dd')
+   
   })
   console.log(this.productForm.value);
-  debugger;
+  
   this.productService.addProduct(this.productForm.value)
       .pipe(first())
       .subscribe({ 
@@ -331,7 +344,7 @@ private addProduct() {
             
             this.openCustomModal(false, null);
             this.getAllProducts();
-            debugger;
+           
             this.productForm.reset();                
               this.alertService.success('New Product added', { keepAfterRouteChange: true });
               //this.router.navigate(['../'], { relativeTo: this.route });
@@ -344,7 +357,15 @@ private addProduct() {
       
   }
 
-  private updateProduct() {   
+  private updateProduct() { 
+  
+    
+    this.productForm.patchValue({  
+    contractId:this.contractsByClientId[0].contractId,
+    status:this.f.status.value==true?1:0,
+    aslTermCoverageExtEndDate: this.productForm.get('aslTermCoverageExtEndDate').value==""?null:this.datePipe.transform(this.f.aslPaidEndDate.value, 'yyyy-MM-dd'),
+    sslTermCoverageExtEndDate: this.productForm.get('sslTermCoverageExtEndDate').value==""?null:this.datePipe.transform(this.f.sslTermCoverageExtEndDate.value, 'yyyy-MM-dd')
+  })
       this.productService.updateProduct(this.productForm.value)
           .pipe(first())
           .subscribe({

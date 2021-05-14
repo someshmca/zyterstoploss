@@ -38,8 +38,11 @@ import { AlertComponent } from './alert/alert.component';
 import { HealthPlanComponent } from './health-plan/health-plan.component';
 import { ProductComponent } from './product/product.component';
 import { MatSelectModule } from '@angular/material/select';
+import { ExcelUploadComponent } from './excel-upload/excel-upload.component';
+import { Nl2brPipe } from '../nl2br.pipe';
+
 @NgModule({
-  declarations: [BatchSettingsComponent, ClaimSearchComponent, ClaimResultComponent, ClaimComponent, BenefitsComponent, ProgramsComponent, ContractsComponent, RoleComponent, RulesComponent, ClientComponent, AttributesComponent, UsersSecurityComponent, MemberComponent, AlertComponent, HealthPlanComponent, ProductComponent],
+  declarations: [BatchSettingsComponent, ClaimSearchComponent, ClaimResultComponent, ClaimComponent, BenefitsComponent, ProgramsComponent, ContractsComponent, RoleComponent, RulesComponent, ClientComponent, AttributesComponent, UsersSecurityComponent, MemberComponent, AlertComponent, HealthPlanComponent, ProductComponent, ExcelUploadComponent, Nl2brPipe],
   imports: [
     CommonModule,
     FormsModule,

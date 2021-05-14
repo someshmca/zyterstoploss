@@ -1,0 +1,25 @@
+<div class="page-content">
+    <div class="card custom-card">
+        <div class="card-header">
+              <h3>Mass Upload</h3>
+              <div class="edit-update-alert">
+                 <alert></alert>
+              </div>            
+        </div>
+        <div class="row">  
+             
+        </div>  
+    <div class="row">  
+        <div class="col-md-6">  
+            <input class="form-control" type="file" #fileInput />  
+        </div>  
+        <div class="col-md-6">  
+            <button class="btn btn-primary" (click)="uploadFile();">Upload</button>  
+        </div>  
+    </div>  
+    <div class="message-area">  
+        <p class="text-success" [innerHTML]="message | nl2br"></p>  
+    </div>
+    </div>
+    </div>
+    

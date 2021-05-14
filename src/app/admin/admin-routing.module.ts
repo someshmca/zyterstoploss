@@ -19,6 +19,7 @@ import { ProductComponent } from './product/product.component';
 import { SSLReportComponent } from '../reports/ssl-report/ssl-report.component';
 import { ASLReportComponent } from '../reports/asl-report/asl-report.component';
 import { MAXLiabilityReportComponent } from '../reports/max-liability-report/max-liability-report.component';
+import { ExcelUploadComponent } from './excel-upload/excel-upload.component';
 const routes: Routes = [
   {path: 'claim-search', component: ClaimSearchComponent, canActivate: [AuthGuard] },
   {path: 'claim-result', component: ClaimResultComponent, canActivate: [AuthGuard] },
@@ -27,8 +28,7 @@ const routes: Routes = [
   {path: 'benefits', component: BenefitsComponent, canActivate: [AuthGuard]
   },
   {path: 'programs', component: ProgramsComponent, canActivate: [AuthGuard] },
-  {path: 'contracts', component: ContractsComponent, canActivate: [AuthGuard]
-  },
+  {path: 'contracts', component: ContractsComponent, canActivate: [AuthGuard] },
   {path: 'clients', component: ClientComponent, canActivate: [AuthGuard] },
   {path: 'users-security', component: UsersSecurityComponent, canActivate: [AuthGuard] },
   {path: 'batch-settings', component: BatchSettingsComponent, canActivate: [AuthGuard] },
@@ -37,6 +37,7 @@ const routes: Routes = [
   {path: 'member', component: MemberComponent, canActivate: [AuthGuard]},
   {path: 'health-plan', component: HealthPlanComponent, canActivate: [AuthGuard]},
   {path: 'product', component: ProductComponent, canActivate: [AuthGuard]},
+  {path: 'excel-upload', component: ExcelUploadComponent, canActivate: [AuthGuard]},
   {path: 'specific-stoploss-report', component: SSLReportComponent},
   {path: 'aggregate-stoploss-report', component: ASLReportComponent, canActivate: [AuthGuard]},
   {path: 'max-liability-report', component: MAXLiabilityReportComponent, canActivate: [AuthGuard]}

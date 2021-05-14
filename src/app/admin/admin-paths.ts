@@ -74,8 +74,15 @@ export const Paths = {
   productAll: "https://medicaslapiorc.azurewebsites.net/api/Product/GetAllProducts",
   product: "https://medicaslapiorc.azurewebsites.net/api/Product/GetProducts?productId=",
   productAdd: "https://medicaslapiorc.azurewebsites.net//api/Product/AddProducts",
-  productUpdate:"https://medicaslapiorc.azurewebsites.net/api/Product/UpdateProducts",
+  productUpdate:"https://medicaslapiorc.azurewebsites.net/api/Product/UpdateProduct",
   productCovertClaims:"https://medicaslapiorc.azurewebsites.net/api/Product//GetCoveredClaims",
 
-  
+  ExcelUploadPath: "https://medicaslapiorc.azurewebsites.net/api/ExcelUpload/UploadExcel",
+
+//https://medicaanalytics-axw4of8ufwa4-hy.analytics.ocp.oraclecloud.com/ui/dv/ui/project.jsp?pageid=visualAnalyzer&reportmode=full&reportpath=%2F%40Catalog%2Fshared%2FMedica%20SL%2FSpecific%20Report
+//https://medicaanalytics-axw4of8ufwa4-hy.analytics.ocp.oraclecloud.com/ui/dv/ui/project.jsp?pageid=visualAnalyzer&reportmode=full&reportpath=%2F%40Catalog%2Fshared%2FMedica%20SL%2FSpecific%20Report
+  sslReportURL: "https://medicaanalytics-axw4of8ufwa4-hy.analytics.ocp.oraclecloud.com/ui/dv/ui/project.jsp?pageid=visualAnalyzer&reportmode=full&reportpath=%2F%40Catalog%2Fshared%2FMedica%20SL%2FSpecific%20Report",
+  aslReportURL: "https://medicaanalytics-axw4of8ufwa4-hy.analytics.ocp.oraclecloud.com/ui/dv/ui/project.jsp?pageid=visualAnalyzer&reportmode=full&reportpath=%2F%40Catalog%2Fusers%2Fsrajamani%40infinite.com%2FMedica%20SL%2FSpecific%20Report",
+  maxLiabilityReportURL: "https://medicaanalytics-axw4of8ufwa4-hy.analytics.ocp.oraclecloud.com/ui/dv/ui/project.jsp?pageid=visualAnalyzer&reportmode=full&reportpath=%2F%40Catalog%2Fusers%2Fsrajamani%40infinite.com%2FMedica%20SL%2FSpecific%20Report"
+
 }

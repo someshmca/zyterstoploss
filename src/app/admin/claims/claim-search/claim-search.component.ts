@@ -10,6 +10,10 @@ import { Observable } from 'rxjs';
 import { AlertService } from '../../services/alert.service';
 import { DatePipe } from '@angular/common';
 
+import {MatPaginator} from '@angular/material/paginator';
+import {MatTableDataSource} from '@angular/material/table';
+import { MatSort } from '@angular/material/sort';
+
 @Component({
   selector: 'app-claim-search',
   templateUrl: './claim-search.component.html',
@@ -27,6 +31,16 @@ export class ClaimSearchComponent implements OnInit {
     toDateInvalid: false
   };
   dateErrorMessage: string = '';
+  
+  claimResults: IClaimReportsModel[] = [];
+  displayedColumns: any[] = ['claimId', 'clientName', 'memberId', 'firstName', 'lastName', 'paidAmount', 'climReceivedOn','paidDate'];
+  dataSource: any;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
+  isClaimResults: boolean = false;
+
+
+
   @ViewChild("focusElem") focusTag: ElementRef;
   constructor(private fb: FormBuilder, 
     private _claimReportService: ClaimReportService, 
@@ -138,7 +152,7 @@ export class ClaimSearchComponent implements OnInit {
       toDate:  this.f.toDate.value==''?null: this.datePipe.transform(this.f.toDate.value, 'yyyy-MM-dd')    
     }
     console.log(claimRequestObj);
-    debugger;
+    
     this._claimReportService.getClaimReport(claimRequestObj).subscribe(
       (data) => {
         this.isClaimSearchErr=false;
@@ -148,13 +162,33 @@ export class ClaimSearchComponent implements OnInit {
         this.dateErrorMessage='';
         console.log("data : "+data);      
         this._claimReportService.setClaimResults(data);
-        this._route.navigate(['/claim-result']);
+        
+       // this._route.navigate(['/claim-result']);
+       
+        this._claimReportService.claimResultsVal.subscribe(
+          (data) =>{
+            
+            this.isClaimResults = true;
+            this.claimResults = data;
+            this.dataSource = new MatTableDataSource(this.claimResults);
+            setTimeout(()=>{
+            this.dataSource.paginator = this.paginator;
+            this.dataSource.sort = this.sort;
+            }, 500)
+          }
+        );
         console.log("Calim Response data : "+data);
       },
       (error) => {
       } 
     );
    // this._claimReportService.getClaimReport("")
+  }
+  setClaimId(id: string){
+    this._claimService.setClaimId(id);
+    console.log("Id : "+id);
+   // this.isClaimReportsHidden= true;
+    this._route.navigate(['/claim']);
   }
   
 }

@@ -37,11 +37,5 @@ export class ClaimResultComponent implements OnInit, AfterViewInit  {
       }
     );
   }
-  setClaimId(id: string){
-    this._claimService.setClaimId(id);
-    console.log("Id : "+id);
-   // this.isClaimReportsHidden= true;
-    this._route.navigate(['/claim']);
-  }
   
 }

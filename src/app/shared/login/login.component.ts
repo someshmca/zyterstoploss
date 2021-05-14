@@ -87,6 +87,7 @@ export class LoginComponent implements OnInit {
               if(data){
                 
                 this.loginData = data;
+                
                 this.loginService.setMenu(this.loginData.menuDetails); 
                 this.loginService.setToken(this.loginData.token);
                 this.loginService.curToken.subscribe(d => {                    

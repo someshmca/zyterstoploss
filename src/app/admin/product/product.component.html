@@ -76,6 +76,15 @@
       <div class="modal-body">
         <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
           <div class="product-form-wrap">
+            <div class="mandate-fields">
+              <span *ngIf="submitted && (!productForm.valid && !productForm.errors?.dates)">Fields marked with * are mandatory</span>
+              <span *ngIf="productForm.errors">{{ productForm.errors?.dates | json }}</span>
+              <span *ngIf="sslIncurredEndErr.isDateErr">{{sslIncurredEndErr.dateErrMsg}}</span>
+              <span *ngIf="sslPaidEndErr.isDateErr">{{sslPaidEndErr.dateErrMsg}}</span>
+              <span *ngIf="aslIncurredEndErr.isDateErr">{{aslIncurredEndErr.dateErrMsg}}</span>
+              <span *ngIf="aslPaidEndErr.isDateErr">{{aslPaidEndErr.dateErrMsg}}</span>
+             
+             </div>  
             <div class="row">
               <div class="col-md-4">
                 <div class="form-group">
@@ -120,7 +129,7 @@
                 <label>Incurred Start Date<small class="starmark">*</small></label>
                 <input type="date" value="MM/DD/yyyy" formControlName="sslIncurredStartDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.sslIncurredStartDate.errors }"/>
               </div>
-            </div>''
+            </div>
             <div class="col-md-4">
               <div class="form-group">
                 <label>Incurred End Date<small class="starmark">*</small></label>
@@ -283,14 +292,14 @@
     <div class="row">
       <div class="col-md-4">
         <div class="custom-control custom-checkbox">
-          <input type="checkbox" class="custom-control-input" formControlName="isMaxLiability" id="isMaxLia" checked>
+          <input type="checkbox" class="custom-control-input"  formControlName="isMaxLiability" id="isMaxLia" (change)="checkMaxLiability()">
           <label class="custom-control-label" for="isMaxLia">Max Liability</label>
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-group">
           <label>IBNR Percentage</label>
-          <input type="number" formControlName="ibnrPercentage" class="form-control"/>
+          <input type="number" formControlName="ibnrPercentage"   class="form-control"/>
         </div>
           <input type="hidden" formControlName="ibnrPercentage" class="form-control"/>
       </div>

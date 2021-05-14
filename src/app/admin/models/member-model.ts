@@ -51,25 +51,9 @@ export interface IMemberAdd{
 }
 
 export interface IMemberUpdate{
-    memberId: string;
-    memberHrid: string;
-    alternateId: string;
-    clientId: string;
-    contractId: number;
-    planId: number;
-    tierId: number;
-    fname: string;
-    lname: string;
-    mname: string;
-    dateOfBirth: string;
-    gender: string;
-    memberStartDate: string;
-    memberEndDate: string;
-    subscriberId: string;
-    subscriberFname: string;
-    subscriberLname: string;
-    laserValue: number;
-    isUnlimited: string;
-    status: number;
-    userId: string;
+  memberId: number;
+  laserValue:number;
+  isUnlimited: string;
+  status: number;
+  userId: string;
 }

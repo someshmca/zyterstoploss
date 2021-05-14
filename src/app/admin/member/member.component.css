@@ -30,3 +30,10 @@
     height: 65vh;
     max-height: 650px;
 }
+.members-table-area .member-table-wrap{
+    width:100%;
+    overflow-x: auto;
+}
+.members-table-area table.table{
+    width: 2200px;
+}

@@ -28,7 +28,7 @@ export class MemberComponent implements OnInit {
   searchResult: any;
   memberForm: FormGroup;
   searchErrorMessage: string;
-  displayedColumns: string[] = ['memberId','subscriberId', 'fname', 'lname', 'mname', 'gender','memberStartDate', 'memberEndDate','dateOfBirth','status'];
+  displayedColumns: string[] = ['memberId', 'clientId', 'contractId', 'planId', 'tierId', 'fname', 'lname', 'mname', 'gender','memberStartDate', 'memberEndDate','dateOfBirth', 'subscriberId', 'subscriberFname', 'subscriberLname', 'laserValue', 'isUnlimited', 'status','userId'];
   searchDataSource: any;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -50,7 +50,7 @@ export class MemberComponent implements OnInit {
   memberSearchErr: any;
   isSearchDataThere: boolean = false;
   noSearchResultsFound: boolean = false;
-
+  uMemberId: any;
   constructor(private mb: FormBuilder, private fb: FormBuilder, private memberService:MemberService, private alertService: AlertService, private datePipe: DatePipe, private loginService: LoginService, private clientService: ClientsService, private contractService: ContractService, private planService: HealthPlanService) { }
 
   ngOnInit() {
@@ -168,6 +168,14 @@ export class MemberComponent implements OnInit {
    this.memberService.memberSearch(memberId,fname,mname, lname, subscriberId, dob, Gender, memberStartDate, memberEndDate).subscribe(
      (data:IMemberSearchResponse[])=>{
        console.log(data);
+       if(data==null || data.length==0){
+         console.log("Records are Empty");
+         
+       }
+       else{
+         console.log("another issue");
+         
+       }
        setTimeout(()=>{
           this.searchDataSource = new MatTableDataSource(data);
           this.isSearchDataThere = true;
@@ -178,6 +186,8 @@ export class MemberComponent implements OnInit {
         this.searchDataSource.sort = this.sort;
        },700)
      }, (error) => {
+       console.log("no record found");
+       
        this.isSearchDataThere = false;
        this.noSearchResultsFound = true;
        this.searchErrorMessage = error.message;
@@ -203,19 +213,42 @@ export class MemberComponent implements OnInit {
     if(id!=null && open){
       this.isAddMode = false;      
       if(id!=null){
+          this.uMemberId = id.memberHrid;
           this.memberForm.patchValue({
             memberId: id.memberHrid,
+            clientId: id.clientId,
+            contractId: id.contractId,
+            planId: id.planId,
+            tierId: id.tierId,
             fname: id.fname,
             lname: id.lname,
             mname: id.mname,
             subscriberId: id.subscriberId,
+            subscriberFname: id.subscriberFname,
+            subscriberLname: id.subscriberLname,
             gender: id.gender,
             status: id.status,
+            laserValue: id.laserValue,
+            isUnlimited: id.isUnlimited==null?false:true,
             memberStartDate: this.datePipe.transform(id.memberStartDate, 'yyyy-MM-dd'),
             memberEndDate: this.datePipe.transform(id.memberEndDate, 'yyyy-MM-dd'),
             dateOfBirth: this.datePipe.transform(id.dateOfBirth, 'yyyy-MM-dd')          
-          })        
+          });
+          console.log(this.memberForm.value);
+          
+          this.memberForm.disable();
+          this.f.laserValue.enable();
+          this.f.isUnlimited.enable();   
+          this.isUnlimitedChecked();
        }        
+  }
+}
+isUnlimitedChecked(){  
+  if(this.f.isUnlimited.value){
+    this.f.laserValue.disable();
+  }
+  else{
+    this.f.laserValue.enable();            
   }
 }
 get m(){return this.memberSearchForm.controls}
@@ -282,27 +315,11 @@ private addMember() {
 
   private updateMember() {
       let updateMemberObj = {
-        memberId: 'M111',
-        memberHrid: this.f.memberHrid.value,
-        alternateId: this.f.alternateId.value,
-        clientId: this.f.clientId.value,
-        contractId: Number(this.f.contractId.value),
-        planId: Number(this.f.planId.value),
-        tierId: Number(this.f.tierId.value),
-        fname: this.f.fname.value,
-        lname: this.f.lname.value,
-        mname: this.f.mname.value,
-        gender: this.f.gender.value,
-        status: this.f.status.value==true?1:0,
-        laserValue: 10,
-        isUnlimited: this.f.isUnlimited.value==true?'Y':'N',
-        userId: this.loginService.currentUserValue.name,
-        memberStartDate: this.f.memberStartDate.value,
-        memberEndDate: this.f.memberEndDate.value,
-        subscriberId: this.f.subscriberId.value,
-        subscriberFname: this.f.subscriberFname.value,
-        subscriberLname: this.f.subscriberLname.value,
-        dateOfBirth: this.f.dateOfBirth.value 
+      memberId: Number(this.uMemberId),
+      laserValue: Number(this.f.laserValue.value),
+      isUnlimited: this.f.isUnlimited.value,
+      status: 1,
+      userId: this.loginService.currentUserValue.name  
       }
       
       this.memberService.updateMember(updateMemberObj)

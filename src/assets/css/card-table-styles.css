@@ -134,3 +134,14 @@
 ::ng-deep .mat-form-field-underline {
     display: none;
   }
+
+  .no-records-found{
+      padding: 15px;
+      height: 70px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+  }
+.no-records-found h3{
+    color: #ff0000;
+}

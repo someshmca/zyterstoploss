@@ -98,22 +98,38 @@
         </form>
         
      
-        <div *ngIf="isSearchDataThere">
+        <div *ngIf="isSearchDataThere">          
+          <div class="card-header">
+            Member Search Results
+            <alert></alert>
+            </div>
           <div class="card-table-area members-table-area" >
               <div class="table-responsive">
                   <!-- <div class="cust-add-area">
                       <span class="fa fa-plus-circle" (click)="openCustomModal(true, null)"></span>
                   </div>     -->
-                  <div class="mat-elevation-z8">
+                  <div class="member-table-wrap">
                     <table mat-table matSort #memberSearchTable [dataSource]="searchDataSource" class="table table-bordered table-striped card-table">
                   
                       <ng-container matColumnDef="memberId">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header >Member ID </th>
                         <td mat-cell *matCellDef="let element"> {{element.memberId}} </td>
                       </ng-container>
-                      <ng-container matColumnDef="subscriberId">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header >Subscriber ID </th>
-                        <td mat-cell *matCellDef="let element"> {{element.subscriberId}} </td>
+                      <ng-container matColumnDef="clientId">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header >Client ID </th>
+                        <td mat-cell *matCellDef="let element"> {{element.clientId}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="contractId">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header >Contract ID </th>
+                        <td mat-cell *matCellDef="let element"> {{element.contractId}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="planId">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header >Plan ID </th>
+                        <td mat-cell *matCellDef="let element"> {{element.planId}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="tierId">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header >Tier ID </th>
+                        <td mat-cell *matCellDef="let element"> {{element.tierId}} </td>
                       </ng-container>
                       <ng-container matColumnDef="fname">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header >First Name </th>
@@ -143,29 +159,52 @@
                         <th mat-header-cell *matHeaderCellDef mat-sort-header >Gender </th>
                         <td mat-cell *matCellDef="let element"> {{element.gender=='M'?'Male':'Female'}} </td>
                       </ng-container>
+                      <ng-container matColumnDef="subscriberId">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header >Subscriber ID </th>
+                        <td mat-cell *matCellDef="let element"> {{element.subscriberId}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="subscriberFname">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header >Subscriber First Name </th>
+                        <td mat-cell *matCellDef="let element"> {{element.subscriberFname}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="subscriberLname">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header >Subscriber Last Name </th>
+                        <td mat-cell *matCellDef="let element"> {{element.subscriberLname}} </td>
+                      </ng-container>
                       <ng-container matColumnDef="status">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header >Status </th>
                         <td mat-cell *matCellDef="let element"> {{element.status==1?'Active':'Inactive'}} </td>
                       </ng-container>
+                      <ng-container matColumnDef="laserValue">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header >Laser Value </th>
+                        <td mat-cell *matCellDef="let element"> {{element.laserValue}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="isUnlimited">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header >Is Unlimited </th>
+                        <td mat-cell *matCellDef="let element"> {{element.isUnlimited}} </td>
+                      </ng-container>
 
-                      <!-- <ng-container matColumnDef="userId">
+                      <ng-container matColumnDef="userId">
                         <th mat-header-cell *matHeaderCellDef> Action </th>
                         <td mat-cell *matCellDef="let element" class="action-link"> 
                           <span class="fa fa-edit" 
                           (click)="openCustomModal(true, element)"></span>
                         </td>
-                      </ng-container> -->
+                      </ng-container>
                       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
                     </table>
                     <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
                   </div>
               </div>
-              <div class="no-grid-results" *ngIf="noSearchResultsFound">
-                  <h3>Could not find the Search Results. Please try again</h3>
-              </div>
           </div>
         </div>
+        <div class="no-grid-results" *ngIf="noSearchResultsFound">
+            <h3>Could not find the Search Results. Please try again</h3>
+        </div>
+        <!-- <div *ngIf="noRecordsFound" class="no-records-found">
+          <h3>No Records Found</h3>
+        </div> -->
  </div> <!-- end of page-content-->
  
 
@@ -312,7 +351,7 @@
                    <div class="form-group switch-group">
                     Is Unlimited
                       <label class="switch">
-                        <input type="checkbox" class="success" formControlName="isUnlimited">
+                        <input type="checkbox" class="success" formControlName="isUnlimited" (change)="isUnlimitedChecked()">
                         <span class="slider round"></span>
                       </label>                  
                 </div>

@@ -40,7 +40,7 @@ export class ProductService {
  const body = JSON.stringify(formData);
  
  const headerOptions = new HttpHeaders({ 'Content-Type': 'application/json' });
-  return this.http.post<IProductUpdate>(Paths.productUpdate, body,{headers: headerOptions} ).pipe(catchError(this.handleError.bind(this)));
+  return this.http.put<IProductUpdate>(Paths.productUpdate, body,{headers: headerOptions} ).pipe(catchError(this.handleError.bind(this)));
  
  }
  getCoveredClaims(){

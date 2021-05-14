@@ -34,7 +34,7 @@ import { MAXLiabilityReportComponent } from './reports/max-liability-report/max-
     MonthlyChartComponent,
     SSLReportComponent,
     ASLReportComponent,
-    MAXLiabilityReportComponent,
+    MAXLiabilityReportComponent
   ],
   imports: [
     BrowserModule,  
