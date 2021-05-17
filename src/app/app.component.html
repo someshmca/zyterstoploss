@@ -7,9 +7,11 @@
       </div>
     <main role="main" class="p-0" [ngClass]="{ 'main-body-area':isLoggedIn, 'col-md-12':!isLoggedIn }"> 
       <header class="content-header">
-        <h3>
-          <span [hidden]="isLoggedIn">Zyter Health – Stop Loss Solution</span>
-        
+        <h3  class="text-white">
+          <!-- <span [hidden]="isLoggedIn">Zyter Health – Stop Loss Solution</span> -->
+          <span [hidden]="isLoggedIn">
+            Medica
+          </span>
           </h3>
          <div [hidden]="!isLoggedIn" class="welcome-user">
           Welcome <span *ngIf="isLoggedIn">{{user}}</span>

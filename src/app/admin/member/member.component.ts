@@ -28,7 +28,7 @@ export class MemberComponent implements OnInit {
   searchResult: any;
   memberForm: FormGroup;
   searchErrorMessage: string;
-  displayedColumns: string[] = ['memberId', 'clientId', 'contractId', 'planId', 'tierId', 'fname', 'lname', 'mname', 'gender','memberStartDate', 'memberEndDate','dateOfBirth', 'subscriberId', 'subscriberFname', 'subscriberLname', 'laserValue', 'isUnlimited', 'status','userId'];
+  displayedColumns: string[] = ['memberId', 'fname', 'lname', 'mname', 'gender','memberStartDate', 'memberEndDate','dateOfBirth', 'subscriberId', 'status','userId'];
   searchDataSource: any;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;

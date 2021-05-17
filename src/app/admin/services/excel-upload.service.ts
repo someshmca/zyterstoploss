@@ -18,7 +18,6 @@ export class ExcelUploadService {
     headers.append('Accept', 'application/json');  
   
     const httpOptions = { headers: headers };  
-  debugger;
     return this.http.post(Paths.ExcelUploadPath, formData, httpOptions)  
   }  
 }
