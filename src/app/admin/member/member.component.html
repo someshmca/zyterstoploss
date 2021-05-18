@@ -115,21 +115,21 @@
                         <th mat-header-cell *matHeaderCellDef mat-sort-header >Member ID </th>
                         <td mat-cell *matCellDef="let element"> {{element.memberId}} </td>
                       </ng-container>
-                      <ng-container matColumnDef="clientId" [hidden]="show">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header >Client ID </th>
-                        <td mat-cell *matCellDef="let element"> {{element.clientId}} </td>
+                      <ng-container matColumnDef="clientId">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header [hidden]="show">Client ID </th>
+                        <td mat-cell *matCellDef="let element" [hidden]="show"> {{element.clientId}} </td>
                       </ng-container>
-                      <ng-container matColumnDef="contractId" [hidden]="show">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header >Contract ID </th>
-                        <td mat-cell *matCellDef="let element"> {{element.contractId}} </td>
+                      <ng-container matColumnDef="contractId">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header [hidden]="show">Contract ID </th>
+                        <td mat-cell *matCellDef="let element" [hidden]="show"> {{element.contractId}} </td>
                       </ng-container>
-                      <ng-container matColumnDef="planId" [hidden]="show">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header >Plan ID </th>
-                        <td mat-cell *matCellDef="let element"> {{element.planId}} </td>
+                      <ng-container matColumnDef="planId">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header [hidden]="show">Plan ID </th>
+                        <td mat-cell *matCellDef="let element" [hidden]="show"> {{element.planId}} </td>
                       </ng-container>
-                      <ng-container matColumnDef="tierId" [hidden]="show">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header >Tier ID </th>
-                        <td mat-cell *matCellDef="let element"> {{element.tierId}} </td>
+                      <ng-container matColumnDef="tierId">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header [hidden]="show" >Tier ID </th>
+                        <td mat-cell *matCellDef="let element" [hidden]="show"> {{element.tierId}} </td>
                       </ng-container>
                       <ng-container matColumnDef="fname">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header >First Name </th>
@@ -163,13 +163,13 @@
                         <th mat-header-cell *matHeaderCellDef mat-sort-header >Subscriber ID </th>
                         <td mat-cell *matCellDef="let element"> {{element.subscriberId}} </td>
                       </ng-container>
-                      <ng-container matColumnDef="laserValue" [hidden]="show">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header >Laser Value </th>
-                        <td mat-cell *matCellDef="let element"> {{element.laserValue}} </td>
+                      <ng-container matColumnDef="laserValue">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header [hidden]="show">Laser Value </th>
+                        <td mat-cell *matCellDef="let element" [hidden]="show"> {{element.laserValue}} </td>
                       </ng-container>
-                      <ng-container matColumnDef="isUnlimited" [hidden]="show">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header >Is Unlimited </th>
-                        <td mat-cell *matCellDef="let element"> {{element.isUnlimited}} </td>
+                      <ng-container matColumnDef="isUnlimited">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header [hidden]="show">Is Unlimited </th>
+                        <td mat-cell *matCellDef="let element" [hidden]="show"> {{element.isUnlimited}} </td>
                       </ng-container>
                       <ng-container matColumnDef="status">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header >Status </th>
@@ -228,8 +228,7 @@
                   <div class="form-group">
                     <label>Account<small class="starmark">*</small></label>
                     <select #focusElem formControlName="clientId" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.clientId.errors }">
-                      <option>1001</option>
-                      <option>1002</option>
+                      <option value="this.value"></option>
                     </select>
                   </div>
                 </div>            
@@ -237,8 +236,7 @@
                   <div class="form-group">
                     <label>Contract<small class="starmark">*</small></label>
                     <select formControlName="contractId" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.contractId.errors }">
-                      <option>1101</option>
-                      <option>1102</option>
+                      <option value="this.value"></option>
                     </select>
                   </div>
                 </div>            
@@ -246,8 +244,7 @@
                   <div class="form-group">
                     <label>Plan<small class="starmark">*</small></label>
                     <select formControlName="planId" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.planId.errors }">
-                      <option>1201</option>
-                      <option>1202</option>
+                      <option value="this.value"></option>
                     </select>
                   </div>
                 </div>
@@ -257,8 +254,7 @@
                   <div class="form-group">
                     <label>Tier<small class="starmark">*</small></label>
                     <select formControlName="tierId" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.tierId.errors }">
-                      <option>1201</option>
-                      <option>1202</option>
+                      <option value="this.value"></option>
                     </select>
                   </div>
                 </div>
