@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import {IProductAll,IProductAdd,IProductUpdate,IActiveClient,IProduct,IAddProductSuccess,IcoveredClaims} from '../models/product-model';
+import {IProductAll,IProductAdd,IProductUpdate,IActiveClient,IProduct,IAddProductSuccess,ICoveredClaims} from '../models/product-model';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import {Paths} from '../admin-paths';
@@ -44,7 +44,7 @@ export class ProductService {
  
  }
  getCoveredClaims(){
-  return this.http.get<IcoveredClaims[]>(Paths.productCovertClaims
+  return this.http.get<ICoveredClaims[]>(Paths.productCovertClaims
     ).pipe(catchError(this.handleError.bind(this)));
 }
   handleError(errorResponse: HttpErrorResponse) {

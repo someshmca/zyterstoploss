@@ -256,10 +256,12 @@ export class MemberComponent implements OnInit {
 
           },900);
           console.log(this.memberForm.value);
-          
           this.memberForm.disable();
           this.f.laserValue.enable();
-          this.f.isUnlimited.enable();   
+          this.f.isUnlimited.enable();  
+          if(this.f.isUnlimited.value){
+            this.f.laserValue.disable();
+          } 
           this.isUnlimitedChecked();
        }        
   }
@@ -348,6 +350,7 @@ private addMember() {
           .subscribe({
               next: () => {
                   this.openCustomModal(false,null); 
+                  this.searchMember(this.memberSearchForm);
                   this.memberForm.reset();
                   
                   this.alertService.success('Member updated', { 

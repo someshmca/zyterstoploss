@@ -89,7 +89,7 @@
               <div class="col-md-4">
                 <div class="form-group">
                   <label>Account<small class="starmark">*</small> </label>
-                  <select #focusElem formControlName="clientId" class="form-control" (change)="getContractIDs($event.target.value)">
+                  <select #focusElem formControlName="clientId" class="form-control" (change)="getContractIDs($event.target.value)" [ngClass]="{ 'is-invalid': submitted && f.clientId.errors }">
                     <option *ngFor="let client of activeClients" [value]="client.clientId">
                       {{client.clientName}}
                     </option>
@@ -196,8 +196,19 @@
                 <label class="custom-control-label" for="imReimb">Immediate Reimbursement</label>
               </div>
             </div>
-          </div>		
-		
+          </div>	
+          <div class="row"> 
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Covered Claims</label>
+                <select formControlName="sslCoveredClaims" class="form-control" multiple>
+                  <option *ngFor="let coveredClaim of coveredClaims" [value]="coveredClaim.claimTypeCode">
+                    {{coveredClaim.claimType}}
+                  </option>
+               </select>                 
+              </div>
+            </div>
+          </div>
 		
 		<h1>Aggregate Stop Loss</h1>
     <div class="row">
@@ -285,6 +296,16 @@
         <div class="form-group">
           <label>Term Coverage Ext End Date</label>
           <input type="date" formControlName="aslTermCoverageExtEndDate" class="form-control"/>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <label>Covered Claims</label>
+          <select formControlName="aslCoveredClaims" class="form-control" multiple>
+            <option *ngFor="let coveredClaim of coveredClaims" [value]="coveredClaim.claimTypeCode">
+              {{coveredClaim.claimType}}
+            </option>
+         </select>                 
         </div>
       </div>
     </div>

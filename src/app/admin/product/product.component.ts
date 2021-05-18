@@ -2,7 +2,7 @@ import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angula
 import { Router, ActivatedRoute } from '@angular/router';
 import { AlertService } from '../services/alert.service';
 import { IProductAll, IProductAdd,
-  IProductUpdate,IActiveClient
+  IProductUpdate,IActiveClient, ICoveredClaims
   } from '../models/product-model';
 import {ProductService} from '../services/product.service';
 import { first } from 'rxjs/operators';
@@ -38,7 +38,7 @@ export class ProductComponent implements OnInit {
   dataSource: any;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  coveredBenefits: any[] = [];
+  coveredClaims: ICoveredClaims[] = [];
   contractIDsAll: any[] = [];
   addObj:IProductAdd;
   sslIncurredEndErr = {
@@ -85,7 +85,7 @@ export class ProductComponent implements OnInit {
     this.productForm = this.formBuilder.group({
       productId: 0,
       clientId: ['', Validators.required],
-      contractId:0,     
+      contractId: ['', Validators.required],     
       sslClaimBasis: ['', Validators.required],     
       sslIncurredStartDate: ['', Validators.required],
       sslIncurredEndDate: ['', Validators.required],
@@ -100,6 +100,7 @@ export class ProductComponent implements OnInit {
 
       sslIsImmediateReimbursement:false,
       sslTermCoverageExtEndDate:'',
+      sslCoveredClaims: '',
       //below from aslDeductible to aslExpecteddClaimLiability are number fields
       aslDeductible: [0, Validators.required],
       aslMinDeductible:0,
@@ -118,6 +119,7 @@ export class ProductComponent implements OnInit {
 
       aslIsMonthlyAccomidation:false,
       aslTermCoverageExtEndDate:'',
+      aslCoveredClaims: '',
 
       isMaxLiability:false,
       ibnrPercentage:0, // this is a number field
@@ -159,7 +161,7 @@ export class ProductComponent implements OnInit {
   }
   getCoveredClaims(){
     this.productService.getCoveredClaims().subscribe((data)=>{
-        this.coveredBenefits = data;
+        this.coveredClaims = data;
     })
   }
   getContractIDs(clientId){
@@ -269,6 +271,8 @@ if(this.productForm.valid && this.f.aslPaidStartDate.value > this.f.aslPaidEndDa
     
     if(id!=null && open){
       this.isAddMode = false;
+      this.f.clientId.disable();
+      this.f.contractId.disable();
       this.productService.getProduct(id.productId).subscribe(x => {        
         console.log(x[0].productId);       
         this.getContractIDs(x[0].clientId);
@@ -319,7 +323,7 @@ private addProduct() {
     
   // }
   console.log(this.addObj);
-  debugger;
+  
   this.productForm.patchValue({
     contractId: this.contractsByClientId[0].contractId,
     status:this.f.status.value==true?1:1,

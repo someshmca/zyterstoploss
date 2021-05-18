@@ -152,7 +152,8 @@ export interface IProduct{
 
 }
 
-export interface IcoveredClaims{
-    claimTypeCode:string;
-    claimType:string
+export interface ICoveredClaims{
+    claimTypeCode: string;
+    claimType: string;
+    status: boolean;
 }
