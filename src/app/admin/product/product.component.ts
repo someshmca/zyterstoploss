@@ -319,7 +319,7 @@ private addProduct() {
     
   // }
   console.log(this.addObj);
-  
+  debugger;
   this.productForm.patchValue({
     contractId: this.contractsByClientId[0].contractId,
     status:this.f.status.value==true?1:1,
@@ -332,8 +332,8 @@ private addProduct() {
     sslIncurredEndDate: this.productForm.get('sslIncurredEndDate').value==""?null:this.datePipe.transform(this.f.sslIncurredEndDate.value, 'yyyy-MM-dd'),
     sslPaidStartDate: this.productForm.get('sslPaidStartDate').value==""?null:this.datePipe.transform(this.f.sslPaidStartDate.value, 'yyyy-MM-dd'),
     sslPaidEndDate: this.productForm.get('sslPaidEndDate').value==""?null:this.datePipe.transform(this.f.sslPaidEndDate.value, 'yyyy-MM-dd'),
-    sslTermCoverageExtEndDate: this.productForm.get('sslTermCoverageExtEndDate').value==""?null:this.datePipe.transform(this.f.sslTermCoverageExtEndDate.value, 'yyyy-MM-dd')
-   
+    sslTermCoverageExtEndDate: this.productForm.get('sslTermCoverageExtEndDate').value==""?null:this.datePipe.transform(this.f.sslTermCoverageExtEndDate.value, 'yyyy-MM-dd'),
+    userId: this.loginService.currentUserValue.name
   })
   console.log(this.productForm.value);
   

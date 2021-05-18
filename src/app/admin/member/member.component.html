@@ -228,15 +228,17 @@
                   <div class="form-group">
                     <label>Account<small class="starmark">*</small></label>
                     <select #focusElem formControlName="clientId" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.clientId.errors }">
-                      <option value="this.value"></option>
-                    </select>
+                      <option [value]="uClientId">
+                        {{uClientId}}
+                      </option>
+                   </select>  
                   </div>
                 </div>            
                 <div class="col-md-4">
                   <div class="form-group">
                     <label>Contract<small class="starmark">*</small></label>
                     <select formControlName="contractId" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.contractId.errors }">
-                      <option value="this.value"></option>
+                      <option [value]="uContractId">{{uContractId}}</option>
                     </select>
                   </div>
                 </div>            
@@ -244,7 +246,7 @@
                   <div class="form-group">
                     <label>Plan<small class="starmark">*</small></label>
                     <select formControlName="planId" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.planId.errors }">
-                      <option value="this.value"></option>
+                      <option [value]="uPlanId">{{uPlanId}}</option>
                     </select>
                   </div>
                 </div>
@@ -252,16 +254,16 @@
               <div class="row">          
                 <div class="col-md-4">
                   <div class="form-group">
-                    <label>Tier<small class="starmark">*</small></label>
+                    <label>Tier<small class="starmark">*</small></label>                    
                     <select formControlName="tierId" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.tierId.errors }">
-                      <option value="this.value"></option>
+                      <option [value]="uTierId">{{uTierId}}</option>
                     </select>
                   </div>
                 </div>
                <div class="col-md-4">
                   <div class="form-group">
                     <label>Member ID<small class="starmark">*</small></label>
-                    <input type="text" formControlName="memberHrid" maxlength="20"  class="form-control" [ngClass]="{ 'is-invalid': submitted && f.memberHrid.errors }"/>
+                    <input type="text" formControlName="memberId" maxlength="20"  class="form-control" [ngClass]="{ 'is-invalid': submitted && f.memberId.errors }"/>
                   </div>
                 </div>
                 <div class="col-md-4">

@@ -30,6 +30,12 @@ export class MemberComponent implements OnInit {
   searchErrorMessage: string;
   displayedColumns: string[] = ['memberId', 'clientId', 'contractId', 'planId', 'tierId', 'fname', 'lname', 'mname', 'gender','memberStartDate', 'memberEndDate','dateOfBirth', 'subscriberId', 'laserValue', 'isUnlimited', 'status','userId'];
   searchDataSource: any;
+  
+  uClientId:any;
+  uContractId:any;
+  uPlanId:any;
+  uTierId:any;
+
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild("focusElem") focusTag: ElementRef;
@@ -163,13 +169,14 @@ export class MemberComponent implements OnInit {
    if(memberId=='' && fname=='' && mname=='' && lname=='' && subscriberId=='' && dob=='' && Gender=='' && memberStartDate=='' && memberEndDate==''){
     this.noSearchFieldEntered = true;
      return;
-   }
+   } 
    console.log(JSON.stringify(formData.value));
    console.log(this.m.Gender.value);
-   
+   console.log(memberId);
    this.memberService.memberSearch(memberId,fname,mname, lname, subscriberId, dob, Gender, memberStartDate, memberEndDate).subscribe(
      (data:IMemberSearchResponse[])=>{
        console.log(data);
+       console.log(data[0].memberId)
        if(data==null || data.length==0){
          console.log("Records are Empty");
          
@@ -217,27 +224,37 @@ export class MemberComponent implements OnInit {
     if(id!=null && open){
       this.isAddMode = false;      
       if(id!=null){
+        console.log(id);
+        
           this.uMemberId = id.memberHrid;
-          this.memberForm.patchValue({
-            memberId: id.memberHrid,
-            clientId: id.clientId,
-            contractId: id.contractId,
-            planId: id.planId,
-            tierId: id.tierId,
-            fname: id.fname,
-            lname: id.lname,
-            mname: id.mname,
-            subscriberId: id.subscriberId,
-            subscriberFname: id.subscriberFname,
-            subscriberLname: id.subscriberLname,
-            gender: id.gender,
-            status: id.status,
-            laserValue: id.laserValue,
-            isUnlimited: id.isUnlimited==null?false:true,
-            memberStartDate: this.datePipe.transform(id.memberStartDate, 'yyyy-MM-dd'),
-            memberEndDate: this.datePipe.transform(id.memberEndDate, 'yyyy-MM-dd'),
-            dateOfBirth: this.datePipe.transform(id.dateOfBirth, 'yyyy-MM-dd')          
-          });
+          setTimeout(()=>{
+            this.uClientId=id.clientId;
+            this.uContractId=id.contractId;
+            this.uPlanId=id.planId;
+            this.uTierId=id.tierId;
+            
+            this.memberForm.patchValue({
+              memberId: id.memberHrid,
+              clientId: id.clientId,
+              contractId: id.contractId,
+              planId: id.planId,
+              tierId: id.tierId,
+              fname: id.fname,
+              lname: id.lname,
+              mname: id.mname,
+              subscriberId: id.subscriberId,
+              subscriberFname: id.subscriberFname,
+              subscriberLname: id.subscriberLname,
+              gender: id.gender,
+              status: id.status,
+              laserValue: id.laserValue,
+              isUnlimited: (id.isUnlimited==null || id.isUnlimited=='N')?false:true,
+              memberStartDate: this.datePipe.transform(id.memberStartDate, 'yyyy-MM-dd'),
+              memberEndDate: this.datePipe.transform(id.memberEndDate, 'yyyy-MM-dd'),
+              dateOfBirth: this.datePipe.transform(id.dateOfBirth, 'yyyy-MM-dd')          
+            });
+
+          },900);
           console.log(this.memberForm.value);
           
           this.memberForm.disable();

@@ -73,9 +73,9 @@ export const Paths = {
 
   productAll: "https://medicaslapiorc.azurewebsites.net/api/Product/GetAllProducts",
   product: "https://medicaslapiorc.azurewebsites.net/api/Product/GetProducts?productId=",
-  productAdd: "https://medicaslapiorc.azurewebsites.net/api/Product/AddProducts",
+  productAdd: "https://medicaslapiorc.azurewebsites.net//api/Product/AddProducts",
   productUpdate:"https://medicaslapiorc.azurewebsites.net/api/Product/UpdateProduct",
-  productCovertClaims:"https://medicaslapiorc.azurewebsites.net/api/Product/GetCoveredClaims",
+  productCovertClaims:"https://medicaslapiorc.azurewebsites.net/api/Product//GetCoveredClaims",
 
   ExcelUploadPath: "https://medicaslapiorc.azurewebsites.net/api/ExcelUpload/UploadExcel",
 //ssl 
