@@ -28,7 +28,7 @@ export class MemberComponent implements OnInit {
   searchResult: any;
   memberForm: FormGroup;
   searchErrorMessage: string;
-  displayedColumns: string[] = ['memberId', 'fname', 'lname', 'mname', 'gender','memberStartDate', 'memberEndDate','dateOfBirth', 'subscriberId', 'status','userId'];
+  displayedColumns: string[] = ['memberId', 'clientId', 'contractId', 'planId', 'tierId', 'fname', 'lname', 'mname', 'gender','memberStartDate', 'memberEndDate','dateOfBirth', 'subscriberId', 'laserValue', 'isUnlimited', 'status','userId'];
   searchDataSource: any;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -41,11 +41,13 @@ export class MemberComponent implements OnInit {
   submitted = false;
   isCustomModalOpen: boolean = false;
   memSearchError: boolean = false;
+  noSearchFieldEntered: boolean = false;
   
   activeClients: IActiveClient[] = [];
   activeContracts: IContract[]=[];
   plans: IPlanAll[]=[];
   tires: ITire[] = [];
+  show: boolean = true;
 
   memberSearchErr: any;
   isSearchDataThere: boolean = false;
@@ -54,7 +56,7 @@ export class MemberComponent implements OnInit {
   constructor(private mb: FormBuilder, private fb: FormBuilder, private memberService:MemberService, private alertService: AlertService, private datePipe: DatePipe, private loginService: LoginService, private clientService: ClientsService, private contractService: ContractService, private planService: HealthPlanService) { }
 
   ngOnInit() {
-    
+    this.show=true;
     this.initMemberSearchForm();
     this.memberForm = this.fb.group({
       memberId: [''],
@@ -136,7 +138,7 @@ export class MemberComponent implements OnInit {
     this.initMemberSearchForm();
     this.isSearchDataThere= false;
     this.memSearchError=false;
-    
+    this.noSearchFieldEntered=false;    
   }
   searchMember(formData: FormGroup){
     this.memSearchSubmitted = true;
@@ -159,7 +161,7 @@ export class MemberComponent implements OnInit {
        return;
    }
    if(memberId=='' && fname=='' && mname=='' && lname=='' && subscriberId=='' && dob=='' && Gender=='' && memberStartDate=='' && memberEndDate==''){
-    this.memSearchError = true;
+    this.noSearchFieldEntered = true;
      return;
    }
    console.log(JSON.stringify(formData.value));
@@ -179,7 +181,8 @@ export class MemberComponent implements OnInit {
        setTimeout(()=>{
           this.searchDataSource = new MatTableDataSource(data);
           this.isSearchDataThere = true;
-          this.noSearchResultsFound = false;
+          this.noSearchFieldEntered = false;
+          this.memSearchError = false;
        }, 400);
        setTimeout(()=>{         
         this.searchDataSource.paginator = this.paginator;
@@ -189,7 +192,8 @@ export class MemberComponent implements OnInit {
        console.log("no record found");
        
        this.isSearchDataThere = false;
-       this.noSearchResultsFound = true;
+       this.memSearchError = true;
+       this.noSearchFieldEntered = false;
        this.searchErrorMessage = error.message;
      }
    )
@@ -317,7 +321,7 @@ private addMember() {
       let updateMemberObj = {
       memberId: Number(this.uMemberId),
       laserValue: Number(this.f.laserValue.value),
-      isUnlimited: this.f.isUnlimited.value,
+      isUnlimited: this.f.isUnlimited.value==true?'Y':'N',
       status: 1,
       userId: this.loginService.currentUserValue.name  
       }
