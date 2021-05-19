@@ -260,6 +260,9 @@ export class MemberComponent implements OnInit {
           this.f.laserValue.enable();
           this.f.isUnlimited.enable();  
           if(this.f.isUnlimited.value){
+            this.memberForm.patchValue({
+              laserValue: 0
+            });
             this.f.laserValue.disable();
           } 
           this.isUnlimitedChecked();
@@ -268,6 +271,9 @@ export class MemberComponent implements OnInit {
 }
 isUnlimitedChecked(){  
   if(this.f.isUnlimited.value){
+    this.memberForm.patchValue({
+      laserValue: 0
+    });
     this.f.laserValue.disable();
   }
   else{
@@ -307,7 +313,7 @@ private addMember() {
       mname: this.f.mname.value==''?'E':this.f.mname.value,
       gender: this.f.gender.value,
       status: 1,      
-      laserValue: 10,
+      laserValue: this.f.laserValue.value,
       isUnlimited: this.f.isUnlimited.value==true?'Y':'N',
       subscriptionID: this.f.subscriberId.value,
       userId: this.loginService.currentUserValue.name,

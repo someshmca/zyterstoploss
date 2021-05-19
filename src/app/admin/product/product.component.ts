@@ -2,7 +2,7 @@ import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angula
 import { Router, ActivatedRoute } from '@angular/router';
 import { AlertService } from '../services/alert.service';
 import { IProductAll, IProductAdd,
-  IProductUpdate,IActiveClient, ICoveredClaims
+  IProductUpdate,IActiveClient, ICoveredClaims, IListContractClaims
   } from '../models/product-model';
 import {ProductService} from '../services/product.service';
 import { first } from 'rxjs/operators';
@@ -39,8 +39,10 @@ export class ProductComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   coveredClaims: ICoveredClaims[] = [];
+  listContractClaims: IListContractClaims[] = [];
   contractIDsAll: any[] = [];
   addObj:IProductAdd;
+  uProductId: number;
   sslIncurredEndErr = {
     isDateErr: false,
     dateErrMsg: ''
@@ -101,6 +103,8 @@ export class ProductComponent implements OnInit {
       sslIsImmediateReimbursement:false,
       sslTermCoverageExtEndDate:'',
       sslCoveredClaims: '',
+
+
       //below from aslDeductible to aslExpecteddClaimLiability are number fields
       aslDeductible: [0, Validators.required],
       aslMinDeductible:0,
@@ -126,7 +130,8 @@ export class ProductComponent implements OnInit {
       defferedFeePercentage:0, // this is a number field
 
       status:false,
-      userId: this.loginService.currentUserValue.name
+      userId: this.loginService.currentUserValue.name,
+      lstContractClaims: []
     });
     this.getAllProducts();
     this.getActiveClients();   
@@ -169,8 +174,10 @@ export class ProductComponent implements OnInit {
    
     this.contractService.getContractsByClientID(clientId).subscribe((data)=>{
       this.contractsByClientId = data;
+      this.productForm.patchValue({
+        contractId: this.contractsByClientId
+      })
     })
-    
   }
   getAllContracts(){
     this.contractService.getAllContracts().subscribe((data)=>{
@@ -258,6 +265,8 @@ if(this.productForm.valid && this.f.aslPaidStartDate.value > this.f.aslPaidEndDa
     this.loading = false;
     if(open && id==null){
       this.isAddMode = true;    
+      this.f.clientId.enable();
+      this.f.contractId.enable();
     }
     
    
@@ -273,7 +282,8 @@ if(this.productForm.valid && this.f.aslPaidStartDate.value > this.f.aslPaidEndDa
       this.isAddMode = false;
       this.f.clientId.disable();
       this.f.contractId.disable();
-      this.productService.getProduct(id.productId).subscribe(x => {        
+      this.productService.getProduct(id.productId).subscribe(x => {     
+        this.uProductId = x[0].productId;   
         console.log(x[0].productId);       
         this.getContractIDs(x[0].clientId);
             this.productForm.patchValue({
@@ -311,6 +321,23 @@ if(this.productForm.valid && this.f.aslPaidStartDate.value > this.f.aslPaidEndDa
               status:x[0].status, 
               userId: this.loginService.currentUserValue.name     
             });
+            let aslCc=[];
+            let sslCc=[];
+            for(let i=0; i<x[0].lstContractClaims.length; i++){
+                console.log(x[0].lstContractClaims[i].sltype);
+                console.log(x[0].lstContractClaims[i].claimtypecode);
+                if(x[0].lstContractClaims[i].sltype=='A'){
+                  aslCc.push(x[0].lstContractClaims[i].claimtypecode);
+                }
+                if(x[0].lstContractClaims[i].sltype=='S'){
+                  sslCc.push(x[0].lstContractClaims[i].claimtypecode);
+                }
+            }
+            
+            this.productForm.patchValue({
+              sslCoveredClaims: sslCc,
+              aslCoveredClaims: aslCc
+            })
           });
          }
       }
@@ -323,7 +350,6 @@ private addProduct() {
     
   // }
   console.log(this.addObj);
-  
   this.productForm.patchValue({
     contractId: this.contractsByClientId[0].contractId,
     status:this.f.status.value==true?1:1,
@@ -337,10 +363,35 @@ private addProduct() {
     sslPaidStartDate: this.productForm.get('sslPaidStartDate').value==""?null:this.datePipe.transform(this.f.sslPaidStartDate.value, 'yyyy-MM-dd'),
     sslPaidEndDate: this.productForm.get('sslPaidEndDate').value==""?null:this.datePipe.transform(this.f.sslPaidEndDate.value, 'yyyy-MM-dd'),
     sslTermCoverageExtEndDate: this.productForm.get('sslTermCoverageExtEndDate').value==""?null:this.datePipe.transform(this.f.sslTermCoverageExtEndDate.value, 'yyyy-MM-dd'),
-    userId: this.loginService.currentUserValue.name
-  })
+    userId: this.loginService.currentUserValue.name,
+    sslCoveredClaims: this.f.sslCoveredClaims.value,
+    aslCoveredClaims: this.f.aslCoveredClaims.value
+  });
   console.log(this.productForm.value);
+
+  console.log(this.f.sslCoveredClaims.value); // 'M', 'P'
+  console.log(this.f.aslCoveredClaims.value); // 'M'
+  this.listContractClaims=[];
   
+  for(let i=0; i<this.f.sslCoveredClaims.value.length; i++){
+    this.listContractClaims.push({
+      productid: 0,
+      claimtypecode: this.f.sslCoveredClaims.value[i],
+      sltype: 'S'
+    })
+  }
+  for(let i=0; i<this.f.aslCoveredClaims.value.length; i++){
+    this.listContractClaims.push({
+      productid: 0,
+      claimtypecode: this.f.aslCoveredClaims.value[i],
+      sltype: 'A'
+    })
+  }
+ console.log(this.listContractClaims);
+ this.productForm.patchValue({
+  lstContractClaims: this.listContractClaims
+ })
+ 
   this.productService.addProduct(this.productForm.value)
       .pipe(first())
       .subscribe({ 
@@ -369,7 +420,31 @@ private addProduct() {
     status:this.f.status.value==true?1:0,
     aslTermCoverageExtEndDate: this.productForm.get('aslTermCoverageExtEndDate').value==""?null:this.datePipe.transform(this.f.aslPaidEndDate.value, 'yyyy-MM-dd'),
     sslTermCoverageExtEndDate: this.productForm.get('sslTermCoverageExtEndDate').value==""?null:this.datePipe.transform(this.f.sslTermCoverageExtEndDate.value, 'yyyy-MM-dd')
-  })
+  });
+  this.productForm.patchValue(this.productForm.value);
+  console.log(this.productForm.value);
+  
+  this.listContractClaims=[];
+  
+  for(let i=0; i<this.f.sslCoveredClaims.value.length; i++){
+    this.listContractClaims.push({
+      productid: this.uProductId,
+      claimtypecode: this.f.sslCoveredClaims.value[i],
+      sltype: 'S'
+    })
+  }
+  for(let i=0; i<this.f.aslCoveredClaims.value.length; i++){
+    this.listContractClaims.push({
+      productid: this.uProductId,
+      claimtypecode: this.f.aslCoveredClaims.value[i],
+      sltype: 'A'
+    })
+  }
+ console.log(this.listContractClaims);
+ this.productForm.patchValue({
+  lstContractClaims: this.listContractClaims
+ })
+ 
       this.productService.updateProduct(this.productForm.value)
           .pipe(first())
           .subscribe({

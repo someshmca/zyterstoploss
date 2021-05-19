@@ -31,6 +31,7 @@ export interface IProductAll{
     defferedFeePercentage: number;
     status: number;
     clientName: string;
+    lstContractClaims: IListContractClaims[];
 
 }
 export interface IProductAdd{
@@ -67,6 +68,7 @@ export interface IProductAdd{
     defferedFeePercentage: number;
     status: number;
     userId: string;
+    lstContractClaims: IListContractClaims[];
 }
 export interface IProductUpdate{
   productId: number;
@@ -101,6 +103,7 @@ export interface IProductUpdate{
   defferedFeePercentage: number;
   status: number;
   userId: string;
+  lstContractClaims: IListContractClaims[];
 }
 export interface IActiveClient{
     clientId: string;
@@ -149,11 +152,16 @@ export interface IProduct{
     defferedFeePercentage: number;
     status: number;
     clientId: string;
-
+    lstContractClaims: IListContractClaims[];
 }
 
 export interface ICoveredClaims{
     claimTypeCode: string;
     claimType: string;
     status: boolean;
+}
+export interface IListContractClaims{
+    productid: number;
+    claimtypecode: string;
+    sltype: string;
 }
