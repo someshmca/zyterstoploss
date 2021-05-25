@@ -83,13 +83,15 @@
               <span *ngIf="sslPaidEndErr.isDateErr">{{sslPaidEndErr.dateErrMsg}}</span>
               <span *ngIf="aslIncurredEndErr.isDateErr">{{aslIncurredEndErr.dateErrMsg}}</span>
               <span *ngIf="aslPaidEndErr.isDateErr">{{aslPaidEndErr.dateErrMsg}}</span>
+              <span *ngIf="sslTermCovrErr.isDateErr">{{sslTermCovrErr.dateErrMsg}}</span>
+              <span *ngIf="aslTermCovrErr.isDateErr">{{aslTermCovrErr.dateErrMsg}}</span>
              
              </div>  
             <div class="row">
               <div class="col-md-4">
                 <div class="form-group">
                   <label>Account<small class="starmark">*</small> </label>
-                  <select #focusElem formControlName="clientId" class="form-control" (change)="getContractIDs($event.target.value)" [ngClass]="{ 'is-invalid': submitted && f.clientId.errors }">
+                  <select #focusElem formControlName="clientId" class="form-control" (change)="getContractIDs($event.target.value)" [ngClass]="{ 'is-invalid': submitted && f.clientId.errors }" disabled="true">
                     <option *ngFor="let client of activeClients" [value]="client.clientId">
                       {{client.clientName}}
                     </option>
@@ -99,7 +101,7 @@
               <div class="col-md-4">
                 <div class="form-group">
                   <label>Contract ID<small class="starmark">*</small></label>
-                  <select class="form-control" formControlName="contractId" [ngClass]="{ 'is-invalid': submitted && f.contractId.errors }">
+                  <select class="form-control" formControlName="contractId" [ngClass]="{ 'is-invalid': submitted && f.contractId.errors }" disabled="true">
                      <option *ngFor="let obj of contractsByClientId" [value]="obj.contractId">
                       {{obj.contractId}}
                     </option> 
@@ -187,7 +189,7 @@
             <div class="col-md-4">
               <div class="form-group">
                 <label>Term Coverage Ext End date</label>
-                <input type="date" formControlName="sslTermCoverageExtEndDate" class="form-control"/>
+                <input type="date" formControlName="sslTermCoverageExtEndDate" class="form-control" [ngClass]="{ 'is-invalid': sslTermCovrErr.isDateErr }" />
               </div>
             </div>
             <div class="col-md-4">
@@ -218,12 +220,12 @@
           <input type="text" formControlName="aslClaimBasis" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.aslClaimBasis.errors }"/>
         </div>
       </div>
-      <div class="col-md-4">
+      <!-- <div class="col-md-4">
         <div class="form-group">
           <label>Deductible<small class="starmark">*</small></label>
           <input type="number" formControlName="aslDeductible" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.aslDeductible.errors }"/>
         </div>
-      </div>
+      </div> -->
       <div class="col-md-4">
         <div class="form-group">
           <label>Minimum Deductible</label>
@@ -295,9 +297,9 @@
       <div class="col-md-4">
         <div class="form-group">
           <label>Term Coverage Ext End Date</label>
-          <input type="date" formControlName="aslTermCoverageExtEndDate" class="form-control"/>
+          <input type="date" formControlName="aslTermCoverageExtEndDate" class="form-control" [ngClass]="{ 'is-invalid': aslTermCovrErr.isDateErr }" />
         </div>
-      </div>
+      </div> 
       <div class="col-md-4">
         <div class="form-group">
           <label>Covered Claims</label>

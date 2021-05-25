@@ -105,3 +105,14 @@ input[type=number] {
 	width: 100%;
 	border: none;
 }
+/*::ng-deep .mat-paginator ::ng-deep .mat-input-underline {
+    display: none;
+}
+*/
+.mat-paginator .mat-form-field-appearance-legacy .mat-form-field-underline{
+	background: rgba(0,0,0,0);
+}
+
+
+
+

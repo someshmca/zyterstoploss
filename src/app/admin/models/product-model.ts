@@ -13,6 +13,7 @@ export interface IProductAll{
     sslLifetimeLimit: number;
     sslTermCoverageExtEndDate: Date;
     sslIsImmediateReimbursement: boolean;
+    sslLasering: boolean;
     aslClaimBasis:string;
     aslDeductible: number;
     aslMinDeductible: number;
@@ -50,6 +51,7 @@ export interface IProductAdd{
     sslLifetimeLimit: number;
     sslTermCoverageExtEndDate: string;
     sslIsImmediateReimbursement: boolean;
+    sslLasering: boolean;
     aslClaimBasis: string;
     aslDeductible: number;
     aslMinDeductible: number;
@@ -85,6 +87,7 @@ export interface IProductUpdate{
   sslLifetimeLimit: number;
   sslTermCoverageExtEndDate: string;
   sslIsImmediateReimbursement: boolean;
+  sslLasering: boolean;
   aslClaimBasis: string;
   aslDeductible: number;
   aslMinDeductible: number;
