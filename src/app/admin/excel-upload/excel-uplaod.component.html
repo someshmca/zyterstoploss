@@ -12,23 +12,30 @@
              
         </div>  
     <div class="row">  
-        <div class="col-md-6">  
-            <input class="form-control" type="file" (change)="onChange($event)" type="file" #fileInput />  
-        </div>  
-        <div class="col-md-6">  
-            <button class="btn btn-primary" (click)="uploadFile();">Upload</button>  
+        <div class="col-12">  
+            <div class="excelupload-controls">
+                <!-- <input class="form-control" type="file" (change)="onChange($event)" #fileInput />  -->
+                
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="customFile" name="filename" (change)="onChange($event)" #fileInput>
+                    <label class="custom-file-label" for="customFile">Choose file</label>
+                </div>
+                <!-- <button class="btn btn-primary" (click)="uploadFile();">Upload</button>   -->
+                <button class="btn btn-primary" [disabled]="isLoading" (click)="uploadFile();"><i class="fa" [ngClass]="{'fa-spin fa-spinner': isLoading, 'fa-check': !isLoading}"></i> {{button}}</button>
+                <button class="btn btn-outline-primary" (click)="resetFileUploader()"> Reset  </button>
+            </div>
         </div>  
     </div>  
     <div class="message-area">  
         <p class="text-warning" *ngIf="isExcelFile === false" [innerHTML]="message | nl2br"></p>  
     </div>
     </div>
-    <div class="row">
+    <!-- <div class="row">
         <div class="col-12 eu-btns">            
             <button class="btn btn-primary" [disabled]="isLoading" (click)="uploadFile();"><i class="fa" [ngClass]="{'fa-spin fa-spinner': isLoading, 'fa-check': !isLoading}"></i> {{button}}</button>
             <button class="btn btn-primary" (click)="resetFileUploader()"> Reset  </button>
         </div>
-    </div>
+    </div> -->
     
     </div>
 
