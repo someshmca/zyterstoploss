@@ -1,32 +1,34 @@
-<div class="page-content">
-<div class="card custom-card">
-    <div class="card-header">
-          <h3>Mass Upload</h3>
-          <div class="edit-update-alert">
-             <alert></alert>
-          </div>
-        
-    </div>
-    <div class="row">  
-         
-    </div>  
-<div class="row">  
-    <div class="col-md-5">  
-        <input class="form-control" (change)="onChange($event)" type="file" #fileInput />  
-        <div *ngIf="isExcelFile === false">
-            {{message}}
-          </div>
-    </div>
-   
-    
 
-<div class="modal-footer-btns">
-    <button class="btn btn-primary" [disabled]="isLoading" (click)="uploadFile();"><i class="fa" [ngClass]="{'fa-spin fa-spinner': isLoading, 'fa-check': !isLoading}"></i> {{button}}</button>
-    <button class="btn btn-primary" (click)="resetFileUploader()"> Reset  </button>
-  </div>   
-</div>  
-<div>  
-    <h4 class="alert-success">{{message}}</h4>  
-</div>
-</div>
-</div>
+
+<div class="page-content">
+    <div class="card custom-card">
+        <div class="card-header">
+              <h3>Mass Upload</h3>
+              <div class="edit-update-alert">
+                 <alert></alert>
+              </div>            
+        </div>
+        <div class="row">  
+             
+        </div>  
+    <div class="row">  
+        <div class="col-md-6">  
+            <input class="form-control" type="file" (change)="onChange($event)" type="file" #fileInput />  
+        </div>  
+        <div class="col-md-6">  
+            <button class="btn btn-primary" (click)="uploadFile();">Upload</button>  
+        </div>  
+    </div>  
+    <div class="message-area">  
+        <p class="text-warning" *ngIf="isExcelFile === false" [innerHTML]="message | nl2br"></p>  
+    </div>
+    </div>
+    <div class="row">
+        <div class="col-12 eu-btns">            
+            <button class="btn btn-primary" [disabled]="isLoading" (click)="uploadFile();"><i class="fa" [ngClass]="{'fa-spin fa-spinner': isLoading, 'fa-check': !isLoading}"></i> {{button}}</button>
+            <button class="btn btn-primary" (click)="resetFileUploader()"> Reset  </button>
+        </div>
+    </div>
+    
+    </div>
+

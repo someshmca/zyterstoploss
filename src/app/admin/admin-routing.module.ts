@@ -19,14 +19,13 @@ import { ProductComponent } from './product/product.component';
 import { SSLReportComponent } from '../reports/ssl-report/ssl-report.component';
 import { ASLReportComponent } from '../reports/asl-report/asl-report.component';
 import { MAXLiabilityReportComponent } from '../reports/max-liability-report/max-liability-report.component';
-import { ExcelUploadComponent } from './excel-upload/excel-upload.component';
+import { ExcelUploadComponent } from '../admin/excel-upload/excel-uplaod.component';
 const routes: Routes = [
   {path: 'claim-search', component: ClaimSearchComponent, canActivate: [AuthGuard] },
   {path: 'claim-result', component: ClaimResultComponent, canActivate: [AuthGuard] },
   {path: 'claim', component: ClaimComponent, canActivate: [AuthGuard] },
   {path: 'attributes', component: AttributesComponent, canActivate: [AuthGuard] },
-  {path: 'benefits', component: BenefitsComponent, canActivate: [AuthGuard]
-  },
+  {path: 'benefits', component: BenefitsComponent, canActivate: [AuthGuard] },
   {path: 'programs', component: ProgramsComponent, canActivate: [AuthGuard] },
   {path: 'contracts', component: ContractsComponent, canActivate: [AuthGuard] },
   {path: 'clients', component: ClientComponent, canActivate: [AuthGuard] },

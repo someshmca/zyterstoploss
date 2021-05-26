@@ -3,4 +3,12 @@
     text-align: left;
     font-size: 1.1rem;
 }
-
+.eu-btns{
+    display: flex;
+    padding: 5px 0;
+    justify-content: flex-end;
+}
+.eu-btns .htn{
+    margin: 0 5px;
+    cursor: pointer;
+}

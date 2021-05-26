@@ -3,17 +3,16 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs'; 
 import {Paths} from '../admin-paths';
 import { ExcelUploadService } from '../services/excel-upload.service';  
-import { LoginService } from 'src/app/shared/services/login.service';
-
-
+import { LoginService } from '../../shared/services/login.service';
+import { first } from 'rxjs/operators';
 
 @Component({
   selector: 'app-excel-uplaod',
   templateUrl: './excel-uplaod.component.html',
-  styleUrls: ['./excel-uplaod.component.css']
+  styleUrls: ['./excel-upload.component.css']
 })
-export class ExcelUplaodComponent implements OnInit {
-  @ViewChild('fileInput') fileInput;  
+export class ExcelUploadComponent implements OnInit {
+ @ViewChild('fileInput') fileInput;  
   message: any;  
   userId:string;
   button = 'Upload';
@@ -24,6 +23,7 @@ export class ExcelUplaodComponent implements OnInit {
 
   ngOnInit(): void {
   }
+
   resetFileUploader() { 
     this.fileInput.nativeElement.value = null;
     this.message=null;
@@ -57,8 +57,12 @@ debugger;
     formData.append('upload', this.fileInput.nativeElement.files[0])  
   this.userId=this.loginService.currentUserValue.name
      this.service.UploadExcel(formData).subscribe(result => {  
-      this.message=result;
-      this.message=this.message.split(',');
+      // this.message=result;
+      // this.message=this.message.split(',');
+      this.message='';
+      for(let i in result){
+        this.message+="- "+result[i]+'\n';
+      }          
     }); 
       this.isLoading = false;
       this.button = 'Upload';     

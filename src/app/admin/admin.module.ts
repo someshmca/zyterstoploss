@@ -38,7 +38,7 @@ import { AlertComponent } from './alert/alert.component';
 import { HealthPlanComponent } from './health-plan/health-plan.component';
 import { ProductComponent } from './product/product.component';
 import { MatSelectModule } from '@angular/material/select';
-import { ExcelUploadComponent } from './excel-upload/excel-upload.component';
+import { ExcelUploadComponent } from '../admin/excel-upload/excel-uplaod.component';
 import { Nl2brPipe } from '../nl2br.pipe';
 
 @NgModule({
