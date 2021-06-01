@@ -39,6 +39,10 @@
                         <th mat-header-cell *matHeaderCellDef mat-sort-header > Contract ID </th>
                         <td mat-cell *matCellDef="let element"> {{element.contractId}} </td>
                       </ng-container>
+                      <ng-container matColumnDef="description">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header > Description </th>
+                        <td mat-cell *matCellDef="let element"> {{element.description}} </td>
+                      </ng-container>                      
                       <ng-container matColumnDef="startDate">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header > Effective Date </th>
                         <td mat-cell *matCellDef="let element"> {{element.startDate | date:'MM/dd/yyyy'}} </td>
@@ -88,6 +92,9 @@
             <span *ngIf="contractForm.errors">{{ contractForm.errors?.dates | json }}</span>
             <span *ngIf="runInStartEndErr.isDateErr">{{runInStartEndErr.dateErrMsg}}</span>
             <span *ngIf="runOutStartEndErr.isDateErr">{{runOutStartEndErr.dateErrMsg}}</span>
+            <span *ngIf="terminationDateErr.isDateErr">{{terminationDateErr.dateErrMsg}}</span>
+            <span *ngIf="endDateDateErr.isDateErr">{{endDateDateErr.dateErrMsg}}</span>
+            <span *ngIf="isContractStartDateInvalid">{{contractStartDateErrMsg}}</span>
            </div>  
            <div class="row">
              <div class="col-md-4">
@@ -179,9 +186,9 @@
            </div>
            
         <div class="modal-footer-btns">
-          <button type="button" class="btn btn-outline-primary" (click)="openCustomModal(false, null)">Cancel</button>
+          <button type="button"  class="btn btn-outline-primary" (click)="openCustomModal(false, null)">Cancel</button>
           <button type="submit" class="btn btn-primary" *ngIf="!isAddMode">Update</button>
-          <button type="submit" class="btn btn-primary" *ngIf="isAddMode">Add</button>
+          <button type="submit" id="btnSave" class="btn btn-primary" [disabled]="isDisabled" *ngIf="isAddMode">Add</button>
         </div>
         </form>
         </div> 

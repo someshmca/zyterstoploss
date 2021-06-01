@@ -27,6 +27,7 @@ export const Paths = {
   contractAdd: "https://medicaslapiorc.azurewebsites.net/api/Contracts/AddContracts",
   contractUpdate: "https://medicaslapiorc.azurewebsites.net/api/Contracts/UpdateContracts",
   contractAll: "https://medicaslapiorc.azurewebsites.net/api/Contracts/GetAllContracts",
+  contractDateValidation: "https://medicaslapiorc.azurewebsites.net/api/Contracts/DateValidation/",
 
   clients: "https://medicaslapiorc.azurewebsites.net/api/Clients/LoadClientDetails",
   client: "https://medicaslapiorc.azurewebsites.net/api/Clients/GetClientDetails/",
@@ -79,16 +80,6 @@ export const Paths = {
   productCovertClaims:"https://medicaslapiorc.azurewebsites.net/api/Product//GetCoveredClaims",
 
   ExcelUploadPath: "https://medicaslapiorc.azurewebsites.net/api/ExcelUpload/UploadExcel",
-//ssl 
-//https://medicaanalytics-axw4of8ufwa4-hy.analytics.ocp.oraclecloud.com/ui/dv/ui/project.jsp?pageid=visualAnalyzer&reportmode=full&reportpath=%2F%40Catalog%2Fshared%2FMedica%20SL%2FSpecific%20Report
-//https://medicaanalytics-axw4of8ufwa4-hy.analytics.ocp.oraclecloud.com/ui/dv/ui/project.jsp?pageid=visualAnalyzer&reportmode=full&reportpath=%2F%40Catalog%2Fshared%2FMedica%20SL%2FSpecific%20Report
-
-// Max
-// https://medicaanalytics-axw4of8ufwa4-hy.analytics.ocp.oraclecloud.com/ui/dv/ui/project.jsp?pageid=visualAnalyzer&reportmode=full&reportpath=%2F%40Catalog%2Fshared%2FMedica%20SL%2FMax%20Liability
-
-// ASL
-// https://medicaanalytics-axw4of8ufwa4-hy.analytics.ocp.oraclecloud.com/ui/dv/ui/project.jsp?pageid=visualAnalyzer&reportmode=full&reportpath=%2F%40Catalog%2Fshared%2FMedica%20SL%2FAggregate%20Liability
-
 
   sslReportURL: "https://medicaanalytics-axw4of8ufwa4-hy.analytics.ocp.oraclecloud.com/ui/dv/ui/project.jsp?pageid=visualAnalyzer&reportmode=full&reportpath=%2F%40Catalog%2Fshared%2FMedica%20SL%2FSpecific%20Report",
   aslReportURL: "https://medicaanalytics-axw4of8ufwa4-hy.analytics.ocp.oraclecloud.com/ui/dv/ui/project.jsp?pageid=visualAnalyzer&reportmode=full&reportpath=%2F%40Catalog%2Fusers%2Fsrajamani%40infinite.com%2FMedica%20SL%2FSpecific%20Report",

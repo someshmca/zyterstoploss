@@ -23,6 +23,9 @@ export class ContractService {
   getContract(val): Observable<IContract[]> {
     return this.http.get<IContract[]>(Paths.contract+val).pipe(catchError(this.handleError.bind(this)));
  }
+ validateContractStartDate(clientId, ContractStartDate){
+   return this.http.get(Paths.contractDateValidation+clientId+'/'+ContractStartDate).pipe(catchError(this.handleError.bind(this)));
+ }
  getContractsByClientID(clientId){
    return this.http.get<IContractsByClient[]>(Paths.contractsByClientPath+clientId);
  }

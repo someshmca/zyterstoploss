@@ -169,8 +169,8 @@ export class ProductComponent implements OnInit {
   getActiveClients(){
     
     this.productService.getAllClients().subscribe(
-      (data)=>{
-        
+      (data)=>{        
+        data.sort((x,y) => x.clientId - y.clientId);
         this.activeClients = data;
       }
     )
@@ -184,7 +184,8 @@ export class ProductComponent implements OnInit {
     clientId = Number(clientId);
    
     this.contractService.getContractsByClientID(clientId).subscribe((data)=>{
-      this.contractsByClientId = data;
+      data.sort((x,y) => x.contractId - y.contractId);
+      this.contractsByClientId = data;      
       this.productForm.patchValue({
         contractId: this.contractsByClientId
       })

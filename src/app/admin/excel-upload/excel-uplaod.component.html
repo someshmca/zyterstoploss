@@ -14,12 +14,12 @@
     <div class="row">  
         <div class="col-12">  
             <div class="excelupload-controls">
-                <!-- <input class="form-control" type="file" (change)="onChange($event)" #fileInput />  -->
+                <input class="form-control" type="file" (change)="onChange($event)" #fileInput />
                 
-                <div class="custom-file">
-                    <input type="file" class="custom-file-input" id="customFile" name="filename" (change)="onChange($event)" #fileInput>
+                <!-- <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="customFile" name="filename" #fileInput>
                     <label class="custom-file-label" for="customFile">Choose file</label>
-                </div>
+                </div> -->
                 <!-- <button class="btn btn-primary" (click)="uploadFile();">Upload</button>   -->
                 <button class="btn btn-primary" [disabled]="isLoading" (click)="uploadFile();"><i class="fa" [ngClass]="{'fa-spin fa-spinner': isLoading, 'fa-check': !isLoading}"></i> {{button}}</button>
                 <button class="btn btn-outline-primary" (click)="resetFileUploader()"> Reset  </button>
@@ -27,7 +27,8 @@
         </div>  
     </div>  
     <div class="message-area">  
-        <p class="text-warning" *ngIf="isExcelFile === false" [innerHTML]="message | nl2br"></p>  
+        <p class="text-primary" [innerHTML]="message | nl2br"></p>  
+        
     </div>
     </div>
     <!-- <div class="row">

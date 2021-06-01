@@ -8,8 +8,9 @@
     padding: 15px;
     justify-content: flex-start;
 }
-.excelupload-controls .custom-file{
+.excelupload-controls .form-control{
     max-width: 500px;
+    padding: 0;
 }
 .excelupload-controls .custom-file-input{
    cursor: pointer;

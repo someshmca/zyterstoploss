@@ -45,6 +45,7 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
   };
   updatePlanID: number
   isNoFactAmount: boolean = false;
+  isDisabled: boolean;
   @ViewChild("focusElem") focusTag: ElementRef;
 
   displayedColumns: string[] = ['clientName', 'planCode', 'planName','planID'];
@@ -162,6 +163,7 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
       this.focusTag.nativeElement.focus()
     }, 100)
     this.submitted = false;
+    this.isDisabled=false;
     if(open && elem==null){
       
       this.isAddMode = true;
@@ -258,7 +260,8 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
   }
 
   private addPlan() {
-    
+    debugger;
+    this.isDisabled=true;
     this.addPlanObj = {
       planID: 0,
       clientId: this.f.clientId.value,
@@ -271,28 +274,28 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
       isTerminalExtCoverage: this.f.isTerminalExtCoverage.value==true?'Y':'N',
       lstTblPlanTier: []      
     }
-    if(this.f.tier1Aggfactamt.value.trim()!='' || this.f.tier1Aggfactamt.value!=null){
+    if(this.f.tier1Aggfactamt.value!=null){
       let tAmount = Number(this.f.tier1Aggfactamt.value);
       let tId=1;
       this.addPlanObj.lstTblPlanTier.push({
         planId: 0, tierId: tId, tierAmount: tAmount, expectedClaimsRate: 0
       });
     }
-    if(this.f.tier2Aggfactamt.value.trim()!='' || this.f.tier2Aggfactamt.value!=null){
+    if(this.f.tier2Aggfactamt.value!=null){
       let tAmount = Number(this.f.tier2Aggfactamt.value);
       let tId=2;
       this.addPlanObj.lstTblPlanTier.push({
         planId: 0, tierId: tId, tierAmount: tAmount, expectedClaimsRate: 0
       });
     }
-    if(this.f.tier3Aggfactamt.value.trim()!='' || this.f.tier3Aggfactamt.value!=null){
+    if( this.f.tier3Aggfactamt.value!=null){
       let tAmount = Number(this.f.tier3Aggfactamt.value);
       let tId=3;
       this.addPlanObj.lstTblPlanTier.push({
         planId: 0, tierId: tId, tierAmount: tAmount, expectedClaimsRate: 0
       });
     }
-    if(this.f.tier4Aggfactamt.value.trim()!='' || this.f.tier4Aggfactamt.value!=null){
+    if(this.f.tier4Aggfactamt.value!=null){
       let tAmount = Number(this.f.tier4Aggfactamt.value);
       let tId=4;
       this.addPlanObj.lstTblPlanTier.push({

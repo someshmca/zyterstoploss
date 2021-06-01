@@ -27,11 +27,12 @@ export class ExcelUploadComponent implements OnInit {
   resetFileUploader() { 
     this.fileInput.nativeElement.value = null;
     this.message=null;
+    this.message='';
    
   }
   onChange(evt) {
     let data, header;
-    debugger;
+    
     const target: DataTransfer = <DataTransfer>(evt.target);
     this.isExcelFile = !!target.files[0].name.match(/(.xls|.xlsx)/);
     if(this.isExcelFile==false)
@@ -43,7 +44,7 @@ export class ExcelUploadComponent implements OnInit {
     }
   }
   uploadFile() { 
-debugger;
+
     if(this.fileInput.nativeElement.value=="")
       {
         this.message="No file uploaded";

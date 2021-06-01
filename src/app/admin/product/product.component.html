@@ -123,19 +123,26 @@
             <div class="col-md-4">
               <div class="form-group">
                 <label>Claim Basis<small class="starmark">*</small></label>
-                <input type="text" formControlName="sslClaimBasis" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.sslClaimBasis.errors }"/>
+                <!-- <input type="text" formControlName="sslClaimBasis" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.sslClaimBasis.errors }"/> -->
+                <select class="form-control" formControlName="sslClaimBasis" [ngClass]="{ 'is-invalid': submitted && f.sslClaimBasis.errors }">
+                  <option value="12/12">12/12</option>
+                  <option value="12/15">12/15</option>
+                  <option value="12/18">12/18</option>
+                  <option value="15/12">15/12</option>
+                  <option value="24/12">24/12</option>
+                </select> 
               </div>                
             </div>
             <div class="col-md-4">
               <div class="form-group">
                 <label>Incurred Start Date<small class="starmark">*</small></label>
-                <input type="date" value="MM/DD/yyyy" formControlName="sslIncurredStartDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.sslIncurredStartDate.errors }"/>
+                <input type="date" value="MM/DD/yyyy" formControlName="sslIncurredStartDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.sslIncurredStartDate.errors }" max="2999-12-31"/>
               </div>
             </div>
             <div class="col-md-4">
               <div class="form-group">
                 <label>Incurred End Date<small class="starmark">*</small></label>
-                <input type="date" value="MM/DD/yyyy" formControlName="sslIncurredEndDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.sslIncurredEndDate.errors }"/>
+                <input type="date" value="MM/DD/yyyy" formControlName="sslIncurredEndDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.sslIncurredEndDate.errors }" max="2999-12-31"/>
               </div>
             </div>
           </div>
@@ -143,13 +150,13 @@
             <div class="col-md-4">
               <div class="form-group">
                 <label>Paid Start Date<small class="starmark">*</small></label>
-                <input type="date" value="MM/DD/yyyy" formControlName="sslPaidStartDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.sslPaidStartDate.errors }"/>
+                <input type="date" value="MM/DD/yyyy" formControlName="sslPaidStartDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.sslPaidStartDate.errors }" max="2999-12-31"/>
               </div>
             </div>
             <div class="col-md-4">
               <div class="form-group">
                 <label>Paid End Date<small class="starmark">*</small></label>
-                <input type="date" value="MM/DD/yyyy" formControlName="sslPaidEndDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.sslPaidEndDate.errors }"/>
+                <input type="date" value="MM/DD/yyyy" formControlName="sslPaidEndDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.sslPaidEndDate.errors }" max="2999-12-31"/>
               </div>
             </div>
             <div class="col-md-4">
@@ -189,7 +196,7 @@
             <div class="col-md-4">
               <div class="form-group">
                 <label>Term Coverage Ext End date</label>
-                <input type="date" formControlName="sslTermCoverageExtEndDate" class="form-control" [ngClass]="{ 'is-invalid': sslTermCovrErr.isDateErr }" />
+                <input type="date" formControlName="sslTermCoverageExtEndDate" class="form-control" [ngClass]="{ 'is-invalid': sslTermCovrErr.isDateErr }" max="2999-12-31"/>
               </div>
             </div>
             <div class="col-md-4">
@@ -217,7 +224,14 @@
       <div class="col-md-4">
         <div class="form-group">
           <label>Claim Basis<small class="starmark">*</small></label>
-          <input type="text" formControlName="aslClaimBasis" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.aslClaimBasis.errors }"/>
+          <!-- <input type="text" formControlName="aslClaimBasis" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.aslClaimBasis.errors }"/> -->
+          <select class="form-control" formControlName="aslClaimBasis" [ngClass]="{ 'is-invalid': submitted && f.aslClaimBasis.errors }">
+            <option value="12/12">12/12</option>
+            <option value="12/15">12/15</option>
+            <option value="12/18">12/18</option>
+            <option value="15/12">15/12</option>
+            <option value="24/12">24/12</option>
+          </select> 
         </div>
       </div>
       <!-- <div class="col-md-4">
@@ -243,13 +257,13 @@
       <div class="col-md-4">
         <div class="form-group">
           <label>Incurrred Start Date<small class="starmark">*</small></label>
-          <input type="date" formControlName="aslIncurrredStartDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.aslIncurrredStartDate.errors }"/>
+          <input type="date" formControlName="aslIncurrredStartDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.aslIncurrredStartDate.errors }" max="2999-12-31"/>
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-group">
           <label>Incurrred End Date<small class="starmark">*</small></label>
-          <input type="date" formControlName="aslIncurredEndDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.aslIncurredEndDate.errors }"/>
+          <input type="date" formControlName="aslIncurredEndDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.aslIncurredEndDate.errors }" max="2999-12-31"/>
         </div>
       </div>
     </div>
@@ -257,13 +271,13 @@
       <div class="col-md-4">
         <div class="form-group">
           <label>Paid Start Date<small class="starmark">*</small></label>
-          <input type="date" formControlName="aslPaidStartDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.aslPaidStartDate.errors }"/>
+          <input type="date" formControlName="aslPaidStartDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.aslPaidStartDate.errors }" max="2999-12-31"/>
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-group">
           <label>Paid End Date<small class="starmark">*</small></label>
-          <input type="date" formControlName="aslPaidEndDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.aslPaidEndDate.errors }"/>
+          <input type="date" formControlName="aslPaidEndDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.aslPaidEndDate.errors }" max="2999-12-31"/>
         </div>
       </div>
       <div class="col-md-4">
@@ -297,7 +311,7 @@
       <div class="col-md-4">
         <div class="form-group">
           <label>Term Coverage Ext End Date</label>
-          <input type="date" formControlName="aslTermCoverageExtEndDate" class="form-control" [ngClass]="{ 'is-invalid': aslTermCovrErr.isDateErr }" />
+          <input type="date" formControlName="aslTermCoverageExtEndDate" class="form-control" [ngClass]="{ 'is-invalid': aslTermCovrErr.isDateErr }" max="2999-12-31" />
         </div>
       </div> 
       <div class="col-md-4">

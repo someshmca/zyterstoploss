@@ -177,7 +177,7 @@
           <div class="modal-footer-btns">
             <button type="button" class="btn btn-outline-primary" (click)="openCustomModal(false, null)">Cancel</button>
             <button type="submit" class="btn btn-primary" *ngIf="!isAddMode">Update</button>
-            <button type="submit" class="btn btn-primary" *ngIf="isAddMode">Add</button>
+            <button type="submit" class="btn btn-primary" [disabled]="isDisabled" *ngIf="isAddMode">Add</button>
           </div>
           </form>
           </div> 
