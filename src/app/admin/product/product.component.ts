@@ -17,6 +17,7 @@ import {IContractsByClient} from '../models/contracts-model';
 import { LoginService } from 'src/app/shared/services/login.service';
 import { asLiteral } from '@angular/compiler/src/render3/view/util';
 import { ContractService } from '../services/contract.service';
+import {CLAIM_BASIS_CONSTANT} from '../claim-basis.constant';
 @Component({
   selector: 'app-product',
   templateUrl: './product.component.html',
@@ -45,6 +46,7 @@ export class ProductComponent implements OnInit {
   uProductId: number;
   uClientId: string;
   uContractId: number;
+  claimBasis : string[];
   sslIncurredEndErr = {
     isDateErr: false,
     dateErrMsg: ''
@@ -71,6 +73,10 @@ export class ProductComponent implements OnInit {
     isDateErr: false,
     dateErrMsg: ''
   };
+  sslDeductibleErr = {
+    isValid: false,
+    errMsg : ''
+  }
   isDisabled = true;
   isEditSelected: boolean = false;
   //isClientSelected:boolean = false;
@@ -106,7 +112,7 @@ export class ProductComponent implements OnInit {
       sslPaidEndDate: ['', Validators.required],
       //below from sslRunInLimit to sslLifetimeLimit are number fields
       sslRunInLimit:0,
-      sslDeductible: [0, Validators.required],
+      sslDeductible: ['', Validators.required],
       sslAggDeductible:0,
       sslAnnualLimit:0,
       sslLifetimeLimit:0,
@@ -144,6 +150,7 @@ export class ProductComponent implements OnInit {
       userId: this.loginService.currentUserValue.name,
       lstContractClaims: []
     });
+    this.claimBasis = CLAIM_BASIS_CONSTANT.values;
     this.getAllProducts();
     this.getActiveClients();   
     this.getCoveredClaims();
@@ -169,9 +176,10 @@ export class ProductComponent implements OnInit {
   getActiveClients(){
     
     this.productService.getAllClients().subscribe(
-      (data)=>{        
-        data.sort((x,y) => x.clientId - y.clientId);
+      (data)=>{       
+        data.sort((a, b) => (a.clientName > b.clientName) ? 1 : -1); // sorts Ascending order by alphabet
         this.activeClients = data;
+        
       }
     )
   }
@@ -189,6 +197,7 @@ export class ProductComponent implements OnInit {
       this.productForm.patchValue({
         contractId: this.contractsByClientId
       })
+      
     })
   }
   getAllContracts(){
@@ -225,6 +234,8 @@ export class ProductComponent implements OnInit {
     this.sslTermCovrErr.dateErrMsg='';  
     this.aslTermCovrErr.isDateErr=false;
     this.aslTermCovrErr.dateErrMsg=''; 
+    this.sslDeductibleErr.isValid=false;
+    this.sslDeductibleErr.errMsg='';
   }
  
   onSubmit() {
@@ -235,6 +246,7 @@ export class ProductComponent implements OnInit {
     this.clearErrorMessages();
     // stop here if form is invalid
    if (this.productForm.invalid) {
+     this.clearErrorMessages();
      return;
    }
    
@@ -265,22 +277,38 @@ if(this.productForm.valid && this.f.aslPaidStartDate.value > this.f.aslPaidEndDa
  
  return;
 }
+if(this.productForm.valid && Number(this.f.sslDeductible.value)<=0){
+  this.sslDeductibleErr.isValid=true;
+  this.sslDeductibleErr.errMsg="SSL Deductible value should be greater than 0";
+  return;
+}
+if(this.productForm.valid && this.f.sslDeductible.value==''){
+  this.sslDeductibleErr.isValid=true;
+  this.sslDeductibleErr.errMsg="SSL Deductible is not valid";
+  return;
+}
 console.log(this.f.sslTermCoverageExtEndDate.value );
 console.log(this.f.sslTermCoverageExtEndDate.valid);
 
 let sslTermVal=this.f.sslTermCoverageExtEndDate.value;
-if(sslTermVal!=""){
-  if(this.productForm.valid && this.f.sslTermCoverageExtEndDate.value < this.f.sslIncurredEndDate.value){
+
+if(sslTermVal!='' && this.productForm.valid){
+  
+  if(this.f.sslTermCoverageExtEndDate.value <= this.f.sslIncurredEndDate.value){
     this.sslTermCovrErr.isDateErr=true;
-    this.sslTermCovrErr.dateErrMsg = 'SSL Term Coverage Date should not be less than SSL Incurred End Date';  
+    
+    this.sslTermCovrErr.dateErrMsg = 'SSL Term Coverage Date should be greater than SSL Incurred End Date';  
     return;
   }
 }
 let aslTermVal=this.f.aslTermCoverageExtEndDate.value;
-if(aslTermVal!=""){
-  if(this.productForm.valid && this.f.aslTermCoverageExtEndDate.value < this.f.aslIncurredEndDate.value){
+
+if(aslTermVal!='' && this.productForm.valid){
+  
+  if(this.f.aslTermCoverageExtEndDate.value <= this.f.aslIncurredEndDate.value){
     this.aslTermCovrErr.isDateErr=true;
-    this.aslTermCovrErr.dateErrMsg = 'ASL Term Coverage Date should not be less than ASL Incurred End Date';  
+    
+    this.aslTermCovrErr.dateErrMsg = 'ASL Term Coverage Date should be greater than ASL Incurred End Date';  
     return;
   }
 }
@@ -406,7 +434,8 @@ private addProduct() {
     aslIncurredEndDate: this.productForm.get('aslIncurredEndDate').value==""?null:this.datePipe.transform(this.f.aslIncurredEndDate.value, 'yyyy-MM-dd'),
     aslPaidStartDate: this.productForm.get('aslPaidStartDate').value==""?null:this.datePipe.transform(this.f.aslPaidStartDate.value, 'yyyy-MM-dd'),
     aslPaidEndDate: this.productForm.get('aslPaidEndDate').value==""?null:this.datePipe.transform(this.f.aslPaidEndDate.value, 'yyyy-MM-dd'),
-    aslTermCoverageExtEndDate: this.productForm.get('aslTermCoverageExtEndDate').value==""?null:this.datePipe.transform(this.f.aslPaidEndDate.value, 'yyyy-MM-dd'),
+    aslTermCoverageExtEndDate: this.productForm.get('aslTermCoverageExtEndDate').value==""?null:this.datePipe.transform(this.f.aslTermCoverageExtEndDate.value, 'yyyy-MM-dd'),
+    sslDeductible: this.f.sslDeductible.value==''?0:Number(this.f.sslDeductible.value),
     sslIncurredStartDate:this.productForm.get('sslIncurredStartDate').value==""?null:this.datePipe.transform(this.f.sslIncurredStartDate.value, 'yyyy-MM-dd'),
     sslIncurredEndDate: this.productForm.get('sslIncurredEndDate').value==""?null:this.datePipe.transform(this.f.sslIncurredEndDate.value, 'yyyy-MM-dd'),
     sslPaidStartDate: this.productForm.get('sslPaidStartDate').value==""?null:this.datePipe.transform(this.f.sslPaidStartDate.value, 'yyyy-MM-dd'),
@@ -477,7 +506,7 @@ private addProduct() {
     this.productForm.patchValue({  
     contractId:this.contractsByClientId[0].contractId,
     status:this.f.status.value==true?1:0,
-    aslTermCoverageExtEndDate: this.productForm.get('aslTermCoverageExtEndDate').value==""?null:this.datePipe.transform(this.f.aslPaidEndDate.value, 'yyyy-MM-dd'),
+    aslTermCoverageExtEndDate: this.productForm.get('aslTermCoverageExtEndDate').value==""?null:this.datePipe.transform(this.f.aslTermCoverageExtEndDate.value, 'yyyy-MM-dd'),
     sslTermCoverageExtEndDate: this.productForm.get('sslTermCoverageExtEndDate').value==""?null:this.datePipe.transform(this.f.sslTermCoverageExtEndDate.value, 'yyyy-MM-dd')
   });
   this.productForm.patchValue(this.productForm.value);

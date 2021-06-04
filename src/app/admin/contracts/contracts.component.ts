@@ -35,8 +35,7 @@ export class ContractsComponent implements OnInit {
   uRunOutEndDate:string;
   uTerminationDate:string;
   isDateValid:boolean;
-  isContractStartDateInvalid: boolean=false;
-  contractStartDateErrMsg: string = '';
+  contractStartDateErrMsg: any = '';
   contractForm: FormGroup;
     id: string;
     isAddMode: boolean;
@@ -44,29 +43,17 @@ export class ContractsComponent implements OnInit {
     submitted = false;
     isCustomModalOpen: boolean = false;
     uContractId: number;
-    startEndDateErr = {
-      isDateErr: false,
-      dateErrMsg: ''
-    };
-    runInStartEndErr = {
-      isDateErr: false,
-      dateErrMsg: ''
-    };
-    runOutStartEndErr = {
-      isDateErr: false,
-      dateErrMsg: ''
-    };
-    terminationDateErr = {
-      isDateErr: false,
-      dateErrMsg: ''
-    };
-    endDateDateErr = {
-      isDateErr: false,
-      dateErrMsg: ''
-    };
+    startDateErr = {isDateErr: false,dateErrMsg: ''};
+    endDateErr = {isDateErr: false,dateErrMsg: ''};
+    runInStartErr = {isDateErr: false, dateErrMsg: ''};
+    runInEndErr = {isDateErr: false, dateErrMsg: ''};
+    runOutStartErr = {isDateErr: false, dateErrMsg: ''};
+    runOutEndErr = {isDateErr: false, dateErrMsg: ''};
+    terminationDateErr = {isDateErr: false, dateErrMsg: ''};
 
-    isDisabled: boolean;
-    @ViewChild("focusElem") focusTag: ElementRef;
+  isDisabled: boolean;
+  @ViewChild("focusElem") focusTag: ElementRef;
+  isContractStartDateInvalid: boolean=false;
 
   displayedColumns: string[] = ['clientName','contractId', 'description', 'startDate','endDate','clientId'];
   dataSource: any;
@@ -87,7 +74,7 @@ export class ContractsComponent implements OnInit {
     this.getAllContracts();
     this.getActiveClients();   
     this.contractForm = this.formBuilder.group({
-      contractId: 0,
+      contractId: '',
       clientId:['', Validators.required],
       startDate:['', Validators.required],
       endDate:['', Validators.required],
@@ -124,7 +111,7 @@ export class ContractsComponent implements OnInit {
     
     this.contractService.getAllClients().subscribe(
       (data)=>{
-        
+        data.sort((a, b) => (a.clientName > b.clientName) ? 1 : -1);
         this.activeClients = data;
       }
     )
@@ -170,6 +157,23 @@ export class ContractsComponent implements OnInit {
       return {};
   }
 }
+clearErrorMessages(){  
+  this.startDateErr.isDateErr=false;
+  this.startDateErr.dateErrMsg='';
+  this.endDateErr.isDateErr=false;
+  this.endDateErr.dateErrMsg='';
+  this.runInStartErr.dateErrMsg='';
+  this.runInStartErr.isDateErr=false;
+  this.runInEndErr.dateErrMsg=''
+  this.runInEndErr.isDateErr=false;
+  this.runOutStartErr.isDateErr=false;
+  this.runOutStartErr.dateErrMsg='';
+  this.runOutEndErr.isDateErr=false;
+  this.runOutEndErr.dateErrMsg='';
+  this.terminationDateErr.dateErrMsg='';
+  this.contractStartDateErrMsg = '';
+  this.isContractStartDateInvalid=false;
+}
   openCustomModal(open: boolean, id:any) {
     setTimeout(()=>{
       this.focusTag.nativeElement.focus();
@@ -180,11 +184,7 @@ export class ContractsComponent implements OnInit {
     if(open && id==null){
       this.isAddMode = true;
     }
-    this.runInStartEndErr.dateErrMsg="";
-    this.startEndDateErr.dateErrMsg="";
-    this.runOutStartEndErr.dateErrMsg="";
-    this.terminationDateErr.dateErrMsg="";
-    this.contractStartDateErrMsg = '';
+    this.clearErrorMessages();
     this.isCustomModalOpen = open;
     if (!open && id==null) {
       this.getAllContracts();
@@ -206,71 +206,145 @@ export class ContractsComponent implements OnInit {
   }
   get f() { return this.contractForm.controls; }
 
-  validateContractStartDate(){
-    this.isContractStartDateInvalid = false;
-    console.log(this.f.clientId.value);
-    console.log(this.f.startDate.value);
-    let cid= this.f.clientId.value;
-    let cStartDate = this.datePipe.transform(this.f.startDate.value, 'MM-dd-yyyy');
-    
-    this.contractService.validateContractStartDate(cid, cStartDate).subscribe(
-      (data)=>{
-        console.log(data);
-        this.contractStartDateErrMsg = data;
-          this.isContractStartDateInvalid = true;      
-          
-      }
-    );
-    return this.isContractStartDateInvalid;
-  }
   onSubmit() {
       this.submitted = true;
-
-      // reset alerts on submit
+      let flag:boolean= false;
       this.alertService.clear();
-      this.runInStartEndErr.isDateErr=false;
-      this.runInStartEndErr.dateErrMsg='';
-      this.runOutStartEndErr.isDateErr=false;
-      this.runOutStartEndErr.dateErrMsg='';
-
-      // stop here if form is invalid
+      this.clearErrorMessages();
      if (this.contractForm.invalid) {
       return;
      }
-     this.validateContractStartDate();
-     if(this.contractForm.valid && this.f.runInStartDate.value > this.f.runInEndDate.value){
-       this.runInStartEndErr.isDateErr=true;
-       this.runInStartEndErr.dateErrMsg = 'Run-In Start date should not be greater than Run-In End date';       
+      //call service
+      let clientId:string = this.f.clientId.value;
+      let ContractStartDate = this.datePipe.transform(this.f.startDate.value, 'MM-dd-yyyy');  
+      this.contractService.validateContractStartDate(clientId, ContractStartDate).pipe(first())    
+      .subscribe({ 
+            next: (data) => {
+              console.log(data);  
+              
+              if(data!=''){      
+                this.isContractStartDateInvalid=true;            
+                  this.contractStartDateErrMsg = data;
+                  flag=false;
+                  this.contractForm.invalid;
+                  return;
+              }                
+              if(data==''){
+                this.isContractStartDateInvalid = false;          
+                this.contractStartDateErrMsg = data;
+                flag=false;
+    if(this.contractForm.valid && this.f.startDate.value!=null && this.f.endDate.value!=null){
+      if(this.contractForm.valid && this.f.startDate.value > this.f.endDate.value){
+        this.startDateErr.isDateErr=true;
+        this.startDateErr.dateErrMsg = 'Contract start date should not be greater than Contract end date'; 
+        flag=false;     
+        return;
+      }
+    }
+    if(this.contractForm.valid && this.f.startDate.value==null && this.f.endDate.value!=null){
+      this.startDateErr.isDateErr=true;
+      this.startDateErr.dateErrMsg = 'Contract start date should not be empty or Invalid';  
+      flag=false;         
+      return;
+    }
+    if(this.contractForm.valid && this.f.startDate.value!=null && this.f.endDate.value==null){
+      this.endDateErr.isDateErr=true;
+      this.endDateErr.dateErrMsg = 'Contract End date should not be empty or Invalid';    
+      flag=false;       
+      return;
+    }
+    if(this.contractForm.valid && this.f.runInStartDate.value!=null && this.f.runInEndDate.value!=null){
+     if(this.f.runInStartDate.value > this.f.runInEndDate.value){
+       this.runInStartErr.isDateErr=true;
+       this.runInStartErr.dateErrMsg = 'Run-In Start date should not be greater than Run-In End date';  
+       flag=false;          
        return;
      }
-     
-     if(this.contractForm.valid && this.f.runOutStartDate.value > this.f.runOutEndDate.value){
-      this.runOutStartEndErr.isDateErr=true;
-      this.runOutStartEndErr.dateErrMsg = 'Run-Out Start date should not be greater than Run-Out End date';      
+    }
+    if(this.contractForm.valid && this.f.runInStartDate.value==null && this.f.runInEndDate.value!=null){
+      this.runInStartErr.isDateErr=true;
+      this.runInStartErr.dateErrMsg = 'Run-In Start date should not be empty';
+      flag=false;
+             
       return;
+    }
+    if(this.contractForm.valid && this.f.runInStartDate.value!=null && this.f.runInEndDate.value==null){
+     this.runInEndErr.isDateErr=true;
+     this.runInEndErr.dateErrMsg = 'Run-In End date should not be empty';    
+     flag=false;        
+     return;
+   }
+   if(this.contractForm.valid && this.f.runOutStartDate.value!=null && this.f.runOutEndDate.value!=null){
+    if(this.f.runOutStartDate.value > this.f.runOutEndDate.value){
+      this.runOutStartErr.isDateErr=true;
+      this.runOutStartErr.dateErrMsg = 'Run-Out Start date should not be greater than Run-Out End date'; 
+      flag=false;           
+      return;
+    }
+  }
+  if(this.contractForm.valid && this.f.runOutStartDate.value==null && this.f.runOutEndDate.value!=null){
+    this.runOutStartErr.isDateErr=true;
+    this.runOutStartErr.dateErrMsg = 'Run-Out Start date should not be empty';       
+    flag=false;     
+    return;
+  }
+   if(this.contractForm.valid && this.f.runOutStartDate.value!=null && this.f.runOutEndDate.value==null){
+      this.runOutEndErr.isDateErr=true;
+      this.runOutEndErr.dateErrMsg = 'Run-Out End date should not be empty';  
+      flag=false;         
+      return;
+    }
+  if(this.f.terminationDate.value !='' || this.f.terminationDate.value!=null){
+      if(this.f.terminationDate.value < this.f.startDate.value || this.f.terminationDate.value > this.f.endDate.value){        
+        this.terminationDateErr.isDateErr=true;
+        this.terminationDateErr.dateErrMsg = 'Termination date should be between Contract Start and End Dates'; 
+        flag=false;          
+        return;
+      }
     }
 
-    if(this.contractForm.valid && this.f.terminationDate.value > this.f.endDate.value){
-      this.terminationDateErr.isDateErr=true;
-      this.terminationDateErr.dateErrMsg = 'Termination date should not be greater than Contract end Date';      
-      return;
-    }
+      if (this.isAddMode) {
+        
+        this.addContract();
+      } else {
+          
+          this.updateContract();            
+      }
+      
+                
+                  
+              }                      
+            },
+            error: error => {
+              console.log(error);           
+              
+              this.isContractStartDateInvalid = false; 
+            }
+        });
+      //end of call service
 
-    if(this.contractForm.valid && this.f.startDate.value > this.f.endDate.value){
-      this.endDateDateErr.isDateErr=true;
-      this.endDateDateErr.dateErrMsg = 'Contract start date should not be greater than Contract end date';      
-      return;
-    }
+    
      //this.contractForm.valid;
       this.loading = true;
-      if (this.isAddMode) {
-          this.addContract();
-      } else {
-          this.updateContract();
-          
-      }
+      // setTimeout(
+      //   () => {  
+      //   }, 1400
+      // )
+      
+    
+           
   }
-  
+  // callAddUpdate(){        
+  //   
+  //   if(!this.isContractStartDateInvalid){
+  //           
+  //     if (this.isAddMode) {
+  //       this.addContract();
+  //     } else {
+  //         this.updateContract();            
+  //     }
+  //   }
+  // }
   private addContract() {
     this.isDisabled=true;
     console.log(this.contractForm.value);
@@ -322,6 +396,7 @@ export class ContractsComponent implements OnInit {
     }
 
     private updateContract() {
+      this.isDisabled = true;
         let updateConObj={
           contractId: this.uContractId,
           clientId: this.contractForm.get('clientId').value,
@@ -341,19 +416,20 @@ export class ContractsComponent implements OnInit {
           policyYear: null,   
         };
         if(updateConObj.runInStartDate=='')
-          updateConObj.runInStartDate = "2009-10-10";
+          updateConObj.runInStartDate = null;
         if(updateConObj.runInEndDate=='')
-          updateConObj.runInEndDate = "2009-11-11";
+          updateConObj.runInEndDate =  null;
         if(updateConObj.runOutStartDate=='')
-          updateConObj.runOutStartDate = "2009-10-10";
+          updateConObj.runOutStartDate =  null;
         if(updateConObj.runOutEndDate=='')
-          updateConObj.runOutEndDate = "2009-11-11";
+          updateConObj.runOutEndDate = null;
         if(updateConObj.terminationDate=='')
-          updateConObj.terminationDate = "2010-10-10";
+          updateConObj.terminationDate = null;
         if(updateConObj.runInStartDate > updateConObj.runInEndDate){
           console.log("start date should not be greater than end date");
           
         }
+        
         this.contractService.updateContract(updateConObj)
             .pipe(first())
             .subscribe({

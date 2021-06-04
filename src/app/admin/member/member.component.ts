@@ -175,6 +175,7 @@ export class MemberComponent implements OnInit {
    console.log(memberId);
    this.memberService.memberSearch(memberId,fname,mname, lname, subscriberId, dob, Gender, memberStartDate, memberEndDate).subscribe(
      (data:IMemberSearchResponse[])=>{
+       debugger;
        console.log(data);
        console.log(data[0].memberId)
        if(data==null || data.length==0){
@@ -225,7 +226,7 @@ export class MemberComponent implements OnInit {
       this.isAddMode = false;      
       if(id!=null){
         console.log(id);
-        
+        debugger;
           this.uMemberId = id.memberHrid;
           setTimeout(()=>{
             this.uClientId=id.clientId;
@@ -344,13 +345,17 @@ private addMember() {
 
   private updateMember() {
       let updateMemberObj = {
-      memberId: Number(this.uMemberId),
+      laserType:"Member",
+      laserTypeId: String(this.uMemberId),
       laserValue: Number(this.f.laserValue.value),
       isUnlimited: this.f.isUnlimited.value==true?'Y':'N',
       status: 1,
-      userId: this.loginService.currentUserValue.name  
+      createdBy: this.loginService.currentUserValue.name,
+      updatedBy: this.loginService.currentUserValue.name,
+      createdOn:null,
+      updatedOn:null  
       }
-      
+      debugger;
       this.memberService.updateMember(updateMemberObj)
           .pipe(first())
           .subscribe({

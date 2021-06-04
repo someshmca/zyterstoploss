@@ -6,6 +6,7 @@ export interface IClient{
   startDate: string;
   endDate: string;
   parentID:string;
+  createdon: string;
 }
   
 
@@ -36,7 +37,9 @@ export interface IClientAdd{
   endDate: string;
   parentID:string;
   userId:string; 
+  createdon: string;
 }
+
 
 export interface IClientAddSuccess{
   clientID: string;
@@ -51,6 +54,7 @@ export interface IClientUpdate{
   endDate: Date;
   parentID:string;
   userId:string;
+  createdon: string;
  }
 
 export interface IClientUpdateSuccess{

@@ -88,13 +88,16 @@
   <form [formGroup]="contractForm" (ngSubmit)="onSubmit()">
   <div class="contract-form-area">
            <div class="mandate-fields">
-            <span *ngIf="submitted && (!contractForm.valid && !contractForm.errors?.dates)">Fields marked with * are mandatory</span>
-            <span *ngIf="contractForm.errors">{{ contractForm.errors?.dates | json }}</span>
-            <span *ngIf="runInStartEndErr.isDateErr">{{runInStartEndErr.dateErrMsg}}</span>
-            <span *ngIf="runOutStartEndErr.isDateErr">{{runOutStartEndErr.dateErrMsg}}</span>
-            <span *ngIf="terminationDateErr.isDateErr">{{terminationDateErr.dateErrMsg}}</span>
-            <span *ngIf="endDateDateErr.isDateErr">{{endDateDateErr.dateErrMsg}}</span>
-            <span *ngIf="isContractStartDateInvalid">{{contractStartDateErrMsg}}</span>
+            <div *ngIf="submitted && (!contractForm.valid && !contractForm.errors?.dates)">Fields marked with * are mandatory</div>
+            <div *ngIf="contractForm.errors">{{ contractForm.errors?.dates | json }}</div>
+            <div *ngIf="startDateErr.isDateErr">{{startDateErr.dateErrMsg}}</div>
+            <div *ngIf="endDateErr.isDateErr">{{endDateErr.dateErrMsg}}</div>
+            <div *ngIf="runInStartErr.isDateErr">{{runInStartErr.dateErrMsg}}</div>
+            <div *ngIf="runInEndErr.isDateErr">{{runInEndErr.dateErrMsg}}</div>
+            <div *ngIf="runOutStartErr.isDateErr">{{runOutStartErr.dateErrMsg}}</div>
+            <div *ngIf="runOutEndErr.isDateErr">{{runOutEndErr.dateErrMsg}}</div>
+            <div *ngIf="terminationDateErr.isDateErr">{{terminationDateErr.dateErrMsg}}</div>
+            <div *ngIf="isContractStartDateInvalid">{{contractStartDateErrMsg}}</div>
            </div>  
            <div class="row">
              <div class="col-md-4">
@@ -108,7 +111,7 @@
                 <label>Account<small class="starmark">*</small> </label>
                 <select #focusElem formControlName="clientId" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.clientId.errors }">
                   <option *ngFor="let client of activeClients" [value]="client.clientId">
-                    {{client.clientName}}
+                    {{client.clientName}} ({{client.clientId}})
                   </option>
                </select>                 
               </div>       
@@ -130,13 +133,13 @@
               <div class="col-md-4">
                 <div class="form-group">
                   <label>Contract Start Date<small class="starmark">*</small></label>
-                  <input type="date" value="MM/dd/yyyy" formControlName="startDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.startDate.errors }" /> 
+                  <input type="date" value="MM/dd/yyyy" formControlName="startDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.startDate.errors}" max="2999-12-31" /> 
                 </div>
               </div>
               <div class="col-md-4">
                 <div class="form-group">
                   <label>Contract End Date<small class="starmark">*</small></label>
-                  <input type="date" value="MM/dd/yyyy" formControlName="endDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.endDate.errors }"/> 
+                  <input type="date" value="MM/dd/yyyy" formControlName="endDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.endDate.errors }" max="2999-12-31"/> 
                 </div>
               </div>
             </div>
@@ -144,19 +147,19 @@
               <div class="col-md-4">
                 <div class="form-group">
                   <label>Run In Start Date</label>
-                  <input type="date" value="MM/dd/yyyy" formControlName="runInStartDate" class="form-control" /> 
+                  <input type="date" value="MM/dd/yyyy" formControlName="runInStartDate" class="form-control"  max="2999-12-31"/> 
                 </div>
               </div>
               <div class="col-md-4">
                 <div class="form-group">
                   <label>Run In End Date</label>
-                  <input type="date" value="MM/dd/yyyy" formControlName="runInEndDate" class="form-control"/> 
+                  <input type="date" value="MM/dd/yyyy" formControlName="runInEndDate" class="form-control" max="2999-12-31"/> 
                 </div>
               </div>
               <div class="col-md-4">
                 <div class="form-group">
                   <label>Run Out Start Date</label>
-                  <input type="date" value="MM/dd/yyyy" formControlName="runOutStartDate" class="form-control" /> 
+                  <input type="date" value="MM/dd/yyyy" formControlName="runOutStartDate" class="form-control" max="2999-12-31" /> 
                 </div>
               </div>
             </div>
@@ -164,13 +167,13 @@
               <div class="col-md-4">
                 <div class="form-group">
                   <label>Run Out End Date</label>
-                  <input type="date" value="MM/dd/yyyy" formControlName="runOutEndDate" class="form-control" /> 
+                  <input type="date" value="MM/dd/yyyy" formControlName="runOutEndDate" class="form-control" max="2999-12-31" /> 
                 </div>
               </div>
               <div class="col-md-4">
                 <div class="form-group">
                   <label>Termination Date</label>
-                  <input type="date" value="MM/dd/yyyy" formControlName="terminationDate" class="form-control"  /> 
+                  <input type="date" value="MM/dd/yyyy" formControlName="terminationDate" class="form-control" max="2999-12-31" [ngClass]="{ 'is-invalid': submitted && terminationDateErr.isDateErr }"  /> 
                 </div>  
               </div>
               <div class="col-md-4" *ngIf="!isAddMode">
@@ -187,7 +190,7 @@
            
         <div class="modal-footer-btns">
           <button type="button"  class="btn btn-outline-primary" (click)="openCustomModal(false, null)">Cancel</button>
-          <button type="submit" class="btn btn-primary" *ngIf="!isAddMode">Update</button>
+          <button type="submit" class="btn btn-primary" *ngIf="!isAddMode" [disabled]="isDisabled">Update</button>
           <button type="submit" id="btnSave" class="btn btn-primary" [disabled]="isDisabled" *ngIf="isAddMode">Add</button>
         </div>
         </form>

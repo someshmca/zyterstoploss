@@ -51,9 +51,13 @@ export interface IMemberAdd{
 }
 
 export interface IMemberUpdate{
-  memberId: number;
+  laserType:string;
+  laserTypeId: string;
   laserValue:number;
   isUnlimited: string;
   status: number;
-  userId: string;
+  createdBy: string;
+  updatedBy:string;
+  createdOn:Date;
+  updatedOn:Date;
 }

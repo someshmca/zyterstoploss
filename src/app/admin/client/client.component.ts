@@ -166,12 +166,13 @@ export class ClientComponent implements OnInit {
         this.clientsService.getClient(id.clientId).subscribe(x => {
         console.log(x[0].clientId);
          this.clientForm.patchValue({
-         clientId:x[0].clientId,
-                clientName:x[0].clientName,        
-               startDate: this.ustartDate,
-                endDate: this.uendDate,
-                parentID:id.parentID,
-            status:x[0].status
+            clientId:x[0].clientId,
+            clientName:x[0].clientName,        
+            startDate: this.ustartDate,
+            endDate: this.uendDate,
+            parentID:id.parentID,
+            status:x[0].status,
+            createdon: x[0].createdon
             //: id.clientId
           });
         }
@@ -197,7 +198,8 @@ export class ClientComponent implements OnInit {
         endDate: clientObj.endDate,
         parentID:clientObj.parentID,
         parentCLientId:clientObj.parentID,
-        userId:this.loginService.currentUserValue.name
+        userId:this.loginService.currentUserValue.name,
+        createdon: clientObj.createdon
 
        });
     }
@@ -226,7 +228,8 @@ export class ClientComponent implements OnInit {
     this.clientForm.patchValue({
       userId:this.loginService.currentUserValue.name,
       status:this.clientForm.get('status').value==true?1:1,
-      parentID:this.clientForm.get('parentID').value
+      parentID:this.clientForm.get('parentID').value,
+      createdon: this.datePipe.transform(Date.now(), 'yyyy-MM-dd')
       //: id.clientId
     });
  //   console.log(this.clientForm.get('status').value);

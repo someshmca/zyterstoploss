@@ -24,7 +24,10 @@ export class ContractService {
     return this.http.get<IContract[]>(Paths.contract+val).pipe(catchError(this.handleError.bind(this)));
  }
  validateContractStartDate(clientId, ContractStartDate){
-   return this.http.get(Paths.contractDateValidation+clientId+'/'+ContractStartDate).pipe(catchError(this.handleError.bind(this)));
+   console.log(Paths.contractDateValidation+clientId+'/'+ContractStartDate);
+   let cpath=Paths.contractDateValidation+clientId+'/'+ContractStartDate;
+   
+   return this.http.get<any>(cpath, {  responseType: 'text' as 'json' }).pipe(catchError(this.handleError.bind(this)));
  }
  getContractsByClientID(clientId){
    return this.http.get<IContractsByClient[]>(Paths.contractsByClientPath+clientId);

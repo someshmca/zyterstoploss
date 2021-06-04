@@ -85,6 +85,8 @@
               <span *ngIf="aslPaidEndErr.isDateErr">{{aslPaidEndErr.dateErrMsg}}</span>
               <span *ngIf="sslTermCovrErr.isDateErr">{{sslTermCovrErr.dateErrMsg}}</span>
               <span *ngIf="aslTermCovrErr.isDateErr">{{aslTermCovrErr.dateErrMsg}}</span>
+              <span *ngIf="sslDeductibleErr.isValid">{{sslDeductibleErr.errMsg}}</span>
+
              
              </div>  
             <div class="row">
@@ -103,7 +105,7 @@
                   <label>Contract ID<small class="starmark">*</small></label>
                   <select class="form-control" formControlName="contractId" [ngClass]="{ 'is-invalid': submitted && f.contractId.errors }" disabled="true">
                      <option *ngFor="let obj of contractsByClientId" [value]="obj.contractId">
-                      {{obj.contractId}}
+                      {{obj.contractId}} ({{obj.description}})
                     </option> 
                   </select>
                 </div>
@@ -125,11 +127,14 @@
                 <label>Claim Basis<small class="starmark">*</small></label>
                 <!-- <input type="text" formControlName="sslClaimBasis" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.sslClaimBasis.errors }"/> -->
                 <select class="form-control" formControlName="sslClaimBasis" [ngClass]="{ 'is-invalid': submitted && f.sslClaimBasis.errors }">
-                  <option value="12/12">12/12</option>
+                  <!-- <option value="12/12">12/12</option>
                   <option value="12/15">12/15</option>
                   <option value="12/18">12/18</option>
                   <option value="15/12">15/12</option>
-                  <option value="24/12">24/12</option>
+                  <option value="24/12">24/12</option> -->
+            <option [value]="i" *ngFor="let i of claimBasis">
+              {{i}}
+              </option>
                 </select> 
               </div>                
             </div>
@@ -170,7 +175,7 @@
             <div class="col-md-4">
               <div class="form-group">
                 <label>Deductible<small class="starmark">*</small></label>
-                <input type="number" formControlName="sslDeductible" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.sslDeductible.errors }"/>
+                <input type="number" formControlName="sslDeductible" class="form-control" [ngClass]="{ 'is-invalid': submitted && sslDeductibleErr.isValid }"/>
               </div>
             </div>
             <div class="col-md-4">
@@ -226,11 +231,14 @@
           <label>Claim Basis<small class="starmark">*</small></label>
           <!-- <input type="text" formControlName="aslClaimBasis" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.aslClaimBasis.errors }"/> -->
           <select class="form-control" formControlName="aslClaimBasis" [ngClass]="{ 'is-invalid': submitted && f.aslClaimBasis.errors }">
-            <option value="12/12">12/12</option>
+            <!-- <option value="12/12">12/12</option>
             <option value="12/15">12/15</option>
             <option value="12/18">12/18</option>
             <option value="15/12">15/12</option>
-            <option value="24/12">24/12</option>
+            <option value="24/12">24/12</option> -->
+            <option [value]="i" *ngFor="let i of claimBasis">
+            {{i}}
+            </option>
           </select> 
         </div>
       </div>

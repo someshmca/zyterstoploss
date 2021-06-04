@@ -121,7 +121,7 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
     
     this.planService.getActiveClients().subscribe(
       (data)=>{
-        
+        data.sort((a, b) => (a.clientName > b.clientName) ? 1 : -1);
         this.activeClients = data;
         for(let i=0; i<this.activeClients.length; i++){
           this.locClients.push(this.activeClients[i]);
@@ -260,7 +260,6 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
   }
 
   private addPlan() {
-    debugger;
     this.isDisabled=true;
     this.addPlanObj = {
       planID: 0,
@@ -324,7 +323,7 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
   }
 
   private updatePlan() {
-    
+    this.isDisabled=true;
     this.updatePlanObj = {
       planID: this.updatePlanID,
       clientId: this.f.clientId.value,

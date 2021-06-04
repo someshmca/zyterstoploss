@@ -134,15 +134,15 @@ input[type='date'].form-control{
     transform: translateX(17px);
 }
 .mandate-fields{
-    height: 20px;
+   line-height: 14px;
     margin: 0;
     text-align: left;
-    display: flex;
+    /*display: flex;
     justify-content: flex-start;
-    align-items: center;
+    align-items: center;*/
     padding: 5px 20px 15px 0;
 }
-.mandate-fields span{
+.mandate-fields span, .mandate-fields div{
     color: #ff0000;
     font-size: 12px;
 }
