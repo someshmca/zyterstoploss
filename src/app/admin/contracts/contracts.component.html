@@ -173,7 +173,7 @@
               <div class="col-md-4">
                 <div class="form-group">
                   <label>Termination Date</label>
-                  <input type="date" value="MM/dd/yyyy" formControlName="terminationDate" class="form-control" max="2999-12-31" [ngClass]="{ 'is-invalid': submitted && terminationDateErr.isDateErr }"  /> 
+                  <input type="date" value="MM/dd/yyyy" formControlName="terminationDate" class="form-control" max="2999-12-31" /> 
                 </div>  
               </div>
               <div class="col-md-4" *ngIf="!isAddMode">

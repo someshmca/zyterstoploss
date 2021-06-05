@@ -210,13 +210,21 @@ clearErrorMessages(){
       this.submitted = true;
       let flag:boolean= false;
       this.alertService.clear();
-      this.clearErrorMessages();
+      this.clearErrorMessages();3
+      let startDateValue=this.f.startDate.value;
+      let endDateValue=this.f.endDate.value;
+      let runInStartValue=this.f.runInStartDate.value;
+      let runInEndValue=this.f.runInEndDate.value;
+      let runOutStartValue= this.f.runOutStartDate.value;
+      let runOutEndValue=this.f.runOutEndDate.value;
+      let terminationDateValue=this.f.terminationDate.value;
+      
      if (this.contractForm.invalid) {
       return;
      }
       //call service
       let clientId:string = this.f.clientId.value;
-      let ContractStartDate = this.datePipe.transform(this.f.startDate.value, 'MM-dd-yyyy');  
+      let ContractStartDate = this.datePipe.transform(startDateValue, 'MM-dd-yyyy');  
       this.contractService.validateContractStartDate(clientId, ContractStartDate).pipe(first())    
       .subscribe({ 
             next: (data) => {
@@ -233,75 +241,79 @@ clearErrorMessages(){
                 this.isContractStartDateInvalid = false;          
                 this.contractStartDateErrMsg = data;
                 flag=false;
-    if(this.contractForm.valid && this.f.startDate.value!=null && this.f.endDate.value!=null){
-      if(this.contractForm.valid && this.f.startDate.value > this.f.endDate.value){
-        this.startDateErr.isDateErr=true;
-        this.startDateErr.dateErrMsg = 'Contract start date should not be greater than Contract end date'; 
-        flag=false;     
-        return;
-      }
-    }
-    if(this.contractForm.valid && this.f.startDate.value==null && this.f.endDate.value!=null){
-      this.startDateErr.isDateErr=true;
-      this.startDateErr.dateErrMsg = 'Contract start date should not be empty or Invalid';  
-      flag=false;         
-      return;
-    }
-    if(this.contractForm.valid && this.f.startDate.value!=null && this.f.endDate.value==null){
-      this.endDateErr.isDateErr=true;
-      this.endDateErr.dateErrMsg = 'Contract End date should not be empty or Invalid';    
-      flag=false;       
-      return;
-    }
-    if(this.contractForm.valid && this.f.runInStartDate.value!=null && this.f.runInEndDate.value!=null){
-     if(this.f.runInStartDate.value > this.f.runInEndDate.value){
-       this.runInStartErr.isDateErr=true;
-       this.runInStartErr.dateErrMsg = 'Run-In Start date should not be greater than Run-In End date';  
-       flag=false;          
-       return;
-     }
-    }
-    if(this.contractForm.valid && this.f.runInStartDate.value==null && this.f.runInEndDate.value!=null){
-      this.runInStartErr.isDateErr=true;
-      this.runInStartErr.dateErrMsg = 'Run-In Start date should not be empty';
-      flag=false;
-             
-      return;
-    }
-    if(this.contractForm.valid && this.f.runInStartDate.value!=null && this.f.runInEndDate.value==null){
-     this.runInEndErr.isDateErr=true;
-     this.runInEndErr.dateErrMsg = 'Run-In End date should not be empty';    
-     flag=false;        
-     return;
-   }
-   if(this.contractForm.valid && this.f.runOutStartDate.value!=null && this.f.runOutEndDate.value!=null){
-    if(this.f.runOutStartDate.value > this.f.runOutEndDate.value){
-      this.runOutStartErr.isDateErr=true;
-      this.runOutStartErr.dateErrMsg = 'Run-Out Start date should not be greater than Run-Out End date'; 
-      flag=false;           
-      return;
-    }
-  }
-  if(this.contractForm.valid && this.f.runOutStartDate.value==null && this.f.runOutEndDate.value!=null){
-    this.runOutStartErr.isDateErr=true;
-    this.runOutStartErr.dateErrMsg = 'Run-Out Start date should not be empty';       
-    flag=false;     
-    return;
-  }
-   if(this.contractForm.valid && this.f.runOutStartDate.value!=null && this.f.runOutEndDate.value==null){
-      this.runOutEndErr.isDateErr=true;
-      this.runOutEndErr.dateErrMsg = 'Run-Out End date should not be empty';  
-      flag=false;         
-      return;
-    }
-  if(this.f.terminationDate.value !='' || this.f.terminationDate.value!=null){
-      if(this.f.terminationDate.value < this.f.startDate.value || this.f.terminationDate.value > this.f.endDate.value){        
-        this.terminationDateErr.isDateErr=true;
-        this.terminationDateErr.dateErrMsg = 'Termination date should be between Contract Start and End Dates'; 
-        flag=false;          
-        return;
-      }
-    }
+                this.contractForm.patchValue(this.contractForm.value);
+                console.log(this.contractForm.value);
+                
+                if(this.contractForm.valid){
+                  if(startDateValue!=null && endDateValue!=null && startDateValue!='' && endDateValue!=''){
+                    if(startDateValue > endDateValue){
+                      this.startDateErr.isDateErr=true;
+                      this.startDateErr.dateErrMsg = 'Contract start date should not be greater than Contract end date'; 
+                      flag=false;     
+                      return;
+                    }
+                  }
+                  if(startDateValue==null || startDateValue==''){
+                    this.startDateErr.isDateErr=true;
+                    this.startDateErr.dateErrMsg = 'Contract start date should not be empty or Invalid';  
+                    flag=false;         
+                    return;
+                  }
+                  if(endDateValue==null || endDateValue==''){
+                    this.endDateErr.isDateErr=true;
+                    this.endDateErr.dateErrMsg = 'Contract End date should not be empty or Invalid';    
+                    flag=false;       
+                    return;
+                  }
+                  if(runInStartValue!=null && runInEndValue!=null && runInStartValue!='' && runInEndValue!=''){
+                    if(runInStartValue > runInEndValue){
+                      this.runInStartErr.isDateErr=true;
+                      this.runInStartErr.dateErrMsg = 'Run-In Start date should not be greater than Run-In End date';  
+                      flag=false;          
+                      return;
+                    }
+                  }
+                  if((runInStartValue==null || runInStartValue=='') && runInEndValue!='' && runInEndValue!=null){
+                    this.runInStartErr.isDateErr=true;
+                    this.runInStartErr.dateErrMsg = 'Run-In Start date should not be empty or Invalid';
+                    flag=false;                            
+                    return;
+                  }
+                  if((runInEndValue==null || runInEndValue=='') && runInStartValue!='' && runInStartValue!=null){
+                  this.runInEndErr.isDateErr=true;
+                  this.runInEndErr.dateErrMsg = 'Run-In End date should not be empty or Invalid';    
+                  flag=false;        
+                  return;
+                }
+                if(runOutStartValue!=null && runOutEndValue!=null && runOutStartValue!='' && runOutEndValue!=''){
+                  if(runOutStartValue > runOutEndValue){
+                    this.runOutStartErr.isDateErr=true;
+                    this.runOutStartErr.dateErrMsg = 'Run-Out Start date should not be greater than Run-Out End date'; 
+                    flag=false;           
+                    return;
+                  }
+                }
+                if((runOutStartValue==null || runOutStartValue=='') && runOutEndValue!='' && runOutEndValue!=null){
+                  this.runOutStartErr.isDateErr=true;
+                  this.runOutStartErr.dateErrMsg = 'Run-Out Start date should not be empty or Invalid';       
+                  flag=false;     
+                  return;
+                }
+                if((runOutEndValue==null || runOutEndValue=='') && runOutStartValue!='' && runOutStartValue!=null){
+                    this.runOutEndErr.isDateErr=true;
+                    this.runOutEndErr.dateErrMsg = 'Run-Out End date should not be empty or Invalid';  
+                    flag=false;         
+                    return;
+                  }
+                if(terminationDateValue !='' && terminationDateValue!=null){
+                    if(terminationDateValue < startDateValue || terminationDateValue > endDateValue){        
+                      this.terminationDateErr.isDateErr=true;
+                      this.terminationDateErr.dateErrMsg = 'Termination date should be between Contract Start and End Dates'; 
+                      flag=false;          
+                      return;
+                    }
+                  }
+                }
 
       if (this.isAddMode) {
         
