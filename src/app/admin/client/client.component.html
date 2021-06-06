@@ -102,8 +102,10 @@
           <div class="client-form-area">
           <form [formGroup]="clientForm" (ngSubmit)="onSubmit()">
              <div class="mandate-fields">
-               <span *ngIf="submitted && (!clientForm.valid && !clientForm.errors?.dates)">Fields marked with * are mandatory</span>
-               <span *ngIf="clientForm.errors">{{ clientForm.errors?.dates | json }}</span>
+               <div *ngIf="submitted && (!clientForm.valid && !clientForm.errors?.dates)">Fields marked with * are mandatory</div>
+               <div *ngIf="clientForm.errors">{{ clientForm.errors?.dates | json }}</div>
+               <div *ngIf="startDateErr.isDateErr">{{startDateErr.dateErrMsg}}</div>
+               <div *ngIf="endDateErr.isDateErr">{{endDateErr.dateErrMsg}}</div>
             </div>  
              <div class="row">
               <div class="col-md-6">
@@ -137,9 +139,12 @@
                 <div class="col-md-6">
                   <div class="form-group">
                     <label>Sub Account of</label>
-                    <select formControlName="parentID" class="form-control"s >
-                      <option *ngFor="let client of parentClientIds; let index=i" [selected]="i==2?true:null" [value]="client.parentID">
+                    <select formControlName="parentID" class="form-control">
+                      <!-- <option *ngFor="let client of parentClientIds; let index=i" [selected]="i==2?true:null" [value]="client.parentID">
                         {{client.parentName}}
+                      </option> -->
+                      <option *ngFor="let client of activeClients; let index=i" [selected]="i==2?true:null" [value]="client.clientId">
+                        {{client.clientName}}
                       </option>
                     </select>
                   </div>  
@@ -158,8 +163,8 @@
              
           <div class="modal-footer-btns">
             <button type="button" class="btn btn-outline-primary" (click)="openCustomModal(false, null)">Cancel</button>
-            <button type="submit" class="btn btn-primary" *ngIf="!isAddMode">Update</button>
-            <button type="submit" class="btn btn-primary" *ngIf="isAddMode">Add</button>
+            <button type="submit" class="btn btn-primary" [disabled]="isDisabled" *ngIf="!isAddMode">Update</button>
+            <button type="submit" class="btn btn-primary" [disabled]="isDisabled" *ngIf="isAddMode">Add</button>
           </div>
           </form>
           </div> 

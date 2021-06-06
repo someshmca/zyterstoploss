@@ -59,6 +59,7 @@ export class MemberComponent implements OnInit {
   isSearchDataThere: boolean = false;
   noSearchResultsFound: boolean = false;
   uMemberId: any;
+  isDisabled: boolean=false;
   constructor(private mb: FormBuilder, private fb: FormBuilder, private memberService:MemberService, private alertService: AlertService, private datePipe: DatePipe, private loginService: LoginService, private clientService: ClientsService, private contractService: ContractService, private planService: HealthPlanService) { }
 
   ngOnInit() {
@@ -208,6 +209,7 @@ export class MemberComponent implements OnInit {
   }
 
   openCustomModal(open: boolean, id:any) {
+    this.isDisabled=false;
     setTimeout(()=>{
       this.focusTag.nativeElement.focus()
     }, 100);
@@ -306,6 +308,7 @@ get f(){return this.memberForm.controls}
     }
 }
 private addMember() {
+  this.isDisabled=true;
     let addMembObj = {
       memberId: this.f.memberHrid.value,
       memberHrid: this.f.memberHrid.value,
@@ -344,6 +347,7 @@ private addMember() {
   }
 
   private updateMember() {
+    this.isDisabled=true;
       let updateMemberObj = {
       laserType:"Member",
       laserTypeId: String(this.uMemberId),

@@ -32,6 +32,7 @@ export class ClientComponent implements OnInit {
   clientIDs: IClient[] = [];
   client: IClientIDRequest;
   singleClient: IClient[] = [];
+  activeClients: IActiveClient[] = [];
 
   contractIDs: IContract[];
   clientForm: FormGroup;
@@ -46,8 +47,12 @@ export class ClientComponent implements OnInit {
   parentClientIds: IParentClient[];
   selectedValue:any;
   isDateValid:boolean;
-
+  isDisabled:boolean;
   isCustomModalOpen: boolean = false;
+
+  startDateErr = {isDateErr: false,dateErrMsg: ''};
+  endDateErr = {isDateErr: false,dateErrMsg: ''};
+
   @ViewChild("focusElem") focusTag: ElementRef;
   
 
@@ -56,6 +61,12 @@ export class ClientComponent implements OnInit {
     this.getAllContracts();
     this.getParentClient();
     this.clientFormInit();
+    this.clientsService.getActiveClients().subscribe(
+      (data) => {
+        data.filter((value,index)=>data.indexOf(value)===index);
+        this.activeClients = data;
+      }
+    )
   }
   
   public doFilter = (value: string) => {
@@ -71,7 +82,7 @@ export class ClientComponent implements OnInit {
       parentID:'',
       status:false,
       userId:""//this.loginService.currentUserValue.name
-  },{validator: this.dateLessThan('startDate', 'endDate')});    
+  })//,{validator: this.dateLessThan('startDate', 'endDate')});    
   }
   getAllClients(){    
     this.clientsService.getAllClients().subscribe(
@@ -97,19 +108,16 @@ export class ClientComponent implements OnInit {
       if (f.value > t.value) {
         this.isDateValid=false;
         return {
-          dates: "End Date  should be greater than Start Date."
+          dates: "End Date should be greater than Start Date."
         };
       }
       return {};
     }
 }
-  getParentClient(){   
-     
+  getParentClient(){        
     this.clientsService.getParentClient().subscribe(
-      (data:IParentClient[]) => {
-        
+      (data:IParentClient[]) => {        
           this.parentClientIds = data;
-          //this.roles = data;
       }
     )
   }
@@ -134,6 +142,13 @@ export class ClientComponent implements OnInit {
   }
   
   get f() { return this.clientForm.controls; }
+  
+clearErrorMessages(){  
+  this.startDateErr.isDateErr=false;
+  this.startDateErr.dateErrMsg='';
+  this.endDateErr.isDateErr=false;
+  this.endDateErr.dateErrMsg='';
+}
   openCustomModal(open: boolean, id:any) {
     setTimeout(()=>{
       this.focusTag.nativeElement.focus()
@@ -141,6 +156,8 @@ export class ClientComponent implements OnInit {
     this.select=true;
     this.submitted = false;
     this.loading = false;
+    this.isDisabled=false;
+    this.clearErrorMessages();
     if(open && id==null){
       this.isAddMode = true;
     }
@@ -163,6 +180,27 @@ export class ClientComponent implements OnInit {
         this.isAddMode = false;
         this.ustartDate = this.datePipe.transform(id.startDate, 'yyyy-MM-dd');
         this.uendDate = this.datePipe.transform(id.endDate, 'yyyy-MM-dd');
+        // this.parentClientIds.filter(item => {
+        //   item.parentName == id.clientName;
+        //   if(item.parentName == id.clientName){
+        //     console.log(item.parentName);
+        //     
+        //   }          
+        // });
+        // console.log(this.parentClientIds.length);
+        
+        // let index = this.parentClientIds.findIndex(x => x.parentName == id.clientName); 
+        // console. log(index);
+        
+        // this.parentClientIds.splice(index, 1);
+        
+        console.log(this.activeClients.length);
+        
+        let index = this.activeClients.findIndex(x => x.clientName == id.clientName); 
+        console. log(index);
+        
+        this.activeClients.splice(index, 1);
+
         this.clientsService.getClient(id.clientId).subscribe(x => {
         console.log(x[0].clientId);
          this.clientForm.patchValue({
@@ -208,10 +246,36 @@ export class ClientComponent implements OnInit {
 
       // reset alerts on submit
       this.alertService.clear();
+      this.clearErrorMessages();
 
-      // stop here if form is invalid
       if (this.clientForm.invalid) {
+        return;
+      }
+      this.clientForm.patchValue(this.clientForm.value);
+      // stop here if form is invalid
+      let startDateValue=this.f.startDate.value;
+      let endDateValue=this.f.endDate.value;
+      if(this.clientForm.valid){
+          if(startDateValue!=null && endDateValue!=null && startDateValue!='' && endDateValue!=''){
+            if(startDateValue > endDateValue){
+              this.startDateErr.isDateErr=true;
+              this.startDateErr.dateErrMsg = 'Start date should not be greater than End date';  
+                      
+              return;
+            }
+          }
+          if((startDateValue==null || startDateValue=='') && endDateValue!='' && endDateValue!=null){
+            this.startDateErr.isDateErr=true;
+            this.startDateErr.dateErrMsg = 'Start date should not be empty or Invalid';
+                                      
+            return;
+          }
+          if((endDateValue==null || endDateValue=='') && startDateValue!='' && startDateValue!=null){
+          this.endDateErr.isDateErr=true;
+          this.endDateErr.dateErrMsg = 'End date should not be empty or Invalid';    
+                
           return;
+        }
       }
 
       this.loading = true;
@@ -223,8 +287,8 @@ export class ClientComponent implements OnInit {
       }
   }
   
-  private addClient() {
-    
+  private addClient() {    
+    this.isDisabled=true;
     this.clientForm.patchValue({
       userId:this.loginService.currentUserValue.name,
       status:this.clientForm.get('status').value==true?1:1,
@@ -253,12 +317,18 @@ export class ClientComponent implements OnInit {
     }
 
     private updateClient() {
-      
+      this.isDisabled=true;      
       this.clientForm.patchValue({
+        startDate: this.f.startDate.value==''?null:this.f.startDate.value,
+        endDate: this.f.endDate.value==''?null:this.f.endDate.value,
         userId:this.loginService.currentUserValue.name,
         status:Boolean(this.clientForm.get('status').value)==true?1:0,
         parentID:String(this.clientForm.get('parentID').value)
         }); 
+        if(this.f.startDate.value==''){
+          
+        }
+        
         this.clientsService.updateClient(this.clientForm.value)
             .pipe(first())
             .subscribe({

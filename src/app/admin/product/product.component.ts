@@ -77,7 +77,7 @@ export class ProductComponent implements OnInit {
     isValid: false,
     errMsg : ''
   }
-  isDisabled = true;
+  isDisabled:boolean=false;
   isEditSelected: boolean = false;
   //isClientSelected:boolean = false;
   // sslForm: FormGroup;
@@ -143,8 +143,8 @@ export class ProductComponent implements OnInit {
       aslCoveredClaims: '',
 
       isMaxLiability:false,
-      ibnrPercentage:0, // this is a number field
-      defferedFeePercentage:0, // this is a number field
+      ibnrPercentage:['', Validators.required], // this is a number field
+      defferedFeePercentage:['', Validators.required], // this is a number field
 
       status:false,
       userId: this.loginService.currentUserValue.name,
@@ -330,6 +330,7 @@ if(aslTermVal!='' && this.productForm.valid){
     }, 100);
     this.submitted = false;
     this.loading = false;
+    this.isDisabled=false;
     if(open && id==null){
       this.isAddMode = true;    
       this.isEditSelected = false;
@@ -423,9 +424,7 @@ if(aslTermVal!='' && this.productForm.valid){
 
 private addProduct() {   
   
-  // this.addObj = {
-    
-  // }
+  this.isDisabled=true;
   console.log(this.addObj);
   this.productForm.patchValue({
     contractId: this.contractsByClientId[0].contractId,
@@ -499,7 +498,7 @@ private addProduct() {
 
   private updateProduct() { 
   
-    
+    this.isDisabled=true;
     this.f.clientId.enable();
     this.f.contractId.enable();
 
@@ -511,6 +510,8 @@ private addProduct() {
   });
   this.productForm.patchValue(this.productForm.value);
   console.log(this.productForm.value);
+  console.log(this.f.ibnrPercentage.errors);
+  console.log(this.f.defferedFeePercentage.errors);
   
   this.listContractClaims=[];
   

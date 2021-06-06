@@ -15,7 +15,7 @@ export class ClientsService {
       ).pipe(catchError(this.handleError.bind(this)));
   }
   getClient(val: string): Observable<IClient[]> {
-    debugger;
+    
     return this.http.get<IClient[]>(Paths.client+val).pipe(catchError(this.handleError.bind(this)));
  }
 

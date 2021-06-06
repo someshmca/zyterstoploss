@@ -344,14 +344,14 @@
       <div class="col-md-4">
         <div class="form-group">
           <label>IBNR Percentage</label>
-          <input type="number" formControlName="ibnrPercentage"   class="form-control"/>
+          <input type="number" formControlName="ibnrPercentage"   class="form-control" [ngClass]="{ 'is-invalid': submitted && f.ibnrPercentage.errors }"/>
         </div>
           <input type="hidden" formControlName="ibnrPercentage" class="form-control"/>
       </div>
       <div class="col-md-4">
         <div class="form-group">
           <label>Deferred Percentage</label>
-          <input type="number" formControlName="defferedFeePercentage" class="form-control"/>
+          <input type="number" formControlName="defferedFeePercentage" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.defferedFeePercentage.errors }"/>
         </div>
          <input type="hidden" formControlName="defferedFeePercentage" class="form-control"/>
       </div>
@@ -362,8 +362,8 @@
 
           <div class="modal-footer-btns">
             <button type="button" class="btn btn-outline-primary" (click)="openCustomModal(false, null)">Cancel</button>
-            <button type="submit" class="btn btn-primary" *ngIf="!isAddMode">Update</button>
-            <button type="submit" class="btn btn-primary" *ngIf="isAddMode">Add</button>
+            <button type="submit" class="btn btn-primary" [disabled]="isDisabled" *ngIf="!isAddMode">Update</button>
+            <button type="submit" class="btn btn-primary" [disabled]="isDisabled" *ngIf="isAddMode">Add</button>
           </div>
         </form>
       </div>

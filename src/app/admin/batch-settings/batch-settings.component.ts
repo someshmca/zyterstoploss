@@ -52,6 +52,7 @@ export class BatchSettingsComponent implements OnInit {
   batchProcessColumns: string[] = ['batchProcess', 'description', 'status', 'lastRun','lastRunStatus','nextScheduleRun','frequency', 'batchType', 'createId','batchProcessId'];
   //batchProcessColumns: string[] = ['batchProcess', 'description', 'status', 'lastRun','lastRunStatus','nextScheduleRun','frequency','batchProcessId', 'batchStatusId','createId','createDate', 'updateId','lastUpdateDate'];
   batchProcessGridSource: any;
+  isDisabled: boolean=false;
   @ViewChild(MatPaginator) paginator1: MatPaginator;
   @ViewChild(MatSort) sort1: MatSort;
   @ViewChild('BatchProcessPaginator', {static: true}) batchProcessPaginator: MatPaginator;
@@ -200,6 +201,7 @@ export class BatchSettingsComponent implements OnInit {
      this.focusTag.nativeElement.focus()
    }, 100);
     this.submitted = false;
+    this.isDisabled=false;
     this.loading = false;
     if(open && id==null){
       this.batchProcessForm.patchValue({        
@@ -270,6 +272,7 @@ export class BatchSettingsComponent implements OnInit {
 }
 
 private addBatchProcess() {
+  this.isDisabled=true;
   
   console.log(this.batchStatusList.length);
   console.log(this.batchStatusList[2].batchStatus);
@@ -313,6 +316,7 @@ private addBatchProcess() {
   }
 
   private updateBatchProcess() {
+    this.isDisabled=true;
     
   let nextScheduleRunValue = this.f.nextScheduleRun.value == ""? this.datePipe.transform(new Date('04/04/2021'), 'yyyy-MM-dd'):this.datePipe.transform(this.f.nextScheduleRun.value, 'yyyy-MM-dd');
   
