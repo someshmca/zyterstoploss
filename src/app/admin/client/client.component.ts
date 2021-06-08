@@ -21,7 +21,7 @@ let p = 'y-MM-dd'; // YYYY-MM-DD
   providers: [DatePipe]
 })
 export class ClientComponent implements OnInit {  
-  displayedColumns: string[] = ['clientId','clientName','startDate','endDate','parentID','userId'];
+  displayedColumns: string[] = ['clientId','clientName','startDate','endDate','userId'];
   dataSource: any;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -49,9 +49,13 @@ export class ClientComponent implements OnInit {
   isDateValid:boolean;
   isDisabled:boolean;
   isCustomModalOpen: boolean = false;
+  accIdStatus: number;
+  accNameStatus: number;
 
   startDateErr = {isDateErr: false,dateErrMsg: ''};
   endDateErr = {isDateErr: false,dateErrMsg: ''};
+  accNameErr = {isDuplicate: false, errMsg: ''};
+  accIdErr = {isDuplicate: false, errMsg: ''};
 
   @ViewChild("focusElem") focusTag: ElementRef;
   
@@ -75,13 +79,18 @@ export class ClientComponent implements OnInit {
 
   clientFormInit(){    
     this.clientForm = this.fb.group({   
-      clientId: [''],
+      clientId: ['', Validators.required],
       clientName:  ['', Validators.required],
       startDate: null,
       endDate:null,
-      parentID:'',
+      claimsAdministrator: '',
+      pharmacyClaimsAdministrator: '',
+      subAccountid: '',
+      subSubAccountid: '',
+      ftn: '',
+      ftnname: '',
       status:false,
-      userId:""//this.loginService.currentUserValue.name
+      userId: ''//this.loginService.currentUserValue.name
   })//,{validator: this.dateLessThan('startDate', 'endDate')});    
   }
   getAllClients(){    
@@ -148,6 +157,36 @@ clearErrorMessages(){
   this.startDateErr.dateErrMsg='';
   this.endDateErr.isDateErr=false;
   this.endDateErr.dateErrMsg='';
+  this.accNameErr.isDuplicate=false;
+  this.accNameErr.errMsg='';
+  this.accIdErr.isDuplicate=false;
+  this.accIdErr.errMsg='';
+}
+checkDuplicateAccountName(aname){
+  this.clientsService.checkDuplicateAccountName(aname).subscribe(
+    (data)=>{
+      this.accNameStatus = data;
+      if(this.accNameStatus>0){
+        this.accNameErr.isDuplicate=true;
+        this.accNameErr.errMsg='The account name '+this.f.clientName.value+' already exists. Please enter different Account Name'; 
+        
+        return;       
+      }
+    }
+  );
+}
+checkDuplicateAccountId(aid){
+  this.clientsService.checkDuplicateAccountId(aid).subscribe(
+    (data)=>{
+      this.accIdStatus = data;
+      if(this.accIdStatus>0){
+        this.accIdErr.isDuplicate=true;
+        this.accIdErr.errMsg='The account Id '+this.f.clientId.value+' already exists. Please enter different Account Id'; 
+        
+        return;       
+      }
+    }
+  );
 }
   openCustomModal(open: boolean, id:any) {
     setTimeout(()=>{
@@ -176,7 +215,7 @@ clearErrorMessages(){
       //this.clientForm.get('status').value)==true?1:0,
       
       if(id!=null){
-        this.selectedValue=id.parentID;
+        //this.selectedValue=id.parentID;
         this.isAddMode = false;
         this.ustartDate = this.datePipe.transform(id.startDate, 'yyyy-MM-dd');
         this.uendDate = this.datePipe.transform(id.endDate, 'yyyy-MM-dd');
@@ -208,7 +247,13 @@ clearErrorMessages(){
             clientName:x[0].clientName,        
             startDate: this.ustartDate,
             endDate: this.uendDate,
-            parentID:id.parentID,
+            //parentID:id.parentID,
+            claimsAdministrator: x[0].claimsAdministrator,
+            pharmacyClaimsAdministrator: x[0].pharmacyClaimsAdministrator,
+            subAccountid: x[0].subAccountid,
+            subSubAccountid: x[0].subSubAccountid,
+            ftn: x[0].ftn,
+            ftnname: x[0].ftnname,
             status:x[0].status,
             createdon: x[0].createdon
             //: id.clientId
@@ -234,8 +279,14 @@ clearErrorMessages(){
         status:clientObj.status,
         startDate: clientObj.startDate,
         endDate: clientObj.endDate,
-        parentID:clientObj.parentID,
-        parentCLientId:clientObj.parentID,
+        //parentID:clientObj.parentID,
+        //parentCLientId:clientObj.parentID,
+        claimsAdministrator: clientObj.claimsAdministrator,
+        pharmacyClaimsAdministrator: clientObj.pharmacyClaimsAdministrator,
+        subAccountid: clientObj.subAccountid,
+        subSubAccountid: clientObj.subSubAccountid,
+        ftn: clientObj.ftn,
+        ftnname: clientObj.ftnname,
         userId:this.loginService.currentUserValue.name,
         createdon: clientObj.createdon
 
@@ -256,6 +307,11 @@ clearErrorMessages(){
       let startDateValue=this.f.startDate.value;
       let endDateValue=this.f.endDate.value;
       if(this.clientForm.valid){
+          this.checkDuplicateAccountName(this.f.clientName.value);
+          this.checkDuplicateAccountId(this.f.clientId.value);
+          console.log("acc id status "+this.accIdStatus);
+          console.log('acc name status '+this.accNameStatus);
+          
           if(startDateValue!=null && endDateValue!=null && startDateValue!='' && endDateValue!=''){
             if(startDateValue > endDateValue){
               this.startDateErr.isDateErr=true;
@@ -287,12 +343,11 @@ clearErrorMessages(){
       }
   }
   
-  private addClient() {    
-    this.isDisabled=true;
+  private addClient() {   
     this.clientForm.patchValue({
       userId:this.loginService.currentUserValue.name,
       status:this.clientForm.get('status').value==true?1:1,
-      parentID:this.clientForm.get('parentID').value,
+      //parentID:this.clientForm.get('parentID').value,
       createdon: this.datePipe.transform(Date.now(), 'yyyy-MM-dd')
       //: id.clientId
     });
@@ -300,8 +355,8 @@ clearErrorMessages(){
     this.clientsService.addClient(this.clientForm.value)
         .pipe(first())
         .subscribe({
-            next: () => {
-              
+            next: () => { 
+              this.isDisabled=true;              
               this.openCustomModal(false, null);
               this.getAllClients();
               this.clientForm.reset();                
@@ -316,15 +371,14 @@ clearErrorMessages(){
         
     }
 
-    private updateClient() {
-      this.isDisabled=true;      
+    private updateClient() {    
       this.clientForm.patchValue({
         startDate: this.f.startDate.value==''?null:this.f.startDate.value,
         endDate: this.f.endDate.value==''?null:this.f.endDate.value,
         userId:this.loginService.currentUserValue.name,
-        status:Boolean(this.clientForm.get('status').value)==true?1:0,
-        parentID:String(this.clientForm.get('parentID').value)
-        }); 
+        status:Boolean(this.clientForm.get('status').value)==true?1:0
+        //parentID:String(this.clientForm.get('parentID').value)
+      }); 
         if(this.f.startDate.value==''){
           
         }
@@ -333,6 +387,7 @@ clearErrorMessages(){
             .pipe(first())
             .subscribe({
                 next: () => {
+                    this.isDisabled=true;  
                     this.getAllClients();
                     this.openCustomModal(false,null); 
                     this.clientForm.reset();

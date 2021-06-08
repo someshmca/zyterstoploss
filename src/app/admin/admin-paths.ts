@@ -35,7 +35,8 @@
 //   clientUpdate: "https://medicaslapiorc.azurewebsites.net/api/Clients/UpdateClients",
 //   activeClients:"https://medicaslapiorc.azurewebsites.net/api/Clients/GetActiveClients",
 //   parentClient:"https://medicaslapiorc.azurewebsites.net/api/Clients/GetParentClient",
-
+//   duplicateClientId: "https://medicaslapiorc.azurewebsites.net/api/Clients/DuplicateClientID?clientId=",
+//   duplicateClientName: "https://medicaslapiorc.azurewebsites.net/api/Clients/DuplicateClient?client=",
 
 
 //   roles: "https://medicaslapiorc.azurewebsites.net/api/Roles/GetAllRoles",
@@ -125,6 +126,8 @@ export const Paths = {
   clientUpdate: "http://10.48.30.158:92/api/Clients/UpdateClients",
   activeClients:"http://10.48.30.158:92/api/Clients/GetActiveClients",
   parentClient:"http://10.48.30.158:92/api/Clients/GetParentClient",
+    duplicateClientId: "http://10.48.30.158:92/api/Clients/DuplicateClientID?clientId=",
+    duplicateClientName: "http://10.48.30.158:92/api/Clients/DuplicateClient?client=",
 
 
 

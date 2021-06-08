@@ -22,7 +22,12 @@ export class ClientsService {
  getActiveClients(){
   return this.http.get<IActiveClient[]>(Paths.activeClients);
 }
-
+checkDuplicateAccountId(accId: string){
+  return this.http.get(Paths.duplicateClientId+accId).pipe(catchError(this.handleError.bind(this)));
+}
+checkDuplicateAccountName(name: string){
+  return this.http.get(Paths.duplicateClientName+name).pipe(catchError(this.handleError.bind(this)));
+}
 getParentClient(){
   return this.http.get<IParentClient[]>(Paths.parentClient);
 }

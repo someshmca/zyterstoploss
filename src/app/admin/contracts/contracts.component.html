@@ -116,34 +116,32 @@
                </select>                 
               </div>       
              </div>
-             <div class="col-md-4">
+             <!-- <div class="col-md-4">
               <div class="form-group">
                 <label>Claim Adminstrator </label>
                 <input type="text" formControlName="claimsAdministrator" class="form-control" />
               </div>
-             </div>
-            </div>
-            <div class="row">
-              <div class="col-md-4">
-                <div class="form-group">
-                 <label>Pharmacy Claims Administrator  </label>
-                 <input type="text" formControlName="pharmacyClaimsAdministrator" class="form-control" />
-               </div>
-              </div>
+             </div> -->
               <div class="col-md-4">
                 <div class="form-group">
                   <label>Contract Start Date<small class="starmark">*</small></label>
                   <input type="date" value="MM/dd/yyyy" formControlName="startDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.startDate.errors}" max="2999-12-31" /> 
                 </div>
               </div>
+            </div>
+            <div class="row">
+              <!-- <div class="col-md-4">
+                <div class="form-group">
+                 <label>Pharmacy Claims Administrator  </label>
+                 <input type="text" formControlName="pharmacyClaimsAdministrator" class="form-control" />
+               </div>
+              </div> -->
               <div class="col-md-4">
                 <div class="form-group">
                   <label>Contract End Date<small class="starmark">*</small></label>
                   <input type="date" value="MM/dd/yyyy" formControlName="endDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.endDate.errors }" max="2999-12-31"/> 
                 </div>
               </div>
-            </div>
-            <div class="row">
               <div class="col-md-4">
                 <div class="form-group">
                   <label>Run In Start Date</label>
@@ -156,14 +154,14 @@
                   <input type="date" value="MM/dd/yyyy" formControlName="runInEndDate" class="form-control" max="2999-12-31"/> 
                 </div>
               </div>
+            </div>
+            <div class="row">
               <div class="col-md-4">
                 <div class="form-group">
                   <label>Run Out Start Date</label>
                   <input type="date" value="MM/dd/yyyy" formControlName="runOutStartDate" class="form-control" max="2999-12-31" /> 
                 </div>
               </div>
-            </div>
-            <div class="row">
               <div class="col-md-4">
                 <div class="form-group">
                   <label>Run Out End Date</label>
@@ -176,7 +174,21 @@
                   <input type="date" value="MM/dd/yyyy" formControlName="terminationDate" class="form-control" max="2999-12-31" /> 
                 </div>  
               </div>
-              <div class="col-md-4" *ngIf="!isAddMode">
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Description</label>
+                  <input type="text"  formControlName="description" class="form-control"/> 
+                </div>  
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Policy Year</label>
+                  <input type="text" maxlength="10" formControlName="policyYear" class="form-control"/> 
+                </div>  
+              </div>
+              <!-- <div class="col-md-4" *ngIf="!isAddMode">
                   <div class="form-group switch-group">
                     Active
                       <label class="switch">
@@ -184,7 +196,7 @@
                         <span class="slider round"></span>
                       </label>                  
                 </div> 
-              </div>
+              </div> -->
             </div>
            </div>
            

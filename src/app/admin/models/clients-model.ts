@@ -6,6 +6,12 @@ export interface IClient{
   startDate: string;
   endDate: string;
   parentID:string;
+  claimsAdministrator: string;
+  pharmacyClaimsAdministrator: string;
+  subAccountid: string;
+  subSubAccountid: string;
+  ftn: string;
+  ftnname: string;
   createdon: string;
 }
   
@@ -38,6 +44,12 @@ export interface IClientAdd{
   parentID:string;
   userId:string; 
   createdon: string;
+  claimsAdministrator: string;
+  pharmacyClaimsAdministrator: string;
+  subAccountid: string;
+  subSubAccountid: string;
+  ftn: string;
+  ftnname: string;
 }
 
 
@@ -54,6 +66,12 @@ export interface IClientUpdate{
   endDate: Date;
   parentID:string;
   userId:string;
+  claimsAdministrator: string;
+  pharmacyClaimsAdministrator: string;
+  subAccountid: string;
+  subSubAccountid: string;
+  ftn: string;
+  ftnname: string;
   createdon: string;
  }
 

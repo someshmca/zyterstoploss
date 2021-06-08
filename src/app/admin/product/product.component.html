@@ -104,20 +104,21 @@
                 <div class="form-group">
                   <label>Contract ID<small class="starmark">*</small></label>
                   <select class="form-control" formControlName="contractId" [ngClass]="{ 'is-invalid': submitted && f.contractId.errors }" disabled="true">
-                     <option *ngFor="let obj of contractsByClientId" [value]="obj.contractId">
-                      {{obj.contractId}} ({{obj.description}})
+                     <option value='' *ngIf="isAddMode"></option>
+                    <option *ngFor="let obj of contractsByClientId" [value]="obj.contractId">
+                      {{obj.contractId}} <span *ngIf="obj.description.length>0">({{obj.description}})</span>
                     </option> 
                   </select>
                 </div>
               </div>
               <div class="col-md-4">
-                <div class="form-group switch-group" *ngIf="!isAddMode">
+                <!-- <div class="form-group switch-group" *ngIf="!isAddMode">
                   Active
                     <label class="switch">
                       <input type="checkbox" class="success" formControlName="status">
                       <span class="slider round"></span>
                     </label>                  
-              </div> 
+                </div>  -->
               </div>
             </div>
             <h1 class="text-primary">Specific Stop Loss</h1>

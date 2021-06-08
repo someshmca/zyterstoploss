@@ -89,7 +89,8 @@ export class ContractsComponent implements OnInit {
       userId:this.loginService.currentUserValue.name,
       ftn: '',
       ftnName: '',
-      policyYear: 0,
+      policyYear: '',
+      description: ''
     }
       
      );    
@@ -134,7 +135,9 @@ export class ContractsComponent implements OnInit {
         runOutStartDate: this.datePipe.transform(this.updateObj[0].runOutStartDate, 'yyyy-MM-dd'),
         runOutEndDate: this.datePipe.transform(this.updateObj[0].runOutEndDate, 'yyyy-MM-dd'),
         terminationDate:this.datePipe.transform(this.updateObj[0].terminationDate, 'yyyy-MM-dd'),
-        status:this.updateObj[0].status  
+        status:this.updateObj[0].status,
+        policyYear: this.updateObj[0].policyYear,
+        description: this.updateObj[0].description
       });
       
     })
@@ -211,6 +214,7 @@ clearErrorMessages(){
       let flag:boolean= false;
       this.alertService.clear();
       this.clearErrorMessages();
+      let a:Date;
       let startDateValue=this.f.startDate.value;
       let endDateValue=this.f.endDate.value;
       let runInStartValue=this.f.runInStartDate.value;
@@ -218,6 +222,14 @@ clearErrorMessages(){
       let runOutStartValue= this.f.runOutStartDate.value;
       let runOutEndValue=this.f.runOutEndDate.value;
       let terminationDateValue=this.f.terminationDate.value;
+      // 
+      // a = startDateValue;
+      // let d=new Date(startDateValue);
+      // console.log("Current date "+this.datePipe.transform(d.setDate(d.getDate()+1), 'MM-dd-yyyy'));
+      // this.contractForm.patchValue({
+      //   runInEndDate: this.datePipe.transform(d.setDate(d.getDate()+1), 'MM-dd-yyyy')
+      // });
+      // 
       
      if (this.contractForm.invalid) {
       return;
@@ -253,6 +265,7 @@ clearErrorMessages(){
                       return;
                     }
                   }
+                
                   if(startDateValue==null || startDateValue==''){
                     this.startDateErr.isDateErr=true;
                     this.startDateErr.dateErrMsg = 'Contract start date should not be empty or Invalid';  
@@ -270,6 +283,16 @@ clearErrorMessages(){
                       this.runInStartErr.isDateErr=true;
                       this.runInStartErr.dateErrMsg = 'Run-In Start date should not be greater than Run-In End date';  
                       flag=false;          
+                      return;
+                    }
+                    const newDate = new Date(startDateValue);
+                    const runInEndValueDate = new Date(runInEndValue);
+                    const startDateValueRed = new Date(newDate.setDate(newDate.getDate()-1));
+                    console.log(' Date ', startDateValueRed, runInEndValue, runInEndValueDate.getTime() !== startDateValueRed.getTime());
+                    if(runInEndValueDate.getTime() !== startDateValueRed.getTime() ){                    
+                      this.runInEndErr.isDateErr=true;
+                      this.runInEndErr.dateErrMsg = 'Run-In End date should be one day lessthan Contract Start Date';
+                      flag=false;                            
                       return;
                     }
                   }
@@ -292,6 +315,16 @@ clearErrorMessages(){
                     flag=false;           
                     return;
                   }
+                  const newEndDate = new Date(endDateValue);
+                  const runOutStartValueDate = new Date(runOutStartValue);
+                  const endDateValueRed = new Date(newEndDate.setDate(newEndDate.getDate()+1));
+                  
+                    if(runOutStartValueDate.getTime() !== endDateValueRed.getTime() ){                    
+                      this.runOutStartErr.isDateErr=true;
+                      this.runOutStartErr.dateErrMsg = 'Run-Out Start date should be one day greaterthan Contract End Date';
+                      flag=false;
+                      return;
+                    }
                 }
                 if((runOutStartValue==null || runOutStartValue=='') && runOutEndValue!='' && runOutEndValue!=null){
                   this.runOutStartErr.isDateErr=true;
@@ -376,7 +409,8 @@ clearErrorMessages(){
       userId: this.loginService.currentUserValue.name,
       ftn: '',
       ftnName: '',
-      policyYear: null
+      policyYear: this.f.policyYear.value,
+      description: this.f.description.value
     }
     if(addObj.runInStartDate=='')
       addObj.runInStartDate = null;
@@ -425,7 +459,8 @@ clearErrorMessages(){
           userId: this.loginService.currentUserValue.name,
           ftn: '',
           ftnName: '',
-          policyYear: null,   
+          policyYear: this.f.policyYear.value,   
+          description: this.f.description.value
         };
         if(updateConObj.runInStartDate=='')
           updateConObj.runInStartDate = null;

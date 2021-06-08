@@ -352,15 +352,21 @@ if(aslTermVal!='' && this.productForm.valid){
     if(id!=null && open){
       this.isAddMode = false;
       this.isEditSelected = true;
+
       this.f.clientId.disable();
       this.f.contractId.disable();
+      
+
       this.productService.getProduct(id.productId).subscribe(x => {     
         this.uProductId = x[0].productId;  
         this.uClientId = x[0].clientId,
         this.uContractId = x[0].contractId,
+        this.getContractIDs(this.uClientId);
+        
         console.log(x[0].productId);  
         console.log("Account "+this.uClientId);
         console.log("Contract ID "+this.uContractId);
+             console.log("x of 0 id "+x[0].contractId);
              
         this.getContractIDs(x[0].clientId);
             this.productForm.patchValue({
@@ -424,7 +430,6 @@ if(aslTermVal!='' && this.productForm.valid){
 
 private addProduct() {   
   
-  this.isDisabled=true;
   console.log(this.addObj);
   this.productForm.patchValue({
     contractId: this.contractsByClientId[0].contractId,
@@ -479,7 +484,7 @@ private addProduct() {
       .pipe(first())
       .subscribe({ 
           next: () => {
-            
+            this.isDisabled=true;            
             this.openCustomModal(false, null);
             this.getAllProducts();
            
@@ -498,7 +503,6 @@ private addProduct() {
 
   private updateProduct() { 
   
-    this.isDisabled=true;
     this.f.clientId.enable();
     this.f.contractId.enable();
 
@@ -541,6 +545,7 @@ private addProduct() {
           .pipe(first())
           .subscribe({
               next: () => {
+                this.isDisabled=true;
                   this.getAllProducts();
                   
                   this.openCustomModal(false,null); 

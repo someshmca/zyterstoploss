@@ -13,6 +13,10 @@ export interface IContract{
     status: number;
     userId: string;
     clientName: string;
+    ftn: string;
+    ftnName: string;
+    policyYear: number;
+    description: string;
 }
 
 export interface IContractIDRequest{
@@ -35,6 +39,10 @@ export interface IContractsByClient{
     status: number;
     userId: string;
     clientName: string;
+    ftn: string;
+    ftnName: string;
+    policyYear: number;
+    description: string;
 }
 
 export interface IContractAdd{
@@ -54,6 +62,7 @@ export interface IContractAdd{
     ftn: string;
     ftnName: string;
     policyYear: number;
+    description: string;
 }
 
 export interface IAddContractSuccess{
@@ -75,6 +84,10 @@ export interface IContractUpdate{
     terminationDate: string;
     status: number;
     userId:string;
+    ftn: string;
+    ftnName: string;
+    policyYear: string;
+    description: string;
 }
 export interface IActiveClient{
     clientId: string;

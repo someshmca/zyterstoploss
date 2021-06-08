@@ -53,10 +53,10 @@
                         <th mat-header-cell *matHeaderCellDef mat-sort-header> End Date </th>
                         <td mat-cell *matCellDef="let element"> {{element.endDate | date:'MM/dd/yyyy'}} </td>
                       </ng-container>
-                      <ng-container matColumnDef="parentID">
+                      <!-- <ng-container matColumnDef="parentID">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header> Sub Account of </th>
                         <td mat-cell *matCellDef="let element"> {{element.parentName}} </td>
-                      </ng-container>
+                      </ng-container> -->
 
                       <!-- Action Column -->
                       <ng-container matColumnDef="userId">
@@ -106,12 +106,14 @@
                <div *ngIf="clientForm.errors">{{ clientForm.errors?.dates | json }}</div>
                <div *ngIf="startDateErr.isDateErr">{{startDateErr.dateErrMsg}}</div>
                <div *ngIf="endDateErr.isDateErr">{{endDateErr.dateErrMsg}}</div>
+               <div *ngIf="accNameErr.isDuplicate">{{accIdErr.errMsg}}</div>
+               <div *ngIf="accNameErr.isDuplicate">{{accNameErr.errMsg}}</div>
             </div>  
              <div class="row">
               <div class="col-md-6">
                  <div class="form-group">
                    <label>Account ID<small *ngIf="isAddMode" class="starmark">*</small></label>
-             <input #focusElem type="text" maxlength="15" formControlName="clientId" [readonly]="!isAddMode" class="form-control" />
+             <input #focusElem type="text" maxlength="15" formControlName="clientId" [readonly]="!isAddMode" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.clientId.errors }" />
                  </div>
                 </div>
                 <div class="col-md-6">
@@ -138,18 +140,19 @@
               <div class="row">
                 <div class="col-md-6">
                   <div class="form-group">
-                    <label>Sub Account of</label>
-                    <select formControlName="parentID" class="form-control">
+                    <label>Sub Account ID</label>                            
+                    <input type="text" value="" formControlName="subAccountid" class="form-control"  maxlength="25"/>   
+                    <!-- <select formControlName="parentID" class="form-control"> -->
                       <!-- <option *ngFor="let client of parentClientIds; let index=i" [selected]="i==2?true:null" [value]="client.parentID">
                         {{client.parentName}}
                       </option> -->
-                      <option *ngFor="let client of activeClients; let index=i" [selected]="i==2?true:null" [value]="client.clientId">
+                      <!-- <option *ngFor="let client of activeClients; let index=i" [selected]="i==2?true:null" [value]="client.clientId">
                         {{client.clientName}}
-                      </option>
-                    </select>
+                      </option> -->
+                    <!-- </select> -->
                   </div>  
                 </div>
-                <div class="col-md-6">
+                <!-- <div class="col-md-6">
                   <div class="form-group switch-group" *ngIf="!isAddMode">
                     Active
                       <label class="switch">
@@ -157,8 +160,42 @@
                         <span class="slider round"></span>
                       </label>                  
                     </div> 
+                </div> -->
+                <div class="col-md-6">
+                  <div class="form-group">                          
+                    <label>Sub Sub-Account ID</label>                          
+                    <input type="text" value="" formControlName="subSubAccountid" class="form-control"  maxlength="25"/>                      
+                   </div>
                 </div>
-              </div>                      
+              </div>    
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">                          
+                    <label>FTN</label>                          
+                    <input type="text" value="" formControlName="ftn" class="form-control"  maxlength="50"/>                      
+                   </div>
+                </div>     
+                <div class="col-md-6">
+                  <div class="form-group">                          
+                    <label>FTN Name</label>                          
+                    <input type="text" value="" formControlName="ftnname" class="form-control"  maxlength="50"/>                      
+                   </div>
+                </div>                
+              </div>    
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">                          
+                    <label>Claims Administrator</label>                          
+                    <input type="text" value="" formControlName="claimsAdministrator" class="form-control"  maxlength="50"/>                      
+                   </div>
+                </div>     
+                <div class="col-md-6">
+                  <div class="form-group">                          
+                    <label>Pharmacy Claims Administrator</label>                          
+                    <input type="text" value="" formControlName="pharmacyClaimsAdministrator" class="form-control"  maxlength="50"/>                      
+                   </div>
+                </div>                
+              </div>                     
                
              
           <div class="modal-footer-btns">
