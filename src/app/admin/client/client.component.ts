@@ -42,6 +42,8 @@ export class ClientComponent implements OnInit {
   submitted = false;
   ustartDate:string;
   uendDate:string;
+  uAccountId: string;
+  uAccountName: string;
   parentCLientId:string;
   select:boolean;
   parentClientIds: IParentClient[];
@@ -168,25 +170,45 @@ checkDuplicateAccountName(aname){
       this.accNameStatus = data;
       if(this.accNameStatus>0){
         this.accNameErr.isDuplicate=true;
-        this.accNameErr.errMsg='The account name '+this.f.clientName.value+' already exists. Please enter different Account Name'; 
-        
+        this.accNameErr.errMsg='The account name '+this.f.clientName.value+' already exists. Please enter different Account Name';    
+             
         return;       
       }
     }
   );
 }
-checkDuplicateAccountId(aid){
-  this.clientsService.checkDuplicateAccountId(aid).subscribe(
-    (data)=>{
-      this.accIdStatus = data;
+// async fetchData(){
+//   const data = await this.httpClient.get(this.apiUrl).toPromise();
+//   console.log("Data: " + JSON.stringify(data)); 
+// }
+async checkDuplicateAccountId(aid){
+  const promise = this.clientsService.checkDuplicateAccountId(aid).toPromise();
+  promise.then((data)=>{
+    console.log("Promise resolved with: " + data);
+    this.accIdStatus = data;
       if(this.accIdStatus>0){
         this.accIdErr.isDuplicate=true;
-        this.accIdErr.errMsg='The account Id '+this.f.clientId.value+' already exists. Please enter different Account Id'; 
+        this.accIdErr.errMsg='The account Id '+this.f.clientId.value+' already exists. Please enter different Account Id';
         
+                 
         return;       
       }
-    }
-  );
+    
+  }).catch((error)=>{
+    console.log("Promise rejected with " + JSON.stringify(error));
+  });
+
+
+  // (
+  //   (data)=>{
+  //     this.accIdStatus = data;
+  //     if(this.accIdStatus>0){
+  //       this.accIdErr.isDuplicate=true;
+  //       this.accIdErr.errMsg='The account Id '+this.f.clientId.value+' already exists. Please enter different Account Id';         
+  //       return;       
+  //     }
+  //   }
+  // );
 }
   openCustomModal(open: boolean, id:any) {
     setTimeout(()=>{
@@ -207,18 +229,16 @@ checkDuplicateAccountId(aid){
     }
     this.getAllClients();
     console.log("id inside modal: "+id);
-
+    this.clientForm.patchValue(this.clientForm.value);
     if(id!=null && open){
       this.isAddMode = false;
       // this.getClient(id);
       //id.status==1?this.clientForm.get('status').setValue(true):this.clientForm.get('status').setValue(false);
       //this.clientForm.get('status').value)==true?1:0,
-      
       if(id!=null){
         //this.selectedValue=id.parentID;
         this.isAddMode = false;
-        this.ustartDate = this.datePipe.transform(id.startDate, 'yyyy-MM-dd');
-        this.uendDate = this.datePipe.transform(id.endDate, 'yyyy-MM-dd');
+        
         // this.parentClientIds.filter(item => {
         //   item.parentName == id.clientName;
         //   if(item.parentName == id.clientName){
@@ -258,6 +278,11 @@ checkDuplicateAccountId(aid){
             createdon: x[0].createdon
             //: id.clientId
           });
+          this.uAccountName = this.f.clientName.value;
+          this.uAccountId = this.f.clientId.value;
+          this.ustartDate = this.datePipe.transform(id.startDate, 'yyyy-MM-dd');
+          this.uendDate = this.datePipe.transform(id.endDate, 'yyyy-MM-dd');
+          
         }
       );
 
@@ -306,12 +331,42 @@ checkDuplicateAccountId(aid){
       // stop here if form is invalid
       let startDateValue=this.f.startDate.value;
       let endDateValue=this.f.endDate.value;
+      
       if(this.clientForm.valid){
-          this.checkDuplicateAccountName(this.f.clientName.value);
+        if(!this.isAddMode){
+            console.log("uAccountName : "+this.uAccountName.toLowerCase());
+            console.log(this.f.clientName.value.toLowerCase());
+            
+            if(this.uAccountName.toLowerCase()!=this.f.clientName.value.toLowerCase()){
+              // this.accNameErr.isDuplicate=true;
+              // this.accNameErr.errMsg = 'You shoud not enter same Account Name again';  
+              this.checkDuplicateAccountName(this.f.clientName.value);
+              return;
+            }
+        }
+        if(this.isAddMode){
           this.checkDuplicateAccountId(this.f.clientId.value);
+          if(this.accIdStatus>0 && this.accNameStatus==0){
+            this.accIdErr.isDuplicate=true;
+            this.accIdErr.errMsg="Accound ID is already available. Please enter different Account ID";
+            return;
+          }
+          
+          this.checkDuplicateAccountName(this.f.clientName.value);
+        }
+          if(this.accIdStatus==0 && this.accNameStatus>0){
+            this.accNameErr.isDuplicate=true;
+            this.accNameErr.errMsg="Accound Name is already available. Please enter different Account Name";
+            return;
+          }
+          if(this.accNameStatus>0){
+            this.accNameErr.isDuplicate=true;
+            this.accNameErr.errMsg="Accound Name is already available. Please enter different Account Name";
+            return;
+          }
           console.log("acc id status "+this.accIdStatus);
           console.log('acc name status '+this.accNameStatus);
-          
+        
           if(startDateValue!=null && endDateValue!=null && startDateValue!='' && endDateValue!=''){
             if(startDateValue > endDateValue){
               this.startDateErr.isDateErr=true;

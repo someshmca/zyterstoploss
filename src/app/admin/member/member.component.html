@@ -8,8 +8,11 @@
             </div>
             <div class="card-body">
               <div class="mandate-fields">
-                <span *ngIf="memSearchSubmitted && !memberSearchForm.valid">Please enter atleast one field</span>
-                <span *ngIf="noSearchFieldEntered">Please enter atleast one field</span>
+                <div *ngIf="memSearchSubmitted && !memberSearchForm.valid">Please enter atleast one field</div>
+                <div *ngIf="noSearchFieldEntered">Please enter atleast one field</div>
+                <div *ngIf="memIdErr.isValid">{{memIdErr.errMsg}}</div>
+                <div *ngIf="memStartDateErr.isValid">{{memStartDateErr.errMsg}}</div>
+                <div *ngIf="memEndDateErr.isValid">{{memEndDateErr.errMsg}}</div>
               </div>  
                 <div class="form-row">
                 <div class="form-field">
@@ -58,19 +61,19 @@
                 <div class="form-field">
                     <label class="form-field-label">Member Start Date</label>
                     <div class="form-field-input">
-                        <input type="date" value="MM/DD/YYYY" class="form-control field-input-text" formControlName="MemberStartDate"/>
+                        <input type="date" value="MM/DD/YYYY" class="form-control field-input-text" formControlName="MemberStartDate" max="2999-12-31" />
                     </div>
                 </div>
                 <div class="form-field">
                     <label class="form-field-label">Member End Date</label>
                     <div class="form-field-input">
-                        <input type="date" value="MM/DD/YYYY" class="form-control field-input-text" formControlName="MemberEndDate"/>
+                        <input type="date" value="MM/DD/YYYY" class="form-control field-input-text" formControlName="MemberEndDate" max="2999-12-31" />
                     </div>
                 </div>
                 <div class="form-field">
                     <label class="form-field-label">Birth Date</label>
                     <div class="form-field-input">
-                        <input type="date" value="MM/DD/YYYY" class="form-control field-input-text" formControlName="DateOfBirth"/>
+                        <input type="date" value="MM/DD/YYYY" class="form-control field-input-text" formControlName="DateOfBirth" max="2999-12-31" />
                     </div>
                 </div>
                 <!-- <div class="form-field">

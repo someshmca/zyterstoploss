@@ -546,11 +546,11 @@ private addProduct() {
           .subscribe({
               next: () => {
                 this.isDisabled=true;
-                  this.getAllProducts();
                   
-                  this.openCustomModal(false,null); 
                   this.productForm.reset();   
                   this.clearErrorMessages();
+                  this.getAllProducts();
+                  this.openCustomModal(false,null); 
                   this.alertService.success('Product updated', { 
                     keepAfterRouteChange: true });
                  // this.router.navigate(['../../'], { relativeTo: this.route });                    

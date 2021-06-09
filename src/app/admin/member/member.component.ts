@@ -56,6 +56,10 @@ export class MemberComponent implements OnInit {
   show: boolean = true;
 
   memberSearchErr: any;
+  memIdErr = {isValid: false, errMsg: ''};
+  memStartDateErr = {isValid: false, errMsg: ''};
+  memEndDateErr = {isValid: false, errMsg: ''};
+
   isSearchDataThere: boolean = false;
   noSearchResultsFound: boolean = false;
   uMemberId: any;
@@ -94,8 +98,17 @@ export class MemberComponent implements OnInit {
       //this.focusTag.nativeElement.focus();
     }, 200);
     this.getActiveClients();
+    this.clearErrorMessages();
   }  // end of ngOnInit 
 
+  clearErrorMessages(){  
+    this.memIdErr.isValid=false;
+    this.memIdErr.errMsg='';
+    this.memStartDateErr.isValid=false;
+    this.memStartDateErr.errMsg='';
+    this.memEndDateErr.isValid=false;
+    this.memEndDateErr.errMsg='';
+  }
   initMemberSearchForm(){    
     this.memberSearchForm = this.mb.group({
       MemberId: [''],
@@ -145,12 +158,14 @@ export class MemberComponent implements OnInit {
     this.initMemberSearchForm();
     this.isSearchDataThere= false;
     this.memSearchError=false;
-    this.noSearchFieldEntered=false;    
+    this.noSearchFieldEntered=false; 
+    this.clearErrorMessages();   
   }
   searchMember(formData: FormGroup){
     this.memSearchSubmitted = true;
     this.memSearchError=false;
    // console.log(formData.get());
+   this.clearErrorMessages();
    let memberId = this.memberSearchForm.get('MemberId').value.trim();
    let fname=this.memberSearchForm.get("Fname").value.trim();
    let mname=this.memberSearchForm.get("Mname").value.trim();   
@@ -161,7 +176,37 @@ export class MemberComponent implements OnInit {
    let memberStartDate=this.memberSearchForm.get("MemberStartDate").value;
    let memberEndDate=this.memberSearchForm.get("MemberEndDate").value;
     console.log(this.memberSearchForm.value);
+    //let alphaNum = /^([a-zA-Z0-9 ]+)$/; 
+    let num1 = /^([0-9]+)$/; 
+    console.log(num1.test(memberId));
+    let a1=num1.test(memberId);
     
+    if(memberStartDate!=null && memberStartDate!='' && memberEndDate!=null && memberEndDate!=''){
+      if(memberStartDate>memberEndDate){
+      this.memStartDateErr.isValid=true;
+      this.memSearchError=false;
+      this.memStartDateErr.errMsg='Member Start Date should not be greater than Member End Date';
+      return;
+      }
+    }
+    if((memberStartDate==null || memberStartDate=='') && (memberEndDate!=null && memberEndDate!='')){
+      this.memStartDateErr.isValid=true;
+      this.memSearchError=false;
+      this.memStartDateErr.errMsg='Member Start Date should not be empty or Invalid';
+      return;
+    }
+    if((memberEndDate==null || memberEndDate=='') && (memberStartDate!=null && memberStartDate!='')){
+      this.memEndDateErr.isValid=true;
+      this.memSearchError=false;
+      this.memEndDateErr.errMsg='Member End Date should not be empty or Invalid';
+      return;
+    }
+    if(!a1 && memberId!=''){
+      this.memIdErr.isValid=true;
+      this.memIdErr.errMsg='Member Id is not valid. It should be a number';
+      return;
+
+    }
    // stop here if form is invalid
    if (this.memberSearchForm.invalid || this.memberSearchForm.value=='') {
      this.memSearchError=true;
@@ -170,14 +215,14 @@ export class MemberComponent implements OnInit {
    if(memberId=='' && fname=='' && mname=='' && lname=='' && subscriberId=='' && dob=='' && Gender=='' && memberStartDate=='' && memberEndDate==''){
     this.noSearchFieldEntered = true;
      return;
-   } 
+   }
    console.log(JSON.stringify(formData.value));
    console.log(this.m.Gender.value);
    console.log(memberId);
    this.memberService.memberSearch(memberId,fname,mname, lname, subscriberId, dob, Gender, memberStartDate, memberEndDate).subscribe(
      (data:IMemberSearchResponse[])=>{
-       debugger;
        console.log(data);
+       this.clearErrorMessages();
        console.log(data[0].memberId)
        if(data==null || data.length==0){
          console.log("Records are Empty");
@@ -199,11 +244,11 @@ export class MemberComponent implements OnInit {
        },700)
      }, (error) => {
        console.log("no record found");
-       
        this.isSearchDataThere = false;
        this.memSearchError = true;
        this.noSearchFieldEntered = false;
        this.searchErrorMessage = error.message;
+       this.clearErrorMessages();       
      }
    )
   }
@@ -228,7 +273,7 @@ export class MemberComponent implements OnInit {
       this.isAddMode = false;      
       if(id!=null){
         console.log(id);
-        debugger;
+        
           this.uMemberId = id.memberHrid;
           setTimeout(()=>{
             this.uClientId=id.clientId;
@@ -258,17 +303,20 @@ export class MemberComponent implements OnInit {
             });
 
           },900);
+          console.log(id.isUnlimited);
+          
+          
           console.log(this.memberForm.value);
           this.memberForm.disable();
           this.f.laserValue.enable();
-          this.f.isUnlimited.enable();  
-          if(this.f.isUnlimited.value){
+          this.f.isUnlimited.enable(); 
+          if(this.f.isUnlimited.value || id.isUnlimited=='Y'){
             this.memberForm.patchValue({
               laserValue: 0
             });
             this.f.laserValue.disable();
           } 
-          this.isUnlimitedChecked();
+          //this.isUnlimitedChecked();
        }        
   }
 }
@@ -277,6 +325,7 @@ isUnlimitedChecked(){
     this.memberForm.patchValue({
       laserValue: 0
     });
+
     this.f.laserValue.disable();
   }
   else{
@@ -359,7 +408,7 @@ private addMember() {
       createdOn:null,
       updatedOn:null  
       }
-      debugger;
+      
       this.memberService.updateMember(updateMemberObj)
           .pipe(first())
           .subscribe({

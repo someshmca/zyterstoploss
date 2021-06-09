@@ -15,6 +15,7 @@
 .excelupload-controls .form-control{
     max-width: 500px;
     padding: 0;
+    height: 27px;
 }
 .excelupload-controls .custom-file-input{
    cursor: pointer;

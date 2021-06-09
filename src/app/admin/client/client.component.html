@@ -106,7 +106,7 @@
                <div *ngIf="clientForm.errors">{{ clientForm.errors?.dates | json }}</div>
                <div *ngIf="startDateErr.isDateErr">{{startDateErr.dateErrMsg}}</div>
                <div *ngIf="endDateErr.isDateErr">{{endDateErr.dateErrMsg}}</div>
-               <div *ngIf="accNameErr.isDuplicate">{{accIdErr.errMsg}}</div>
+               <div *ngIf="accIdErr.isDuplicate">{{accIdErr.errMsg}}</div>
                <div *ngIf="accNameErr.isDuplicate">{{accNameErr.errMsg}}</div>
             </div>  
              <div class="row">

@@ -156,3 +156,10 @@ input[type='date'].form-control{
 .alert{
     padding: 5px 10px !important;
 }
+.form-control:disabled, 
+.form-control[readonly] {
+    background-color: #f2f3f5;
+    opacity: 1;
+    cursor: default;
+}
+
