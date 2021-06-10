@@ -259,14 +259,17 @@ async checkDuplicateAccountId(aid){
         console. log(index);
         
         this.activeClients.splice(index, 1);
-
+        this.ustartDate = this.datePipe.transform(id.startDate, 'yyyy-MM-dd');
+        this.uendDate = this.datePipe.transform(id.endDate, 'yyyy-MM-dd');
+        
         this.clientsService.getClient(id.clientId).subscribe(x => {
+          
         console.log(x[0].clientId);
          this.clientForm.patchValue({
             clientId:x[0].clientId,
             clientName:x[0].clientName,        
-            startDate: this.ustartDate,
-            endDate: this.uendDate,
+            startDate:  this.datePipe.transform(x[0].startDate, 'yyyy-MM-dd'),
+            endDate:  this.datePipe.transform(x[0].endDate, 'yyyy-MM-dd'),
             //parentID:id.parentID,
             claimsAdministrator: x[0].claimsAdministrator,
             pharmacyClaimsAdministrator: x[0].pharmacyClaimsAdministrator,
@@ -278,15 +281,10 @@ async checkDuplicateAccountId(aid){
             createdon: x[0].createdon
             //: id.clientId
           });
-          this.uAccountName = this.f.clientName.value;
-          this.uAccountId = this.f.clientId.value;
-          this.ustartDate = this.datePipe.transform(id.startDate, 'yyyy-MM-dd');
-          this.uendDate = this.datePipe.transform(id.endDate, 'yyyy-MM-dd');
-          
-        }
-      );
-
-       
+          this.uAccountName = x[0].clientName;
+        });
+        //this.uAccountId = this.f.clientId.value;
+               
         
        }
 
@@ -333,37 +331,36 @@ async checkDuplicateAccountId(aid){
       let endDateValue=this.f.endDate.value;
       
       if(this.clientForm.valid){
-        if(!this.isAddMode){
-            console.log("uAccountName : "+this.uAccountName.toLowerCase());
-            console.log(this.f.clientName.value.toLowerCase());
+         if(!this.isAddMode){
+        //     console.log("uAccountName : "+this.uAccountName.toLowerCase());
+        //     console.log(this.f.clientName.value.toLowerCase());
             
             if(this.uAccountName.toLowerCase()!=this.f.clientName.value.toLowerCase()){
-              // this.accNameErr.isDuplicate=true;
-              // this.accNameErr.errMsg = 'You shoud not enter same Account Name again';  
               this.checkDuplicateAccountName(this.f.clientName.value);
-              return;
-            }
-        }
+            } 
+         }
         if(this.isAddMode){
           this.checkDuplicateAccountId(this.f.clientId.value);
-          if(this.accIdStatus>0 && this.accNameStatus==0){
-            this.accIdErr.isDuplicate=true;
-            this.accIdErr.errMsg="Accound ID is already available. Please enter different Account ID";
-            return;
-          }
+          // if(this.accIdStatus>0 && this.accNameStatus==0){
+          //   this.accIdErr.isDuplicate=true;
+          //   this.accIdErr.errMsg="Accound ID is already available. Please enter different Account ID";
+          //   return;
+          // }
           
           this.checkDuplicateAccountName(this.f.clientName.value);
         }
-          if(this.accIdStatus==0 && this.accNameStatus>0){
-            this.accNameErr.isDuplicate=true;
-            this.accNameErr.errMsg="Accound Name is already available. Please enter different Account Name";
-            return;
-          }
-          if(this.accNameStatus>0){
-            this.accNameErr.isDuplicate=true;
-            this.accNameErr.errMsg="Accound Name is already available. Please enter different Account Name";
-            return;
-          }
+        
+        //this.checkDuplicateAccountName(this.f.clientName.value);
+          // if(this.accIdStatus==0 && this.accNameStatus>0){
+          //   this.accNameErr.isDuplicate=true;
+          //   this.accNameErr.errMsg="Accound Name is already available. Please enter different Account Name";
+          //   return;
+          // }
+          // if(this.accNameStatus>0){
+          //   this.accNameErr.isDuplicate=true;
+          //   this.accNameErr.errMsg="Accound Name is already available. Please enter different Account Name";
+          //   return;
+          // }
           console.log("acc id status "+this.accIdStatus);
           console.log('acc name status '+this.accNameStatus);
         
@@ -444,6 +441,7 @@ async checkDuplicateAccountId(aid){
                 next: () => {
                     this.isDisabled=true;  
                     this.getAllClients();
+                    this.uAccountName='';
                     this.openCustomModal(false,null); 
                     this.clientForm.reset();
                     this.alertService.success('Client updated', { 

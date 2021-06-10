@@ -23,8 +23,11 @@ export class ClientsService {
   return this.http.get<IActiveClient[]>(Paths.activeClients);
 }
 checkDuplicateAccountId(accId: string){
-  debugger;
+  
   return this.http.get(Paths.duplicateClientId+accId).pipe(catchError(this.handleError.bind(this)));
+}
+getClientDetails(clientId: string){
+  return this.http.get(Paths.getClientDetails+clientId).pipe(catchError(this.handleError.bind(this)));
 }
 checkDuplicateAccountName(name: string){
   return this.http.get(Paths.duplicateClientName+name).pipe(catchError(this.handleError.bind(this)));

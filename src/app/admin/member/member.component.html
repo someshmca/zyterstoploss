@@ -73,7 +73,7 @@
                 <div class="form-field">
                     <label class="form-field-label">Birth Date</label>
                     <div class="form-field-input">
-                        <input type="date" value="MM/DD/YYYY" class="form-control field-input-text" formControlName="DateOfBirth" max="2999-12-31" />
+                        <input type="date" value="MM/DD/YYYY" class="form-control field-input-text" formControlName="DateOfBirth" [max]="today" />
                     </div>
                 </div>
                 <!-- <div class="form-field">

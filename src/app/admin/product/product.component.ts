@@ -15,7 +15,6 @@ import { ClientsService } from '../services/clients.service';
 import { IClient } from '../models/clients-model';
 import {IContractsByClient} from '../models/contracts-model';
 import { LoginService } from 'src/app/shared/services/login.service';
-import { asLiteral } from '@angular/compiler/src/render3/view/util';
 import { ContractService } from '../services/contract.service';
 import {CLAIM_BASIS_CONSTANT} from '../claim-basis.constant';
 @Component({
@@ -489,7 +488,8 @@ private addProduct() {
             this.getAllProducts();
            
             this.productForm.reset();    
-            this.clearErrorMessages();            
+            this.clearErrorMessages();   
+                     
               this.alertService.success('New Product added', { keepAfterRouteChange: true });
               //this.router.navigate(['../'], { relativeTo: this.route });
           },

@@ -54,6 +54,7 @@ export class ContractsComponent implements OnInit {
   isDisabled: boolean;
   @ViewChild("focusElem") focusTag: ElementRef;
   isContractStartDateInvalid: boolean=false;
+  clientDetails: any;
 
   displayedColumns: string[] = ['clientName','contractId', 'description', 'startDate','endDate','clientId'];
   dataSource: any;
@@ -95,13 +96,21 @@ export class ContractsComponent implements OnInit {
       
      );    
   }
-
+  getClientDetails(clientId){
+    this.clientService.getClientDetails(clientId).subscribe(
+      (data)=>{
+        this.clientDetails = data[0];
+        
+      }
+    )
+  }
   getAllContracts(){    
     this.contractService.getAllContracts().subscribe(
       (data: IContract[]) => {
         
           this.contractIDs = data;
           this.contracts = data;
+          
           this.dataSource = new MatTableDataSource(this.contracts);
           this.dataSource.paginator = this.paginator;
           this.dataSource.sort = this.sort;
@@ -114,6 +123,7 @@ export class ContractsComponent implements OnInit {
       (data)=>{
         data.sort((a, b) => (a.clientName > b.clientName) ? 1 : -1);
         this.activeClients = data;
+        
       }
     )
   }
@@ -199,6 +209,8 @@ clearErrorMessages(){
     if(id!=null && open){
       this.isAddMode = false;
       this.getContract(id);
+      this.getClientDetails(id.clientId);
+      
       console.log(this.updateObj);
            
           

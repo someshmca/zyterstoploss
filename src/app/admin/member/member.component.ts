@@ -35,6 +35,7 @@ export class MemberComponent implements OnInit {
   uContractId:any;
   uPlanId:any;
   uTierId:any;
+  today: string;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -92,7 +93,7 @@ export class MemberComponent implements OnInit {
       tierId: ['', Validators.required],
       dateOfBirth: ['', Validators.required]
     });
-    
+    this.today=this.datePipe.transform(new Date(Date.now()), "MM/dd/yyyy");    
     setTimeout(()=>{
       this.focusMSTag.nativeElement.focus();
       //this.focusTag.nativeElement.focus();
