@@ -12,6 +12,9 @@ import { MatSort, Sort } from '@angular/material/sort';
 import {DatePipe} from '@angular/common';
 import { AlertService } from '../services/alert.service';
 import { LoginService } from 'src/app/shared/services/login.service';
+import { combineLatest } from 'rxjs';
+import { ModuleNames } from 'ag-grid-community';
+
 let dp = new DatePipe(navigator.language);
 let p = 'y-MM-dd'; // YYYY-MM-DD
 @Component({
@@ -165,17 +168,20 @@ clearErrorMessages(){
   this.accIdErr.errMsg='';
 }
 checkDuplicateAccountName(aname){
-  this.clientsService.checkDuplicateAccountName(aname).subscribe(
-    (data)=>{
-      this.accNameStatus = data;
-      if(this.accNameStatus>0){
-        this.accNameErr.isDuplicate=true;
-        this.accNameErr.errMsg='The account name '+this.f.clientName.value+' already exists. Please enter different Account Name';    
+  return this.clientsService.checkDuplicateAccountName(aname).toPromise();
+  // promise.then((data)=>{
+  //     //this.accNameStatus = data;
+  //     
+  //     if(data>0){
+  //       this.accNameErr.isDuplicate=true;
+  //       this.accNameErr.errMsg='The account name '+this.f.clientName.value+' already exists. Please enter different Account Name';    
              
-        return;       
-      }
-    }
-  );
+  //      // return;       
+  //     }
+  //   }
+  // ).catch((error)=>{
+  //   console.log("Promise rejected with " + JSON.stringify(error));
+  // });
 }
 // async fetchData(){
 //   const data = await this.httpClient.get(this.apiUrl).toPromise();
@@ -331,23 +337,37 @@ async checkDuplicateAccountId(aid){
       let endDateValue=this.f.endDate.value;
       
       if(this.clientForm.valid){
-         if(!this.isAddMode){
-        //     console.log("uAccountName : "+this.uAccountName.toLowerCase());
-        //     console.log(this.f.clientName.value.toLowerCase());
-            
-            if(this.uAccountName.toLowerCase()!=this.f.clientName.value.toLowerCase()){
-              this.checkDuplicateAccountName(this.f.clientName.value);
-            } 
-         }
         if(this.isAddMode){
-          this.checkDuplicateAccountId(this.f.clientId.value);
-          // if(this.accIdStatus>0 && this.accNameStatus==0){
-          //   this.accIdErr.isDuplicate=true;
-          //   this.accIdErr.errMsg="Accound ID is already available. Please enter different Account ID";
-          //   return;
-          // }
+          const cid= this.clientsService.checkDuplicateAccountId(this.f.clientId.value);
+          const cname = this.clientsService.checkDuplicateAccountName(this.f.clientName.value);
+          const connectStream = combineLatest([cid, cname]);
+          connectStream.subscribe(
+            ([id,name]) => {
+              console.log('client Id : '+id);
+              console.log('client Namem : '+name);
+              if(id>0 && name>0){
+                this.accNameErr.isDuplicate=true;
+                this.accNameErr.errMsg="Accound Name and Account ID already exists";
+                return;
+              }
+              if(id>0){
+                this.accIdErr.isDuplicate=true;
+                this.accIdErr.errMsg="Account ID already exists";
+                return;
+              }
+              if(name>0){
+                this.accNameErr.isDuplicate=true;
+                this.accNameErr.errMsg="Accound Name already exists";
+                return;
+              }
+              this.addClient();
+              
+            });
+            
           
-          this.checkDuplicateAccountName(this.f.clientName.value);
+          // this.checkDuplicateAccountId(this.f.clientId.value);
+          
+          // this.checkDuplicateAccountName(this.f.clientName.value);
         }
         
         //this.checkDuplicateAccountName(this.f.clientName.value);
@@ -361,8 +381,6 @@ async checkDuplicateAccountId(aid){
           //   this.accNameErr.errMsg="Accound Name is already available. Please enter different Account Name";
           //   return;
           // }
-          console.log("acc id status "+this.accIdStatus);
-          console.log('acc name status '+this.accNameStatus);
         
           if(startDateValue!=null && endDateValue!=null && startDateValue!='' && endDateValue!=''){
             if(startDateValue > endDateValue){
@@ -387,10 +405,23 @@ async checkDuplicateAccountId(aid){
       }
 
       this.loading = true;
-      if (this.isAddMode) {
-          this.addClient();
-      } else {
+      if (!this.isAddMode) {
+      
+        if(this.uAccountName.toLowerCase() !== this.f.clientName.value.toLowerCase()){
+          this.checkDuplicateAccountName(this.f.clientName.value).then(data => {
+            if(data>0) {
+              this.accNameErr.isDuplicate=true;
+              this.accNameErr.errMsg='The account name '+this.f.clientName.value+' already exists. Please enter different Account Name'; 
+              return;
+            }
+            else{
+              
+              this.updateClient();
+            }
+          });
+        } else  {
           this.updateClient();
+        } 
           
       }
   }
@@ -431,6 +462,7 @@ async checkDuplicateAccountId(aid){
         status:Boolean(this.clientForm.get('status').value)==true?1:0
         //parentID:String(this.clientForm.get('parentID').value)
       }); 
+      
         if(this.f.startDate.value==''){
           
         }
@@ -439,13 +471,14 @@ async checkDuplicateAccountId(aid){
             .pipe(first())
             .subscribe({
                 next: () => {
-                    this.isDisabled=true;  
                     this.getAllClients();
+                    
                     this.uAccountName='';
                     this.openCustomModal(false,null); 
                     this.clientForm.reset();
                     this.alertService.success('Client updated', { 
                       keepAfterRouteChange: true });
+                    this.isDisabled=true;  
                    // this.router.navigate(['../../'], { relativeTo: this.route });                    
                 },
                 error: error => {

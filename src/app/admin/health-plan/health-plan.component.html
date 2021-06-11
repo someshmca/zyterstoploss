@@ -31,7 +31,7 @@
                <table mat-table matSort #planTable [dataSource]="dataSource" class="table table-bordered table-striped table-hover card-table">
              
                  <ng-container matColumnDef="clientName">
-                   <th mat-header-cell *matHeaderCellDef mat-sort-header > Account </th>
+                   <th mat-header-cell *matHeaderCellDef mat-sort-header > Account Name </th>
                    <td mat-cell *matCellDef="let element"> {{element.clientName}} </td>
                  </ng-container>
                  <ng-container matColumnDef="planCode">

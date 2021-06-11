@@ -483,14 +483,13 @@ private addProduct() {
       .pipe(first())
       .subscribe({ 
           next: () => {
-            this.isDisabled=true;            
-            this.openCustomModal(false, null);
             this.getAllProducts();
-           
             this.productForm.reset();    
-            this.clearErrorMessages();   
+            this.clearErrorMessages();         
+            this.openCustomModal(false, null);           
                      
               this.alertService.success('New Product added', { keepAfterRouteChange: true });
+              this.isDisabled=true;      
               //this.router.navigate(['../'], { relativeTo: this.route });
           },
           error: error => {
@@ -545,14 +544,14 @@ private addProduct() {
           .pipe(first())
           .subscribe({
               next: () => {
-                this.isDisabled=true;
-                  
-                  this.productForm.reset();   
-                  this.clearErrorMessages();
                   this.getAllProducts();
-                  this.openCustomModal(false,null); 
+                  this.openCustomModal(false,null);                     
+                    this.productForm.reset();   
+                    debugger;
+                    this.clearErrorMessages();
                   this.alertService.success('Product updated', { 
                     keepAfterRouteChange: true });
+                    this.isDisabled=true;
                  // this.router.navigate(['../../'], { relativeTo: this.route });                    
               },
               error: error => {
