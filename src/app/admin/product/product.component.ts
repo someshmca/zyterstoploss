@@ -188,15 +188,16 @@ export class ProductComponent implements OnInit {
     })
   }
   getContractIDs(clientId){
-    clientId = Number(clientId);
+    clientId = clientId;
    
     this.contractService.getContractsByClientID(clientId).subscribe((data)=>{
       data.sort((x,y) => x.contractId - y.contractId);
       this.contractsByClientId = data;      
-      this.productForm.patchValue({
-        contractId: this.contractsByClientId
-      })
       
+      this.productForm.patchValue({
+        contractId: this.contractsByClientId[0].contractId
+      })
+      console.log(this.productForm.value);
     })
   }
   getAllContracts(){
@@ -354,13 +355,14 @@ if(aslTermVal!='' && this.productForm.valid){
 
       this.f.clientId.disable();
       this.f.contractId.disable();
+      this.getAllProducts();
       
-
       this.productService.getProduct(id.productId).subscribe(x => {     
+        
         this.uProductId = x[0].productId;  
         this.uClientId = x[0].clientId,
         this.uContractId = x[0].contractId,
-        this.getContractIDs(this.uClientId);
+        this.getContractIDs(x[0].clientId);
         
         console.log(x[0].productId);  
         console.log("Account "+this.uClientId);
@@ -547,7 +549,7 @@ private addProduct() {
                   this.getAllProducts();
                   this.openCustomModal(false,null);                     
                     this.productForm.reset();   
-                    debugger;
+                    
                     this.clearErrorMessages();
                   this.alertService.success('Product updated', { 
                     keepAfterRouteChange: true });

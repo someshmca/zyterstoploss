@@ -37,6 +37,8 @@ export class ContractsComponent implements OnInit {
   isDateValid:boolean;
   contractStartDateErrMsg: any = '';
   contractForm: FormGroup;
+  clientStartDate: any;
+  clientEndDate: any;
     id: string;
     isAddMode: boolean;
     loading = false;
@@ -45,6 +47,7 @@ export class ContractsComponent implements OnInit {
     uContractId: number;
     startDateErr = {isDateErr: false,dateErrMsg: ''};
     endDateErr = {isDateErr: false,dateErrMsg: ''};
+    startDateRangeErr = {isDateErr: false,dateErrMsg: ''};
     runInStartErr = {isDateErr: false, dateErrMsg: ''};
     runInEndErr = {isDateErr: false, dateErrMsg: ''};
     runOutStartErr = {isDateErr: false, dateErrMsg: ''};
@@ -97,10 +100,15 @@ export class ContractsComponent implements OnInit {
      );    
   }
   getClientDetails(clientId){
+    
     this.clientService.getClientDetails(clientId).subscribe(
       (data)=>{
         this.clientDetails = data[0];
-        
+        this.clientStartDate = this.datePipe.transform(this.clientDetails.startDate, 'yyyy-MM-dd');
+        this.clientEndDate = this.datePipe.transform(this.clientDetails.startDate, 'yyyy-MM-dd');
+      }, 
+      (error) => {
+          console.log("No Details for selected Account ID ");
       }
     )
   }
@@ -175,9 +183,11 @@ clearErrorMessages(){
   this.startDateErr.dateErrMsg='';
   this.endDateErr.isDateErr=false;
   this.endDateErr.dateErrMsg='';
+  this.startDateRangeErr.isDateErr=false;
+  this.startDateRangeErr.dateErrMsg='';
   this.runInStartErr.dateErrMsg='';
   this.runInStartErr.isDateErr=false;
-  this.runInEndErr.dateErrMsg=''
+  this.runInEndErr.dateErrMsg='';
   this.runInEndErr.isDateErr=false;
   this.runOutStartErr.isDateErr=false;
   this.runOutStartErr.dateErrMsg='';
@@ -276,8 +286,14 @@ clearErrorMessages(){
                       flag=false;     
                       return;
                     }
+
                   }
-                
+                  // if((startDateValue < this.clientStartDate && startDateValue!= this.clientStartDate) || (startDateValue>this.clientEndDate && startDateValue!= this.clientEndDate)){
+                  //   this.startDateRangeErr.isDateErr=true;
+                  //   this.startDateRangeErr.dateErrMsg = 'Contract start date should be in between Account Start and End Date'; 
+                  //   flag=false;     
+                  //   return;
+                  // }
                   if(startDateValue==null || startDateValue==''){
                     this.startDateErr.isDateErr=true;
                     this.startDateErr.dateErrMsg = 'Contract start date should not be empty or Invalid';  

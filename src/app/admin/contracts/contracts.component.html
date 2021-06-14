@@ -98,6 +98,7 @@
             <div *ngIf="runOutEndErr.isDateErr">{{runOutEndErr.dateErrMsg}}</div>
             <div *ngIf="terminationDateErr.isDateErr">{{terminationDateErr.dateErrMsg}}</div>
             <div *ngIf="isContractStartDateInvalid">{{contractStartDateErrMsg}}</div>
+            <!-- <div *ngIf="startDateRangeErr.isDateErr">{{startDateRangeErr.dateErrMsg}}</div> -->
            </div>  
            <div class="row">
              <div class="col-md-4">
@@ -109,7 +110,7 @@
              <div class="col-md-4">
               <div class="form-group">
                 <label>Account ID<small class="starmark">*</small> </label>
-                <select #focusElem formControlName="clientId" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.clientId.errors }">
+                <select #focusElem formControlName="clientId" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.clientId.errors }" (change)="getClientDetails($event.target.value)">
                   <option *ngFor="let client of activeClients" [value]="client.clientId">
                     {{client.clientName}} ({{client.clientId}})
                   </option>
@@ -125,7 +126,7 @@
               <div class="col-md-4">
                 <div class="form-group">
                   <label>Contract Start Date<small class="starmark">*</small></label>
-                  <input type="date" value="MM/dd/yyyy" formControlName="startDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.startDate.errors}" max="2999-12-31" /> 
+                  <input type="date" value="MM/dd/yyyy" formControlName="startDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.startDate.errors}"/> 
                 </div>
               </div>
             </div>

@@ -60,6 +60,7 @@ export class ClaimSearchComponent implements OnInit {
       toDate: ['']
     },{validator: this.dateLessThan('fromDate', 'toDate')});
     this.maxDate = this.datePipe.transform(new Date(Date.now()), 'yyyy-MM-dd');
+    this.maxDate=null;
     setTimeout(()=>{
       this.focusTag.nativeElement.focus()
     }, 100)

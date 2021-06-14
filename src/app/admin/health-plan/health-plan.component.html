@@ -82,7 +82,7 @@
     <form [formGroup]="planForm" (ngSubmit)="onSubmit()">
              <div class="mandate-fields">
                <span *ngIf="submitted && !planForm.valid">Fields marked with * are mandatory</span>
-               <span *ngIf="submitted && isNoFactAmount">Enter any Fact Amount. Atleast One Fact amount is required</span>
+               <span *ngIf="submitted && isNoFactAmount">Enter any Factor Amount. Atleast One Factor amount is required</span>
              </div>  
              <div class="row">
                  <div class="col-md-4">
@@ -99,7 +99,7 @@
                  </div>
                  <div class="col-md-4">  
                   <div class="form-group">
-                    <label>Account<small class="starmark">*</small> </label>
+                    <label>Account Name<small class="starmark">*</small> </label>
               <select formControlName="clientId" class="form-control" (change)="getContractsByClient($event)" [ngClass]="{ 'is-invalid': submitted && f.clientId.errors }">
                     <option *ngFor="let client of locClients" [value]="client.clientId">
                         {{client.clientName}}
@@ -111,7 +111,7 @@
                 <div class="row">
                     <div class="col-md-4">
                       <div class="form-group">
-                       <label>Contract<small class="starmark">*</small> </label>
+                       <label>Contract ID<small class="starmark">*</small> </label>
                        <select formControlName="contractId" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.contractId.errors }">
                          <option *ngFor="let contract of activeContracts" [value]="contract.contractId">
                            {{contract.contractId}}
@@ -121,13 +121,13 @@
                     </div>
                     <div class="col-md-4">
                       <div class="form-group">
-                        <label>{{locTires[0].tierName}} Fact Amount</label>
+                        <label>{{locTires[0].tierName}} Factor Amount</label>
                   <input type="text" formControlName="tier1Aggfactamt" [value]="locTires[0].tierId" class="form-control" />
                       </div>
                     </div>
                     <div class="col-md-4">
                       <div class="form-group">
-                        <label>{{locTires[1].tierName}} Fact Amount</label>
+                        <label>{{locTires[1].tierName}} Factor Amount</label>
                   <input type="text" formControlName="tier2Aggfactamt" [value]="locTires[1].tierId"  class="form-control" />
                       </div>
                     </div>
@@ -135,13 +135,13 @@
                    <div class="row">
                      <div class="col-md-4">
                       <div class="form-group">
-                        <label>{{locTires[2].tierName}} Fact Amount</label>
+                        <label>{{locTires[2].tierName}} Factor Amount</label>
                   <input type="text" formControlName="tier3Aggfactamt" [value]="locTires[2].tierId" class="form-control" />
                       </div>
                      </div>
                      <div class="col-md-4">
                       <div class="form-group">
-                     <label>{{locTires[3].tierName}} Fact Amount</label>
+                     <label>{{locTires[3].tierName}} Factor Amount</label>
                <input type="text" formControlName="tier4Aggfactamt" [value]="locTires[3].tierId" class="form-control" />
                    </div>
                      </div>

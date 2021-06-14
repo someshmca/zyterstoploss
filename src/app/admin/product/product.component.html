@@ -106,7 +106,8 @@
                   <select class="form-control" formControlName="contractId" [ngClass]="{ 'is-invalid': submitted && f.contractId.errors }" disabled="true">
                      <option value='' *ngIf="isAddMode"></option>
                     <option *ngFor="let obj of contractsByClientId" [value]="obj.contractId">
-                      {{obj.contractId}} <span *ngIf="obj.description.length>0">({{obj.description}})</span>
+                      {{obj.contractId}} 
+                      <!-- <span *ngIf="obj.description.length>0">({{obj.description}})</span> -->
                     </option> 
                   </select>
                 </div>
