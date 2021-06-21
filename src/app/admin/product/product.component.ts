@@ -122,7 +122,7 @@ export class ProductComponent implements OnInit {
 
       sslIsImmediateReimbursement:false,
       sslTermCoverageExtEndDate:'',
-      sslCoveredClaims: '',
+      sslCoveredClaims: ['', Validators.required],
       sslLasering: false,
 
       //below from aslDeductible to aslExpecteddClaimLiability are number fields
@@ -143,7 +143,7 @@ export class ProductComponent implements OnInit {
 
       aslIsMonthlyAccomidation:false,
       aslTermCoverageExtEndDate:'',
-      aslCoveredClaims: '',
+      aslCoveredClaims: ['', Validators.required],
 
       isMaxLiability:false,
       ibnrPercentage:['', Validators.required], // this is a number field

@@ -101,7 +101,6 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
     this.getTires();
     this.getAllPlans();
     this.getActiveClients();
-
     this.isStatusChecked = true;
   }
   

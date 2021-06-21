@@ -220,12 +220,18 @@
           <div class="row"> 
             <div class="col-md-4">
               <div class="form-group">
-                <label>Covered Claims</label>
-                <select formControlName="sslCoveredClaims" class="form-control" multiple>
+                <label>Covered Claims<small class="starmark">*</small></label>
+                <select formControlName="sslCoveredClaims" class="form-control" multiple [ngClass]="{ 'is-invalid': submitted && f.sslCoveredClaims.errors }">
                   <option *ngFor="let coveredClaim of coveredClaims" [value]="coveredClaim.claimTypeCode">
                     {{coveredClaim.claimType}}
                   </option>
                </select>                 
+              </div>
+            </div>
+            <div class="col-md-4"> </div>
+            <div class="col-md-4">
+              <div class="product-cell-area">                
+                  <a class="text-primary" routerLink="/member" routerLinkActive="active">Lasering</a>
               </div>
             </div>
           </div>
@@ -330,12 +336,17 @@
       </div> 
       <div class="col-md-4">
         <div class="form-group">
-          <label>Covered Claims</label>
-          <select formControlName="aslCoveredClaims" class="form-control" multiple>
+          <label>Covered Claims<small class="starmark">*</small></label>
+          <select formControlName="aslCoveredClaims" class="form-control" multiple [ngClass]="{ 'is-invalid': submitted && f.aslCoveredClaims.errors }">
             <option *ngFor="let coveredClaim of coveredClaims" [value]="coveredClaim.claimTypeCode">
               {{coveredClaim.claimType}}
             </option>
          </select>                 
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="product-cell-area">          
+          <a class="text-primary" routerLink="/health-plan" routerLinkActive="active">Plan</a>
         </div>
       </div>
     </div>
@@ -368,7 +379,6 @@
 
           <div class="modal-footer-btns">
             <button type="button" class="btn btn-primary" routerLink="/contracts" routerLinkActive="active">Back</button>
-            <button type="button" class="btn btn-primary" routerLink="/health-plan" routerLinkActive="active">Plan</button>
             <button type="button" class="btn btn-outline-primary" (click)="openCustomModal(false, null)">Cancel</button>
             <button type="submit" class="btn btn-primary" [disabled]="isDisabled" *ngIf="!isAddMode">Update</button>
             <button type="submit" class="btn btn-primary" [disabled]="isDisabled" *ngIf="isAddMode">Add</button>
