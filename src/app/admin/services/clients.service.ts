@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import {IClient, IClientIDRequest, IClientAdd, IClientAddSuccess, IClientUpdate,IParentClient, IClientUpdateSuccess, IActiveClient} from '../models/clients-model';
-import { Observable, throwError } from 'rxjs';
+import { Observable, throwError, BehaviorSubject } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import {Paths} from '../admin-paths';
 
@@ -10,6 +10,23 @@ import {Paths} from '../admin-paths';
 })
 export class ClientsService {
   constructor(private http: HttpClient) { }
+  
+  clientIdValue=new BehaviorSubject<any>('');
+  passClientId(id: string){
+    this.clientIdValue.next(id);  
+    this.clientIdValue.asObservable();
+  }
+  clientAddStatus = new BehaviorSubject<boolean>(false);
+  setClientAddStatus(status: boolean){
+    this.clientAddStatus.next(status);  
+    this.clientAddStatus.asObservable();  
+  }
+  clientUpdateStatus = new BehaviorSubject<boolean>(false);
+  setClientUpdateStatus(stat: boolean){
+    this.clientUpdateStatus.next(stat);  
+    this.clientUpdateStatus.asObservable();    
+  }
+
   getAllClients(){
     return this.http.get<IClient[]>(Paths.clients
       ).pipe(catchError(this.handleError.bind(this)));
@@ -22,6 +39,7 @@ export class ClientsService {
  getActiveClients(){
   return this.http.get<IActiveClient[]>(Paths.activeClients);
 }
+
 checkDuplicateAccountId(accId: string){
   
   return this.http.get(Paths.duplicateClientId+accId).pipe(catchError(this.handleError.bind(this)));

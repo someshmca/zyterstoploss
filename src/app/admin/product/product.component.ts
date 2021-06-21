@@ -17,6 +17,7 @@ import {IContractsByClient} from '../models/contracts-model';
 import { LoginService } from 'src/app/shared/services/login.service';
 import { ContractService } from '../services/contract.service';
 import {CLAIM_BASIS_CONSTANT} from '../claim-basis.constant';
+import { HealthPlanService } from '../services/health-plan.service';
 @Component({
   selector: 'app-product',
   templateUrl: './product.component.html',
@@ -31,6 +32,7 @@ export class ProductComponent implements OnInit {
     submitted = false;
     isCustomModalOpen: boolean = false;
     @ViewChild("focusElem") focusTag: ElementRef;
+    @ViewChild("prodFilter") productInputFilter: ElementRef;
   products:IProductAll[] = [];
   activeClients: IActiveClient[]=[];
   contractsByClientId: IContractsByClient[] = [];
@@ -78,12 +80,13 @@ export class ProductComponent implements OnInit {
   }
   isDisabled:boolean=false;
   isEditSelected: boolean = false;
-  //isClientSelected:boolean = false;
-  // sslForm: FormGroup;
-  // aslForm: FormGroup;
-  // maxLiabilityForm: FormGroup;
-  // isOptional = false;
-
+  inpValue: string='';
+  contractAddStatus: boolean;
+  contractUpdateStatus: boolean;
+  productAddStatus: boolean;
+  productUpdateStatus: boolean;
+  planAddStatus: boolean;
+  planUpdateStatus: boolean;
   constructor(
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
@@ -91,6 +94,7 @@ export class ProductComponent implements OnInit {
     private productService: ProductService,
     private clientService: ClientsService,
     private contractService: ContractService,
+    private planService: HealthPlanService,
     private alertService: AlertService,
     private datePipe: DatePipe,
     private loginService: LoginService)
@@ -155,13 +159,66 @@ export class ProductComponent implements OnInit {
     this.getCoveredClaims();
     //this.getAllContracts();
     //this.isClientSelected = false;
-    this.checkMaxLiability();
+    this.checkMaxLiability(); 
+    this.getContractAddStatus();
+    this.getContractUpdateStatus();
+
+    this.getProductAddStatus();
+    this.getProductUpdateStatus();    
+  }
+  getProductAddStatus(){
+    this.productService.productAddStatus.subscribe((status)=>{
+        this.productAddStatus = status;    
+        if(this.productAddStatus){
+          this.clientService.clientIdValue.subscribe((value)=>{
+            this.productForm.patchValue({
+              clientId: value
+            });
+            this.openCustomModal(true, null);
+          })
+        }
+      })
+  }
+  getProductUpdateStatus(){
+    this.productService.productUpdateStatus.subscribe((status)=>{
+        this.productUpdateStatus = status;
+        if(this.productUpdateStatus){
+          this.clientService.clientIdValue.subscribe(
+            (data)=>{                   
+              let d:string=data;
+              this.inpValue = d;
+              setTimeout(()=>{
+                  this.productInputFilter.nativeElement.focus();                  
+                }, 1000)              
+            })
+        }
+      })
   }
 
+  
+  getContractAddStatus(){   
+    this.contractService.contractAddStatus.subscribe((status)=> {
+        this.contractAddStatus = status;        
+      });
+  }
+  getContractUpdateStatus(){       
+    this.contractService.contractUpdateStatus.subscribe((status)=> {
+        this.contractUpdateStatus = status;        
+      });
+  }
+  getPlanAddStatus(){   
+    this.planService.planAddStatus.subscribe((status)=> {
+        this.planAddStatus = status;        
+      });
+  }
+  getPlanUpdateStatus(){       
+    this.planService.planUpdateStatus.subscribe((status)=> {
+        this.planUpdateStatus = status;        
+      });
+  }
   get f() { return this.productForm.controls; }
 
-  checkMaxLiability(){
-    
+  checkMaxLiability(){    
     console.log(this.f.isMaxLiability.value);
     if(this.f.isMaxLiability.value==true){
       this.f.ibnrPercentage.enable();
@@ -172,15 +229,12 @@ export class ProductComponent implements OnInit {
       this.f.defferedFeePercentage.disable();
     }
   }
-  getActiveClients(){
-    
+  getActiveClients(){    
     this.productService.getAllClients().subscribe(
       (data)=>{       
         data.sort((a, b) => (a.clientName > b.clientName) ? 1 : -1); // sorts Ascending order by alphabet
-        this.activeClients = data;
-        
-      }
-    )
+        this.activeClients = data;        
+      })
   }
   getCoveredClaims(){
     this.productService.getCoveredClaims().subscribe((data)=>{
@@ -424,6 +478,12 @@ if(aslTermVal!='' && this.productForm.valid){
               aslCoveredClaims: aslCc
             })
           });
+          
+          this.planService.setPlanAddStatus(false);
+          this.clientService.passClientId(this.f.clientId.value);
+          this.planService.setPlanUpdateStatus(true);
+
+
          }
       }
 
@@ -486,10 +546,12 @@ private addProduct() {
       .subscribe({ 
           next: () => {
             this.getAllProducts();
-            this.productForm.reset();    
+            //this.productForm.reset();    
             this.clearErrorMessages();         
-            this.openCustomModal(false, null);           
-                     
+            //this.openCustomModal(false, null);           
+              
+          this.planService.setPlanAddStatus(true);
+          this.planService.setPlanUpdateStatus(false);       
               this.alertService.success('New Product added', { keepAfterRouteChange: true });
               this.isDisabled=true;      
               //this.router.navigate(['../'], { relativeTo: this.route });

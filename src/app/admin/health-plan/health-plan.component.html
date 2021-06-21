@@ -4,9 +4,10 @@
     <div class="card custom-card">
      <div class="card-header">
            <h3>Plan</h3>
-           <div class="edit-update-alert">
+           <!-- <div class="edit-update-alert">
               <alert></alert>
-           </div>
+           </div> -->           
+      <a class="text-primary" routerLink="/product" routerLinkActive="active">Back</a>
      </div>
      <div class="card-body">
          <div class="select-grid-wrap">
@@ -17,7 +18,7 @@
                  </label>
                  <div fxLayout fxLayoutAlign="center center">
                    <mat-form-field fxFlex="40%">
-                     <input matInput type="text" (keyup)="doFilter($event.target.value)" placeholder="Search a  Plan">
+                     <input matInput type="text" #planFilter [value]="inpValue" (keyup)="doFilter($event.target.value)"  (focus)="doFilter($event.target.value)" placeholder="Search a  Plan">
                    </mat-form-field>
                  </div>   
                </div> 
@@ -73,8 +74,11 @@
                 <span *ngIf="isAddMode">Add Plan</span>
                 <span *ngIf="!isAddMode">Update Plan</span>
             </h4>
-            <a class="fa fa-2x fa-times-circle" (click)="openCustomModal(false, null)">
-            </a>
+            <div>
+              <alert></alert>
+              <a class="fa fa-2x fa-times-circle" (click)="openCustomModal(false, null)">
+              </a>
+            </div>
         </div>
         <!-- Modal body -->
         <div class="modal-body"> 

@@ -4,7 +4,8 @@
     <div class="card-header">
       <h3>Product</h3>
       <div class="edit-update-alert">
-        <alert></alert>
+        <!-- <alert></alert> -->
+      <a class="text-primary" routerLink="/contracts" routerLinkActive="active">Back</a>
       </div>
     </div>
     <div class="card-body">
@@ -16,7 +17,7 @@
             </label>
             <div fxLayout fxLayoutAlign="center center">
               <mat-form-field fxFlex="40%">
-                <input matInput type="text" (keyup)="doFilter($event.target.value)" placeholder="Search a Product">
+                <input matInput type="text" #prodFilter [value]="inpValue" (keyup)="doFilter($event.target.value)"  (focus)="doFilter($event.target.value)" placeholder="Search a Product">
               </mat-form-field>
             </div>
           </div>
@@ -69,7 +70,10 @@
           <span *ngIf="isAddMode">Add Product</span>
           <span *ngIf="!isAddMode">Update Product</span>
         </h4>
-        <a class="fa fa-2x fa-times-circle" (click)="openCustomModal(false, null)"></a>
+        <div>
+          <alert></alert>
+          <a class="fa fa-2x fa-times-circle" (click)="openCustomModal(false, null)"></a>
+        </div>
 
       </div>
       <!-- Modal body -->
@@ -363,6 +367,8 @@
 
 
           <div class="modal-footer-btns">
+            <button type="button" class="btn btn-primary" routerLink="/contracts" routerLinkActive="active">Back</button>
+            <button type="button" class="btn btn-primary" routerLink="/health-plan" routerLinkActive="active">Plan</button>
             <button type="button" class="btn btn-outline-primary" (click)="openCustomModal(false, null)">Cancel</button>
             <button type="submit" class="btn btn-primary" [disabled]="isDisabled" *ngIf="!isAddMode">Update</button>
             <button type="submit" class="btn btn-primary" [disabled]="isDisabled" *ngIf="isAddMode">Add</button>

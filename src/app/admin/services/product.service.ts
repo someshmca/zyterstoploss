@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import {IProductAll,IProductAdd,IProductUpdate,IActiveClient,IProduct,IAddProductSuccess,ICoveredClaims} from '../models/product-model';
-import { Observable, throwError } from 'rxjs';
+import { Observable, throwError, BehaviorSubject } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import {Paths} from '../admin-paths';
 
@@ -11,7 +11,17 @@ import {Paths} from '../admin-paths';
 export class ProductService {
 
   constructor(private http: HttpClient) { }
-
+  
+ productAddStatus = new BehaviorSubject<boolean>(false);
+  setProductAddStatus(status: boolean){
+    this.productAddStatus.next(status);  
+    this.productAddStatus.asObservable();  
+  }
+  productUpdateStatus = new BehaviorSubject<boolean>(false);
+  setProductUpdateStatus(stat: boolean){
+    this.productUpdateStatus.next(stat);  
+    this.productUpdateStatus.asObservable();    
+  }
   getAllProducts(){
     return this.http.get<IProductAll[]>(Paths.productAll
       ).pipe(catchError(this.handleError.bind(this)));

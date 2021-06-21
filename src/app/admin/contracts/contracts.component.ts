@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, Renderer2 } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AlertService } from '../services/alert.service';
 import { IContract, IContractIDRequest,
@@ -14,6 +14,7 @@ import { formatDate, DatePipe } from '@angular/common';
 import { ClientsService } from '../services/clients.service';
 import { IClient } from '../models/clients-model';
 import { LoginService } from 'src/app/shared/services/login.service';
+import { ProductService } from '../services/product.service';
 @Component({
   selector: 'app-contracts',
   templateUrl: './contracts.component.html',
@@ -56,27 +57,49 @@ export class ContractsComponent implements OnInit {
 
   isDisabled: boolean;
   @ViewChild("focusElem") focusTag: ElementRef;
+  @ViewChild("filterInp") filterTable: ElementRef;
+  inpValue: string;
+
   isContractStartDateInvalid: boolean=false;
   clientDetails: any;
+
+  contractAddStatus: boolean; 
+  contractUpdateStatus: boolean;
+  clientUpdateStatus: boolean;
+  productAddStatus: boolean;
+  productUpdateStatus: boolean;
 
   displayedColumns: string[] = ['clientName','contractId', 'description', 'startDate','endDate','clientId'];
   dataSource: any;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  backClientUpdateStatus: boolean;
   constructor(
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
     private contractService: ContractService,
     private clientService: ClientsService,
+    private productService: ProductService,
     private alertService: AlertService,
     private datePipe: DatePipe,
     private loginService: LoginService
   ) { }
   ngOnInit(){
     
+    //this.filterTable.nativeElement.value = 'Hello';
+    //this.filterTable.nativeElement.innerHTML="Hello";
+    //
+        this.inpValue = "";
+    // setTimeout(
+    //   () => {
+    //     this.filterTable.nativeElement.focus();
+    //   }, 400
+    // )
+
     this.getAllContracts();
     this.getActiveClients();   
+    
     this.contractForm = this.formBuilder.group({
       contractId: '',
       clientId:['', Validators.required],
@@ -95,10 +118,66 @@ export class ContractsComponent implements OnInit {
       ftnName: '',
       policyYear: '',
       description: ''
-    }
-      
-     );    
+    });
+    this.getContractAddStatus();
+    this.getContractUpdateStatus();
+    this.getClientUpdateStatus();    
+    this.getProductAddStatus();
+    this.getProductUpdateStatus(); 
   }
+  getContractAddStatus(){
+    this.contractService.contractAddStatus.subscribe(
+      (data)=>{
+        this.contractAddStatus = data;        
+        if(this.contractAddStatus){
+          this.clientService.clientIdValue.subscribe((value)=>{
+            this.contractForm.patchValue({
+              clientId: value
+            });
+            this.openCustomModal(true, null);
+          })
+        }
+      }
+    )
+  }
+  getContractUpdateStatus(){
+    this.contractService.contractUpdateStatus.subscribe(
+      (data)=>{
+        this.contractUpdateStatus = data;       
+         
+        if(this.contractUpdateStatus){
+          this.clientService.clientIdValue.subscribe(
+            (data)=>{     
+              
+              let d:string=data;
+              this.inpValue = d;
+              setTimeout(
+                ()=>{
+                  this.filterTable.nativeElement.focus();                  
+                }, 1000
+              )              
+            }
+          )
+        }
+      }
+    )
+  }
+  getClientUpdateStatus(){
+    this.clientService.clientUpdateStatus.subscribe((status)=>{
+      this.clientUpdateStatus = status;
+    })
+  }
+  getProductAddStatus(){
+    this.productService.productAddStatus.subscribe((status)=>{
+        this.productAddStatus = status;
+      })
+  }
+  getProductUpdateStatus(){
+    this.productService.productUpdateStatus.subscribe((status)=>{
+        this.productUpdateStatus = status;
+      })
+  }
+
   getClientDetails(clientId){
     
     this.clientService.getClientDetails(clientId).subscribe(
@@ -221,13 +300,20 @@ clearErrorMessages(){
       this.getContract(id);
       this.getClientDetails(id.clientId);
       
-      console.log(this.updateObj);
-           
-          
+      this.clientService.passClientId(id);
+      this.clientService.setClientUpdateStatus(true);   
+      this.clientService.setClientAddStatus(false);
+      this.productService.setProductAddStatus(false);
+      this.productService.setProductUpdateStatus(true);
+      setTimeout(()=>{
+        this.clientService.passClientId(this.f.clientName.value);
+      }, 1000);
+      this.productService.setProductAddStatus(false);
+      console.log(this.updateObj);          
     }
   }
   public doFilter = (value: string) => {
-    this.dataSource.filter = value.trim().toLocaleLowerCase();
+    this.dataSource.filter = value.trim().toLowerCase();    
   }
   get f() { return this.contractForm.controls; }
 
@@ -262,6 +348,7 @@ clearErrorMessages(){
       this.contractService.validateContractStartDate(clientId, ContractStartDate).pipe(first())    
       .subscribe({ 
             next: (data) => {
+              
               console.log(data);  
               
               if(data!=''){      
@@ -407,17 +494,6 @@ clearErrorMessages(){
     
            
   }
-  // callAddUpdate(){        
-  //   
-  //   if(!this.isContractStartDateInvalid){
-  //           
-  //     if (this.isAddMode) {
-  //       this.addContract();
-  //     } else {
-  //         this.updateContract();            
-  //     }
-  //   }
-  // }
   private addContract() {
     this.isDisabled=true;
     console.log(this.contractForm.value);
@@ -456,9 +532,14 @@ clearErrorMessages(){
         .pipe(first())
         .subscribe({
             next: () => {
-              this.openCustomModal(false, null);
+              //this.openCustomModal(false, null);
               this.getAllContracts();
-              this.contractForm.reset();                
+              //this.contractForm.reset();     
+              this.contractService.setContractAddStatus(false);  
+              
+              this.clientService.passClientId(this.f.clientId.value);     
+              this.productService.setProductAddStatus(true);
+              this.productService.setProductUpdateStatus(false);
                 this.alertService.success('New Contract added', { keepAfterRouteChange: true });               
             },
             error: error => {
@@ -509,8 +590,8 @@ clearErrorMessages(){
             .pipe(first())
             .subscribe({
                 next: () => {
-                    this.openCustomModal(false,null); 
-                    this.contractForm.reset();
+                    //this.openCustomModal(false,null); 
+                    //this.contractForm.reset();
                     
                     this.getAllContracts();
                     this.alertService.success('Contract updated', { 

@@ -14,6 +14,17 @@ export class HealthPlanService {
   constructor(private http: HttpClient) { }
 
 
+  planAddStatus = new BehaviorSubject<boolean>(false);
+  setPlanAddStatus(status: boolean){
+    this.planAddStatus.next(status);  
+    this.planAddStatus.asObservable();  
+  }
+  planUpdateStatus = new BehaviorSubject<boolean>(false);
+  setPlanUpdateStatus(stat: boolean){
+    this.planUpdateStatus.next(stat);  
+    this.planUpdateStatus.asObservable();    
+  }
+
   getAllPlans(){
     return this.http.get<IPlanAll[]>(Paths.planAll).pipe(catchError(this.handleError.bind(this)));
   }

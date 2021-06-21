@@ -23,14 +23,14 @@ let p = 'y-MM-dd'; // YYYY-MM-DD
   styleUrls: ['./client.component.css'],
   providers: [DatePipe]
 })
-export class ClientComponent implements OnInit {  
+export class ClientComponent implements OnInit {
   displayedColumns: string[] = ['clientId','clientName','startDate','endDate','userId'];
   dataSource: any;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
   constructor(private clientsService: ClientsService, private fb: FormBuilder, private contractService: ContractService, private alertService: AlertService, private datePipe: DatePipe,private loginService: LoginService) { }
-  
+
   clients:IClient[] = [];
   clientIDs: IClient[] = [];
   client: IClientIDRequest;
@@ -56,6 +56,10 @@ export class ClientComponent implements OnInit {
   isCustomModalOpen: boolean = false;
   accIdStatus: number;
   accNameStatus: number;
+  
+  contractAddStatus: boolean;
+  contractUpdateStatus: boolean;
+  clientUpdateStatus: boolean;
 
   startDateErr = {isDateErr: false,dateErrMsg: ''};
   endDateErr = {isDateErr: false,dateErrMsg: ''};
@@ -63,7 +67,7 @@ export class ClientComponent implements OnInit {
   accIdErr = {isDuplicate: false, errMsg: ''};
 
   @ViewChild("focusElem") focusTag: ElementRef;
-  
+
 
   ngOnInit() {
     this.getAllClients();
@@ -74,16 +78,33 @@ export class ClientComponent implements OnInit {
       (data) => {
         data.filter((value,index)=>data.indexOf(value)===index);
         this.activeClients = data;
-      }
-    )
+      });
+    this.getContractAddStatus();
+    this.getContractUpdateStatus();
+    this.getClientUpdateStatus();
   }
-  
+  getClientUpdateStatus(){
+    this.clientsService.clientUpdateStatus.subscribe((status)=>{
+        this.clientUpdateStatus = status;
+      })
+  }
+  getContractAddStatus(){   
+    this.contractService.contractAddStatus.subscribe((status)=> {
+        this.contractAddStatus = status;        
+      });
+  }
+  getContractUpdateStatus(){       
+    this.contractService.contractUpdateStatus.subscribe((status)=> {
+        this.contractUpdateStatus = status;        
+      });
+  }
+
   public doFilter = (value: string) => {
     this.dataSource.filter = value.trim().toLocaleLowerCase();
-  }  
+  }
 
-  clientFormInit(){    
-    this.clientForm = this.fb.group({   
+  clientFormInit(){
+    this.clientForm = this.fb.group({
       clientId: ['', Validators.required],
       clientName:  ['', Validators.required],
       startDate: null,
@@ -96,26 +117,26 @@ export class ClientComponent implements OnInit {
       ftnname: '',
       status:false,
       userId: ''//this.loginService.currentUserValue.name
-  })//,{validator: this.dateLessThan('startDate', 'endDate')});    
+  })//,{validator: this.dateLessThan('startDate', 'endDate')});
   }
-  getAllClients(){    
+  getAllClients(){
     this.clientsService.getAllClients().subscribe(
       (data: IClient[]) => {
           this.clientIDs =  data;
-          this.clients = data; 
+          this.clients = data;
           this.dataSource = new MatTableDataSource(this.clients);
           this.dataSource.paginator = this.paginator;
           this.dataSource.sort = this.sort;
-      
+
           const sortState: Sort = {active: 'clientId', direction: 'asc'};
           this.sort.active = sortState.active;
           this.sort.direction = sortState.direction;
           this.sort.sortChange.emit(sortState);
       }
     )
-  } 
+  }
   dateLessThan(from: string, to: string) {
-  
+
     return (group: FormGroup): {[key: string]: any} => {
       let f = group.controls[from];
       let t = group.controls[to];
@@ -128,36 +149,36 @@ export class ClientComponent implements OnInit {
       return {};
     }
 }
-  getParentClient(){        
+  getParentClient(){
     this.clientsService.getParentClient().subscribe(
-      (data:IParentClient[]) => {        
+      (data:IParentClient[]) => {
           this.parentClientIds = data;
       }
     )
   }
-  
-  getAllContracts(){    
+
+  getAllContracts(){
     this.contractService.getAllContracts().subscribe(
       (data: IContract[]) => {
           this.contractIDs = data;
       }
     )
-  }  
+  }
   getClient(clientId){
     this.clientsService.getClient(clientId).subscribe(
       (data: IClient[]) => {
-        
+
 
         console.log("data 0 : "+data[0].clientId);
         this.singleClient = data;
-        
+
       }
     );
   }
-  
+
   get f() { return this.clientForm.controls; }
-  
-clearErrorMessages(){  
+
+clearErrorMessages(){
   this.startDateErr.isDateErr=false;
   this.startDateErr.dateErrMsg='';
   this.endDateErr.isDateErr=false;
@@ -171,12 +192,12 @@ checkDuplicateAccountName(aname){
   return this.clientsService.checkDuplicateAccountName(aname).toPromise();
   // promise.then((data)=>{
   //     //this.accNameStatus = data;
-  //     
+  //
   //     if(data>0){
   //       this.accNameErr.isDuplicate=true;
-  //       this.accNameErr.errMsg='The account name '+this.f.clientName.value+' already exists. Please enter different Account Name';    
-             
-  //      // return;       
+  //       this.accNameErr.errMsg='The account name '+this.f.clientName.value+' already exists. Please enter different Account Name';
+
+  //      // return;
   //     }
   //   }
   // ).catch((error)=>{
@@ -185,7 +206,7 @@ checkDuplicateAccountName(aname){
 }
 // async fetchData(){
 //   const data = await this.httpClient.get(this.apiUrl).toPromise();
-//   console.log("Data: " + JSON.stringify(data)); 
+//   console.log("Data: " + JSON.stringify(data));
 // }
 async checkDuplicateAccountId(aid){
   const promise = this.clientsService.checkDuplicateAccountId(aid).toPromise();
@@ -195,11 +216,11 @@ async checkDuplicateAccountId(aid){
       if(this.accIdStatus>0){
         this.accIdErr.isDuplicate=true;
         this.accIdErr.errMsg='The account Id '+this.f.clientId.value+' already exists. Please enter different Account Id';
-        
-                 
-        return;       
+
+
+        return;
       }
-    
+
   }).catch((error)=>{
     console.log("Promise rejected with " + JSON.stringify(error));
   });
@@ -210,8 +231,8 @@ async checkDuplicateAccountId(aid){
   //     this.accIdStatus = data;
   //     if(this.accIdStatus>0){
   //       this.accIdErr.isDuplicate=true;
-  //       this.accIdErr.errMsg='The account Id '+this.f.clientId.value+' already exists. Please enter different Account Id';         
-  //       return;       
+  //       this.accIdErr.errMsg='The account Id '+this.f.clientId.value+' already exists. Please enter different Account Id';
+  //       return;
   //     }
   //   }
   // );
@@ -238,45 +259,26 @@ async checkDuplicateAccountId(aid){
     this.clientForm.patchValue(this.clientForm.value);
     if(id!=null && open){
       this.isAddMode = false;
-      // this.getClient(id);
-      //id.status==1?this.clientForm.get('status').setValue(true):this.clientForm.get('status').setValue(false);
-      //this.clientForm.get('status').value)==true?1:0,
       if(id!=null){
-        //this.selectedValue=id.parentID;
         this.isAddMode = false;
-        
-        // this.parentClientIds.filter(item => {
-        //   item.parentName == id.clientName;
-        //   if(item.parentName == id.clientName){
-        //     console.log(item.parentName);
-        //     
-        //   }          
-        // });
-        // console.log(this.parentClientIds.length);
-        
-        // let index = this.parentClientIds.findIndex(x => x.parentName == id.clientName); 
-        // console. log(index);
-        
-        // this.parentClientIds.splice(index, 1);
-        
+
         console.log(this.activeClients.length);
-        
-        let index = this.activeClients.findIndex(x => x.clientName == id.clientName); 
+
+        let index = this.activeClients.findIndex(x => x.clientName == id.clientName);
         console. log(index);
-        
+
         this.activeClients.splice(index, 1);
         this.ustartDate = this.datePipe.transform(id.startDate, 'yyyy-MM-dd');
         this.uendDate = this.datePipe.transform(id.endDate, 'yyyy-MM-dd');
-        
+
         this.clientsService.getClient(id.clientId).subscribe(x => {
-          
+
         console.log(x[0].clientId);
          this.clientForm.patchValue({
             clientId:x[0].clientId,
-            clientName:x[0].clientName,        
+            clientName:x[0].clientName,
             startDate:  this.datePipe.transform(x[0].startDate, 'yyyy-MM-dd'),
             endDate:  this.datePipe.transform(x[0].endDate, 'yyyy-MM-dd'),
-            //parentID:id.parentID,
             claimsAdministrator: x[0].claimsAdministrator,
             pharmacyClaimsAdministrator: x[0].pharmacyClaimsAdministrator,
             subAccountid: x[0].subAccountid,
@@ -285,23 +287,28 @@ async checkDuplicateAccountId(aid){
             ftnname: x[0].ftnname,
             status:x[0].status,
             createdon: x[0].createdon
-            //: id.clientId
           });
           this.uAccountName = x[0].clientName;
         });
         //this.uAccountId = this.f.clientId.value;
-               
-        
+        this.contractService.setContractAddStatus(false);
+        setTimeout(()=>{
+          this.clientsService.passClientId(this.f.clientName.value);
+          
+        }, 1000);
+        this.contractService.setContractUpdateStatus(true);
+        this.clientsService.setClientUpdateStatus(true);
+
        }
 
-        
+
   }
 }
 
 
 
-            
-    patchClientForm(clientObj:IClientUpdate){            
+
+    patchClientForm(clientObj:IClientUpdate){
       this.clientForm.patchValue({
         clientId: clientObj.clientID,
         clientName: clientObj.clientName,
@@ -335,7 +342,7 @@ async checkDuplicateAccountId(aid){
       // stop here if form is invalid
       let startDateValue=this.f.startDate.value;
       let endDateValue=this.f.endDate.value;
-      
+
       if(this.clientForm.valid){
         if(this.isAddMode){
           const cid= this.clientsService.checkDuplicateAccountId(this.f.clientId.value);
@@ -360,73 +367,56 @@ async checkDuplicateAccountId(aid){
                 this.accNameErr.errMsg="Accound Name already exists";
                 return;
               }
-              this.addClient();
-              
-            });
-            
-          
-          // this.checkDuplicateAccountId(this.f.clientId.value);
-          
-          // this.checkDuplicateAccountName(this.f.clientName.value);
-        }
-        
-        //this.checkDuplicateAccountName(this.f.clientName.value);
-          // if(this.accIdStatus==0 && this.accNameStatus>0){
-          //   this.accNameErr.isDuplicate=true;
-          //   this.accNameErr.errMsg="Accound Name is already available. Please enter different Account Name";
-          //   return;
-          // }
-          // if(this.accNameStatus>0){
-          //   this.accNameErr.isDuplicate=true;
-          //   this.accNameErr.errMsg="Accound Name is already available. Please enter different Account Name";
-          //   return;
-          // }
-        
-          if(startDateValue!=null && endDateValue!=null && startDateValue!='' && endDateValue!=''){
-            if(startDateValue > endDateValue){
-              this.startDateErr.isDateErr=true;
-              this.startDateErr.dateErrMsg = 'Start date should not be greater than End date';  
-                      
+              if(startDateValue!=null && endDateValue!=null && startDateValue!='' && endDateValue!=''){
+                if(startDateValue > endDateValue){
+                  this.startDateErr.isDateErr=true;
+                  this.startDateErr.dateErrMsg = 'Start date should not be greater than End date';
+    
+                  return;
+                }
+              }
+              if((startDateValue==null || startDateValue=='') && endDateValue!='' && endDateValue!=null){
+                this.startDateErr.isDateErr=true;
+                this.startDateErr.dateErrMsg = 'Start date should not be empty or Invalid';
+    
+                return;
+              }
+              if((endDateValue==null || endDateValue=='') && startDateValue!='' && startDateValue!=null){
+              this.endDateErr.isDateErr=true;
+              this.endDateErr.dateErrMsg = 'End date should not be empty or Invalid';
+    
               return;
             }
-          }
-          if((startDateValue==null || startDateValue=='') && endDateValue!='' && endDateValue!=null){
-            this.startDateErr.isDateErr=true;
-            this.startDateErr.dateErrMsg = 'Start date should not be empty or Invalid';
-                                      
-            return;
-          }
-          if((endDateValue==null || endDateValue=='') && startDateValue!='' && startDateValue!=null){
-          this.endDateErr.isDateErr=true;
-          this.endDateErr.dateErrMsg = 'End date should not be empty or Invalid';    
-                
-          return;
+              this.addClient();
+
+            });
         }
+
       }
 
       this.loading = true;
       if (!this.isAddMode) {
-      
+
         if(this.uAccountName.toLowerCase() !== this.f.clientName.value.toLowerCase()){
           this.checkDuplicateAccountName(this.f.clientName.value).then(data => {
             if(data>0) {
               this.accNameErr.isDuplicate=true;
-              this.accNameErr.errMsg='The account name '+this.f.clientName.value+' already exists. Please enter different Account Name'; 
+              this.accNameErr.errMsg='The account name '+this.f.clientName.value+' already exists. Please enter different Account Name';
               return;
             }
             else{
-              
+
               this.updateClient();
             }
           });
         } else  {
           this.updateClient();
-        } 
-          
+        }
+
       }
   }
-  
-  private addClient() {   
+
+  private addClient() {
     this.clientForm.patchValue({
       userId:this.loginService.currentUserValue.name,
       status:this.clientForm.get('status').value==true?1:1,
@@ -438,48 +428,49 @@ async checkDuplicateAccountId(aid){
     this.clientsService.addClient(this.clientForm.value)
         .pipe(first())
         .subscribe({
-            next: () => { 
-              this.isDisabled=true;              
-              this.openCustomModal(false, null);
+            next: () => {
+              this.isDisabled=true;
+              //this.openCustomModal(false, null);
               this.getAllClients();
-              this.clientForm.reset();                
-                this.alertService.success('New Client added', { keepAfterRouteChange: true });
-                //this.router.navigate(['../'], { relativeTo: this.route });
+              this.clientsService.passClientId(this.f.clientId.value);
+              this.contractService.setContractAddStatus(true);
+              //this.getContractAddStatus();
+              this.alertService.success('New Client added', { keepAfterRouteChange: true });
             },
             error: error => {
                 this.alertService.error(error);
                 this.loading = false;
             }
         });
-        
+
     }
 
-    private updateClient() {    
+    private updateClient() {
       this.clientForm.patchValue({
         startDate: this.f.startDate.value==''?null:this.f.startDate.value,
         endDate: this.f.endDate.value==''?null:this.f.endDate.value,
         userId:this.loginService.currentUserValue.name,
         status:Boolean(this.clientForm.get('status').value)==true?1:0
         //parentID:String(this.clientForm.get('parentID').value)
-      }); 
-      
+      });
+
         if(this.f.startDate.value==''){
-          
+
         }
-        
+
         this.clientsService.updateClient(this.clientForm.value)
             .pipe(first())
             .subscribe({
                 next: () => {
                     this.getAllClients();
-                    
+
                     this.uAccountName='';
-                    this.openCustomModal(false,null); 
-                    this.clientForm.reset();
-                    this.alertService.success('Client updated', { 
+                    //this.openCustomModal(false,null);
+                    //this.clientForm.reset();
+                    this.alertService.success('Client updated', {
                       keepAfterRouteChange: true });
-                    this.isDisabled=true;  
-                   // this.router.navigate(['../../'], { relativeTo: this.route });                    
+                    this.isDisabled=true;
+                   // this.router.navigate(['../../'], { relativeTo: this.route });
                 },
                 error: error => {
                     this.alertService.error(error);

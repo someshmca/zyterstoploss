@@ -13,24 +13,25 @@ export class LoginService {
   private currentUserSubject: BehaviorSubject<LoginResponseModel>;
     public currentUser: Observable<LoginResponseModel>;
     public User: any;
-    
+
   username: string;
   password: string;
   // above paht will give following re3sponse
 /*  {
     "name": "Ashwani",
     "roleName": "Admin"
-  } 
+  }
  */
 
   //path= "https://jsonplaceholder.typicode.com/posts/1";
+
 
   private token = new BehaviorSubject<any>('');
   curToken = this.token.asObservable();
   setToken(token: any) {
       this.token.next(token)
     }
-  
+
   private isLoggedIn = new BehaviorSubject<any>(false);
   loginStatus = this.isLoggedIn.asObservable();
   setLoginStatus(isLoggedIn: boolean) {
@@ -42,16 +43,16 @@ export class LoginService {
   setLoggedInUser(loggedUser: string) {
     this.loggedUserName.next(loggedUser)
   }
-  
+
   private loggedRoleName = new BehaviorSubject<string>('');
   loggedRole = this.loggedRoleName.asObservable();
   setLoggedRole(loggedRole: string) {
     this.loggedRoleName.next(loggedRole)
   }
-  
+
 
   constructor(private http: HttpClient) {
-    this.currentUserSubject = 
+    this.currentUserSubject =
     new BehaviorSubject<LoginResponseModel>(JSON.parse(localStorage.getItem('currentUser')));
     this.currentUser = this.currentUserSubject.asObservable();
    }
@@ -60,8 +61,8 @@ export class LoginService {
    }
     getLoginDetails(username: string, password: string){
       this.username = username;
-      this.password= password;     
-      console.log(); 
+      this.password= password;
+      console.log();
       return this.http.get(Paths.loginPath+"?emailId="+this.username+"&password="+this.password)
       .pipe(map(user => {
         // store user details and jwt token in local storage to keep user logged in between page refreshes
@@ -76,7 +77,7 @@ export class LoginService {
       menuD = this.menu.asObservable();
       setMenu(menu: any) {
           this.menu.next(menu)
-      } 
+      }
     logout() {
       // remove user from local storage and set current user to null
       localStorage.removeItem('currentUser');

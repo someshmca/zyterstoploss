@@ -4,7 +4,8 @@
    <div class="card custom-card">
       <div class="card-header">
       Contracts
-      <alert></alert>
+      <!-- <alert></alert> -->
+      <a class="text-primary" routerLink="/clients" routerLinkActive="active">Back</a>
       </div>
       <div class="card-body">
           <div class="select-grid-wrap">
@@ -16,7 +17,7 @@
               
                   <div fxLayout fxLayoutAlign="center center">
                     <mat-form-field fxFlex="40%">
-                      <input matInput type="text" (keyup)="doFilter($event.target.value)" placeholder="Search a Contract">
+                      <input matInput type="text" #filterInp [value]="inpValue" (keyup)="doFilter($event.target.value)" (focus)="doFilter($event.target.value)" placeholder="Search a Contract">
                     </mat-form-field>
                   </div>  
               </div>  
@@ -79,8 +80,11 @@
               <span *ngIf="isAddMode">Add Contract</span>
               <span *ngIf="!isAddMode">Update Contract</span>
           </h4>
-          <a class="fa fa-2x fa-times-circle" (click)="openCustomModal(false, null)">
-          </a>
+          <div>
+            <alert></alert>
+            <a class="fa fa-2x fa-times-circle" (click)="openCustomModal(false, null)">
+            </a>
+          </div>
       </div>
       <!-- Modal body -->
       <div class="modal-body"> 
@@ -202,6 +206,9 @@
            </div>
            
         <div class="modal-footer-btns">
+          <button type="button" class="btn btn-primary" routerLink="/clients" routerLinkActive="active">Back</button>
+          <button type="button" [className]="!productAddStatus? 'btn btn-secondary':'btn btn-primary'" [disabled]="!productAddStatus" routerLink="/product" routerLinkActive="active" *ngIf="isAddMode">Product</button>
+          <button type="button" class="btn btn-primary" routerLink="/product" routerLinkActive="active" *ngIf="!isAddMode">Product</button>
           <button type="button"  class="btn btn-outline-primary" (click)="openCustomModal(false, null)">Cancel</button>
           <button type="submit" class="btn btn-primary" *ngIf="!isAddMode" [disabled]="isDisabled">Update</button>
           <button type="submit" id="btnSave" class="btn btn-primary" [disabled]="isDisabled" *ngIf="isAddMode">Add</button>
