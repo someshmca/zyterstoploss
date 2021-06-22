@@ -94,10 +94,10 @@
         </a>
       </div>
 
+          
+      <form [formGroup]="ruleForm" (ngSubmit)="onSubmit()"  autocomplete="off">
       <!-- Modal body -->
       <div class="modal-body">
-          
-  <form [formGroup]="ruleForm" (ngSubmit)="onSubmit()"  autocomplete="off">
           <div class="mandate-fields">
             <span *ngIf="submitted && !ruleForm.valid">Fields marked with * are mandatory</span>
           </div>  
@@ -156,19 +156,25 @@
               </div>
             </div> -->      
         
-            <div class="row form-btns-area">
-              <button class="btn btn-outline-primary" (click)="openCustomModal(false, null)">Cancel</button>
-              <button [disabled]="loading" class="btn btn-primary" *ngIf="isAddMode">
-                  <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
-                  Add
-              </button>
-              <button [disabled]="loading" class="btn btn-primary" *ngIf="!isAddMode">
-                  <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
-                  Update
-              </button>
+            
+      </div>       
+      <div class="modal-footer">
+        <div class="modal-footer-btns">
+          <div class="col_1"> </div>
+          <div class="col_2"> 
+            <button class="btn btn-outline-primary" (click)="openCustomModal(false, null)">Cancel</button>
+            <button [disabled]="loading" class="btn btn-primary" *ngIf="isAddMode">
+                <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+                Add
+            </button>
+            <button [disabled]="loading" class="btn btn-primary" *ngIf="!isAddMode">
+                <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+                Update
+            </button>
           </div>
-        </form>
-      </div>           
+      </div>
+      </div>    
+    </form>
       </div>
     </div>
   </div>

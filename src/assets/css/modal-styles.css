@@ -29,12 +29,21 @@
     color: #ffffff;
     font-size: 1.2rem;
 }
-.modal-footer-btns{
-    text-align: right;
-    padding: 4px 0 4px 15px;
+div.modal-footer{
+    background: linear-gradient(#f8f8f8, #ebf1f5);
 }
-.modal-footer-btns .btn{
-    margin-left: 15px;
+.modal-footer-btns{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 4px 0;
+}
+.modal-footer-btns .col_1 .btn{
+    margin-right: 10px;
+}
+.modal-footer-btns .col_2 .btn{
+    margin-left: 10px;
 }
 .select-grid-header{
     display: flex;

@@ -76,9 +76,9 @@
         </div>
 
       </div>
+        <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
       <!-- Modal body -->
       <div class="modal-body">
-        <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
           <div class="product-form-wrap">
             <div class="mandate-fields">
               <span *ngIf="submitted && (!productForm.valid && !productForm.errors?.dates)">Fields marked with * are mandatory</span>
@@ -373,18 +373,21 @@
          <input type="hidden" formControlName="defferedFeePercentage" class="form-control"/>
       </div>
     </div>
-</div>
-
-
-
-          <div class="modal-footer-btns">
-            <button type="button" class="btn btn-primary" routerLink="/contracts" routerLinkActive="active">Back</button>
+</div>   
+      </div>
+      <div class="modal-footer">
+        <div class="modal-footer-btns">
+          <div class="col_1">
+           <button type="button" class="btn btn-primary" routerLink="/contracts" routerLinkActive="active">Back</button>
+          </div>
+          <div class="col_2">
             <button type="button" class="btn btn-outline-primary" (click)="openCustomModal(false, null)">Cancel</button>
-            <button type="submit" class="btn btn-primary" [disabled]="isDisabled" *ngIf="!isAddMode">Update</button>
+           <button type="submit" class="btn btn-primary" [disabled]="isDisabled" *ngIf="!isAddMode">Update</button>
             <button type="submit" class="btn btn-primary" [disabled]="isDisabled" *ngIf="isAddMode">Add</button>
           </div>
-        </form>
+        </div>
       </div>
+        </form>
     </div>
   </div>
 </div>

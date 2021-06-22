@@ -101,9 +101,9 @@
             </div>
         </div>
         <!-- Modal body -->
+      <form [formGroup]="clientForm" (ngSubmit)="onSubmit()">
         <div class="modal-body">
           <div class="client-form-area">
-          <form [formGroup]="clientForm" (ngSubmit)="onSubmit()">
              <div class="mandate-fields">
                <div *ngIf="submitted && (!clientForm.valid && !clientForm.errors?.dates)">Fields marked with * are mandatory</div>
                <div *ngIf="clientForm.errors">{{ clientForm.errors?.dates | json }}</div>
@@ -199,18 +199,22 @@
                    </div>
                 </div>
               </div>
-
-
-          <div class="modal-footer-btns">
-            <button type="button" [className]="!contractAddStatus? 'btn btn-secondary':'btn btn-primary'" [disabled]="!contractAddStatus" routerLink="/contracts" routerLinkActive="active" *ngIf="isAddMode">Contracts</button>
-            <button type="button" class="btn btn-primary" routerLink="/contracts" routerLinkActive="active" *ngIf="!isAddMode">Contracts</button>
-            <button type="button" class="btn btn-outline-primary" (click)="openCustomModal(false, null)">Cancel</button>
-            <button type="submit" class="btn btn-primary" *ngIf="!isAddMode">Update</button>
-            <button type="submit" [className]="isDisabled?'btn btn-secondary':'btn btn-primary'" [disabled]="isDisabled"  *ngIf="isAddMode">Add</button>
-          </div>
-          </form>
           </div>
         </div>
+        <div class="modal-footer">
+          <div class="modal-footer-btns">
+            <div class="col_1">
+              <button type="button" [className]="!contractAddStatus? 'btn btn-secondary':'btn btn-primary'" [disabled]="!contractAddStatus" routerLink="/contracts" routerLinkActive="active" *ngIf="isAddMode">Contracts</button>
+              <button type="button" class="btn btn-primary" routerLink="/contracts" routerLinkActive="active" *ngIf="!isAddMode">Contracts</button>
+            </div>
+            <div class="col_2">
+              <button type="button" class="btn btn-outline-primary" (click)="openCustomModal(false, null)">Cancel</button>  
+              <button type="submit" class="btn btn-primary" *ngIf="!isAddMode">Update</button>
+              <button type="submit" [className]="isDisabled?'btn btn-secondary':'btn btn-primary'" [disabled]="isDisabled"  *ngIf="isAddMode">Add</button>              
+            </div>
+          </div>          
+        </div>
+      </form>
         </div>
       </div>
     </div>

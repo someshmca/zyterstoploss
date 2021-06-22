@@ -171,9 +171,9 @@
           <a class="fa fa-2x fa-times-circle" (click)="openCustomModal(false, null)">
           </a>
       </div>
+      <form [formGroup]="batchProcessForm" (ngSubmit)="onSubmit()"  autocomplete="off">
       <!-- Modal body -->
       <div class="modal-body">   
-  <form [formGroup]="batchProcessForm" (ngSubmit)="onSubmit()"  autocomplete="off">
     <div class="mandate-fields">
       <span *ngIf="submitted && !batchProcessForm.valid">Fields marked with * are mandatory</span>
     </div>  
@@ -242,13 +242,19 @@
         </div>
       </div> -->
     </div> 
+      </div>   
+      <div class="modal-footer">
+        
     <div class="modal-footer-btns">
+      <div class="col_1"> </div>
+      <div class="col_2">
           <button type="button" class="btn btn-outline-primary" tabindex="9" (click)="openCustomModal(false, null)">Cancel</button>
           <button type="submit" class="btn btn-primary" [disabled]="isDisabled" *ngIf="isAddMode">Add</button>
           <button type="submit" class="btn btn-primary" [disabled]="isDisabled" *ngIf="!isAddMode">Update</button>
-        </div>
-        </form>
-      </div>           
+       </div>
+      </div>
+      </div>  
+    </form>      
       </div>
     </div>
   </div>

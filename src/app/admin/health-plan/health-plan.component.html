@@ -80,10 +80,10 @@
               </a>
             </div>
         </div>
+        <form [formGroup]="planForm" (ngSubmit)="onSubmit()">
         <!-- Modal body -->
         <div class="modal-body"> 
     <div class="helth-plan-form-area">
-    <form [formGroup]="planForm" (ngSubmit)="onSubmit()">
              <div class="mandate-fields">
                <span *ngIf="submitted && !planForm.valid">Fields marked with * are mandatory</span>
                <span *ngIf="submitted && isNoFactAmount">Enter any Factor Amount. Atleast One Factor amount is required</span>
@@ -178,14 +178,22 @@
                    </div>
              
              
-          <div class="modal-footer-btns">
-            <button type="button" class="btn btn-outline-primary" (click)="openCustomModal(false, null)">Cancel</button>
-            <button type="submit" class="btn btn-primary" *ngIf="!isAddMode" [disabled]="isDisabled">Update</button>
-            <button type="submit" class="btn btn-primary" [disabled]="isDisabled" *ngIf="isAddMode">Add</button>
-          </div>
-          </form>
+          
           </div> 
-        </div>           
+        </div>    
+        
+          
+        <div class="modal-footer">
+          <div class="modal-footer-btns">
+            <div class="col_1"> </div>
+            <div class="col_2">
+              <button type="button" class="btn btn-outline-primary" (click)="openCustomModal(false, null)">Cancel</button>
+              <button type="submit" class="btn btn-primary" *ngIf="!isAddMode" [disabled]="isDisabled">Update</button>
+              <button type="submit" class="btn btn-primary" [disabled]="isDisabled" *ngIf="isAddMode">Add</button>
+            </div>
+          </div>
+        </div>
+        </form>       
         </div>
       </div>
     </div>

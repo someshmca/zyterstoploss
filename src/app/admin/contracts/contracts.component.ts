@@ -69,7 +69,7 @@ export class ContractsComponent implements OnInit {
   productAddStatus: boolean;
   productUpdateStatus: boolean;
 
-  displayedColumns: string[] = ['clientName','contractId', 'description', 'startDate','endDate','clientId'];
+  displayedColumns: string[] = ['clientName','contractId', 'startDate', 'endDate', 'clientId'];
   dataSource: any;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;

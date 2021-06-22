@@ -222,9 +222,9 @@
              </a>
          </div> 
          <!-- Modal body -->
-         <div class="modal-body"> 
-     <div class="member-search-area">
      <form [formGroup]="memberForm" (ngSubmit)="onSubmit()">
+         <div class="modal-body"> 
+          <div class="member-search-area">
               <div class="mandate-fields">
                 <span *ngIf="submitted && !memberForm.valid">Fields marked with * are mandatory</span>
               </div>
@@ -379,15 +379,20 @@
                     </div>
                 </div>                    
                </div>
-          </div>   
+          </div>      
+        </div>
+      </div> 
+      <div class="modal-footer">
            <div class="modal-footer-btns">
+            <div class="col_1"> </div>
+            <div class="col_2">
              <button type="button" class="btn btn-outline-primary" (click)="openCustomModal(false, null)">Cancel</button>
              <button type="submit" class="btn btn-primary" *ngIf="!isAddMode">Update</button>
              <button type="submit" class="btn btn-primary" *ngIf="isAddMode">Add</button>
+            </div>
            </div>
-           </form>
         </div>
-           </div> 
+      </form>
          </div>           
          </div>
        </div>

@@ -80,9 +80,9 @@
             <a class="fa fa-2x fa-times-circle" (click)="openCustomModal(false, null)">
             </a>
         </div>
+        <form [formGroup]="securityForm" (ngSubmit)="onSubmit()" autocomplete="off">
           <!-- Modal body -->
       <div class="modal-body">          
-        <form [formGroup]="securityForm" (ngSubmit)="onSubmit()" autocomplete="off">
           <div class="mandate-fields">
             <span *ngIf="submitted && !securityForm.valid">Fields marked with * are mandatory</span>
           </div>                     
@@ -204,21 +204,25 @@
                   </div>
                       <!-- <div class="form-group">
                         <label *ngIf="addUserForm.errors">{{ addUserForm.errors?.dates | json }}</label>
-                      </div> -->     
-            <div class="row form-btns-area">
-              <button class="btn btn-outline-primary" (click)="openCustomModal(false, null)">Cancel</button>
-              <button [disabled]="loading" class="btn btn-primary" *ngIf="isAddMode">
-                  <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
-                  Add
-              </button>
-              <button [disabled]="loading" class="btn btn-primary" *ngIf="!isAddMode">
-                  <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
-                  Update
-              </button>
-          </div>
-            </form>
+                      </div> -->  
             </div>
-            
+            <div class="modal-footer">
+              <div class="modal-footer-btns">
+                <div class="col_1"> </div>
+                <div class="col_2"> 
+                  <button class="btn btn-outline-primary" (click)="openCustomModal(false, null)">Cancel</button>
+                  <button [disabled]="loading" class="btn btn-primary" *ngIf="isAddMode">
+                      <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+                      Add
+                  </button>
+                  <button [disabled]="loading" class="btn btn-primary" *ngIf="!isAddMode">
+                      <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+                      Update
+                  </button>
+                </div>
+              </div>
+            </div>   
+          </form>
           </div>           
           </div>
         </div>

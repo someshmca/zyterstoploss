@@ -39,11 +39,7 @@
                       <ng-container matColumnDef="contractId">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header > Contract ID </th>
                         <td mat-cell *matCellDef="let element"> {{element.contractId}} </td>
-                      </ng-container>
-                      <ng-container matColumnDef="description">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header > Description </th>
-                        <td mat-cell *matCellDef="let element"> {{element.description}} </td>
-                      </ng-container>                      
+                      </ng-container>                  
                       <ng-container matColumnDef="startDate">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header > Effective Date </th>
                         <td mat-cell *matCellDef="let element"> {{element.startDate | date:'MM/dd/yyyy'}} </td>
@@ -87,9 +83,9 @@
           </div>
       </div>
       <!-- Modal body -->
+  <form [formGroup]="contractForm" (ngSubmit)="onSubmit()">
       <div class="modal-body"> 
         
-  <form [formGroup]="contractForm" (ngSubmit)="onSubmit()">
   <div class="contract-form-area">
            <div class="mandate-fields">
             <div *ngIf="submitted && (!contractForm.valid && !contractForm.errors?.dates)">Fields marked with * are mandatory</div>
@@ -204,17 +200,22 @@
               </div> -->
             </div>
            </div>
-           
-        <div class="modal-footer-btns">
-          <button type="button" class="btn btn-primary" routerLink="/clients" routerLinkActive="active">Back</button>
-          <button type="button" [className]="!productAddStatus? 'btn btn-secondary':'btn btn-primary'" [disabled]="!productAddStatus" routerLink="/product" routerLinkActive="active" *ngIf="isAddMode">Product</button>
-          <button type="button" class="btn btn-primary" routerLink="/product" routerLinkActive="active" *ngIf="!isAddMode">Product</button>
-          <button type="button"  class="btn btn-outline-primary" (click)="openCustomModal(false, null)">Cancel</button>
-          <button type="submit" class="btn btn-primary" *ngIf="!isAddMode" [disabled]="isDisabled">Update</button>
-          <button type="submit" id="btnSave" class="btn btn-primary" [disabled]="isDisabled" *ngIf="isAddMode">Add</button>
+        </div> 
+        <div class="modal-footer">
+          <div class="modal-footer-btns">
+            <div class="col_1">
+              <button type="button" class="btn btn-primary" routerLink="/clients" routerLinkActive="active">Back</button>
+              <button type="button" [className]="!productAddStatus? 'btn btn-secondary':'btn btn-primary'" [disabled]="!productAddStatus" routerLink="/product" routerLinkActive="active" *ngIf="isAddMode">Product</button>
+              <button type="button" class="btn btn-primary" routerLink="/product" routerLinkActive="active" *ngIf="!isAddMode">Product</button>
+            </div>
+            <div class="col_2">
+              <button type="button"  class="btn btn-outline-primary" (click)="openCustomModal(false, null)">Cancel</button>
+              <button type="submit" class="btn btn-primary" *ngIf="!isAddMode" [disabled]="isDisabled">Update</button>
+              <button type="submit" id="btnSave" class="btn btn-primary" [disabled]="isDisabled" *ngIf="isAddMode">Add</button>
+            </div>
+          </div>
         </div>
         </form>
-        </div> 
       </div>           
       </div>
     </div>
