@@ -107,16 +107,16 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(){
   }
   
-  getProductAddStatus(){
-    this.productService.productAddStatus.subscribe((status)=>{
-        this.productAddStatus = status;
-      })
-  }
-  getProductUpdateStatus(){
-    this.productService.productUpdateStatus.subscribe((status)=>{
-        this.productUpdateStatus = status;
-      })
-  }
+  // getProductAddStatus(){
+  //   this.productService.productAddStatus.subscribe((status)=>{
+  //       this.productAddStatus = status;
+  //     })
+  // }
+  // getProductUpdateStatus(){
+  //   this.productService.productUpdateStatus.subscribe((status)=>{
+  //       this.productUpdateStatus = status;
+  //     })
+  // }
   getPlanAddStatus(){
     this.planService.planAddStatus.subscribe((status)=>{
         this.planAddStatus = status; 

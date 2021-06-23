@@ -81,12 +81,12 @@ export class ProductComponent implements OnInit {
   isDisabled:boolean=false;
   isEditSelected: boolean = false;
   inpValue: string='';
-  contractAddStatus: boolean;
-  contractUpdateStatus: boolean;
+  // contractAddStatus: boolean;
+  // contractUpdateStatus: boolean;
   productAddStatus: boolean;
   productUpdateStatus: boolean;
-  planAddStatus: boolean;
-  planUpdateStatus: boolean;
+  // planAddStatus: boolean;
+  // planUpdateStatus: boolean;
   constructor(
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
@@ -160,8 +160,8 @@ export class ProductComponent implements OnInit {
     //this.getAllContracts();
     //this.isClientSelected = false;
     this.checkMaxLiability(); 
-    this.getContractAddStatus();
-    this.getContractUpdateStatus();
+    // this.getContractAddStatus();
+    // this.getContractUpdateStatus();
 
     this.getProductAddStatus();
     this.getProductUpdateStatus();    
@@ -196,26 +196,26 @@ export class ProductComponent implements OnInit {
   }
 
   
-  getContractAddStatus(){   
-    this.contractService.contractAddStatus.subscribe((status)=> {
-        this.contractAddStatus = status;        
-      });
-  }
-  getContractUpdateStatus(){       
-    this.contractService.contractUpdateStatus.subscribe((status)=> {
-        this.contractUpdateStatus = status;        
-      });
-  }
-  getPlanAddStatus(){   
-    this.planService.planAddStatus.subscribe((status)=> {
-        this.planAddStatus = status;        
-      });
-  }
-  getPlanUpdateStatus(){       
-    this.planService.planUpdateStatus.subscribe((status)=> {
-        this.planUpdateStatus = status;        
-      });
-  }
+  // getContractAddStatus(){   
+  //   this.contractService.contractAddStatus.subscribe((status)=> {
+  //       this.contractAddStatus = status;        
+  //     });
+  // }
+  // getContractUpdateStatus(){       
+  //   this.contractService.contractUpdateStatus.subscribe((status)=> {
+  //       this.contractUpdateStatus = status;        
+  //     });
+  // }
+  // getPlanAddStatus(){   
+  //   this.planService.planAddStatus.subscribe((status)=> {
+  //       this.planAddStatus = status;        
+  //     });
+  // }
+  // getPlanUpdateStatus(){       
+  //   this.planService.planUpdateStatus.subscribe((status)=> {
+  //       this.planUpdateStatus = status;        
+  //     });
+  // }
   get f() { return this.productForm.controls; }
 
   checkMaxLiability(){    
@@ -480,7 +480,8 @@ if(aslTermVal!='' && this.productForm.valid){
           });
           
           this.planService.setPlanAddStatus(false);
-          this.clientService.passClientId(this.f.clientId.value);
+          //this.contractService.setContractUpdateStatus(true);
+          //this.clientService.passClientId(id.clientName);
           this.planService.setPlanUpdateStatus(true);
 
 

@@ -14,6 +14,8 @@ import { AlertService } from '../services/alert.service';
 import { LoginService } from 'src/app/shared/services/login.service';
 import { combineLatest } from 'rxjs';
 import { ModuleNames } from 'ag-grid-community';
+import { Router } from '@angular/router';
+import { ɵbypassSanitizationTrustStyle } from '@angular/core';
 
 let dp = new DatePipe(navigator.language);
 let p = 'y-MM-dd'; // YYYY-MM-DD
@@ -29,7 +31,7 @@ export class ClientComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private clientsService: ClientsService, private fb: FormBuilder, private contractService: ContractService, private alertService: AlertService, private datePipe: DatePipe,private loginService: LoginService) { }
+  constructor(private clientService: ClientsService, private fb: FormBuilder, private contractService: ContractService, private alertService: AlertService, private datePipe: DatePipe,private loginService: LoginService, private route: Router) { }
 
   clients:IClient[] = [];
   clientIDs: IClient[] = [];
@@ -60,21 +62,21 @@ export class ClientComponent implements OnInit {
   contractAddStatus: boolean;
   contractUpdateStatus: boolean;
   clientUpdateStatus: boolean;
-
+  inpValue: string= '';
   startDateErr = {isDateErr: false,dateErrMsg: ''};
   endDateErr = {isDateErr: false,dateErrMsg: ''};
   accNameErr = {isDuplicate: false, errMsg: ''};
   accIdErr = {isDuplicate: false, errMsg: ''};
 
   @ViewChild("focusElem") focusTag: ElementRef;
-
+  @ViewChild("filterInput") filterInput: ElementRef;
 
   ngOnInit() {
     this.getAllClients();
     this.getAllContracts();
     this.getParentClient();
     this.clientFormInit();
-    this.clientsService.getActiveClients().subscribe(
+    this.clientService.getActiveClients().subscribe(
       (data) => {
         data.filter((value,index)=>data.indexOf(value)===index);
         this.activeClients = data;
@@ -84,8 +86,16 @@ export class ClientComponent implements OnInit {
     this.getClientUpdateStatus();
   }
   getClientUpdateStatus(){
-    this.clientsService.clientUpdateStatus.subscribe((status)=>{
+    this.clientService.clientUpdateStatus.subscribe((status)=>{
         this.clientUpdateStatus = status;
+        
+        this.clientService.clientIdValue.subscribe((data)=>{                   
+          let d:string=data;
+          this.inpValue = d;
+          setTimeout(()=>{
+              this.filterInput.nativeElement.focus();                  
+            }, 1000);
+        });
       })
   }
   getContractAddStatus(){   
@@ -120,7 +130,7 @@ export class ClientComponent implements OnInit {
   })//,{validator: this.dateLessThan('startDate', 'endDate')});
   }
   getAllClients(){
-    this.clientsService.getAllClients().subscribe(
+    this.clientService.getAllClients().subscribe(
       (data: IClient[]) => {
           this.clientIDs =  data;
           this.clients = data;
@@ -150,7 +160,7 @@ export class ClientComponent implements OnInit {
     }
 }
   getParentClient(){
-    this.clientsService.getParentClient().subscribe(
+    this.clientService.getParentClient().subscribe(
       (data:IParentClient[]) => {
           this.parentClientIds = data;
       }
@@ -165,7 +175,7 @@ export class ClientComponent implements OnInit {
     )
   }
   getClient(clientId){
-    this.clientsService.getClient(clientId).subscribe(
+    this.clientService.getClient(clientId).subscribe(
       (data: IClient[]) => {
 
 
@@ -189,7 +199,7 @@ clearErrorMessages(){
   this.accIdErr.errMsg='';
 }
 checkDuplicateAccountName(aname){
-  return this.clientsService.checkDuplicateAccountName(aname).toPromise();
+  return this.clientService.checkDuplicateAccountName(aname).toPromise();
   // promise.then((data)=>{
   //     //this.accNameStatus = data;
   //
@@ -209,7 +219,7 @@ checkDuplicateAccountName(aname){
 //   console.log("Data: " + JSON.stringify(data));
 // }
 async checkDuplicateAccountId(aid){
-  const promise = this.clientsService.checkDuplicateAccountId(aid).toPromise();
+  const promise = this.clientService.checkDuplicateAccountId(aid).toPromise();
   promise.then((data)=>{
     console.log("Promise resolved with: " + data);
     this.accIdStatus = data;
@@ -271,7 +281,7 @@ async checkDuplicateAccountId(aid){
         this.ustartDate = this.datePipe.transform(id.startDate, 'yyyy-MM-dd');
         this.uendDate = this.datePipe.transform(id.endDate, 'yyyy-MM-dd');
 
-        this.clientsService.getClient(id.clientId).subscribe(x => {
+        this.clientService.getClient(id.clientId).subscribe(x => {
 
         console.log(x[0].clientId);
          this.clientForm.patchValue({
@@ -293,11 +303,11 @@ async checkDuplicateAccountId(aid){
         //this.uAccountId = this.f.clientId.value;
         this.contractService.setContractAddStatus(false);
         setTimeout(()=>{
-          this.clientsService.passClientId(this.f.clientName.value);
+          this.clientService.passClientId(this.f.clientName.value);
           
         }, 1000);
         this.contractService.setContractUpdateStatus(true);
-        this.clientsService.setClientUpdateStatus(true);
+        this.clientService.setClientUpdateStatus(true);
 
        }
 
@@ -328,6 +338,12 @@ async checkDuplicateAccountId(aid){
 
        });
     }
+    gotoAddContract(){
+      this.route.navigate(['/contracts']);      
+    }
+    gotoUpdateContract(){
+      this.route.navigate(['/contracts']);      
+    }
     onSubmit() {
       this.submitted = true;
 
@@ -345,8 +361,8 @@ async checkDuplicateAccountId(aid){
 
       if(this.clientForm.valid){
         if(this.isAddMode){
-          const cid= this.clientsService.checkDuplicateAccountId(this.f.clientId.value);
-          const cname = this.clientsService.checkDuplicateAccountName(this.f.clientName.value);
+          const cid= this.clientService.checkDuplicateAccountId(this.f.clientId.value);
+          const cname = this.clientService.checkDuplicateAccountName(this.f.clientName.value);
           const connectStream = combineLatest([cid, cname]);
           connectStream.subscribe(
             ([id,name]) => {
@@ -425,14 +441,14 @@ async checkDuplicateAccountId(aid){
       //: id.clientId
     });
  //   console.log(this.clientForm.get('status').value);
-    this.clientsService.addClient(this.clientForm.value)
+    this.clientService.addClient(this.clientForm.value)
         .pipe(first())
         .subscribe({
             next: () => {
               this.isDisabled=true;
               //this.openCustomModal(false, null);
               this.getAllClients();
-              this.clientsService.passClientId(this.f.clientId.value);
+              this.clientService.passClientId(this.f.clientId.value);
               this.contractService.setContractAddStatus(true);
               //this.getContractAddStatus();
               this.alertService.success('New Client added', { keepAfterRouteChange: true });
@@ -458,7 +474,7 @@ async checkDuplicateAccountId(aid){
 
         }
 
-        this.clientsService.updateClient(this.clientForm.value)
+        this.clientService.updateClient(this.clientForm.value)
             .pipe(first())
             .subscribe({
                 next: () => {

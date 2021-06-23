@@ -23,7 +23,7 @@
                       </div> -->
                       <div fxLayout fxLayoutAlign="center center">
                         <mat-form-field fxFlex="40%">
-                          <input matInput type="text" (keyup)="doFilter($event.target.value)" placeholder="Search a Account">
+                          <input matInput [value]="inpValue" #filterInput type="text" (keyup)="doFilter($event.target.value)" placeholder="Search a Account">
                         </mat-form-field>
                       </div>
                   </div>
@@ -204,8 +204,8 @@
         <div class="modal-footer">
           <div class="modal-footer-btns">
             <div class="col_1">
-              <button type="button" [className]="!contractAddStatus? 'btn btn-secondary':'btn btn-primary'" [disabled]="!contractAddStatus" routerLink="/contracts" routerLinkActive="active" *ngIf="isAddMode">Contracts</button>
-              <button type="button" class="btn btn-primary" routerLink="/contracts" routerLinkActive="active" *ngIf="!isAddMode">Contracts</button>
+              <button type="button" [className]="!contractAddStatus? 'btn btn-secondary':'btn btn-primary'" [disabled]="!contractAddStatus" (click)="gotoAddContract()" routerLinkActive="active" *ngIf="isAddMode">Contracts</button>
+              <button type="button" class="btn btn-primary" (click)="gotoUpdateContract()" routerLinkActive="active" *ngIf="!isAddMode">Contracts</button>
             </div>
             <div class="col_2">
               <button type="button" class="btn btn-outline-primary" (click)="openCustomModal(false, null)">Cancel</button>  

@@ -185,7 +185,9 @@
           
         <div class="modal-footer">
           <div class="modal-footer-btns">
-            <div class="col_1"> </div>
+            <div class="col_1">
+              <button class="btn btn-primary" routerLink="/product" routerLinkActive="active">Back</button>
+               </div>
             <div class="col_2">
               <button type="button" class="btn btn-outline-primary" (click)="openCustomModal(false, null)">Cancel</button>
               <button type="submit" class="btn btn-primary" *ngIf="!isAddMode" [disabled]="isDisabled">Update</button>

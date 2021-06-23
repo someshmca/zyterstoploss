@@ -110,7 +110,7 @@
              <div class="col-md-4">
               <div class="form-group">
                 <label>Account ID<small class="starmark">*</small> </label>
-                <select #focusElem formControlName="clientId" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.clientId.errors }" (change)="getClientDetails($event.target.value)">
+                <select #focusElem formControlName="clientId" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.clientId.errors }" (focus)="getClientDetails($event.target.value)" (change)="getClientDetails($event.target.value)">
                   <option *ngFor="let client of activeClients" [value]="client.clientId">
                     {{client.clientName}} ({{client.clientId}})
                   </option>
@@ -205,7 +205,7 @@
           <div class="modal-footer-btns">
             <div class="col_1">
               <button type="button" class="btn btn-primary" routerLink="/clients" routerLinkActive="active">Back</button>
-              <button type="button" [className]="!productAddStatus? 'btn btn-secondary':'btn btn-primary'" [disabled]="!productAddStatus" routerLink="/product" routerLinkActive="active" *ngIf="isAddMode">Product</button>
+              <button type="button" class="btn btn-primary" routerLink="/product" routerLinkActive="active" *ngIf="isAddMode">Product</button>
               <button type="button" class="btn btn-primary" routerLink="/product" routerLinkActive="active" *ngIf="!isAddMode">Product</button>
             </div>
             <div class="col_2">

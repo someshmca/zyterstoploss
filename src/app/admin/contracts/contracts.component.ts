@@ -65,9 +65,9 @@ export class ContractsComponent implements OnInit {
 
   contractAddStatus: boolean; 
   contractUpdateStatus: boolean;
-  clientUpdateStatus: boolean;
-  productAddStatus: boolean;
-  productUpdateStatus: boolean;
+  //clientUpdateStatus: boolean;
+  // productAddStatus: boolean;
+  // productUpdateStatus: boolean;
 
   displayedColumns: string[] = ['clientName','contractId', 'startDate', 'endDate', 'clientId'];
   dataSource: any;
@@ -121,9 +121,9 @@ export class ContractsComponent implements OnInit {
     });
     this.getContractAddStatus();
     this.getContractUpdateStatus();
-    this.getClientUpdateStatus();    
-    this.getProductAddStatus();
-    this.getProductUpdateStatus(); 
+    //this.getClientUpdateStatus();    
+    // this.getProductAddStatus();
+    // this.getProductUpdateStatus(); 
   }
   getContractAddStatus(){
     this.contractService.contractAddStatus.subscribe(
@@ -146,37 +146,32 @@ export class ContractsComponent implements OnInit {
         this.contractUpdateStatus = data;       
          
         if(this.contractUpdateStatus){
-          this.clientService.clientIdValue.subscribe(
-            (data)=>{     
-              
+          this.clientService.clientIdValue.subscribe((data)=>{                   
               let d:string=data;
               this.inpValue = d;
-              setTimeout(
-                ()=>{
+              setTimeout(()=>{
                   this.filterTable.nativeElement.focus();                  
-                }, 1000
-              )              
-            }
-          )
+                }, 1000);
+            });
         }
       }
     )
   }
-  getClientUpdateStatus(){
-    this.clientService.clientUpdateStatus.subscribe((status)=>{
-      this.clientUpdateStatus = status;
-    })
-  }
-  getProductAddStatus(){
-    this.productService.productAddStatus.subscribe((status)=>{
-        this.productAddStatus = status;
-      })
-  }
-  getProductUpdateStatus(){
-    this.productService.productUpdateStatus.subscribe((status)=>{
-        this.productUpdateStatus = status;
-      })
-  }
+  // getClientUpdateStatus(){
+  //   this.clientService.clientUpdateStatus.subscribe((status)=>{
+  //     this.clientUpdateStatus = status;
+  //   })
+  // }
+  // getProductAddStatus(){
+  //   this.productService.productAddStatus.subscribe((status)=>{
+  //       this.productAddStatus = status;
+  //     })
+  // }
+  // getProductUpdateStatus(){
+  //   this.productService.productUpdateStatus.subscribe((status)=>{
+  //       this.productUpdateStatus = status;
+  //     })
+  // }
 
   getClientDetails(clientId){
     
@@ -211,8 +206,7 @@ export class ContractsComponent implements OnInit {
         data.sort((a, b) => (a.clientName > b.clientName) ? 1 : -1);
         this.activeClients = data;
         
-      }
-    )
+      })
   }
   getContract(contractId){
     this.contractService.getContract(contractId).subscribe((data)=>{
@@ -300,15 +294,12 @@ clearErrorMessages(){
       this.getContract(id);
       this.getClientDetails(id.clientId);
       
-      this.clientService.passClientId(id);
       this.clientService.setClientUpdateStatus(true);   
       this.clientService.setClientAddStatus(false);
       this.productService.setProductAddStatus(false);
       this.productService.setProductUpdateStatus(true);
-      setTimeout(()=>{
-        this.clientService.passClientId(this.f.clientName.value);
-      }, 1000);
-      this.productService.setProductAddStatus(false);
+      //   this.clientService.passClientId(id.clientName);
+      // debugger;
       console.log(this.updateObj);          
     }
   }
@@ -534,13 +525,14 @@ clearErrorMessages(){
             next: () => {
               //this.openCustomModal(false, null);
               this.getAllContracts();
-              //this.contractForm.reset();     
-              this.contractService.setContractAddStatus(false);  
-              
-              this.clientService.passClientId(this.f.clientId.value);     
-              this.productService.setProductAddStatus(true);
-              this.productService.setProductUpdateStatus(false);
-                this.alertService.success('New Contract added', { keepAfterRouteChange: true });               
+              //this.contractForm.reset();                   
+              //this.clientService.passClientId(this.f.clientId.value);   
+              this.alertService.success('New Contract added', { keepAfterRouteChange: true });   
+              setTimeout(()=>{
+                this.clientService.passClientId(this.f.clientId.value);
+              },1000);
+             this.productService.setProductUpdateStatus(false);    
+              this.productService.setProductAddStatus(true);          
             },
             error: error => {
                 this.alertService.error(error);
