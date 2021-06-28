@@ -5,7 +5,7 @@
       <div class="card-header">
       Contracts
       <!-- <alert></alert> -->
-      <a class="text-primary" routerLink="/clients" routerLinkActive="active">Back</a>
+      
       </div>
       <div class="card-body">
           <div class="select-grid-wrap">
@@ -58,7 +58,14 @@
                       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
                     </table>
-                    <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
+                    <div class="grid-footer">
+                      <div class="col_1">
+                        <a class="text-primary" routerLink="/clients" routerLinkActive="active">Back</a>
+                      </div>
+                      <div class="col_2">
+                        <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
+                      </div>
+                    </div>
                   </div>
               </div>
               </div>
@@ -204,9 +211,10 @@
         <div class="modal-footer">
           <div class="modal-footer-btns">
             <div class="col_1">
-              <button type="button" class="btn btn-primary" routerLink="/clients" routerLinkActive="active">Back</button>
-              <button type="button" class="btn btn-primary" routerLink="/product" routerLinkActive="active" *ngIf="isAddMode">Product</button>
-              <button type="button" class="btn btn-primary" routerLink="/product" routerLinkActive="active" *ngIf="!isAddMode">Product</button>
+              <button type="button" class="btn btn-primary" *ngIf="isAddMode" routerLinkActive="active" (click)="goBackClientAdd()">Back</button>
+              <button type="button" class="btn btn-primary" *ngIf="!isAddMode" routerLinkActive="active" (click)="goBackClientUpdate()">Back</button>
+              <button type="button" class="btn btn-primary"  routerLinkActive="active" (click)="gotoProductAdd()" *ngIf="isAddMode">Product</button>
+              <button type="button" class="btn btn-primary" routerLinkActive="active" (click)="gotoProductUpdate()" *ngIf="!isAddMode">Product</button>
             </div>
             <div class="col_2">
               <button type="button"  class="btn btn-outline-primary" (click)="openCustomModal(false, null)">Cancel</button>

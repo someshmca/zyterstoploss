@@ -303,20 +303,20 @@
                 <div class="col-md-4">
                      <div class="form-group">
                         <label>Date of Birth<small class="starmark">*</small></label> 
-                        <input type="date" value="MM/DD/YYYY" formControlName="dateOfBirth" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.dateOfBirth.errors }" />                            
+                        <input type="date" value="MM/DD/YYYY" formControlName="dateOfBirth" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.dateOfBirth.errors }" max="2999-12-31" />                            
                       </div>
                 </div>  
                 <div class="col-md-4">
                      <div class="form-group">
                         <label>Member Start Date<small class="starmark">*</small></label> 
-                        <input type="date" value="MM/DD/YYYY" formControlName="memberStartDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.memberStartDate.errors }"/>
+                        <input type="date" value="MM/DD/YYYY" formControlName="memberStartDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.memberStartDate.errors }" max="2999-12-31"/>
                         
                       </div>
                 </div>
                 <div class="col-md-4">
                      <div class="form-group">
                         <label>Member End Date<small class="starmark">*</small></label> 
-                        <input type="date" value="MM/DD/YYYY" formControlName="memberEndDate" class="form-control"/>
+                        <input type="date" value="MM/DD/YYYY" formControlName="memberEndDate" class="form-control" max="2999-12-31"/>
                         
                       </div>
                 </div>
@@ -369,7 +369,7 @@
                 </div>    
                </div>
                <div class="row">
-                <div class="col-md-4" *ngIf="!isAddMode">
+                <!-- <div class="col-md-4" *ngIf="!isAddMode">
                     <div class="form-group switch-group">
                         Active
                           <label class="switch">
@@ -377,7 +377,7 @@
                             <span class="slider round"></span>
                           </label>                  
                     </div>
-                </div>                    
+                </div>                     -->
                </div>
           </div>      
         </div>

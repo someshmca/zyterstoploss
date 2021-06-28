@@ -1,4 +1,4 @@
 {
-    "appService.defaultWebAppToDeploy": "/subscriptions/40b54f55-8d97-484d-9455-0d260ffa9fe1/resourceGroups/Medica_ZyterStopLoss/providers/Microsoft.Web/sites/ZyterHealthSLUI",
-    "appService.deploySubpath": "dist\\medica2"
+    "appService.deploySubpath": "dist\\medica2",
+    "appService.defaultWebAppToDeploy": "/subscriptions/9e4b168a-24c5-41c8-a993-25378c417340/resourceGroups/medica/providers/Microsoft.Web/sites/ZyterHealthSLUI"
 }

@@ -226,8 +226,6 @@ async checkDuplicateAccountId(aid){
       if(this.accIdStatus>0){
         this.accIdErr.isDuplicate=true;
         this.accIdErr.errMsg='The account Id '+this.f.clientId.value+' already exists. Please enter different Account Id';
-
-
         return;
       }
 
@@ -301,14 +299,6 @@ async checkDuplicateAccountId(aid){
           this.uAccountName = x[0].clientName;
         });
         //this.uAccountId = this.f.clientId.value;
-        this.contractService.setContractAddStatus(false);
-        setTimeout(()=>{
-          this.clientService.passClientId(this.f.clientName.value);
-          
-        }, 1000);
-        this.contractService.setContractUpdateStatus(true);
-        this.clientService.setClientUpdateStatus(true);
-
        }
 
 
@@ -339,9 +329,18 @@ async checkDuplicateAccountId(aid){
        });
     }
     gotoAddContract(){
-      this.route.navigate(['/contracts']);      
+      this.clientService.passClientId(this.f.clientId.value);  
+      debugger;
+      this.contractService.setContractUpdateStatus(false);
+      this.route.navigate(['/contracts']);  
     }
     gotoUpdateContract(){
+      setTimeout(()=>{
+        this.clientService.passClientId(this.f.clientName.value);        
+      }, 1000);
+      debugger;
+      this.contractService.setContractUpdateStatus(true);
+      this.contractService.setContractAddStatus(false);
       this.route.navigate(['/contracts']);      
     }
     onSubmit() {
@@ -448,7 +447,6 @@ async checkDuplicateAccountId(aid){
               this.isDisabled=true;
               //this.openCustomModal(false, null);
               this.getAllClients();
-              this.clientService.passClientId(this.f.clientId.value);
               this.contractService.setContractAddStatus(true);
               //this.getContractAddStatus();
               this.alertService.success('New Client added', { keepAfterRouteChange: true });
@@ -458,7 +456,6 @@ async checkDuplicateAccountId(aid){
                 this.loading = false;
             }
         });
-
     }
 
     private updateClient() {
@@ -486,6 +483,7 @@ async checkDuplicateAccountId(aid){
                     this.alertService.success('Client updated', {
                       keepAfterRouteChange: true });
                     this.isDisabled=true;
+                    this.contractService.setContractAddStatus(false);  
                    // this.router.navigate(['../../'], { relativeTo: this.route });
                 },
                 error: error => {

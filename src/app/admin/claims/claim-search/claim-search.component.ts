@@ -60,7 +60,7 @@ export class ClaimSearchComponent implements OnInit {
       toDate: ['']
     },{validator: this.dateLessThan('fromDate', 'toDate')});
     this.maxDate = this.datePipe.transform(new Date(Date.now()), 'yyyy-MM-dd');
-    this.maxDate=null;
+    this.maxDate= '2999-12-31';
     setTimeout(()=>{
       this.focusTag.nativeElement.focus()
     }, 100)
@@ -132,7 +132,7 @@ export class ClaimSearchComponent implements OnInit {
       this.isClaimSearchErr = false;
       return;      
     }
-    if(this.f.memberId.value=='' && this.f.firstName.value=='' && this.f.lastName.value=='' && this.f.dateOfBirth.value==null && this.f.claimId.value=='' && this.f.fromDate.value==null && this.f.toDate.value==null){
+    if(this.f.memberId.value.trim()=='' && this.f.firstName.value.trim()=='' && this.f.lastName.value.trim()=='' && this.f.dateOfBirth.value==null && this.f.claimId.value.trim()=='' && this.f.fromDate.value==null && this.f.toDate.value==null){
       
       this.isClaimSearchErr = true;
       return;

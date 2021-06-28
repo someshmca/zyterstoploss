@@ -65,15 +65,11 @@ export class ContractsComponent implements OnInit {
 
   contractAddStatus: boolean; 
   contractUpdateStatus: boolean;
-  //clientUpdateStatus: boolean;
-  // productAddStatus: boolean;
-  // productUpdateStatus: boolean;
 
   displayedColumns: string[] = ['clientName','contractId', 'startDate', 'endDate', 'clientId'];
   dataSource: any;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  backClientUpdateStatus: boolean;
   constructor(
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
@@ -294,10 +290,6 @@ clearErrorMessages(){
       this.getContract(id);
       this.getClientDetails(id.clientId);
       
-      this.clientService.setClientUpdateStatus(true);   
-      this.clientService.setClientAddStatus(false);
-      this.productService.setProductAddStatus(false);
-      this.productService.setProductUpdateStatus(true);
       //   this.clientService.passClientId(id.clientName);
       // debugger;
       console.log(this.updateObj);          
@@ -480,8 +472,7 @@ clearErrorMessages(){
       // setTimeout(
       //   () => {  
       //   }, 1400
-      // )
-      
+      // )     
     
            
   }
@@ -527,11 +518,7 @@ clearErrorMessages(){
               this.getAllContracts();
               //this.contractForm.reset();                   
               //this.clientService.passClientId(this.f.clientId.value);   
-              this.alertService.success('New Contract added', { keepAfterRouteChange: true });   
-              setTimeout(()=>{
-                this.clientService.passClientId(this.f.clientId.value);
-              },1000);
-             this.productService.setProductUpdateStatus(false);    
+              this.alertService.success('New Contract added', { keepAfterRouteChange: true });  
               this.productService.setProductAddStatus(true);          
             },
             error: error => {
@@ -596,5 +583,34 @@ clearErrorMessages(){
                     this.loading = false;
                 }
             });
+    }
+
+    gotoProductAdd(){        
+      setTimeout(()=>{
+        this.clientService.passClientId(this.f.clientId.value);
+      },1000);
+      this.productService.setProductUpdateStatus(false);   
+      this.router.navigate(['/product']);
+    }
+
+    gotoProductUpdate(){        
+      setTimeout(()=>{
+        this.clientService.passClientId(this.f.clientId.value);
+      },1000);
+      this.productService.setProductUpdateStatus(true);   
+      this.productService.setProductAddStatus(false);
+      this.router.navigate(['/product']);
+    }
+    goBackClientAdd(){
+      this.clientService.setClientAddStatus(true);
+      this.clientService.passClientId(this.f.clientId.value);
+      this.clientService.setClientUpdateStatus(false);
+      this.router.navigate(['/clients']);
+    }
+    goBackClientUpate(){
+      this.clientService.setClientAddStatus(false);
+      this.clientService.passClientId(this.f.clientId.value);
+      this.clientService.setClientUpdateStatus(true);
+      this.router.navigate(['/clients']);
     }
 }

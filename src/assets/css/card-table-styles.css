@@ -145,3 +145,13 @@
 .no-records-found h3{
     color: #ff0000;
 }
+
+.grid-footer{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.grid-footer a{
+    font-size: 1rem;
+    font-weight: bold;
+}

@@ -177,7 +177,7 @@
                     <label>Effective From 
                       <small class="starmark">*</small>
                     </label>
-                    <input type="date" class="form-control" formControlName="effectiveFrom" [ngClass]="{ 'is-invalid': submitted && f.effectiveFrom.errors }">
+                    <input type="date" class="form-control" formControlName="effectiveFrom" [ngClass]="{ 'is-invalid': submitted && f.effectiveFrom.errors }" max="2999-12-31">
                     <!-- <div class="invalid-feedback">
                       <div *ngIf="submitted && f.effectiveFrom.errors">
                         <div *ngIf="f.effectiveFrom.errors.required">                      
@@ -191,7 +191,7 @@
                       <div class="form-group">
                         <label>Effective To 
                            <small class="starmark">*</small></label>
-                            <input type="date" class="form-control field-input-text" formControlName="effectiveTo" [ngClass]="{ 'is-invalid': submitted && f.effectiveTo.errors }"/>
+                            <input type="date" class="form-control field-input-text" formControlName="effectiveTo" [ngClass]="{ 'is-invalid': submitted && f.effectiveTo.errors }" max="2999-12-31"/>
                             <!-- <div class="invalid-feedback">
                             <div *ngIf="submitted && f.effectiveTo.errors">
                                 <div *ngIf="f.effectiveTo.errors.required">                      

@@ -230,7 +230,10 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
       this.planI=elem.planID;
       // let newArr = this.plans.filter((plan)=>{
       //   return plan.planID == this.planI
-      // });
+      // });      
+      this.tierObj={
+        t1Amt:0, t2Amt:0, t3Amt:0, t4Amt:0
+      };
       console.log(elem.lstTblPlanTier.length);
       for(let i=0;i<elem.lstTblPlanTier.length; i++){
         if(elem.lstTblPlanTier[i].tierId==1){
@@ -299,12 +302,10 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
       let t2=this.f.tier2Aggfactamt.value;
       let t3=this.f.tier3Aggfactamt.value;
       let t4=this.f.tier4Aggfactamt.value;
+      debugger;
       if((t1=='' || t1==0) && (t2=='' || t2==0) && (t3=='' || t3==0) && (t4=='' || t4==0)){
         this.isNoFactAmount=true;
         return;
-      }
-      else{
-        this.isNoFactAmount=false;
       }
       this.loading = true;
       if (this.isAddMode) {
@@ -316,6 +317,7 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
 
   private addPlan() {
     this.isDisabled=true;
+    this.isNoFactAmount=false;
     this.addPlanObj = {
       planID: 0,
       clientId: this.f.clientId.value,
@@ -368,7 +370,7 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
                   this.getAllPlans();
 
                   this.planForm.reset();
-                  this.alertService.success('New Plan added', { keepAfterRouteChange: true });
+                  this.alertService.success('New Plan & Tier added', { keepAfterRouteChange: true });
               },
               error: error => {
                   this.alertService.error(error);
@@ -379,6 +381,7 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
 
   private updatePlan() {
     this.isDisabled=true;
+    this.isNoFactAmount=false;
     this.updatePlanObj = {
       planID: this.updatePlanID,
       clientId: this.f.clientId.value,
@@ -428,7 +431,7 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
           .pipe(first())
           .subscribe({
               next: () => {
-                  this.alertService.success('Plan updated', {
+                  this.alertService.success('Plan & Tier updated', {
                     keepAfterRouteChange: true });
 
                     this.openCustomModal(false,null);

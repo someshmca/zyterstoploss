@@ -2,7 +2,7 @@
     width: 200px;
 }
 .main-body-area{
-    width: calc(100vw - 220px);
+    width: calc(100% - 200px);
 }
 
 .content-header{

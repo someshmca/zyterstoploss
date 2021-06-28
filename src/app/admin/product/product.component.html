@@ -4,10 +4,10 @@
     <div class="card-header">
       <h3>Product</h3>
       <div class="edit-update-alert">
-        <!-- <alert></alert> -->
-      <a class="text-primary" routerLink="/contracts" routerLinkActive="active">Back</a>
+        <!-- <alert></alert> -->      
       </div>
     </div>
+
     <div class="card-body">
       <div class="select-grid-wrap">
         <div class="select-grid-header">
@@ -52,7 +52,14 @@
                 <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                 <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
               </table>
-              <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
+              <div class="grid-footer">
+                <div class="col_1">
+                  <a class="text-primary" routerLink="/contracts" routerLinkActive="active">Back</a>
+                </div>
+                <div class="col_2">
+                  <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -380,7 +387,7 @@
           <div class="col_1">
            <button type="button" class="btn btn-primary" routerLink="/contracts" routerLinkActive="active">Back</button>
            <button class="btn btn-primary" routerLink="/member" routerLinkActive="active">Lasering</button>
-           <button class="btn btn-primary" routerLink="/health-plan" routerLinkActive="active">Plan</button>
+           <button class="btn btn-primary" routerLink="/health-plan" routerLinkActive="active">Plan &amp; Tier</button>
           </div>
           <div class="col_2">
             <button type="button" class="btn btn-outline-primary" (click)="openCustomModal(false, null)">Cancel</button>

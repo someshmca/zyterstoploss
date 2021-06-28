@@ -3,18 +3,17 @@
   
     <div class="card custom-card">
      <div class="card-header">
-           <h3>Plan</h3>
-           <!-- <div class="edit-update-alert">
+           <h3>Plan &amp; Tier</h3>
+            <div class="edit-update-alert">
               <alert></alert>
-           </div> -->           
-      <a class="text-primary" routerLink="/product" routerLinkActive="active">Back</a>
+           </div>           
      </div>
      <div class="card-body">
          <div class="select-grid-wrap">
              <div class="select-grid-header">
                <div>
                  <label class="form-field-label">
-                     Search Plan 
+                     Search Plan &amp; Tier 
                  </label>
                  <div fxLayout fxLayoutAlign="center center">
                    <mat-form-field fxFlex="40%">
@@ -54,7 +53,14 @@
                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
                </table>
-               <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
+               <div class="grid-footer">
+                 <div class="col_1">
+                   <a class="text-primary" routerLink="/product" routerLinkActive="active">Back</a>
+                 </div>
+                 <div class="col_2">
+                   <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
+                 </div>
+               </div>
              </div>
          </div>
          </div>
@@ -71,11 +77,11 @@
         <!-- Modal Header -->
         <div class="modal-header">
             <h4 class="modal-title">
-                <span *ngIf="isAddMode">Add Plan</span>
-                <span *ngIf="!isAddMode">Update Plan</span>
+                <span *ngIf="isAddMode">Add Plan &amp; Tier</span>
+                <span *ngIf="!isAddMode">Update Plan &amp; Tier</span>
             </h4>
             <div>
-              <alert></alert>
+              
               <a class="fa fa-2x fa-times-circle" (click)="openCustomModal(false, null)">
               </a>
             </div>
@@ -117,6 +123,7 @@
                       <div class="form-group">
                        <label>Contract ID<small class="starmark">*</small> </label>
                        <select formControlName="contractId" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.contractId.errors }">
+                        <option value=''>&nbsp;</option>
                          <option *ngFor="let contract of activeContracts" [value]="contract.contractId">
                            {{contract.contractId}}
                        </option>

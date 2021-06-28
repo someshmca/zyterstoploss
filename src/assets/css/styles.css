@@ -113,6 +113,10 @@ input[type=number] {
 	background: rgba(0,0,0,0);
 }
 
+.form-control.is-invalid, .was-validated .form-control:invalid{
+    background: none !important;
+    padding-right: 10px !important;
+}
 
 
 

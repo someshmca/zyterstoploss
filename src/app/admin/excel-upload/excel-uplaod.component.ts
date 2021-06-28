@@ -37,7 +37,7 @@ export class ExcelUploadComponent implements OnInit {
     this.isExcelFile = !!target.files[0].name.match(/(.xls|.xlsx)/);
     if(this.isExcelFile==false)
     {
-      this.message=" This is not an Excel file";
+      this.message="Invalid file. Import Xls Or Xlsx file only";
     }
     if (target.files.length > 1) {
       this.fileInput.nativeElement.value = '';

@@ -26,7 +26,7 @@
             </div>
             <div class="excel-upload-btns">
                 <button class="btn btn-primary" [disabled]="isLoading" (click)="uploadFile();"><i class="fa" [ngClass]="{'fa-spin fa-spinner': isLoading, 'fa-check': !isLoading}"></i> {{button}}</button>  
-                <button class="btn btn-primary" (click)="resetFileUploader()"> Reset  </button>  
+                <button [className]="isLoading?'btn btn-secondary':'btn btn-primary'" (click)="resetFileUploader()" [disabled]="isLoading"> Reset  </button>  
 
             </div>
         </div>  
