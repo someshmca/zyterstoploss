@@ -116,6 +116,7 @@ export class ClaimSearchComponent implements OnInit {
   onSubmit(form: FormGroup) {
     console.log(this.dateErr.fromDateErr); 
     this.clearErrorMessages();
+       
     this.claimSearchForm.patchValue({
       claimId: this.f.claimId.value,
       memberId: this.f.memberId.value,
@@ -125,18 +126,17 @@ export class ClaimSearchComponent implements OnInit {
       fromDate:  this.f.fromDate.value==''?null:  this.f.fromDate.value,
       toDate:  this.f.toDate.value==''?null: this.f.toDate.value   
     });
-    console.log(this.claimSearchForm.value);
+    this.f.claimId.value==' '?'':this.f.claimId.value;
+    this.f.memberId.value==' '?'':this.f.memberId.value;
+    this.f.firstName.value==' '?'':this.f.firstName.value;
+    this.f.lastName.value==' '?'':this.f.lastName.value;
     
-    this.submitted = true;
-    this.dateErrorMessage='';
-    if(this.claimSearchForm.invalid){
-      this.dateErrorMessage='';
-      if(this.dateErr.fromDateErr)  
-        this.dateErrorMessage = "From date should not be greater than To date";
+    if(this.f.memberId.value=='' && this.f.firstName.value=='' && this.f.lastName.value=='' && this.f.dateOfBirth.value==null && this.f.claimId.value=='' && this.f.fromDate.value==null && this.f.toDate.value==null){
+                    
+      this.isClaimSearchErr = true;
       return;
     }
-   // if((this.f.fromDate.valid && this.f.fromDate.value!=null) && (this.f.toDate.value!=null && this.f.toDate.valid ))
-   
+    
     if(this.dateErr.fromDateErr)
     {      
       this.dateErrorMessage='';
@@ -162,17 +162,6 @@ export class ClaimSearchComponent implements OnInit {
       return;      
     }
     
-    if(this.f.memberId.value.trim()=='' && this.f.firstName.value.trim()=='' && this.f.lastName.value.trim()=='' && this.f.dateOfBirth.value==null && this.f.claimId.value.trim()=='' && this.f.fromDate.value==null && this.f.toDate.value==null){
-      
-      this.isClaimSearchErr = true;
-      return;
-    }
-    const headers = { 'content-type': 'application/json'};
-    // this.claimSearchForm.patchValue({
-    //   DateOfBirth:'0001-01-01',
-    //   ServiceDateFrom: '0001-01-01',
-    //   ServiceDateTo: '0001-01-01'      
-    // })
     let checkMemberId = /^([A-Za-z0-9]+)$/; 
     console.log(checkMemberId.test(this.f.memberId.value));
     let memberIdTest=checkMemberId.test(this.f.memberId.value);
@@ -191,6 +180,7 @@ export class ClaimSearchComponent implements OnInit {
       this.memberIdErr.errMsg='Member Id is not valid';
       return;
     }
+
     let claimRequestObj = {
       claimId: this.f.claimId.value,
       memberId: this.f.memberId.value,
@@ -216,7 +206,27 @@ export class ClaimSearchComponent implements OnInit {
        // this._route.navigate(['/claim-result']);
        
         this._claimReportService.claimResultsVal.subscribe(
-          (data) =>{            
+          (data) =>{ 
+            console.log(this.claimSearchForm.value);
+            
+            this.submitted = true;
+            this.dateErrorMessage='';
+            // if(this.claimSearchForm.invalid){
+            //   this.dateErrorMessage='';
+            //   if(this.dateErr.fromDateErr)  
+            //     this.dateErrorMessage = "From date should not be greater than To date";
+            //   return;
+            // }
+           
+            const headers = { 'content-type': 'application/json'};
+            // this.claimSearchForm.patchValue({
+            //   DateOfBirth:'0001-01-01',
+            //   ServiceDateFrom: '0001-01-01',
+            //   ServiceDateTo: '0001-01-01'      
+            // })
+
+
+            // -----------------------        
             this.isClaimResults = true;
             this.claimSearchNotFound = false;
             this.claimResults = data;
