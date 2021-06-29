@@ -298,10 +298,10 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
       if (this.planForm.invalid) {
           return;
       }
-      let t1=this.f.tier1Aggfactamt.value;
-      let t2=this.f.tier2Aggfactamt.value;
-      let t3=this.f.tier3Aggfactamt.value;
-      let t4=this.f.tier4Aggfactamt.value;
+      let t1=this.f.tier1Aggfactamt.value==null?'':this.f.tier1Aggfactamt.value;
+      let t2=this.f.tier2Aggfactamt.value==null?'':this.f.tier2Aggfactamt.value;
+      let t3=this.f.tier3Aggfactamt.value==null?'':this.f.tier3Aggfactamt.value;
+      let t4=this.f.tier4Aggfactamt.value==null?'':this.f.tier4Aggfactamt.value;
       debugger;
       if((t1=='' || t1==0) && (t2=='' || t2==0) && (t3=='' || t3==0) && (t4=='' || t4==0)){
         this.isNoFactAmount=true;
@@ -330,28 +330,29 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
       isTerminalExtCoverage: this.f.isTerminalExtCoverage.value==true?'Y':'N',
       lstTblPlanTier: []
     }
-    if(this.f.tier1Aggfactamt.value!=null){
+    debugger;
+    if(this.f.tier1Aggfactamt.value!=null && this.f.tier1Aggfactamt.value!=''){
       let tAmount = Number(this.f.tier1Aggfactamt.value);
       let tId=1;
       this.addPlanObj.lstTblPlanTier.push({
         planId: 0, tierId: tId, tierAmount: tAmount, expectedClaimsRate: 0
       });
     }
-    if(this.f.tier2Aggfactamt.value!=null){
+    if(this.f.tier2Aggfactamt.value!=null && this.f.tier2Aggfactamt.value!=''){
       let tAmount = Number(this.f.tier2Aggfactamt.value);
       let tId=2;
       this.addPlanObj.lstTblPlanTier.push({
         planId: 0, tierId: tId, tierAmount: tAmount, expectedClaimsRate: 0
       });
     }
-    if( this.f.tier3Aggfactamt.value!=null){
+    if( this.f.tier3Aggfactamt.value!=null && this.f.tier3Aggfactamt.value!=''){
       let tAmount = Number(this.f.tier3Aggfactamt.value);
       let tId=3;
       this.addPlanObj.lstTblPlanTier.push({
         planId: 0, tierId: tId, tierAmount: tAmount, expectedClaimsRate: 0
       });
     }
-    if(this.f.tier4Aggfactamt.value!=null){
+    if(this.f.tier4Aggfactamt.value!=null && this.f.tier4Aggfactamt.value!=''){
       let tAmount = Number(this.f.tier4Aggfactamt.value);
       let tId=4;
       this.addPlanObj.lstTblPlanTier.push({
@@ -366,10 +367,12 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
           .subscribe({
               next: () => {
 
-                  this.openCustomModal(false, null);
-                  this.getAllPlans();
-
                   this.planForm.reset();
+                  this.openCustomModal(false, null);
+                  //this.getAllPlans();
+                  this.getTires();
+                  this.getAllPlans();
+                  this.getActiveClients();
                   this.alertService.success('New Plan & Tier added', { keepAfterRouteChange: true });
               },
               error: error => {

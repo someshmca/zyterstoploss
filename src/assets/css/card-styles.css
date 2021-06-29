@@ -137,9 +137,6 @@ input[type='date'].form-control{
    line-height: 14px;
     margin: 0;
     text-align: left;
-    /*display: flex;
-    justify-content: flex-start;
-    align-items: center;*/
     padding: 5px 20px 15px 0;
 }
 .mandate-fields span, .mandate-fields div{

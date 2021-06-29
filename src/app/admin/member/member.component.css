@@ -4,9 +4,14 @@
     padding: 0;
     margin: 5px 0;
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
+    align-items: center;
 }
-.member-search-btns-area .btn{
+.member-search-btns-area .col_1 a{
+    font-size: 1rem;
+    font-weight: bold;
+}
+.member-search-btns-area .col_2 .btn{
     margin-left: 15px;
 }
 .no-grid-results{
@@ -21,7 +26,7 @@
     margin-top: 5px;
 }
 .mandate-fields{
-    padding-left: 20px;
+    padding: 5px 20px;
 }
 .member-form-wrap{
     overflow-y: auto;
@@ -36,4 +41,13 @@
 }
 .members-table-area table.table{
     width: 100%;
+}
+
+.member-search-results-area .card-body{
+    padding-left: 0;
+    padding-right: 0;
+}
+.member-search .card-footer{
+    background: none;
+    border-top: none;
 }

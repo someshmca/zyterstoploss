@@ -1,13 +1,10 @@
 
 <div class="page-content">
 
-    <form [formGroup]="memberSearchForm" (ngSubmit)="searchMember(memberSearchForm)">
-        <div class="card custom-card">
+        <div class="card custom-card member-search">
+          <form [formGroup]="memberSearchForm" (ngSubmit)="searchMember(memberSearchForm)">
             <div class="card-header">
                 Member Search
-                <div>                  
-                  <a class="text-primary" routerLink="/product" routerLinkActive="active">Back</a>
-                </div>
             </div>
             <div class="card-body">
               <div class="mandate-fields">
@@ -95,105 +92,115 @@
                 </div> </div> -->
             </div>
             </div>
-        </div>
-        
-            <div class="member-search-btns-area">  
-                <button class="btn btn-outline-primary" type="button" (click)="resetMemberSearch()">Reset</button>    
-                <button class="btn btn-primary">Search</button>            
+            <div class="card-footer">
+              <div class="member-search-btns-area">  
+                  <div class="col_1">                    
+                    <a class="text-primary" routerLink="/product" routerLinkActive="active">Back</a>
+                  </div>
+                  <div class="col_2">
+                    <button class="btn btn-outline-primary" type="button" (click)="resetMemberSearch()">Reset</button>    
+                    <button class="btn btn-primary">Search</button>  
+                  </div>          
+              </div>
             </div>
         </form>
+        </div>
         
      
-        <div *ngIf="isSearchDataThere">          
+        <div *ngIf="isSearchDataThere" class="member-search-results-area">      
+          <div class="card">    
           <div class="card-header">
             Member Search Results
             <alert></alert>
             </div>
-          <div class="card-table-area members-table-area" >
-              <div class="table-responsive">
-                  <!-- <div class="cust-add-area">
-                      <span class="fa fa-plus-circle" (click)="openCustomModal(true, null)"></span>
-                  </div>     -->
-                  <div class="member-table-wrap">
-                    <table mat-table matSort #memberSearchTable [dataSource]="searchDataSource" class="table table-bordered table-striped card-table">
-                  
-                      <ng-container matColumnDef="memberId">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header >Member ID </th>
-                        <td mat-cell *matCellDef="let element"> {{element.memberId}} </td>
-                      </ng-container>
-                      <ng-container matColumnDef="clientId">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header [hidden]="show">Client ID </th>
-                        <td mat-cell *matCellDef="let element" [hidden]="show"> {{element.clientId}} </td>
-                      </ng-container>
-                      <ng-container matColumnDef="contractId">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header [hidden]="show">Contract ID </th>
-                        <td mat-cell *matCellDef="let element" [hidden]="show"> {{element.contractId}} </td>
-                      </ng-container>
-                      <ng-container matColumnDef="planId">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header [hidden]="show">Plan ID </th>
-                        <td mat-cell *matCellDef="let element" [hidden]="show"> {{element.planId}} </td>
-                      </ng-container>
-                      <ng-container matColumnDef="tierId">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header [hidden]="show" >Tier ID </th>
-                        <td mat-cell *matCellDef="let element" [hidden]="show"> {{element.tierId}} </td>
-                      </ng-container>
-                      <ng-container matColumnDef="fname">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header >First Name </th>
-                        <td mat-cell *matCellDef="let element"> {{element.fname}} </td>
-                      </ng-container>
-                      <ng-container matColumnDef="lname">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header >Last Name </th>
-                        <td mat-cell *matCellDef="let element"> {{element.lname}} </td>
-                      </ng-container>
-                      <ng-container matColumnDef="mname">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header >Middle Name </th>
-                        <td mat-cell *matCellDef="let element"> {{element.mname}} </td>
-                      </ng-container>
-                      <ng-container matColumnDef="memberStartDate">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header >Member Start Date </th>
-                        <td mat-cell *matCellDef="let element"> {{element.memberStartDate | date:'MM/dd/yyyy'}} </td>
-                      </ng-container>
-                      <ng-container matColumnDef="memberEndDate">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header >Member End Date </th>
-                        <td mat-cell *matCellDef="let element"> {{element.memberEndDate | date:'MM/dd/yyyy'}} </td>
-                      </ng-container>
-                      <ng-container matColumnDef="dateOfBirth">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header >Date of Birth </th>
-                        <td mat-cell *matCellDef="let element"> {{element.dateOfBirth | date:'MM/dd/yyyy'}} </td>
-                      </ng-container>
-                      <ng-container matColumnDef="gender">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header >Gender </th>
-                        <td mat-cell *matCellDef="let element"> {{element.gender=='M'?'Male':'Female'}} </td>
-                      </ng-container>
-                      <ng-container matColumnDef="subscriberId">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header >Subscriber ID </th>
-                        <td mat-cell *matCellDef="let element"> {{element.subscriberId}} </td>
-                      </ng-container>
-                      <ng-container matColumnDef="laserValue">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header [hidden]="show">Laser Value </th>
-                        <td mat-cell *matCellDef="let element" [hidden]="show"> {{element.laserValue}} </td>
-                      </ng-container>
-                      <ng-container matColumnDef="isUnlimited">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header [hidden]="show">Is Unlimited </th>
-                        <td mat-cell *matCellDef="let element" [hidden]="show"> {{element.isUnlimited}} </td>
-                      </ng-container>
-                      <ng-container matColumnDef="status">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header >Status </th>
-                        <td mat-cell *matCellDef="let element"> {{element.status==1?'Active':'Inactive'}} </td>
-                      </ng-container>
-                      <ng-container matColumnDef="userId">
-                        <th mat-header-cell *matHeaderCellDef> Action </th>
-                        <td mat-cell *matCellDef="let element" class="action-link"> 
-                          <span class="fa fa-edit" 
-                          (click)="openCustomModal(true, element)"></span>
-                        </td>
-                      </ng-container>
-                      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-                    </table>
-                    <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
+            <div class="card-body">
+              <div class="card-table-area members-table-area" >
+                  <div class="table-responsive">
+                      <!-- <div class="cust-add-area">
+                          <span class="fa fa-plus-circle" (click)="openCustomModal(true, null)"></span>
+                      </div>     -->
+                      <div class="member-table-wrap">
+                        <table mat-table matSort #memberSearchTable [dataSource]="searchDataSource" class="table table-bordered table-striped card-table">
+                      
+                          <ng-container matColumnDef="memberId">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header >Member ID </th>
+                            <td mat-cell *matCellDef="let element"> {{element.memberId}} </td>
+                          </ng-container>
+                          <ng-container matColumnDef="clientId">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header [hidden]="show">Client ID </th>
+                            <td mat-cell *matCellDef="let element" [hidden]="show"> {{element.clientId}} </td>
+                          </ng-container>
+                          <ng-container matColumnDef="contractId">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header [hidden]="show">Contract ID </th>
+                            <td mat-cell *matCellDef="let element" [hidden]="show"> {{element.contractId}} </td>
+                          </ng-container>
+                          <ng-container matColumnDef="planId">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header [hidden]="show">Plan ID </th>
+                            <td mat-cell *matCellDef="let element" [hidden]="show"> {{element.planId}} </td>
+                          </ng-container>
+                          <ng-container matColumnDef="tierId">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header [hidden]="show" >Tier ID </th>
+                            <td mat-cell *matCellDef="let element" [hidden]="show"> {{element.tierId}} </td>
+                          </ng-container>
+                          <ng-container matColumnDef="fname">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header >First Name </th>
+                            <td mat-cell *matCellDef="let element"> {{element.fname}} </td>
+                          </ng-container>
+                          <ng-container matColumnDef="lname">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header >Last Name </th>
+                            <td mat-cell *matCellDef="let element"> {{element.lname}} </td>
+                          </ng-container>
+                          <ng-container matColumnDef="mname">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header >Middle Name </th>
+                            <td mat-cell *matCellDef="let element"> {{element.mname}} </td>
+                          </ng-container>
+                          <ng-container matColumnDef="memberStartDate">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header >Member Start Date </th>
+                            <td mat-cell *matCellDef="let element"> {{element.memberStartDate | date:'MM/dd/yyyy'}} </td>
+                          </ng-container>
+                          <ng-container matColumnDef="memberEndDate">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header >Member End Date </th>
+                            <td mat-cell *matCellDef="let element"> {{element.memberEndDate | date:'MM/dd/yyyy'}} </td>
+                          </ng-container>
+                          <ng-container matColumnDef="dateOfBirth">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header >Date of Birth </th>
+                            <td mat-cell *matCellDef="let element"> {{element.dateOfBirth | date:'MM/dd/yyyy'}} </td>
+                          </ng-container>
+                          <ng-container matColumnDef="gender">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header >Gender </th>
+                            <td mat-cell *matCellDef="let element"> {{element.gender=='M'?'Male':'Female'}} </td>
+                          </ng-container>
+                          <ng-container matColumnDef="subscriberId">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header >Subscriber ID </th>
+                            <td mat-cell *matCellDef="let element"> {{element.subscriberId}} </td>
+                          </ng-container>
+                          <ng-container matColumnDef="laserValue">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header [hidden]="show">Laser Value </th>
+                            <td mat-cell *matCellDef="let element" [hidden]="show"> {{element.laserValue}} </td>
+                          </ng-container>
+                          <ng-container matColumnDef="isUnlimited">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header [hidden]="show">Is Unlimited </th>
+                            <td mat-cell *matCellDef="let element" [hidden]="show"> {{element.isUnlimited}} </td>
+                          </ng-container>
+                          <ng-container matColumnDef="status">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header >Status </th>
+                            <td mat-cell *matCellDef="let element"> {{element.status==1?'Active':'Inactive'}} </td>
+                          </ng-container>
+                          <ng-container matColumnDef="userId">
+                            <th mat-header-cell *matHeaderCellDef> Action </th>
+                            <td mat-cell *matCellDef="let element" class="action-link"> 
+                              <span class="fa fa-edit" 
+                              (click)="openCustomModal(true, element)"></span>
+                            </td>
+                          </ng-container>
+                          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                        </table>
+                        <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
+                      </div>
                   </div>
               </div>
+          </div>
           </div>
         </div>
         <div class="no-grid-results" *ngIf="memSearchError">

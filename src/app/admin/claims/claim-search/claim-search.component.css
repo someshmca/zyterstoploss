@@ -15,3 +15,18 @@
 .claim-search-btns-area .btn{
     margin-left: 15px;
 }
+.mandate-fields{
+     padding: 5px 20px;
+ }
+ .claim-results-area .card{
+     margin: 0 20px;
+ }
+ 
+ .claim-results-area .card-body{
+    padding-left: 0;
+    padding-right: 0;
+}
+.claim-search .card-footer{
+    background: none;
+    border-top: none;
+}
