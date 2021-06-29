@@ -146,6 +146,14 @@
     color: #ff0000;
 }
 
+.no-grid-results{
+    padding: 30px 15px;
+}
+.no-grid-results h3{
+    text-align: center;
+    color: #ff0000;
+    font-size: 1.4rem;
+}
 .grid-footer{
     display: flex;
     justify-content: space-between;

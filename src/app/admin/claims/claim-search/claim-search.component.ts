@@ -40,7 +40,7 @@ export class ClaimSearchComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   isClaimResults: boolean = false;
-
+  claimSearchNotFound: boolean = false;
 
 
   @ViewChild("focusElem") focusTag: ElementRef;
@@ -80,6 +80,7 @@ export class ClaimSearchComponent implements OnInit {
     this.dateErr.toDateInvalid=false;
     this.dateErrorMessage='';
     this.isClaimSearchErr=false;
+    this.claimSearchNotFound = false;
   }
   dateLessThan(from: string, to: string) {  
     return (group: FormGroup): {[key: string]: any} => {
@@ -107,6 +108,7 @@ export class ClaimSearchComponent implements OnInit {
   // conven`ience getter for easy access to form fields
   resetClaimSearch(){
     this.claimSearchForm.reset();
+    this.claimSearchNotFound = false;
     this.isClaimResults = false;    
     this.clearErrorMessages();   
   }
@@ -207,15 +209,16 @@ export class ClaimSearchComponent implements OnInit {
         this.dateErr.fromDateInvalid=false;
         this.dateErr.toDateInvalid=false;
         this.dateErrorMessage='';
+        this.claimSearchNotFound = false;
         console.log("data : "+data);      
         this._claimReportService.setClaimResults(data);
         
        // this._route.navigate(['/claim-result']);
        
         this._claimReportService.claimResultsVal.subscribe(
-          (data) =>{
-            
+          (data) =>{            
             this.isClaimResults = true;
+            this.claimSearchNotFound = false;
             this.claimResults = data;
             this.dataSource = new MatTableDataSource(this.claimResults);
             setTimeout(()=>{
@@ -227,6 +230,9 @@ export class ClaimSearchComponent implements OnInit {
         console.log("Calim Response data : "+data);
       },
       (error) => {
+        this.claimSearchNotFound = true;
+        this.isClaimResults = false;
+
       } 
     );
    // this._claimReportService.getClaimReport("")
