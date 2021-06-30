@@ -16,6 +16,7 @@ import { combineLatest } from 'rxjs';
 import { ModuleNames } from 'ag-grid-community';
 import { Router } from '@angular/router';
 import { ɵbypassSanitizationTrustStyle } from '@angular/core';
+import {NavPopupService} from '../services/nav-popup.service';
 
 let dp = new DatePipe(navigator.language);
 let p = 'y-MM-dd'; // YYYY-MM-DD
@@ -31,7 +32,7 @@ export class ClientComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private clientService: ClientsService, private fb: FormBuilder, private contractService: ContractService, private alertService: AlertService, private datePipe: DatePipe,private loginService: LoginService, private route: Router) { }
+  constructor(private clientService: ClientsService, private fb: FormBuilder, private contractService: ContractService, private alertService: AlertService, private datePipe: DatePipe,private loginService: LoginService, private route: Router, private navService: NavPopupService) { }
 
   clients:IClient[] = [];
   clientIDs: IClient[] = [];
@@ -448,6 +449,15 @@ async checkDuplicateAccountId(aid){
               //this.openCustomModal(false, null);
               this.getAllClients();
               this.contractService.setContractAddStatus(true);
+              this.clientService.getClient(this.f.clientId.value).subscribe(
+                (data: IClient[]) => {
+                  debugger;
+                  this.navService.setClientObj(data[0].clientId, data[0].clientName, true, false);
+                  this.navService.clientObj.subscribe((data)=>{
+                    console.log(data);
+                    debugger;
+                  })
+                });
               //this.getContractAddStatus();
               this.alertService.success('New Client added', { keepAfterRouteChange: true });
             },
