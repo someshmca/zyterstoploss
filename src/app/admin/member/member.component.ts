@@ -109,12 +109,17 @@ export class MemberComponent implements OnInit {
     this.getActiveClients();
     this.clearErrorMessages();    
     this.navService.isLasering.subscribe((status)=>{
+      
       if(status){
         this.isLaseringPage = true;
         this.navService.productObj.subscribe((data)=>{
+          
             this.memberService.getMember(data.clientId).subscribe(
               (data)=>{
-                this.laseringDataSource = new MatTableDataSource(data);                
+                
+                this.laseringDataSource = new MatTableDataSource(data);   
+                this.laseringDataSource.paginator = this.paginator;
+                this.laseringDataSource.sort = this.sort;             
               }
             )
           })

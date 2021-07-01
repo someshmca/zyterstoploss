@@ -338,7 +338,7 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
       let t2=this.f.tier2Aggfactamt.value==null?'':this.f.tier2Aggfactamt.value;
       let t3=this.f.tier3Aggfactamt.value==null?'':this.f.tier3Aggfactamt.value;
       let t4=this.f.tier4Aggfactamt.value==null?'':this.f.tier4Aggfactamt.value;
-      debugger;
+      
       if((t1=='' || t1==0) && (t2=='' || t2==0) && (t3=='' || t3==0) && (t4=='' || t4==0)){
         this.isNoFactAmount=true;
         return;
@@ -366,7 +366,7 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
       isTerminalExtCoverage: this.f.isTerminalExtCoverage.value==true?'Y':'N',
       lstTblPlanTier: []
     }
-    debugger;
+    
     if(this.f.tier1Aggfactamt.value!=null && this.f.tier1Aggfactamt.value!=''){
       let tAmount = Number(this.f.tier1Aggfactamt.value);
       let tId=1;

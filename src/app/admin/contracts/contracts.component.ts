@@ -297,7 +297,7 @@ clearErrorMessages(){
       this.getClientDetails(id.clientId);
       
       //   this.clientService.passClientId(id.clientName);
-      // debugger;
+      // 
       console.log(this.updateObj);          
     }
   }
@@ -531,7 +531,7 @@ clearErrorMessages(){
                 this.navService.contractObj.subscribe((data)=>{
                   console.log(data);
                   this.isAdded = data.isAdd;
-                  debugger;
+                  
                 });
               });
             },
@@ -618,7 +618,7 @@ clearErrorMessages(){
         this.navService.contractObj.subscribe((data)=>{
           console.log(data);
           this.isAdded = false;
-          debugger;
+          
         });
       });
       this.router.navigate(['/product']);

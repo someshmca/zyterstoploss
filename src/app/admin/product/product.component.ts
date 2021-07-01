@@ -522,8 +522,14 @@ if(aslTermVal!='' && this.productForm.valid){
       this.router.navigate(['/health-plan']);
     }
     gotoLasering(){
-      this.navService.setIsLasering(true);
-      this.router.navigate(['/member']);
+      this.clientService.getClient(this.f.clientId.value).subscribe((data)=>{ 
+        this.navService.setProductObj(data[0].clientId, data[0].clientName, false, true);
+        this.navService.productObj.subscribe((data)=>{
+          this.isAdded=data.isAdd;
+          this.navService.setIsLasering(true);
+          this.router.navigate(['/member']);
+        })
+      });
     }
       
 

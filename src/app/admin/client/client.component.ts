@@ -353,7 +353,7 @@ async checkDuplicateAccountId(aid){
     }
     gotoAddContract(){
       //this.clientService.passClientId(this.f.clientId.value);  
-     // debugger;
+     // 
      // this.contractService.setContractUpdateStatus(false);
       this.route.navigate(['/contracts']);  
     }
@@ -365,17 +365,17 @@ async checkDuplicateAccountId(aid){
       // setTimeout(()=>{
       //   this.clientService.passClientId(this.f.clientName.value);        
       // }, 1000);
-      // debugger;
+      // 
       // this.contractService.setContractUpdateStatus(true);
       // this.contractService.setContractAddStatus(false);
               this.clientService.getClient(this.f.clientId.value).subscribe(
                 (data: IClient[]) => {
-                  debugger;
+                  
                   this.navService.setClientObj(data[0].clientId, data[0].clientName, false, true);
                   this.navService.clientObj.subscribe((data)=>{
                     console.log(data);
                     this.isAdded = false;
-                    debugger;
+                    
                   })
                 });
       this.route.navigate(['/contracts']);      
@@ -487,12 +487,12 @@ async checkDuplicateAccountId(aid){
               this.contractService.setContractAddStatus(true);
               this.clientService.getClient(this.f.clientId.value).subscribe(
                 (data: IClient[]) => {
-                  debugger;
+                  
                   this.navService.setClientObj(data[0].clientId, data[0].clientName, true, false);
                   this.navService.clientObj.subscribe((data)=>{
                     console.log(data);
                     this.isAdded = data.isAdd;
-                    debugger;
+                    
                   })
                 });
               //this.getContractAddStatus();
