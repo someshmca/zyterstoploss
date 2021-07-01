@@ -17,6 +17,8 @@ import { from } from 'rxjs';
 import { ClientsService } from '../services/clients.service';
 import { ContractService } from '../services/contract.service';
 import { HealthPlanService } from '../services/health-plan.service';
+import {NavPopupService} from '../services/nav-popup.service';
+
 @Component({
   selector: 'app-member',
   templateUrl: './member.component.html',
@@ -30,6 +32,10 @@ export class MemberComponent implements OnInit {
   searchErrorMessage: string;
   displayedColumns: string[] = ['memberId', 'clientId', 'contractId', 'planId', 'tierId', 'fname', 'lname', 'mname', 'gender','memberStartDate', 'memberEndDate','dateOfBirth', 'subscriberId', 'laserValue', 'isUnlimited', 'status','userId'];
   searchDataSource: any;
+
+  laseringColumns: string[] = ['fname', 'lname', 'memberId'];
+  laseringDataSource: any;
+
   
   uClientId:any;
   uContractId:any;
@@ -55,7 +61,7 @@ export class MemberComponent implements OnInit {
   plans: IPlanAll[]=[];
   tires: ITire[] = [];
   show: boolean = true;
-
+  isLaseringPage: boolean = false;
   memberSearchErr: any;
   memIdErr = {isValid: false, errMsg: ''};
   memStartDateErr = {isValid: false, errMsg: ''};
@@ -65,11 +71,13 @@ export class MemberComponent implements OnInit {
   noSearchResultsFound: boolean = false;
   uMemberId: any;
   isDisabled: boolean=false;
-  constructor(private mb: FormBuilder, private fb: FormBuilder, private memberService:MemberService, private alertService: AlertService, private datePipe: DatePipe, private loginService: LoginService, private clientService: ClientsService, private contractService: ContractService, private planService: HealthPlanService) { }
+  constructor(private mb: FormBuilder, private fb: FormBuilder, private memberService:MemberService, private alertService: AlertService, private datePipe: DatePipe, private loginService: LoginService, private clientService: ClientsService, private contractService: ContractService, private planService: HealthPlanService, private navService: NavPopupService) { }
 
   ngOnInit() {
     this.show=true;
+
     this.initMemberSearchForm();
+    this.isLaseringPage =false;
     this.memberForm = this.fb.group({
       memberId: [''],
       fname: ['', Validators.required],
@@ -99,7 +107,22 @@ export class MemberComponent implements OnInit {
       //this.focusTag.nativeElement.focus();
     }, 200);
     this.getActiveClients();
-    this.clearErrorMessages();
+    this.clearErrorMessages();    
+    this.navService.isLasering.subscribe((status)=>{
+      if(status){
+        this.isLaseringPage = true;
+        this.navService.productObj.subscribe((data)=>{
+            this.memberService.getMember(data.clientId).subscribe(
+              (data)=>{
+                this.laseringDataSource = new MatTableDataSource(data);                
+              }
+            )
+          })
+      }
+      else{
+        this.isLaseringPage = false;
+      }
+    });
   }  // end of ngOnInit 
 
   clearErrorMessages(){  

@@ -44,6 +44,7 @@ export class ClientComponent implements OnInit {
   clientForm: FormGroup;
   id: string;
   isAddMode: boolean;
+  isAdded: boolean;
   loading = false;
   submitted = false;
   ustartDate:string;
@@ -82,33 +83,54 @@ export class ClientComponent implements OnInit {
         data.filter((value,index)=>data.indexOf(value)===index);
         this.activeClients = data;
       });
-    this.getContractAddStatus();
-    this.getContractUpdateStatus();
-    this.getClientUpdateStatus();
+    this.isAdded = false;
+    // this.getContractAddStatus();
+    // this.getContractUpdateStatus();
+    //this.getClientUpdateStatus();
+    this.getClientStatus();
   }
-  getClientUpdateStatus(){
-    this.clientService.clientUpdateStatus.subscribe((status)=>{
-        this.clientUpdateStatus = status;
-        
-        this.clientService.clientIdValue.subscribe((data)=>{                   
-          let d:string=data;
-          this.inpValue = d;
-          setTimeout(()=>{
-              this.filterInput.nativeElement.focus();                  
-            }, 1000);
+  
+  getClientStatus(){
+    this.navService.clientObj.subscribe((data)=>{
+      if(data.isAdd){
+        this.clientForm.patchValue({
+          clientId: data.clientId
         });
-      })
-  }
-  getContractAddStatus(){   
-    this.contractService.contractAddStatus.subscribe((status)=> {
-        this.contractAddStatus = status;        
+        this.openCustomModal(true, null);
+      }
+        if(data.isUpdate){          
+          this.inpValue = data.clientName;
+          //setTimeout(()=>{
+              
+              this.filterInput.nativeElement.focus(); 
+              this.isAdded = false;            
+          //  }, 1000);
+        }
       });
   }
-  getContractUpdateStatus(){       
-    this.contractService.contractUpdateStatus.subscribe((status)=> {
-        this.contractUpdateStatus = status;        
-      });
-  }
+  // getClientUpdateStatus(){
+  //   this.clientService.clientUpdateStatus.subscribe((status)=>{
+  //       this.clientUpdateStatus = status;
+        
+  //       this.clientService.clientIdValue.subscribe((data)=>{                   
+  //         let d:string=data;
+  //         this.inpValue = d;
+  //         setTimeout(()=>{
+  //             this.filterInput.nativeElement.focus();                  
+  //           }, 1000);
+  //       });
+  //     })
+  // }
+  // getContractAddStatus(){   
+  //   this.contractService.contractAddStatus.subscribe((status)=> {
+  //       this.contractAddStatus = status;        
+  //     });
+  // }
+  // getContractUpdateStatus(){       
+  //   this.contractService.contractUpdateStatus.subscribe((status)=> {
+  //       this.contractUpdateStatus = status;        
+  //     });
+  // }
 
   public doFilter = (value: string) => {
     this.dataSource.filter = value.trim().toLocaleLowerCase();
@@ -330,18 +352,32 @@ async checkDuplicateAccountId(aid){
        });
     }
     gotoAddContract(){
-      this.clientService.passClientId(this.f.clientId.value);  
-      debugger;
-      this.contractService.setContractUpdateStatus(false);
+      //this.clientService.passClientId(this.f.clientId.value);  
+     // debugger;
+     // this.contractService.setContractUpdateStatus(false);
       this.route.navigate(['/contracts']);  
     }
+    clearSearchInput(){
+      this.filterInput.nativeElement.value='';
+      this.filterInput.nativeElement.focus();
+    }
     gotoUpdateContract(){
-      setTimeout(()=>{
-        this.clientService.passClientId(this.f.clientName.value);        
-      }, 1000);
-      debugger;
-      this.contractService.setContractUpdateStatus(true);
-      this.contractService.setContractAddStatus(false);
+      // setTimeout(()=>{
+      //   this.clientService.passClientId(this.f.clientName.value);        
+      // }, 1000);
+      // debugger;
+      // this.contractService.setContractUpdateStatus(true);
+      // this.contractService.setContractAddStatus(false);
+              this.clientService.getClient(this.f.clientId.value).subscribe(
+                (data: IClient[]) => {
+                  debugger;
+                  this.navService.setClientObj(data[0].clientId, data[0].clientName, false, true);
+                  this.navService.clientObj.subscribe((data)=>{
+                    console.log(data);
+                    this.isAdded = false;
+                    debugger;
+                  })
+                });
       this.route.navigate(['/contracts']);      
     }
     onSubmit() {
@@ -455,6 +491,7 @@ async checkDuplicateAccountId(aid){
                   this.navService.setClientObj(data[0].clientId, data[0].clientName, true, false);
                   this.navService.clientObj.subscribe((data)=>{
                     console.log(data);
+                    this.isAdded = data.isAdd;
                     debugger;
                   })
                 });

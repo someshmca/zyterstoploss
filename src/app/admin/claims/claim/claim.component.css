@@ -71,3 +71,8 @@
     width: 18px;
     margin-left: 6px;
 }
+
+.claim-card .card-footer{
+    background: none;
+    border-top: none;
+}

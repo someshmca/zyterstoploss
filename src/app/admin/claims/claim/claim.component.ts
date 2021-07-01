@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {ClaimService} from '../../services/claim.service';
 import {IClaim} from '../../models/claim-model';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-claim',
@@ -16,7 +17,7 @@ export class ClaimComponent implements OnInit {
   //isCalculateClicked: boolean = false;
   stopLossAmount: any;
   locIsUnlimited: boolean;
-  constructor(private _claimService: ClaimService){
+  constructor(private _claimService: ClaimService, private router: Router){
 
   }
 
@@ -41,6 +42,9 @@ export class ClaimComponent implements OnInit {
      // 
     })
     //
+  }
+  goBackClaimSearch(){
+    this.router.navigate(['/claim-search']);
   }
  calculateClaimAmount(){
     console.log("Claim ID in cal func : "+this.claimid);

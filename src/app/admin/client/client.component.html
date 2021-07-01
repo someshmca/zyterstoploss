@@ -21,10 +21,15 @@
                               </option>
                           </select>
                       </div> -->
-                      <div fxLayout fxLayoutAlign="center center">
-                        <mat-form-field fxFlex="40%">
-                          <input matInput [value]="inpValue" #filterInput type="text" (keyup)="doFilter($event.target.value)" placeholder="Search a Account">
-                        </mat-form-field>
+                      <div class="search-field-clear-area">
+                        <div fxLayout fxLayoutAlign="center center">
+                          <mat-form-field fxFlex="40%">
+                            <input matInput [value]="inpValue" #filterInput type="text" (keyup)="doFilter($event.target.value)" placeholder="Search a Account" autocomplete="off">
+                          </mat-form-field>
+                        </div>
+                        <div class="clear-btn-div">
+                          <button type="button" class="btn btn-outline-secondary" (click)="clearSearchInput()">Clear</button>
+                        </div>
                       </div>
                   </div>
             </div>
@@ -204,13 +209,13 @@
         <div class="modal-footer">
           <div class="modal-footer-btns">
             <div class="col_1">
-              <button type="button" class="btn btn-primary" (click)="gotoAddContract()" routerLinkActive="active" *ngIf="isAddMode">Contracts</button>
+              <button type="button" class="btn btn-primary" (click)="gotoAddContract()" [disabled]="!isAdded" routerLinkActive="active" *ngIf="isAddMode">Contracts</button>
               <button type="button" class="btn btn-primary" (click)="gotoUpdateContract()" routerLinkActive="active" *ngIf="!isAddMode">Contracts</button>
             </div>
             <div class="col_2">
               <button type="button" class="btn btn-outline-primary" (click)="openCustomModal(false, null)">Cancel</button>  
               <button type="submit" class="btn btn-primary" *ngIf="!isAddMode">Update</button>
-              <button type="submit" class="btn btn-primary" *ngIf="isAddMode">Add</button>              
+              <button type="submit" class="btn btn-primary" *ngIf="isAddMode" [disabled]="isAdded">Add</button>              
             </div>
           </div>          
         </div>

@@ -33,6 +33,10 @@ export class UsersSecurityComponent implements OnInit {
   loading = false;
   submitted = false;
   isCustomModalOpen: boolean = false;
+
+  effectiveFrom = {isValid: false, errors: ''};
+  effectiveTo = {isValid: false, errors: ''}; 
+
   @ViewChild("focusElem") focusTag: ElementRef;
 
   displayedColumns: string[] = ['userId', 'userName', 'status', 'updatedId'];
@@ -63,11 +67,19 @@ export class UsersSecurityComponent implements OnInit {
         createdOn: '',
         lastupdate: '',
         password: ''
-  },{validator: this.dateLessThan('effectiveFrom', 'effectiveTo')}); 
-      
-  this.getAllRoles();
+  },{validator: this.dateLessThan('effectiveFrom', 'effectiveTo')},); 
+
+    this.getAllRoles();
+    this.clearErrorMessages();
    
   }
+  clearErrorMessages(){  
+    this.effectiveFrom.isValid=false;
+    this.effectiveFrom.errors='';
+    this.effectiveTo.isValid=false;
+    this.effectiveTo.errors='';
+  }
+
   getAllUsersList(){    
     this.userSecurityService.getAllUserList().subscribe(
       (data: IAllUserIDs[]) => {          
@@ -82,12 +94,20 @@ export class UsersSecurityComponent implements OnInit {
   dateLessThan(from: string, to: string) {
   
     return (group: FormGroup): {[key: string]: any} => {
+      this.clearErrorMessages();
       let f = group.controls[from];
       let t = group.controls[to];
       if (f.value > t.value) {
-        return {
-          dates: "Effective Date To should be greater than Effective Date From."
-        };
+        this.effectiveFrom.isValid= true;
+        this.clearErrorMessages(); 
+      } else if(f.value == t.value) {
+        this.effectiveFrom.isValid= true;
+        this.clearErrorMessages(); 
+      } else if(t.value > new Date(Date.now())){
+        this.effectiveFrom.isValid= true;
+        this.clearErrorMessages(); 
+      } else {
+        this.effectiveFrom.isValid= false;
       }
       return {};
     }
@@ -172,16 +192,46 @@ getAllRoles(){
      }
      
      onSubmit() {
+
+      this.clearErrorMessages();
+
        this.submitted = true;
-   
+       
+      let effectiveFrom = this.datePipe.transform(this.securityForm.get('effectiveFrom').value, 'yyyy-MM-dd');
+      let effectiveTo = this.datePipe.transform(this.securityForm.get('effectiveTo').value, 'yyyy-MM-dd');
+      let maxDate = this.datePipe.transform(new Date(Date.now()), 'yyyy-MM-dd');
+      if(effectiveFrom!=null && effectiveFrom!='' && effectiveTo!=null && effectiveTo!=''){
+        if(effectiveFrom>effectiveTo){
+        this.effectiveFrom.isValid=true;
+        this.effectiveFrom.errors='Effective From Date should not be greater than Effective To Date';
+        return;
+        }
+      }
+      if((effectiveFrom!==null || effectiveFrom!=='') && (effectiveTo!=null && effectiveTo!='')){
+        if(effectiveFrom==effectiveTo){
+        this.effectiveFrom.isValid=true;
+        this.effectiveFrom.errors='Effective From Date should not be EQUAL to Effective To Date';
+        return;
+        }
+      }
+      if((effectiveFrom!==null || effectiveFrom!=='') && (effectiveTo!=null && effectiveTo!='')){
+        if(effectiveTo > maxDate ){
+        this.effectiveFrom.isValid=true;
+        this.effectiveFrom.errors='Effective To date must be less than '+maxDate+' date';
+        return;
+        }
+      }
+
+
+      
+
        // reset alerts on submit
        this.alertService.clear();
-   
        // stop here if form is invalid
        if (this.securityForm.invalid) {
            return;
        }
-   
+
        this.loading = true;
        if (this.isAddMode) {
            
@@ -193,7 +243,7 @@ getAllRoles(){
    }
    
    private addUser() {
-     
+
      this.securityForm.patchValue({ 
        roleId: Number(this.securityForm.get('roleId').value),
        effectiveFrom: this.datePipe.transform(this.securityForm.get('effectiveFrom').value, 'yyyy-MM-dd'),
@@ -203,7 +253,7 @@ getAllRoles(){
        createdId: "ash",
        createdOn: "2020-10-01",
        lastupdate: "2021-10-10"
-     });     
+     });   
      this.userSecurityService.addUser(this.securityForm.value)
          .pipe(first())
          .subscribe({
@@ -219,7 +269,6 @@ getAllRoles(){
                  this.loading = false;
              }
          });
-         
      }
    
      private updateUser() {

@@ -18,6 +18,7 @@ import { LoginService } from 'src/app/shared/services/login.service';
 import { ContractService } from '../services/contract.service';
 import {CLAIM_BASIS_CONSTANT} from '../claim-basis.constant';
 import { HealthPlanService } from '../services/health-plan.service';
+import {NavPopupService} from '../services/nav-popup.service';
 @Component({
   selector: 'app-product',
   templateUrl: './product.component.html',
@@ -83,10 +84,11 @@ export class ProductComponent implements OnInit {
   inpValue: string='';
   // contractAddStatus: boolean;
   // contractUpdateStatus: boolean;
-  productAddStatus: boolean;
-  productUpdateStatus: boolean;
+  // productAddStatus: boolean;
+  // productUpdateStatus: boolean;
   // planAddStatus: boolean;
   // planUpdateStatus: boolean;
+  isAdded: boolean;
   constructor(
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
@@ -97,7 +99,8 @@ export class ProductComponent implements OnInit {
     private planService: HealthPlanService,
     private alertService: AlertService,
     private datePipe: DatePipe,
-    private loginService: LoginService)
+    private loginService: LoginService,
+    private navService: NavPopupService)
     {
    }
    
@@ -153,6 +156,7 @@ export class ProductComponent implements OnInit {
       userId: this.loginService.currentUserValue.name,
       lstContractClaims: []
     });
+    this.isAdded=false;
     this.claimBasis = CLAIM_BASIS_CONSTANT.values;
     this.getAllProducts();
     this.getActiveClients();   
@@ -163,37 +167,42 @@ export class ProductComponent implements OnInit {
     // this.getContractAddStatus();
     // this.getContractUpdateStatus();
 
-    this.getProductAddStatus();
-    this.getProductUpdateStatus();    
+    this.getProductStatus();
+    //this.getProductUpdateStatus();    
   }
-  getProductAddStatus(){
-    this.productService.productAddStatus.subscribe((status)=>{
-        this.productAddStatus = status;    
-        if(this.productAddStatus){
-          this.clientService.clientIdValue.subscribe((value)=>{
-            this.productForm.patchValue({
-              clientId: value
-            });
-            this.openCustomModal(true, null);
-          })
-        }
-      })
+  getProductStatus(){
+    this.navService.contractObj.subscribe((data)=>{
+      if(data.isAdd){
+        this.productForm.patchValue({
+          clientId: data.clientId
+        });
+        this.getContractIDs(data.clientId);
+        
+        this.openCustomModal(true, null);
+      }
+      if(data.isUpdate){          
+        this.inpValue = data.clientName;
+        setTimeout(()=>{
+            this.productInputFilter.nativeElement.focus();                  
+         }, 1000);
+      }
+    });
   }
-  getProductUpdateStatus(){
-    this.productService.productUpdateStatus.subscribe((status)=>{
-        this.productUpdateStatus = status;
-        if(this.productUpdateStatus){
-          this.clientService.clientIdValue.subscribe(
-            (data)=>{                   
-              let d:string=data;
-              this.inpValue = d;
-              setTimeout(()=>{
-                  this.productInputFilter.nativeElement.focus();                  
-                }, 1000)              
-            })
-        }
-      })
-  }
+  // getProductUpdateStatus(){
+  //   this.productService.productUpdateStatus.subscribe((status)=>{
+  //       this.productUpdateStatus = status;
+  //       if(this.productUpdateStatus){
+  //         this.clientService.clientIdValue.subscribe(
+  //           (data)=>{                   
+  //             let d:string=data;
+  //             this.inpValue = d;
+  //             setTimeout(()=>{
+  //                 this.productInputFilter.nativeElement.focus();                  
+  //               }, 1000)              
+  //           })
+  //       }
+  //     })
+  // }
 
   
   // getContractAddStatus(){   
@@ -479,15 +488,43 @@ if(aslTermVal!='' && this.productForm.valid){
             })
           });
           
-          this.planService.setPlanAddStatus(false);
+          //this.planService.setPlanAddStatus(false);
           //this.contractService.setContractUpdateStatus(true);
           //this.clientService.passClientId(id.clientName);
-          this.planService.setPlanUpdateStatus(true);
+          //this.planService.setPlanUpdateStatus(true);
 
 
          }
       }
-
+      clearSearchInput(){
+        this.productInputFilter.nativeElement.value='';
+        this.productInputFilter.nativeElement.focus();
+      }
+      goBackContractAdd(){     
+        this.router.navigate(['/contracts']);
+      }
+      goBackContractUpdate(){  
+          this.navService.contractObj.subscribe((data)=>{
+            this.navService.setContractObj(data.clientId, data.clientName,false,true);          
+          });
+        this.router.navigate(['/contracts']);
+      }
+    gotoPlanAdd(){
+      this.router.navigate(['/health-plan']);
+    }
+    gotoPlanUpdate(){
+      this.clientService.getClient(this.f.clientId.value).subscribe((data)=>{ 
+        this.navService.setProductObj(data[0].clientId, data[0].clientName, false, true);
+        this.navService.productObj.subscribe((data)=>{
+          this.isAdded=data.isAdd;
+        })
+      });
+      this.router.navigate(['/health-plan']);
+    }
+    gotoLasering(){
+      this.navService.setIsLasering(true);
+      this.router.navigate(['/member']);
+    }
       
 
 private addProduct() {   
@@ -551,10 +588,16 @@ private addProduct() {
             this.clearErrorMessages();         
             //this.openCustomModal(false, null);           
               
-          this.planService.setPlanAddStatus(true);
-          this.planService.setPlanUpdateStatus(false);       
+          // this.planService.setPlanAddStatus(true);
+          // this.planService.setPlanUpdateStatus(false);       
+            this.clientService.getClient(this.f.clientId.value).subscribe((data)=>{
+              this.navService.setProductObj(data[0].clientId, data[0].clientName, true, false);
+              this.navService.productObj.subscribe((data)=>{
+                this.isAdded=data.isAdd;
+              })
+            })
               this.alertService.success('New Product added', { keepAfterRouteChange: true });
-              this.isDisabled=true;      
+              // this.isDisabled=true;      
               //this.router.navigate(['../'], { relativeTo: this.route });
           },
           error: error => {

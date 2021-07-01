@@ -12,6 +12,7 @@ import {Paths} from '../admin-paths';
 export class MemberService {
 
   constructor(private http: HttpClient) { }
+
   memberSearch(memId: string, fname: string, mname: string, lname: string, subscriberId: string, dob: string,gender: string,memberStartDate:string,memberEndDate: string ): Observable<IMemberSearchResponse[]> {
     let params = new HttpParams();
     params=params.set('MemberId',memId).set('Fname',fname).set('Mname',mname).set('Lname',lname).set('SubscriberId',subscriberId).set('DateOfBirth',dob).set('Gender',gender).set('MemberStartDate', memberStartDate).set('MemberEndDate', memberEndDate);
@@ -25,7 +26,9 @@ export class MemberService {
   
    return this.http.post(Paths.memberAdd, body,{headers: headerOptions} ).pipe(catchError(this.handleError.bind(this)));
  }
-
+getMember(clientId){
+  return this.http.get(Paths.member+clientId).pipe(catchError(this.handleError.bind(this)));
+}
  
  updateMember(formData: IMemberUpdate) {
   const body = JSON.stringify(formData);

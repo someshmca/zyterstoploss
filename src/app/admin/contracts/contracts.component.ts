@@ -15,6 +15,7 @@ import { ClientsService } from '../services/clients.service';
 import { IClient } from '../models/clients-model';
 import { LoginService } from 'src/app/shared/services/login.service';
 import { ProductService } from '../services/product.service';
+import { NavPopupService } from '../services/nav-popup.service';
 @Component({
   selector: 'app-contracts',
   templateUrl: './contracts.component.html',
@@ -63,11 +64,12 @@ export class ContractsComponent implements OnInit {
   isContractStartDateInvalid: boolean=false;
   clientDetails: any;
 
-  contractAddStatus: boolean; 
-  contractUpdateStatus: boolean;
+  //contractAddStatus: boolean; 
+  //contractUpdateStatus: boolean;
 
   displayedColumns: string[] = ['clientName','contractId', 'startDate', 'endDate', 'clientId'];
   dataSource: any;
+  isAdded: boolean;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   constructor(
@@ -79,7 +81,8 @@ export class ContractsComponent implements OnInit {
     private productService: ProductService,
     private alertService: AlertService,
     private datePipe: DatePipe,
-    private loginService: LoginService
+    private loginService: LoginService,
+    private navService: NavPopupService
   ) { }
   ngOnInit(){
     
@@ -95,7 +98,7 @@ export class ContractsComponent implements OnInit {
 
     this.getAllContracts();
     this.getActiveClients();   
-    
+    this.isAdded = false;
     this.contractForm = this.formBuilder.group({
       contractId: '',
       clientId:['', Validators.required],
@@ -115,44 +118,47 @@ export class ContractsComponent implements OnInit {
       policyYear: '',
       description: ''
     });
-    this.getContractAddStatus();
-    this.getContractUpdateStatus();
+    this.getContractStatus();
+    //this.getContractAddStatus();
+    //this.getContractUpdateStatus();
     //this.getClientUpdateStatus();    
     // this.getProductAddStatus();
     // this.getProductUpdateStatus(); 
   }
-  getContractAddStatus(){
-    this.contractService.contractAddStatus.subscribe(
+  getContractStatus(){
+    this.navService.clientObj.subscribe(
       (data)=>{
-        this.contractAddStatus = data;        
-        if(this.contractAddStatus){
-          this.clientService.clientIdValue.subscribe((value)=>{
-            this.contractForm.patchValue({
-              clientId: value
-            });
-            this.openCustomModal(true, null);
-          })
+        if(data.isAdd){
+          this.contractForm.patchValue({
+            clientId: data.clientId
+          });
+          this.openCustomModal(true, null);
         }
-      }
-    )
+        if(data.isUpdate){          
+          this.inpValue = data.clientName;
+          setTimeout(()=>{
+              this.filterTable.nativeElement.focus();                  
+            }, 1000);
+        }
+      });
   }
-  getContractUpdateStatus(){
-    this.contractService.contractUpdateStatus.subscribe(
-      (data)=>{
-        this.contractUpdateStatus = data;       
+  // getContractUpdateStatus(){
+  //   this.contractService.contractUpdateStatus.subscribe(
+  //     (data)=>{
+  //       this.contractUpdateStatus = data;       
          
-        if(this.contractUpdateStatus){
-          this.clientService.clientIdValue.subscribe((data)=>{                   
-              let d:string=data;
-              this.inpValue = d;
-              setTimeout(()=>{
-                  this.filterTable.nativeElement.focus();                  
-                }, 1000);
-            });
-        }
-      }
-    )
-  }
+  //       if(this.contractUpdateStatus){
+  //         this.clientService.clientIdValue.subscribe((data)=>{                   
+  //             let d:string=data;
+  //             this.inpValue = d;
+  //             setTimeout(()=>{
+  //                 this.filterTable.nativeElement.focus();                  
+  //               }, 1000);
+  //           });
+  //       }
+  //     }
+  //   )
+  // }
   // getClientUpdateStatus(){
   //   this.clientService.clientUpdateStatus.subscribe((status)=>{
   //     this.clientUpdateStatus = status;
@@ -519,7 +525,15 @@ clearErrorMessages(){
               //this.contractForm.reset();                   
               //this.clientService.passClientId(this.f.clientId.value);   
               this.alertService.success('New Contract added', { keepAfterRouteChange: true });  
-              this.productService.setProductAddStatus(true);          
+              //this.productService.setProductAddStatus(true);  
+              this.clientService.getClient(this.f.clientId.value).subscribe((data)=>{                
+                this.navService.setContractObj(data[0].clientId, data[0].clientName,true,false);
+                this.navService.contractObj.subscribe((data)=>{
+                  console.log(data);
+                  this.isAdded = data.isAdd;
+                  debugger;
+                });
+              });
             },
             error: error => {
                 this.alertService.error(error);
@@ -586,31 +600,46 @@ clearErrorMessages(){
     }
 
     gotoProductAdd(){        
-      setTimeout(()=>{
-        this.clientService.passClientId(this.f.clientId.value);
-      },1000);
-      this.productService.setProductUpdateStatus(false);   
+      // setTimeout(()=>{
+      //   this.clientService.passClientId(this.f.clientId.value);
+      // },1000);
+      // this.productService.setProductUpdateStatus(false);   
       this.router.navigate(['/product']);
     }
 
     gotoProductUpdate(){        
-      setTimeout(()=>{
-        this.clientService.passClientId(this.f.clientId.value);
-      },1000);
-      this.productService.setProductUpdateStatus(true);   
-      this.productService.setProductAddStatus(false);
+      // setTimeout(()=>{
+      //   this.clientService.passClientId(this.f.clientId.value);
+      // },1000);
+      // this.productService.setProductUpdateStatus(true);   
+      // this.productService.setProductAddStatus(false);
+      this.clientService.getClient(this.f.clientId.value).subscribe((data)=>{                
+        this.navService.setContractObj(data[0].clientId, data[0].clientName,false,true);
+        this.navService.contractObj.subscribe((data)=>{
+          console.log(data);
+          this.isAdded = false;
+          debugger;
+        });
+      });
       this.router.navigate(['/product']);
     }
+    clearSearchInput(){
+      this.filterTable.nativeElement.value='';
+      this.filterTable.nativeElement.focus();
+    }
     goBackClientAdd(){
-      this.clientService.setClientAddStatus(true);
-      this.clientService.passClientId(this.f.clientId.value);
-      this.clientService.setClientUpdateStatus(false);
+      // this.clientService.setClientAddStatus(true);
+      // this.clientService.passClientId(this.f.clientId.value);
+      // this.clientService.setClientUpdateStatus(false);        
       this.router.navigate(['/clients']);
     }
-    goBackClientUpate(){
-      this.clientService.setClientAddStatus(false);
-      this.clientService.passClientId(this.f.clientId.value);
-      this.clientService.setClientUpdateStatus(true);
+    goBackClientUpdate(){
+      // this.clientService.setClientAddStatus(false);
+      // this.clientService.passClientId(this.f.clientId.value);
+      // this.clientService.setClientUpdateStatus(true);     
+        this.navService.clientObj.subscribe((data)=>{
+          this.navService.setClientObj(data.clientId, data.clientName,false,true);          
+        });
       this.router.navigate(['/clients']);
     }
 }

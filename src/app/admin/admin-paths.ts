@@ -74,6 +74,9 @@ export const Paths = {
   memberSearch: "https://medicaslapiorc.azurewebsites.net/api/Member/GetMemberdetail?",
   memberAdd: "https://medicaslapiorc.azurewebsites.net/api/Member/AddMember",
   memberUpdate: "https://medicaslapiorc.azurewebsites.net/api/Member/UpdateMember",
+  memberAll: "https://medicaslapiorc.azurewebsites.net/api/Member/GetAllMember",
+  member:"https://medicaslapiorc.azurewebsites.net/api/Member/GetMemberDetailsByClientId/",
+
 
   productAll: "https://medicaslapiorc.azurewebsites.net/api/Product/GetAllProducts",
   product: "https://medicaslapiorc.azurewebsites.net/api/Product/GetProducts?productId=",

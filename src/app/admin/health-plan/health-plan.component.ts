@@ -9,13 +9,14 @@ import {MatTableDataSource} from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import {BehaviorSubject } from 'rxjs';
 import { elementAt, first } from 'rxjs/operators';
+import {Router} from '@angular/router'
 
 import { AlertService } from '../services/alert.service';
 import { DatePipe } from '@angular/common';
 import { LoginService } from 'src/app/shared/services/login.service';
 import { ProductService } from '../services/product.service';
 import { ClientsService } from '../services/clients.service';
-
+import {NavPopupService} from '../services/nav-popup.service';
 
 @Component({
   selector: 'app-health-plan',
@@ -50,6 +51,7 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
   updatePlanID: number
   isNoFactAmount: boolean = false;
   isDisabled: boolean;
+  isAdded: boolean;
   @ViewChild("focusElem") focusTag: ElementRef;
   @ViewChild("planFilter") planInputFilter: ElementRef;
 
@@ -57,11 +59,11 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
   dataSource: any;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  productAddStatus: boolean;
-  productUpdateStatus: boolean;
+  // productAddStatus: boolean;
+  // productUpdateStatus: boolean;
 
-  planAddStatus: boolean;
-  planUpdateStatus: boolean;
+  // planAddStatus: boolean;
+  // planUpdateStatus: boolean;
   constructor(
     private formBuilder: FormBuilder,
     private clientService: ClientsService,
@@ -69,7 +71,9 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
     private planService: HealthPlanService,
     private loginService: LoginService,
     private alertService: AlertService,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private navService:NavPopupService,
+    private router:Router
   ) { }
 
   ngOnInit() {
@@ -98,9 +102,11 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
         }
       ])
     });
+    this.isAdded=false;
     this.getTires();
     this.getAllPlans();
     this.getActiveClients();
+    this.getPlanStatus();
     this.isStatusChecked = true;
   }
   
@@ -117,34 +123,50 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
   //       this.productUpdateStatus = status;
   //     })
   // }
-  getPlanAddStatus(){
-    this.planService.planAddStatus.subscribe((status)=>{
-        this.planAddStatus = status; 
-        if(this.planAddStatus){
-          this.clientService.clientIdValue.subscribe((value)=>{
-            this.planForm.patchValue({
-              clientId: value
-            });
-            this.openCustomModal(true, null);
-          })
-        }
-      })
+  getPlanStatus(){
+    this.navService.productObj.subscribe((data)=>{
+      if(data.isAdd){
+        this.planForm.patchValue({
+          clientId: data.clientId
+        });
+        this.openCustomModal(true, null);
+      }
+      if(data.isUpdate){          
+        this.inpValue = data.clientName;
+        setTimeout(()=>{
+            this.planInputFilter.nativeElement.focus();                  
+         }, 1000);
+      }
+    });   
   }
-  getPlanUpdateStatus(){
-    this.planService.planUpdateStatus.subscribe((status)=>{
-        this.planUpdateStatus = status;
-        if(this.planUpdateStatus){
-          this.clientService.clientIdValue.subscribe(
-            (data)=>{                   
-              let d:string=data;
-              this.inpValue = d;
-              setTimeout(()=>{
-                  this.planInputFilter.nativeElement.focus();                  
-                }, 1000)              
-            })
-        }
-      })
-  }
+  // getPlanAddStatus(){
+  //   this.planService.planAddStatus.subscribe((status)=>{
+  //       this.planAddStatus = status; 
+  //       if(this.planAddStatus){
+  //         this.clientService.clientIdValue.subscribe((value)=>{
+  //           this.planForm.patchValue({
+  //             clientId: value
+  //           });
+  //           this.openCustomModal(true, null);
+  //         })
+  //       }
+  //     })
+  // }
+  // getPlanUpdateStatus(){
+  //   this.planService.planUpdateStatus.subscribe((status)=>{
+  //       this.planUpdateStatus = status;
+  //       if(this.planUpdateStatus){
+  //         this.clientService.clientIdValue.subscribe(
+  //           (data)=>{                   
+  //             let d:string=data;
+  //             this.inpValue = d;
+  //             setTimeout(()=>{
+  //                 this.planInputFilter.nativeElement.focus();                  
+  //               }, 1000)              
+  //           })
+  //       }
+  //     })
+  // }
   getAllPlans() {
     this.planService.getAllPlans().subscribe(
       (data: IPlanAll[]) => {
@@ -285,7 +307,21 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
 
     this.locClientName = cName;
   }
-
+  
+  goBackProductAdd(){     
+    this.router.navigate(['/product']);
+  }
+  goBackProductUpdate(){  
+      this.navService.productObj.subscribe((data)=>{
+        this.navService.setProductObj(data.clientId, data.clientName,false,true);          
+      });
+    this.router.navigate(['/product']);
+  }
+  
+  clearSearchInput(){
+    this.planInputFilter.nativeElement.value='';
+    this.planInputFilter.nativeElement.focus();
+  }
   // conven`ience getter for easy access to form fields
   get f() { return this.planForm.controls; }
 

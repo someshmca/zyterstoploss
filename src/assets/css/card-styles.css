@@ -159,4 +159,25 @@ input[type='date'].form-control{
     opacity: 1;
     cursor: default;
 }
+.custom-card-footer{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.custom-card-footer a{
+    font-size: 1rem;
+    font-weight: bold;
+}
+.search-field-clear-area{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+.search-field-clear-area .clear-btn-div{
+    margin-left: 10px;
+}
+.search-field-clear-area .clear-btn-div .btn{
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
 

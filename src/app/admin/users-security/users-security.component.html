@@ -85,6 +85,9 @@
       <div class="modal-body">          
           <div class="mandate-fields">
             <span *ngIf="submitted && !securityForm.valid">Fields marked with * are mandatory</span>
+            <div *ngIf="effectiveFrom.isValid">{{effectiveFrom.errors}}</div>
+            <div *ngIf="effectiveTo.isValid">{{effectiveTo.errors}}</div>
+            <!-- <span *ngIf="submitted && !securityForm1.valid">please select a valid date range</span> -->
           </div>                     
             <div class="row">
                 <div class="col-md-6">
@@ -178,9 +181,10 @@
                       <small class="starmark">*</small>
                     </label>
                     <input type="date" class="form-control" formControlName="effectiveFrom" [ngClass]="{ 'is-invalid': submitted && f.effectiveFrom.errors }" max="2999-12-31">
+                    <!-- <div *ngIf="effectiveFrom.isValid">{{effectiveFrom.errMsg}}</div>  -->
                     <!-- <div class="invalid-feedback">
-                      <div *ngIf="submitted && f.effectiveFrom.errors">
-                        <div *ngIf="f.effectiveFrom.errors.required">                      
+                      <div *ngIf="submitted && f.effectiveFrom.errMsg">
+                        <div *ngIf="f.effectiveFrom.errMsg.required">                      
                           Invalid Effective From
                         </div>
                       </div> 
@@ -193,8 +197,8 @@
                            <small class="starmark">*</small></label>
                             <input type="date" class="form-control field-input-text" formControlName="effectiveTo" [ngClass]="{ 'is-invalid': submitted && f.effectiveTo.errors }" max="2999-12-31"/>
                             <!-- <div class="invalid-feedback">
-                            <div *ngIf="submitted && f.effectiveTo.errors">
-                                <div *ngIf="f.effectiveTo.errors.required">                      
+                            <div *ngIf="submitted && f.effectiveTo.errMsg">
+                                <div *ngIf="f.effectiveTo.errMsg.required">                      
                                   Invalid Effective To
                                 </div>
                               </div>

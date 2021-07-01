@@ -15,11 +15,16 @@
             <label class="form-field-label">
               Search Product
             </label>
-            <div fxLayout fxLayoutAlign="center center">
-              <mat-form-field fxFlex="40%">
-                <input matInput type="text" #prodFilter [value]="inpValue" (keyup)="doFilter($event.target.value)"  (focus)="doFilter($event.target.value)" placeholder="Search a Product">
-              </mat-form-field>
-            </div>
+            <div class="search-field-clear-area">   
+              <div fxLayout fxLayoutAlign="center center">
+                <mat-form-field fxFlex="40%">
+                  <input matInput type="text" #prodFilter [value]="inpValue" (keyup)="doFilter($event.target.value)"  (focus)="doFilter($event.target.value)" placeholder="Search a Product">
+                </mat-form-field>
+              </div> 
+              <div class="clear-btn-div">
+                <button type="button" class="btn btn-outline-secondary" (click)="clearSearchInput()">Clear</button>
+              </div>
+            </div> 
           </div>
         </div>
         <div class="card-table-area">
@@ -54,7 +59,7 @@
               </table>
               <div class="grid-footer">
                 <div class="col_1">
-                  <a class="text-primary" routerLink="/contracts" routerLinkActive="active">Back</a>
+                  <a class="text-primary" (click)="goBackContractUpdate()">Back</a>
                 </div>
                 <div class="col_2">
                   <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
@@ -104,7 +109,7 @@
               <div class="col-md-4">
                 <div class="form-group">
                   <label>Account ID<small class="starmark">*</small> </label>
-                  <select #focusElem formControlName="clientId" class="form-control" (change)="getContractIDs($event.target.value)" [ngClass]="{ 'is-invalid': submitted && f.clientId.errors }" disabled="true">
+                  <select #focusElem formControlName="clientId" class="form-control" (change)="getContractIDs($event.target.value)" (focus)="getContractIDs($event.target.value)" [ngClass]="{ 'is-invalid': submitted && f.clientId.errors }">
                     <option *ngFor="let client of activeClients" [value]="client.clientId">
                       {{client.clientName}}
                     </option>
@@ -114,7 +119,7 @@
               <div class="col-md-4">
                 <div class="form-group">
                   <label>Contract ID<small class="starmark">*</small></label>
-                  <select class="form-control" formControlName="contractId" [ngClass]="{ 'is-invalid': submitted && f.contractId.errors }" disabled="true">
+                  <select class="form-control" formControlName="contractId" [ngClass]="{ 'is-invalid': submitted && f.contractId.errors }">
                      <option value='' *ngIf="isAddMode"></option>
                     <option *ngFor="let obj of contractsByClientId" [value]="obj.contractId">
                       {{obj.contractId}} 
@@ -385,14 +390,20 @@
       <div class="modal-footer">
         <div class="modal-footer-btns">
           <div class="col_1">
-           <button type="button" class="btn btn-primary" routerLink="/contracts" routerLinkActive="active">Back</button>
-           <button class="btn btn-primary" routerLink="/member" routerLinkActive="active">Lasering</button>
-           <button class="btn btn-primary" routerLink="/health-plan" routerLinkActive="active">Plan &amp; Tier</button>
+           <button type="button" class="btn btn-primary" *ngIf="isAddMode" routerLinkActive="active" (click)="goBackContractAdd()">Back</button>
+           <button type="button" class="btn btn-primary" *ngIf="!isAddMode" routerLinkActive="active" (click)="goBackContractUpdate()">Back</button>
+           <button class="btn btn-primary" routerLinkActive="active" [disabled]="isAddMode && !isAdded" (click)="gotoLasering()">Lasering</button>
+           <button class="btn btn-primary" routerLinkActive="active" [disabled]="!isAdded" (click)="gotoPlanAdd()" *ngIf="isAddMode">
+            Plan &amp; Tier
+          </button>
+            <button class="btn btn-primary" routerLinkActive="active" (click)="gotoPlanUpdate()" *ngIf="!isAddMode">
+              Plan &amp; Tier
+            </button>
           </div>
           <div class="col_2">
             <button type="button" class="btn btn-outline-primary" (click)="openCustomModal(false, null)">Cancel</button>
-           <button type="submit" class="btn btn-primary" [disabled]="isDisabled" *ngIf="!isAddMode">Update</button>
-            <button type="submit" class="btn btn-primary" [disabled]="isDisabled" *ngIf="isAddMode">Add</button>
+           <button type="submit" class="btn btn-primary" *ngIf="!isAddMode">Update</button>
+            <button type="submit" class="btn btn-primary" [disabled]="isAdded" *ngIf="isAddMode">Add</button>
           </div>
         </div>
       </div>

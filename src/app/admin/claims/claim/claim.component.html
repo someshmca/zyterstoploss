@@ -1,11 +1,11 @@
 <div class="page-content">
-    <nav aria-label="breadcrumb">
+    <!-- <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a routerLink="/claim-search" routerLinkActive="active">Claim Search</a></li>
           <li class="breadcrumb-item active" aria-current="page">Claim</li>
         </ol>
-      </nav>
-    <div class="card">
+      </nav> -->
+    <div class="card claim-card">
         <div class="card-header claim-actions-header">
             <h5>Claim Details</h5>
            <!-- <h5>Actions </h5>
@@ -133,6 +133,14 @@
                     </div> 
                 </div> 
             </div>  -->
+            </div>
+            <div class="card-footer">
+                <div class="custom-card-footer">
+                    <div class="col_1">
+                        <a class="text-primary" (click)="goBackClaimSearch()">Back</a>
+                    </div>
+                    <div class="col_2"> </div>
+                </div>
             </div>
             <!-- <h1 class="coming-soon">Claim Screen is in Progress. It will render as soon as possible.</h1> -->
         </div>
