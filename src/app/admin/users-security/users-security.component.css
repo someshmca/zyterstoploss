@@ -1,0 +1,50 @@
+
+
+.rules-add-area{
+    position: absolute;
+    width: 59px;
+    height: 50px;
+    right: -15px;
+    top: -20px;
+    display: inline-block;
+}
+.rules-add-area span{
+    font-size: 3rem;
+    color: #008000;
+    cursor: pointer;
+}
+.associated-roles{
+    padding: 15px 0;
+}
+.custom-control-label::before{
+    top: 3px;
+}
+.custom-control-inline{
+    margin-right: 20px;
+}
+.custom-card .form-group{
+    align-items: center;
+}
+.custom-card .form-group label{
+    margin-bottom: 0;
+}
+.modal-footer-btns{
+    text-align: right;
+}
+.security-add-modal .modal-dialog {
+    width: 760px;
+    max-width: 760px;
+}
+
+.security-update-modal .modal-dialog {
+    width: 760px;
+    max-width: 760px;
+}
+.default {
+    border: 500px solid gray;
+}
+
+.error-msg {
+	color: #D8000C;
+	
+}

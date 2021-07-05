@@ -1,0 +1,121 @@
+
+/*html, body, div, p, input, span, label, .form-control{
+   font-family: Arial, Helvetica, sans-serif;
+   font-size: 12px;
+}
+ h1, h2, h3, h4, h5, h6{
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}
+h1{
+    font-size: 20px;
+}
+h2{ font-size: 18px;}
+h3{ font-size: 16px;}
+h4{ font-size: 15px;}
+h5{ font-size: 14px;}
+h6{ font-size: 13px;} */
+html, body, a, i, span, div, table, tr, th, td, input, select, button, form, header, footer, main, section, nav, label{
+	font-family: Arial, Helvetica, sans-serif;
+	color: #535353;
+	font-size: 13px;
+}
+body{	
+	background-color: #F5FBFF;
+	min-height: 100vh;
+	position: relative;
+	/* padding-bottom: 250px; */
+}
+p{
+	margin: 0;
+}
+a, a .fa, .fas, .fa-pencil, .fa-edit{
+	cursor: pointer;
+}
+ul{
+	list-style-type: none;
+}
+input, button, a, img{
+	outline: none;
+}
+progress{
+	width: 100%;
+}
+
+.form-control{
+    border: 1px solid #a0a0a0;
+}
+a:hover{
+    text-decoration: none;
+}
+.starmark{
+	color: #ff0000;
+	font-size: 16px;
+}
+.cselect-dropdown{
+	margin-left: 35px;
+}
+
+select.crules-select {
+	width: 400px;
+	position: relative;
+	left: -57px;
+}
+select.crules-select option {
+    width: 400px;
+    text-overflow: ellipsis;
+	overflow: hidden;
+}
+
+.alert{
+    margin-bottom: 0 !important;
+}
+.breadcrumb .breadcrumb-item a,
+.breadcrumb .breadcrumb-item a:hover{
+	color: #2d72bb;
+}
+.coming-soon{
+	color: #ff0000;
+	font-size: 1.5rem;
+	padding: 3rem 20px;
+	text-align: center;
+	clear: both;
+}
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+.report-wrap{
+	padding: 10px;
+	border: 1px solid #c5c9ce;
+	border-radius: 5px;
+	width: 95%;
+	margin: 10px auto;
+}
+.report-iframe{
+	margin: 0;
+	display: block;
+	height: 74vh;
+	width: 100%;
+	border: none;
+}
+/*::ng-deep .mat-paginator ::ng-deep .mat-input-underline {
+    display: none;
+}
+*/
+.mat-paginator .mat-form-field-appearance-legacy .mat-form-field-underline{
+	background: rgba(0,0,0,0);
+}
+
+.form-control.is-invalid, .was-validated .form-control:invalid{
+    background: none !important;
+    padding-right: 10px !important;
+}
+
+

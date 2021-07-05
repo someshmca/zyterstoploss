@@ -1,0 +1,20 @@
+
+/* .programs-table-area{
+    width: 600px;
+} */
+
+.programs-table-area{
+    margin: 5px 25px 5px 20px;
+}
+.programs-table-area tr th:nth-child(1),
+.programs-table-area tr td:nth-child(1){
+    width: 10%;
+}
+.programs-table-area tr th:nth-child(2),
+.programs-table-area tr td:nth-child(2){
+    width: 75%;
+}
+.programs-table-area tr th:nth-child(3),
+.programs-table-area tr td:nth-child(3){
+    width: 10%;
+}

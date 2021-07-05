@@ -1,0 +1,144 @@
+
+<div class="page-content">
+
+    <form [formGroup]="claimSearchForm" (ngSubmit)="onSubmit(claimSearchForm)">
+        <div class="card custom-card claim-search">
+            <div class="card-header">
+                Claim Search
+            </div>
+            <div class="card-body">
+                <div class="mandate-fields">
+                  <!-- <span *ngIf="submitted && !claimSearchForm.valid"></span> -->
+                  <span *ngIf="isClaimSearchErr">Please enter atleast one field</span>
+                  <span *ngIf="dateErr.fromDateErr">{{dateErrorMessage}}</span>
+                  <span *ngIf="dateErr.fromDateInvalid">{{dateErrorMessage}}</span>
+                  <span *ngIf="dateErr.toDateInvalid">{{dateErrorMessage}}</span>
+                  <div *ngIf="claimIdErr.isValid">{{claimIdErr.errMsg}}</div>
+                  <div *ngIf="memberIdErr.isValid">{{memberIdErr.errMsg}}</div>                  
+                </div> 
+                <div class="form-row">
+                <div class="form-field">
+                    <label class="form-field-label">
+                        Member ID</label>
+                    <div class="form-field-input">
+                        <input type="text" #focusElem class="form-control field-input-text" formControlName="memberId" [ngClass]="{ 'is-invalid': memberIdErr.isValid }"/>
+                    </div>
+                </div>
+                <div class="form-field">
+                    <label class="form-field-label">Member First Name</label>
+                    <div class="form-field-input">
+                        <input type="text" class="form-control field-input-text" formControlName="firstName"/>
+                    </div>
+                </div>
+                <div class="form-field">
+                    <label class="form-field-label">Member Last Name</label>
+                    <div class="form-field-input">
+                        <input type="text" class="form-control field-input-text" formControlName="lastName"/>
+                    </div>
+                </div>
+                <div class="form-field">
+                    <label class="form-field-label">Member Birth Date</label>
+                    <div class="form-field-input">
+                        <input type="date" class="form-control field-input-text" value="MM/DD/YYYY" formControlName="dateOfBirth" [max]="today"/>
+                    </div>
+                </div>
+                <div class="form-field">
+                    <label class="form-field-label">Service Start Date</label>
+                    <div class="form-field-input">
+                        <input type="date" class="form-control field-input-text" value="MM/DD/YYYY" [max]="maxDate" formControlName="fromDate"/>
+                    </div>
+                </div>
+                <div class="form-field">
+                    <label class="form-field-label">Service End Date</label>
+                    <div class="form-field-input">
+                        <input type="date" class="form-control field-input-text" value="MM/DD/YYYY" [max]="maxDate" formControlName="toDate"/>
+                    </div>
+                </div>  
+                <div class="form-field">
+                    <div class="form-field-label">
+                        <label>Claim ID</label>
+                    </div>
+                    <div class="form-field-input">
+                        <input type="text" class="form-control field-input-text" formControlName="claimId" [ngClass]="{ 'is-invalid': claimIdErr.isValid }" />                        
+                    </div>
+                </div>
+            </div>
+            </div>
+            <div class="card-footer">        
+                <div class="claim-search-btns-area">
+                    <button class="btn btn-outline-primary" type="button" (click)="resetClaimSearch()">Reset</button>
+                    <button class="btn btn-primary">Search</button>                  
+                </div>
+            </div>
+        </div>
+        </form>
+ </div>
+ 
+
+<div *ngIf="isClaimResults" class="claim-results-area">     
+    <div class="card">   
+        <div class="card-header">Claim Search Results</div>
+        <div class="card-body">
+        <div class="card-table-area">
+            <div class="table-responsive card-table">        
+              <div class="table-responsive">
+                <div class="mat-elevation-z8">
+                    <table mat-table matSort #claimResultTable [dataSource]="dataSource" class="table table-bordered table-striped card-table">            
+                        <ng-container matColumnDef="claimId">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Claim ID </th>
+                        <td mat-cell *matCellDef="let element"> 
+                            {{element.claimId}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="clientName">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Client Name </th>
+                        <td mat-cell *matCellDef="let element"> 
+                            {{element.clientName}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="memberId">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Member ID </th>
+                        <td mat-cell *matCellDef="let element"> 
+                            {{element.memberId}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="firstName">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header > First Name </th>
+                        <td mat-cell *matCellDef="let element"> {{element.firstName}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="lastName">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header >Last Name</th>
+                        <td mat-cell *matCellDef="let element"> {{element.lastName}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="paidAmount">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header >Paid Amount</th>
+                        <td mat-cell *matCellDef="let element" style="text-align: right; padding-right: 15px;"> 
+                            {{element.paidAmount}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="climReceivedOn">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Claim Received On</th>
+                        <td mat-cell *matCellDef="let element"> {{element.climReceivedOn | date:'MM/dd/yyyy'}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="paidDate">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Paid Date</th>
+                        <td mat-cell *matCellDef="let element"> 
+                            {{element.paidDate | date:'MM/dd/yyyy'}} </td>
+                        </ng-container>
+                        <!-- <ng-container matColumnDef="dateOfBirth">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header >Date of Birth</th>
+                        <td mat-cell *matCellDef="let element"> 
+                            {{element.dateOfBirth | date:'MM/dd/yyyy'}}
+                        </td>
+            
+                        </ng-container> -->
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="setClaimId(row.claimId)"></tr>
+                    </table>
+                    <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons> </mat-paginator>
+                </div>
+            </div>
+            </div>
+            </div>
+            </div>
+    </div>
+</div>
+<div class="no-grid-results" *ngIf="claimSearchNotFound">
+    <h3>Could not find the Search Results. Please try again</h3>
+</div>

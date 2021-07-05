@@ -1,0 +1,32 @@
+.claim-table-content{
+    padding: 15px;
+}
+.claim-table-content h2{
+    font-size: 18px;
+    padding: 8px 0;
+    font-weight: bold;
+}
+ .claim-search-btns-area{
+    padding: 0;
+    margin: 5px 0;
+    display: flex;
+    justify-content: flex-end;
+}
+.claim-search-btns-area .btn{
+    margin-left: 15px;
+}
+.mandate-fields{
+     padding: 5px 20px;
+ }
+ .claim-results-area .card{
+     margin: 0 20px;
+ }
+ 
+ .claim-results-area .card-body{
+    padding-left: 0;
+    padding-right: 0;
+}
+.claim-search .card-footer{
+    background: none;
+    border-top: none;
+}

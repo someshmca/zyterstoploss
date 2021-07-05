@@ -1,0 +1,24 @@
+
+.attributes-table-area{
+    margin: 5px 25px 5px 20px;
+}
+.attributes-table-area tr th:nth-child(1),
+.attributes-table-area tr td:nth-child(1){
+    width: 10%;
+}
+.attributes-table-area tr th:nth-child(2),
+.attributes-table-area tr td:nth-child(2){
+    width: 45%;
+}
+.attributes-table-area tr th:nth-child(3),
+.attributes-table-area tr td:nth-child(3){
+    width: 20%;
+}
+.attributes-table-area tr th:nth-child(4),
+.attributes-table-area tr td:nth-child(4){
+    width: 15%;
+}
+.attributes-table-area tr th:nth-child(5),
+.attributes-table-area tr td:nth-child(5){
+    width: 10%;
+}

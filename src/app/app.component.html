@@ -1,0 +1,26 @@
+
+  <div class="container-fluid">
+      
+    <div class="row">
+      <div [ngClass]="{ 'main-nav-area':isLoggedIn, 'd-none':!isLoggedIn }"> 
+        <app-main-side-nav></app-main-side-nav>
+      </div>
+    <main role="main" class="p-0" [ngClass]="{ 'main-body-area':isLoggedIn, 'col-md-12':!isLoggedIn }"> 
+      <header class="content-header">
+        <h3  class="text-white">
+          <!-- <span [hidden]="isLoggedIn">Zyter Health – Stop Loss Solution</span> -->
+          <span [hidden]="isLoggedIn">
+            Medica
+          </span>
+          </h3>
+         <div [hidden]="!isLoggedIn" class="welcome-user">
+          Welcome <span *ngIf="isLoggedIn">{{user}}</span>
+          <p><a (click)="logout()">Logout</a></p>
+        </div>
+      </header>
+      <div class="main-content-area">
+        <router-outlet></router-outlet>
+      </div>
+     </main>
+  </div>
+</div>

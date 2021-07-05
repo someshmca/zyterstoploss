@@ -1,0 +1,165 @@
+
+
+.mat-paginator {
+    min-width: 900px;
+}
+
+.select-grid-wrap{
+    /* width: 760px; */
+    width: 100%;
+    margin: 0 auto 0 auto;
+}
+.mat-form-field-appearance-legacy .mat-form-field-wrapper{
+    padding-bottom: 15px;
+}
+.card-table-area{
+    position: relative;
+    margin: 0 20px;
+    padding: 0 0;
+}
+.select-grid-wrap .form-field-label{
+    padding-left: 0;
+    text-align: left;
+    font-weight: bold;
+}
+.role-select-grid-wrap .form-field-input{
+    width: 200px;
+}
+.rules-select-grid-wrap .form-field-input{
+    width: 500px;
+}
+.card-table-area .card-table, 
+.card-table-area .card-table.mat-table
+{
+    border-collapse: collapse;
+    width: 100%;
+    min-width: 900px;
+    margin: 0;
+} 
+
+.card-table-area.batch-process-table-area{
+    margin-top: 16px;
+}
+.card-table-area .card-table tr th,
+.card-table-area .mat-table.card-table tr th
+{
+    color: #002C77;
+    padding: 5px;
+}
+.card-table-area .mat-table.card-table tr th div{
+    color: #002C77;
+    font-size: 12px;
+}
+.card-table-area .card-table tr td, 
+.card-table-area .mat-table.card-table tr td
+{
+    padding: 5px;
+    font-size: 12px;
+}
+.card-table-area .mat-table.card-table .mat-header-row{
+    height: auto;
+}
+.card-table-area .mat-table.card-table .mat-row{
+    height: auto;
+}
+.card-table-area .mat-table.card-table .mat-footer-row{
+    height: auto;
+}
+.card-table-area .mat-table.card-table tr .c-id,
+.card-table-area .card-table tr .c-id{
+    width: 100px;
+}
+.card-table-area .mat-table.card-table tr .c-desc, 
+.card-table-area .card-table tr .c-desc{
+    width: 200px;
+}
+.card-table-area .mat-table.card-table tr .c-group, 
+.card-table-area .card-table tr .c-group{
+    width: 120px;
+}
+.card-table-area .mat-table.card-table tr .c-value, 
+.card-table-area .card-table tr .c-value{
+    width: 120px;
+}
+.card-table-area .mat-table.card-table tr .c-action, 
+.card-table-area .card-table tr .c-action{
+    width: 120px;
+    text-align: center;
+}
+.card-table-area .mat-table.card-table tr th:last-child, 
+.card-table-area .card-table tr th:last-child, 
+.card-table-area .mat-table.card-table tr td:last-child, 
+.card-table-area .card-table tr td:last-child
+{
+    width: 90px;
+    text-align: center;
+}
+.card-table-area .mat-table.card-table tr td .btn{
+    padding: 5px 10px;
+    line-height: normal;
+    font-size: 1em;
+}
+.cust-add-area{
+    position: absolute;
+    width: 36px;
+    height: 39px;
+    right: -15px;
+    top: -20px;
+    display: inline-block;
+    z-index: 99;
+}
+.cust-add-area span{
+    font-size: 3rem;
+    color: #008000;
+    cursor: pointer;
+}
+.action-items{
+    text-align: center;
+}
+.action-items .fa{
+    margin: 0 8px;
+    color: #778899;
+    cursor: pointer;
+
+}
+.card .fa.fa-edit:hover{
+    color: #0148b3;    
+    font-weight: bold;
+    transform: scale(1.5);
+}
+.card .fa.fa-trash:hover{
+    color: #b80202;
+}
+
+::ng-deep .mat-form-field-underline {
+    display: none;
+  }
+
+  .no-records-found{
+      padding: 15px;
+      height: 70px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+  }
+.no-records-found h3{
+    color: #ff0000;
+}
+
+.no-grid-results{
+    padding: 30px 15px;
+}
+.no-grid-results h3{
+    text-align: center;
+    color: #ff0000;
+    font-size: 1.4rem;
+}
+.grid-footer{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.grid-footer a{
+    font-size: 1rem;
+    font-weight: bold;
+}

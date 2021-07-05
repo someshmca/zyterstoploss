@@ -1,0 +1,183 @@
+
+
+.card.custom-card{
+    background: #ffffff;
+    border: 1px solid #E2E2E2;
+    border-radius: 5px;
+    margin-bottom: 5px;
+}
+
+.card-header{
+    font-weight: 600;
+    color: #002c77;
+    padding: 5px 15px;
+    border-left: 4px solid #4193CE;
+    font-size: 14px;    
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 45px;
+}
+.card-header.card-header-in {
+    background-color: rgb(162 213 236 / 3%);
+    color: #4b8794;
+    padding: 5px 15px;
+    border-left: 2px solid #6ac5e8;
+}
+.card-header h3{
+    padding: 0;
+    margin: 0;
+    color: #002c77;
+    font-size: 14px;
+}
+.edit-update-alert{
+    text-align: right;
+}
+.custom-card .form-group, .card .form-group{
+    display: flex;
+    align-items: center;
+    min-height: 35px;
+}
+
+.page-content .card-body{
+    padding: 5px 0 0 0;
+}
+.form-row{
+    display: flex;
+    align-items: center;
+}
+.form-field{
+    display: flex;
+    min-height: 35px;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin: 5px 15px 1px 15px;
+    padding: 0 0 2px 0;
+    position: relative;
+}
+.form-field-label{
+    margin: 0 20px 0 0;
+    padding-top: 3px;
+    text-align: right;
+    min-width: 150px; 
+}
+.form-field-input{
+    width: 150px;
+    margin: 0 0 0 2px;
+}
+.error-msg{
+    width: 150px;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    text-align: left;
+    font-size: 11px;
+    color: #ff0000;
+}
+.form-field-input .form-control.field-input-text{
+    height: 30px;
+    line-height: normal;
+    padding: 2px;
+}
+
+
+.error-field{
+    border: 1px solid red !important;
+}
+.is-invalid{
+	border: 1px solid #ff0000 !important;
+}
+.form-field .form-field-input .invalid-feedback{
+	color: #ff0000 !important;
+    height: 20px;
+    display: block;
+    margin: 2px 0 0 0 !important;
+    padding: 0;
+    font-size: 11px;
+}
+.is-invalid~.invalid-feedback{
+    height: 15px;
+    display: block !important;
+}
+.invalid-feedback *{
+    color: #ff0000;
+}
+.form-btns-area{
+    padding: 5px 15px 5px 15px !important;
+    justify-content: flex-end;
+}
+.form-btns-area .btn{
+    margin-left: 15px;
+}
+input[type='date'].form-control{
+    text-transform:uppercase;
+}
+.form-group.switch-group{
+    display: flex;
+    justify-content: space-between;
+    padding: 3px;
+    border-radius: 5px;
+    margin-bottom: 10px !important;
+    background: #f4f5f4;
+}
+.form-group.switch-group .switch{
+    width: 40px;
+    height: 20px;
+    top: 0;
+    left: 0;
+}
+.form-group.switch-group .slider:before{
+    height: 15px;
+    width: 15px;
+}
+.form-group.switch-group input:checked + .slider:before {
+    transform: translateX(17px);
+}
+.mandate-fields{
+   line-height: 14px;
+    margin: 0;
+    text-align: left;
+    padding: 5px 20px 15px 0;
+}
+.mandate-fields span, .mandate-fields div{
+    color: #ff0000;
+    font-size: 12px;
+}
+.card-header h5{
+    margin-bottom: 0;
+}
+.select-grid-header .mat-form-field-infix{
+    border: 1px solid #cccccc !;
+}
+
+.alert{
+    padding: 5px 10px !important;
+}
+.form-control:disabled, 
+.form-control[readonly] {
+    background-color: #f2f3f5;
+    opacity: 1;
+    cursor: default;
+}
+.custom-card-footer{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.custom-card-footer a{
+    font-size: 1rem;
+    font-weight: bold;
+}
+.search-field-clear-area{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+.search-field-clear-area .clear-btn-div{
+    margin-left: 10px;
+}
+.search-field-clear-area .clear-btn-div .btn{
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
+

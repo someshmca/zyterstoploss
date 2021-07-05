@@ -1,0 +1,12 @@
+.modal-dialog{
+    margin-top: 6rem !important;
+}
+.clientChk{
+    width:20px;
+    height:20px;
+}
+
+/*::ng-deep .mat-form-field-underline {
+    display: none;
+  }
+  */

@@ -1,0 +1,85 @@
+
+
+.clients-table-area{
+    margin: 5px 25px 5px 20px;
+}
+.clients-table-area tr th:nth-child(1),
+.clients-table-area tr td:nth-child(1){
+    width: 10%;
+}
+.clients-table-area tr th:nth-child(2),
+.clients-table-area tr td:nth-child(2){
+    width: 30%;
+}
+.clients-table-area tr th:nth-child(3),
+.clients-table-area tr td:nth-child(3){
+    width: 15%;
+}
+.clients-table-area tr th:nth-child(4),
+.clients-table-area tr td:nth-child(4){
+    width: 15%;
+}
+.clients-table-area tr th:nth-child(5),
+.clients-table-area tr td:nth-child(5){
+    width: 20%;
+}
+.clients-table-area tr th:nth-child(6),
+.clients-table-area tr td:nth-child(6){
+    width: 10%;
+}
+
+.custom-modal .modal-dialog{
+    top: 8vh;
+}
+
+.custom-modal .modal-dialog.add-form-dialog{
+    max-width: 1200px;
+}
+.custom-modal .modal-dialog.update-form-dialog{
+    max-width: 1200px;
+}
+
+
+.cselect-dropdown{
+	margin-left: 20px;
+}
+
+.client-row-data{
+    display: flex;
+    padding: 15px;
+    flex-wrap: wrap;
+}
+
+.clField{
+    margin: 6px 8px;
+    display: flex;
+}
+.cllabel{
+    width: 100px;
+    font-weight: 600;
+    font-size: 14px;
+    word-wrap: break-word;
+}
+.clValue{
+    width: 250px;
+    font-size: 14px;
+    word-wrap: break-word;
+}
+#clientAdd .form-group{
+    margin-bottom: 3px;
+}
+#clientAdd .form-control{
+    padding: 4px;
+    height: 30px;
+}
+#clientUpdate .form-group{
+    margin-bottom: 3px;
+}
+#clientUpdate .form-control{
+    padding: 4px;
+    height: 30px;
+}
+.clientChk{
+    width:20px;
+    height:20px;
+}

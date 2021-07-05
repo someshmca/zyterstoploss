@@ -1,0 +1,135 @@
+
+
+.modal{
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(1px);
+}
+
+.modal-content .fa{
+    cursor: pointer;
+    position: absolute;
+    top: -6px;
+    right: -2px;
+    color: #003847;
+    display: inline-block;
+    width: 20px;
+}
+.modal-content .fa.fa-times-circle{
+    color: #ffffff;
+}
+.modal-content a:hover{
+    border: none;
+    outline: none;
+    text-decoration: none;
+}
+.modal-header{
+    background: #002C77;
+}
+.modal-title, .modal-title span{
+    color: #ffffff;
+    font-size: 1.2rem;
+}
+div.modal-footer{
+    background: linear-gradient(#f8f8f8, #ebf1f5);
+}
+.modal-footer-btns{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 4px 0;
+}
+.modal-footer-btns .col_1 .btn{
+    margin-right: 10px;
+}
+.modal-footer-btns .col_2 .btn{
+    margin-left: 10px;
+}
+.select-grid-header{
+    display: flex;
+    justify-content: space-between;
+    padding: 0 20px;
+}
+.select-grid-header>div{
+    display: flex;
+    align-items: center;
+}
+.success-dialog-msg{
+    height: auto;
+    padding: 2px 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 30px;
+    animation: successFadeIn 5s linear;
+    opacity: 0;
+    animation-iteration-count: 1;
+}
+.success-dialog-msg h2{
+    padding: 0;
+    margin: 0;
+    font-size: 1.2rem;
+    text-align: center;
+    color: #397402;
+}
+@keyframes successFadeIn{
+    0%{
+        opacity: 0;
+    }
+    100%{
+        opacity: 1;
+    }
+}
+
+@media (min-width: 576px){ 
+    .contract-modal .modal-dialog{
+        max-width: 700px;
+    }
+}
+.cdk-overlay-container, .cdk-overlay-pane {
+    z-index: 99999 !important;
+}
+.mat-step-header .mat-step-icon-selected div span, 
+.mat-step-header span,
+.mat-step-icon .mat-icon{
+    color: #ffffff;
+}
+.form-group>label{
+    height: 20px;
+}
+.btn.btn-primary span{
+    color: #ffffff !important;
+}
+
+.chkbox-inline{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+.chkbox-inline label{
+    margin-bottom: 0;
+}
+.chkbox-inline input[type='checkbox']{
+    margin-left: 10px;
+}
+.mat-select{
+    border: 1px solid #a0a0a0;
+}
+select.form-control.is-invalid{
+    background-position: 91% center !important;
+}
+
+.custom-control-label::before {
+    top: 1px;
+    left: -20px;
+    width: 18px;
+    height: 18px;
+}
+.custom-control-label::after {
+    top: 2px;
+    left: -19px;
+    width: 16px;
+    height: 16px;
+}
+

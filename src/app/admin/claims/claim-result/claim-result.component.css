@@ -1,0 +1,30 @@
+
+
+.claim-table-area{
+    margin: 15px auto;
+}
+.claim-table-area table{
+    border: 1px solid #c0c0c0;
+    width: 1500px;    
+}
+
+.claim-report-table tr td:first-child{
+    color: #007bff;
+    cursor: pointer;
+}
+.claim-table-area{
+    width: 100%;
+    overflow-x: auto;
+}
+.claim-report-table{
+    width: 1200px;
+}
+
+table.card-table tr:hover,
+table.card-table tr:focus,
+table.card-table tr:active td,
+table.card-table tr:focus-visible td,
+table.card-table tr:focus-within td{
+    background: #c6f4ff;
+    cursor: pointer;
+}

@@ -1,0 +1,116 @@
+
+   <div class="page-content">   
+    <div class="card custom-card">
+            <div class="card-header">
+              <h3>Programs</h3>              
+              <div class="edit-update-alert">
+                <alert></alert>
+            </div>
+            </div>
+            <div class="card-body">
+                <div class="select-grid-wrap">
+                  <div class="select-grid-header">
+                    <div>
+                        <label class="form-field-label">
+                            Search Program 
+                        </label>
+                        <!-- <div class="form-field-input">
+                            <select class="form-control cselect-dropdown" name="programID" (change)="onChangeProgram($event.target.value)">
+                                <option selected="selected" value="Select All">Select All</option>
+                                <option *ngFor="let programObj of programIDs" [value]="programObj.programId">
+                                    {{programObj.programId}}
+                                </option>
+                            </select>
+                        </div> -->
+                        <div fxLayout fxLayoutAlign="center center">
+                          <mat-form-field fxFlex="40%">
+                            <input matInput type="text" (keyup)="doFilter($event.target.value)" placeholder="Search a Program">
+                          </mat-form-field>
+                        </div>                        
+                    </div> 
+                    <!-- <div *ngIf="isNewProgramAdded" class="success-dialog-msg">
+                         <h2>New Program added successfully</h2>
+                    </div>
+                    <div *ngIf="isProgramUpdated" class="success-dialog-msg">
+                         <h2>Program updated successfully</h2>
+                    </div>  -->
+                  </div>   
+                <div class="card-table-area programs-table-area">
+                <div class="table-responsive">
+                    <div class="cust-add-area">
+                        <span class="fa fa-plus-circle" (click)="openCustomModal(true, null)"></span>
+                    </div> 
+                    <div class="mat-elevation-z8">
+                      <table mat-table matSort #programTable [dataSource]="dataSource" class="table table-bordered table-striped card-table">
+                    
+                        <ng-container matColumnDef="programId">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Program ID </th>
+                          <td mat-cell *matCellDef="let element"> {{element.programId}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="description">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Description </th>
+                          <td mat-cell *matCellDef="let element"> {{element.description}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="updateid">
+                          <th mat-header-cell *matHeaderCellDef> Action </th>
+                          <td mat-cell *matCellDef="let element" class="action-link"> 
+                            <span class="fa fa-edit" 
+                                  (click)="openCustomModal(true, element.programId)"></span>
+                          </td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                      </table>
+                      <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
+                    </div>
+                </div>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!-- Add/Update Program Modal -->
+<div class="modal fade" role="dialog" [ngStyle]="{'display': isCustomModalOpen ? 'block' : 'none', 'opacity': 1}">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">        
+      <!-- Modal Header -->
+      <div class="modal-header">
+          <h4 class="modal-title">
+              <span *ngIf="isAddMode">Add Program</span>
+              <span *ngIf="!isAddMode">Update Program</span>
+          </h4>
+          <a class="fa fa-2x fa-times-circle" (click)="openCustomModal(false, null)">
+          </a>
+      </div>
+      <!-- Modal body -->
+      <div class="modal-body">          
+  <div class="add-role-area">
+  <form [formGroup]="programForm" (ngSubmit)="onSubmit()">
+          <div class="mandate-fields">
+            <span *ngIf="submitted && !programForm.valid">Fields marked with * are mandatory</span>
+          </div>         
+            <div class="form-group">
+              <label>Description 
+                <small class="starmark">*</small></label>
+        <input type="text" #focusElem formControlName="description" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.description.errors }" />
+              <!-- <div class="invalid-feedback">
+                  <div *ngIf="submitted && f.description.errors">
+                      <div *ngIf="f.description.errors.required">Description is required</div>
+                  </div>
+              </div> -->
+            </div>
+        <div class="modal-footer-btns">
+          <button type="button" class="btn btn-outline-primary" (click)="openCustomModal(false, null)">Cancel</button>
+          <button type="submit" class="btn btn-primary" *ngIf="!isAddMode">Update</button>
+          <button type="submit" class="btn btn-primary" *ngIf="isAddMode">Add</button>
+        </div>
+        </form>
+        </div>  <!-- end of add-Program-area -->
+      </div>           
+      </div>
+    </div>
+  </div>
+ 
+
+

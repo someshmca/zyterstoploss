@@ -1,0 +1,45 @@
+
+
+.member-search-btns-area{
+    padding: 0;
+    margin: 5px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.member-search-btns-area .col_1 a{
+    font-size: 1rem;
+    font-weight: bold;
+}
+.member-search-btns-area .col_2 .btn{
+    margin-left: 15px;
+}
+.members-table-area{
+    margin-top: 5px;
+}
+.mandate-fields{
+    padding: 5px 20px;
+}
+.member-form-wrap{
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 9px 0;
+    height: 65vh;
+    max-height: 650px;
+}
+.members-table-area .member-table-wrap{
+    width:100%;
+    overflow-x: auto;
+}
+.members-table-area table.table{
+    width: 100%;
+}
+
+.member-search-results-area .card-body{
+    padding-left: 0;
+    padding-right: 0;
+}
+.member-search .card-footer{
+    background: none;
+    border-top: none;
+}
