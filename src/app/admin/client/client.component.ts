@@ -17,6 +17,7 @@ import { ModuleNames } from 'ag-grid-community';
 import { Router } from '@angular/router';
 import { ɵbypassSanitizationTrustStyle } from '@angular/core';
 import {NavPopupService} from '../services/nav-popup.service';
+import { IClientObj } from '../models/nav-popups.model';
 
 let dp = new DatePipe(navigator.language);
 let p = 'y-MM-dd'; // YYYY-MM-DD
@@ -64,14 +65,14 @@ export class ClientComponent implements OnInit {
   contractAddStatus: boolean;
   contractUpdateStatus: boolean;
   clientUpdateStatus: boolean;
-  inpValue: string= '';
+  searchInputValue: string= '';
   startDateErr = {isDateErr: false,dateErrMsg: ''};
   endDateErr = {isDateErr: false,dateErrMsg: ''};
   accNameErr = {isDuplicate: false, errMsg: ''};
   accIdErr = {isDuplicate: false, errMsg: ''};
-
+  tempClientObj:IClientObj;
   @ViewChild("focusElem") focusTag: ElementRef;
-  @ViewChild("filterInput") filterInput: ElementRef;
+  @ViewChild("filterSearchInput") filterSearchInput: ElementRef;
 
   ngOnInit() {
     this.getAllClients();
@@ -92,20 +93,20 @@ export class ClientComponent implements OnInit {
   
   getClientStatus(){
     this.navService.clientObj.subscribe((data)=>{
+      this.tempClientObj = data;
       if(data.isAdd){
-        this.clientForm.patchValue({
-          clientId: data.clientId
-        });
-        this.openCustomModal(true, null);
+        this.searchInputValue = data.clientName;
+        setTimeout(()=>{this.filterSearchInput.nativeElement.focus();}, 1000);        
       }
-        if(data.isUpdate){          
-          this.inpValue = data.clientName;
-          //setTimeout(()=>{
-              
-              this.filterInput.nativeElement.focus(); 
-              this.isAdded = false;            
-          //  }, 1000);
+      else if(data.isUpdate){          
+          this.searchInputValue = data.clientName;
+          setTimeout(()=>{this.filterSearchInput.nativeElement.focus(); this.isAdded = false;}, 1000);
         }
+      else{
+        this.searchInputValue='';
+        this.filterSearchInput.nativeElement.blur();
+        this.getAllClients();
+      }
       });
   }
   // getClientUpdateStatus(){
@@ -284,6 +285,8 @@ async checkDuplicateAccountId(aid){
     if (!open && id==null) {
       this.clientForm.reset();
       this.isAddMode = false;
+      this.searchInputValue='';
+      this.filterSearchInput.nativeElement.blur();
     }
     this.getAllClients();
     console.log("id inside modal: "+id);
@@ -320,6 +323,7 @@ async checkDuplicateAccountId(aid){
             createdon: x[0].createdon
           });
           this.uAccountName = x[0].clientName;
+          this.navService.setClientObj(x[0].clientId, x[0].clientName, false, true);
         });
         //this.uAccountId = this.f.clientId.value;
        }
@@ -352,33 +356,24 @@ async checkDuplicateAccountId(aid){
        });
     }
     gotoAddContract(){
-      //this.clientService.passClientId(this.f.clientId.value);  
-     // 
-     // this.contractService.setContractUpdateStatus(false);
-      this.route.navigate(['/contracts']);  
+      if(this.isAdded){
+        this.clientService.getClient(this.f.clientId.value).subscribe((data)=>{
+          this.navService.setContractObj(data[0].clientId, data[0].clientName, true,false);
+          this.route.navigate(['/contracts']); 
+        });
+      } 
     }
     clearSearchInput(){
-      this.filterInput.nativeElement.value='';
-      this.filterInput.nativeElement.focus();
+      this.searchInputValue='';
+      this.filterSearchInput.nativeElement.focus();
     }
     gotoUpdateContract(){
-      // setTimeout(()=>{
-      //   this.clientService.passClientId(this.f.clientName.value);        
-      // }, 1000);
-      // 
-      // this.contractService.setContractUpdateStatus(true);
-      // this.contractService.setContractAddStatus(false);
-              this.clientService.getClient(this.f.clientId.value).subscribe(
-                (data: IClient[]) => {
-                  
-                  this.navService.setClientObj(data[0].clientId, data[0].clientName, false, true);
-                  this.navService.clientObj.subscribe((data)=>{
-                    console.log(data);
-                    this.isAdded = false;
-                    
-                  })
-                });
-      this.route.navigate(['/contracts']);      
+      this.clientService.getClient(this.f.clientId.value).subscribe(
+        (data: IClient[]) => {                  
+          this.navService.setContractObj(data[0].clientId, data[0].clientName, false, true);
+          this.isAdded = false;
+          this.route.navigate(['/contracts']);   
+        });   
     }
     onSubmit() {
       this.submitted = true;
@@ -484,17 +479,10 @@ async checkDuplicateAccountId(aid){
               this.isDisabled=true;
               //this.openCustomModal(false, null);
               this.getAllClients();
-              this.contractService.setContractAddStatus(true);
-              this.clientService.getClient(this.f.clientId.value).subscribe(
-                (data: IClient[]) => {
-                  
-                  this.navService.setClientObj(data[0].clientId, data[0].clientName, true, false);
-                  this.navService.clientObj.subscribe((data)=>{
-                    console.log(data);
-                    this.isAdded = data.isAdd;
-                    
-                  })
-                });
+              this.clientService.getClient(this.f.clientId.value).subscribe((data)=>{
+                this.navService.setClientObj(data[0].clientId, data[0].clientName, true,false);
+              });              
+              this.isAdded = true;
               //this.getContractAddStatus();
               this.alertService.success('New Client added', { keepAfterRouteChange: true });
             },

@@ -11,13 +11,17 @@
                 <a>{{cnavitem.name}} <span class="arrow"></span></a>
             </li>
              <ul class="sub-menu collapse" [attr.id]="'a'+cnavitem.menuGroup" data-parent="#accordionExample">
-                <li *ngFor="let itms of cnavitem.menus" [routerLink]="itms.route" routerLinkActive="active">
+                <li *ngFor="let itms of cnavitem.menus" [routerLink]="itms.route" routerLinkActive="active" (click)="clearPopupSessions()">
                     <a>
-                        {{itms.name}}
+                        {{itms.name}} 
                     </a>
                 </li> 
             </ul>
           </ul>
+          <!-- <ul>
+            <li routerLink="/lasering" routerLinkActive="active" style="color: white">Lasering</li>
+          </ul> 
+          <br/>-->
           <!-- <ul id="menu-content" class="menu-content collapse out">
 
             <li  data-toggle="collapse" class="collapsed active" data-target="#g2">

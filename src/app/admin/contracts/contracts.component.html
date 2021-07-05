@@ -17,7 +17,7 @@
                   <div class="search-field-clear-area">         
                     <div fxLayout fxLayoutAlign="center center">
                       <mat-form-field fxFlex="40%">
-                        <input matInput type="text" #filterInp [value]="inpValue" (keyup)="doFilter($event.target.value)" (focus)="doFilter($event.target.value)" placeholder="Search a Contract">
+                        <input matInput type="text" #filterSearchInput [value]="searchInputValue" (keyup)="doFilter($event.target.value)" (focus)="doFilter($event.target.value)" placeholder="Search a Contract">
                       </mat-form-field>
                     </div> 
                     <div class="clear-btn-div">
@@ -64,7 +64,7 @@
                     </table>
                     <div class="grid-footer">
                       <div class="col_1">
-                        <a class="text-primary" routerLinkActive="active" (click)="goBackClientUpdate()">Back</a>
+                        <a class="text-primary" routerLinkActive="active" (click)="goBackPreviousNoFilter()">Back</a>
                       </div>
                       <div class="col_2"> 
                         <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
@@ -215,8 +215,8 @@
         <div class="modal-footer">
           <div class="modal-footer-btns">
             <div class="col_1">
-              <button type="button" class="btn btn-primary" *ngIf="isAddMode" routerLinkActive="active" (click)="goBackClientAdd()">Back</button>
-              <button type="button" class="btn btn-primary" *ngIf="!isAddMode" routerLinkActive="active" (click)="goBackClientUpdate()">Back</button>
+              <button type="button" class="btn btn-primary" *ngIf="isAddMode" routerLinkActive="active" (click)="goBackPreviousScreen()">Back</button>
+              <button type="button" class="btn btn-primary" *ngIf="!isAddMode" routerLinkActive="active" (click)="goBackCurrentScreen()">Back</button>
               <button type="button" class="btn btn-primary"  routerLinkActive="active" [disabled]="!isAdded" (click)="gotoProductAdd()" *ngIf="isAddMode">Product</button>
               <button type="button" class="btn btn-primary" routerLinkActive="active" (click)="gotoProductUpdate()" *ngIf="!isAddMode">Product</button>
             </div>

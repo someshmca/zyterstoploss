@@ -1,10 +1,10 @@
 import { Component, OnInit, ViewChild, AfterViewInit, ElementRef } from '@angular/core';
-import {IMemberSearch, IMemberSearchResponse, IMemberAdd} from '../models/member-model';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { IActiveClient } from '../models/clients-model';
-import {IContract} from '../models/contracts-model';
 import {IPlanAll, ITire} from '../models/health-plan.model';
-import {MemberService} from '../services/member.service';
+import {ILaseringList, ILaseringAdd, ILaseringUpdate} from '../models/lasering.model';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { IActiveClient, IClient } from '../models/clients-model';
+import {IContract} from '../models/contracts-model';
+import {LaseringService} from '../services/lasering.service';
 import {Paths} from '../admin-paths';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
@@ -18,41 +18,43 @@ import { ClientsService } from '../services/clients.service';
 import { ContractService } from '../services/contract.service';
 import { HealthPlanService } from '../services/health-plan.service';
 import {NavPopupService} from '../services/nav-popup.service';
+import { Router } from '@angular/router';
+import { IClientObj } from '../models/nav-popups.model';
 
 @Component({
-  selector: 'app-member',
-  templateUrl: './member.component.html',
-  styleUrls: ['./member.component.css'],
+  selector: 'app-lasering',
+  templateUrl: './lasering.component.html',
+  styleUrls: ['./lasering.component.css'],
   providers: [DatePipe]
 })
-export class MemberComponent implements OnInit {
-  memberSearchForm: FormGroup;
-  searchResult: any;
+export class LaseringComponent implements OnInit {
+  
   memberForm: FormGroup;
   searchErrorMessage: string;
-  displayedColumns: string[] = ['memberId', 'clientId', 'contractId', 'planId', 'tierId', 'fname', 'lname', 'mname', 'gender','memberStartDate', 'memberEndDate','dateOfBirth', 'subscriberId', 'laserValue', 'isUnlimited', 'status','userId'];
-  searchDataSource: any;
-
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
+  
+  @ViewChild("focusElem") focusTag: ElementRef;
+  @ViewChild("filterSearchInput") filterSearchInput: ElementRef;
+  laseringColumns: string[] = ['fname', 'lname', 'memberId', 'laserValue'];
+  laseringDataSource: any;
   
   uClientId:any;
   uContractId:any;
   uPlanId:any;
   uTierId:any;
   today: string;
+  searchInputValue: string;
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
-  @ViewChild("focusElem") focusTag: ElementRef;
-  @ViewChild("focusMemSearch") focusMSTag: ElementRef;
-  
   isAddMode: boolean = false;
+  isAdded: boolean;
   loading = false;
-  memSearchSubmitted = false;
   submitted = false;
   isCustomModalOpen: boolean = false;
   memSearchError: boolean = false;
   noSearchFieldEntered: boolean = false;
-  
+  tempLaseringObj:IClientObj;
+
   activeClients: IActiveClient[] = [];
   activeContracts: IContract[]=[];
   plans: IPlanAll[]=[];
@@ -67,12 +69,23 @@ export class MemberComponent implements OnInit {
   noSearchResultsFound: boolean = false;
   uMemberId: any;
   isDisabled: boolean=false;
-  constructor(private mb: FormBuilder, private fb: FormBuilder, private memberService:MemberService, private alertService: AlertService, private datePipe: DatePipe, private loginService: LoginService, private clientService: ClientsService, private contractService: ContractService, private planService: HealthPlanService, private navService: NavPopupService) { }
+
+  constructor(private mb: FormBuilder, 
+    private fb: FormBuilder, 
+    private laseringService:LaseringService, 
+    private alertService: AlertService, 
+    private datePipe: DatePipe, 
+    private loginService: LoginService, 
+    private clientService: ClientsService, 
+    private contractService: ContractService, 
+    private planService: HealthPlanService, 
+    private navService: NavPopupService,
+    private router: Router) { }
 
   ngOnInit() {
     this.show=true;
+    this.isAdded=false;
 
-    this.initMemberSearchForm();
     this.memberForm = this.fb.group({
       memberId: [''],
       fname: ['', Validators.required],
@@ -96,16 +109,57 @@ export class MemberComponent implements OnInit {
       tierId: ['', Validators.required],
       dateOfBirth: ['', Validators.required]
     });
-    //this.today=this.datePipe.transform(new Date(Date.now()), "MM/dd/yyyy");    
-    this.today=new Date().toJSON().split('T')[0];
-    setTimeout(()=>{
-      this.focusMSTag.nativeElement.focus();
-      //this.focusTag.nativeElement.focus();
-    }, 200);
+    this.today=this.datePipe.transform(new Date(Date.now()), "MM/dd/yyyy");    
+    this.getLaseringStatus();
+    this.getAllMembers();
     this.getActiveClients();
-    this.clearErrorMessages();    
-  }  // end of ngOnInit 
-
+    this.clearErrorMessages();  
+  } // end of ngOninit() method 
+  
+  public doFilter = (value: string) => {
+    this.laseringDataSource.filter = value.trim().toLocaleLowerCase();
+  }
+  getLaseringStatus(){
+    
+    this.navService.laseringObj.subscribe((data)=>{
+      this.tempLaseringObj = data;
+      
+      if(data.isAdd){
+        this.memberForm.patchValue({
+          clientId: data.clientId
+        });
+        this.openCustomModal(true, null);
+      }
+      else if(data.isUpdate){          
+        
+        this.searchInputValue = data.clientName;
+        setTimeout(()=>{
+            this.filterSearchInput.nativeElement.focus();                  
+         }, 1000);
+      }
+      else{     
+        
+        this.searchInputValue = '';
+        this.filterSearchInput.nativeElement.blur(); 
+        this.getAllMembers();
+      }
+    });   
+  }
+  getAllMembers(){     
+         
+        this.laseringService.getAllMembers().subscribe(
+          (data)=>{                
+            
+            this.laseringDataSource = new MatTableDataSource(data);   
+            this.laseringDataSource.paginator = this.paginator;
+            this.laseringDataSource.sort = this.sort;             
+          }
+        )
+  }
+  clearSearchInput(){
+    this.searchInputValue='';
+    this.filterSearchInput.nativeElement.focus();
+  }
   clearErrorMessages(){  
     this.memIdErr.isValid=false;
     this.memIdErr.errMsg='';
@@ -114,20 +168,6 @@ export class MemberComponent implements OnInit {
     this.memEndDateErr.isValid=false;
     this.memEndDateErr.errMsg='';
   }
-  initMemberSearchForm(){    
-    this.memberSearchForm = this.mb.group({
-      MemberId: [''],
-      SubscriberId:[''],
-      MemberStartDate: [''],
-      MemberEndDate: [''],
-      Fname:[''],
-      Lname: [''],
-      Mname: '',
-      DateOfBirth:[''],
-      Gender: ['']
-    });
-  }
-
   getActiveClients(){
     this.clientService.getActiveClients().subscribe(
       (data)=>{
@@ -159,105 +199,6 @@ export class MemberComponent implements OnInit {
       }
     )
   }
-  resetMemberSearch(){
-    this.initMemberSearchForm();
-    this.isSearchDataThere= false;
-    this.memSearchError=false;
-    this.noSearchFieldEntered=false; 
-    this.clearErrorMessages();   
-  }
-  searchMember(formData: FormGroup){
-    this.memSearchSubmitted = true;
-    this.memSearchError=false;
-   // console.log(formData.get());
-   this.clearErrorMessages();
-   let memberId = this.memberSearchForm.get('MemberId').value.trim();
-   let fname=this.memberSearchForm.get("Fname").value.trim();
-   let mname=this.memberSearchForm.get("Mname").value.trim();   
-   let lname=this.memberSearchForm.get("Lname").value.trim();
-   let subscriberId=this.memberSearchForm.get("SubscriberId").value.trim();
-   let Gender=this.memberSearchForm.get("Gender").value;
-   let dob=this.memberSearchForm.get("DateOfBirth").value;
-   let memberStartDate=this.memberSearchForm.get("MemberStartDate").value;
-   let memberEndDate=this.memberSearchForm.get("MemberEndDate").value;
-    console.log(this.memberSearchForm.value);
-    //let alphaNum = /^([a-zA-Z0-9 ]+)$/; 
-    let num1 = /^([0-9]+)$/; 
-    console.log(num1.test(memberId));
-    let a1=num1.test(memberId);
-    
-    if(memberStartDate!=null && memberStartDate!='' && memberEndDate!=null && memberEndDate!=''){
-      if(memberStartDate>memberEndDate){
-      this.memStartDateErr.isValid=true;
-      this.memSearchError=false;
-      this.memStartDateErr.errMsg='Member Start Date should not be greater than Member End Date';
-      return;
-      }
-    }
-    if((memberStartDate==null || memberStartDate=='') && (memberEndDate!=null && memberEndDate!='')){
-      this.memStartDateErr.isValid=true;
-      this.memSearchError=false;
-      this.memStartDateErr.errMsg='Member Start Date should not be empty or Invalid';
-      return;
-    }
-    if((memberEndDate==null || memberEndDate=='') && (memberStartDate!=null && memberStartDate!='')){
-      this.memEndDateErr.isValid=true;
-      this.memSearchError=false;
-      this.memEndDateErr.errMsg='Member End Date should not be empty or Invalid';
-      return;
-    }
-    if(!a1 && memberId!=''){
-      this.memIdErr.isValid=true;
-      this.memIdErr.errMsg='Member Id is not valid. It should be a number';
-      return;
-
-    }
-   // stop here if form is invalid
-   if (this.memberSearchForm.invalid || this.memberSearchForm.value=='') {
-     this.memSearchError=true;
-       return;
-   }
-   if(memberId=='' && fname=='' && mname=='' && lname=='' && subscriberId=='' && dob=='' && Gender=='' && memberStartDate=='' && memberEndDate==''){
-    this.noSearchFieldEntered = true;
-     return;
-   }
-   console.log(JSON.stringify(formData.value));
-   console.log(this.m.Gender.value);
-   console.log(memberId);
-   this.memberService.memberSearch(memberId,fname,mname, lname, subscriberId, dob, Gender, memberStartDate, memberEndDate).subscribe(
-     (data:IMemberSearchResponse[])=>{
-       console.log(data);
-       this.clearErrorMessages();
-       console.log(data[0].memberId)
-       if(data==null || data.length==0){
-         console.log("Records are Empty");
-         
-       }
-       else{
-         console.log("another issue");
-         
-       }
-       setTimeout(()=>{
-          this.searchDataSource = new MatTableDataSource(data);
-          this.isSearchDataThere = true;
-          this.noSearchFieldEntered = false;
-          this.memSearchError = false;
-       }, 400);
-       setTimeout(()=>{         
-        this.searchDataSource.paginator = this.paginator;
-        this.searchDataSource.sort = this.sort;
-       },700)
-     }, (error) => {
-       console.log("no record found");
-       this.isSearchDataThere = false;
-       this.memSearchError = true;
-       this.noSearchFieldEntered = false;
-       this.searchErrorMessage = error.message;
-       this.clearErrorMessages();       
-     }
-   )
-  }
-
   openCustomModal(open: boolean, id:any) {
     this.isDisabled=false;
     setTimeout(()=>{
@@ -271,6 +212,8 @@ export class MemberComponent implements OnInit {
     if (!open && id==null) {
       this.memberForm.reset();
       this.isAddMode = false;
+      this.searchInputValue='';
+      this.filterSearchInput.nativeElement.blur();
     }
     console.log("id inside modal: "+id);
 
@@ -324,44 +267,70 @@ export class MemberComponent implements OnInit {
           //this.isUnlimitedChecked();
        }        
   }
-}
-isUnlimitedChecked(){  
-  if(this.f.isUnlimited.value){
-    this.memberForm.patchValue({
-      laserValue: 0
-    });
+ }
+ isUnlimitedChecked(){  
+   if(this.f.isUnlimited.value){
+     this.memberForm.patchValue({
+       laserValue: 0
+     });
+ 
+     this.f.laserValue.disable();
+   }
+   else{
+     this.f.laserValue.enable();            
+   }
+ }
+ get f(){return this.memberForm.controls}
+ onSubmit() {
+    
+  this.submitted = true;
 
-    this.f.laserValue.disable();
+  // reset alerts on submit
+  this.alertService.clear();
+
+  // stop here if form is invalid
+  if (this.memberForm.invalid) {
+      return;
+  }
+
+  this.loading = true;
+  
+  if (this.isAddMode) {
+    
+      this.addMember();
+  } else {
+      this.updateMember();
+      
+  }
+ }
+ 
+ goBackPreviousNoFilter(){
+  this.navService.resetProductObj();
+  this.router.navigate(['/product']);
+}
+goBackPreviousScreen(){     
+  if(this.isAdded){
+    this.openCustomModal(false,null);
+    this.searchInputValue = this.tempLaseringObj.clientName;
+    this.filterSearchInput.nativeElement.focus();
+  }
+  if(!this.isAdded){
+    this.router.navigate(['/product']);
+  }
+}
+goBackCurrentScreen(){  
+  if(this.tempLaseringObj.isUpdate){
+    
+    this.openCustomModal(false,null);
+    this.searchInputValue=this.tempLaseringObj.clientName;
+    setTimeout(()=>this.filterSearchInput.nativeElement.focus(),500);
   }
   else{
-    this.f.laserValue.enable();            
+    this.openCustomModal(false,null);
   }
 }
-get m(){return this.memberSearchForm.controls}
-get f(){return this.memberForm.controls}
-  onSubmit() {
-    
-    this.submitted = true;
 
-    // reset alerts on submit
-    this.alertService.clear();
-
-    // stop here if form is invalid
-    if (this.memberForm.invalid) {
-        return;
-    }
-
-    this.loading = true;
-    
-    if (this.isAddMode) {
-      
-        this.addMember();
-    } else {
-        this.updateMember();
-        
-    }
-}
-private addMember() {
+ private addMember() {
   this.isDisabled=true;
     let addMembObj = {
       memberId: this.f.memberHrid.value,
@@ -381,7 +350,7 @@ private addMember() {
     }
     console.log(addMembObj);
 
-  this.memberService.addMember(addMembObj)
+  this.laseringService.addMember(addMembObj)
       .pipe(first())
       .subscribe({
           next: () => {
@@ -390,6 +359,7 @@ private addMember() {
             this.memberForm.reset();     
                  
               this.alertService.success('New Member added', { keepAfterRouteChange: true });
+              this.isAdded=true;
               //this.router.navigate(['../'], { relativeTo: this.route });
           },
           error: error => {
@@ -399,7 +369,6 @@ private addMember() {
       });
       
   }
-
   private updateMember() {
     this.isDisabled=true;
       let updateMemberObj = {
@@ -414,12 +383,11 @@ private addMember() {
       updatedOn:null  
       }
       
-      this.memberService.updateMember(updateMemberObj)
+      this.laseringService.updateMember(updateMemberObj)
           .pipe(first())
           .subscribe({
               next: () => {
                   this.openCustomModal(false,null); 
-                  this.searchMember(this.memberSearchForm);
                   this.memberForm.reset();
                   
                   this.alertService.success('Member updated', { 
@@ -432,5 +400,4 @@ private addMember() {
               }
           });
   }
-
 }

@@ -5,7 +5,7 @@
      <div class="card-header">
            <h3>Plan &amp; Tier</h3>
             <div class="edit-update-alert">
-              <alert></alert>
+              <!-- <alert></alert> -->
            </div>           
      </div>
      <div class="card-body">
@@ -18,7 +18,7 @@
                  <div class="search-field-clear-area">   
                   <div fxLayout fxLayoutAlign="center center">
                     <mat-form-field fxFlex="40%">
-                      <input matInput type="text" #planFilter [value]="inpValue" (keyup)="doFilter($event.target.value)"  (focus)="doFilter($event.target.value)" placeholder="Search a  Plan">
+                      <input matInput type="text" #filterSearchInput [value]="searchInputValue" (keyup)="doFilter($event.target.value)"  (focus)="doFilter($event.target.value)" placeholder="Search a  Plan">
                     </mat-form-field>
                   </div>   
                   <div class="clear-btn-div">
@@ -60,7 +60,7 @@
                </table>
                <div class="grid-footer">
                  <div class="col_1">
-                   <a class="text-primary" routerLinkActive="active" (click)="goBackProductUpdate()">Back</a>
+                   <a class="text-primary" routerLinkActive="active" (click)="goBackPreviousNoFilter()">Back</a>
                  </div>
                  <div class="col_2">
                    <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
@@ -86,7 +86,7 @@
                 <span *ngIf="!isAddMode">Update Plan &amp; Tier</span>
             </h4>
             <div>
-              
+              <alert></alert>
               <a class="fa fa-2x fa-times-circle" (click)="openCustomModal(false, null)">
               </a>
             </div>
@@ -198,8 +198,8 @@
         <div class="modal-footer">
           <div class="modal-footer-btns">
             <div class="col_1">
-              <button type="button" class="btn btn-primary" *ngIf="isAddMode" routerLinkActive="active" (click)="goBackProductAdd()">Back</button>
-              <button type="button" class="btn btn-primary" *ngIf="!isAddMode" routerLinkActive="active" (click)="goBackProductUpdate()">Back</button>
+              <button type="button" class="btn btn-primary" *ngIf="isAddMode" routerLinkActive="active" (click)="goBackPreviousScreen()">Back</button>
+              <button type="button" class="btn btn-primary" *ngIf="!isAddMode" routerLinkActive="active" (click)="goBackCurrentScreen()">Back</button>
                </div>
             <div class="col_2">
               <button type="button" class="btn btn-outline-primary" (click)="openCustomModal(false, null)">Cancel</button>

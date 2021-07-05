@@ -24,7 +24,7 @@
                       <div class="search-field-clear-area">
                         <div fxLayout fxLayoutAlign="center center">
                           <mat-form-field fxFlex="40%">
-                            <input matInput [value]="inpValue" #filterInput type="text" (keyup)="doFilter($event.target.value)" placeholder="Search a Account" autocomplete="off">
+                            <input matInput [value]="searchInputValue" #filterSearchInput type="text" (keyup)="doFilter($event.target.value)" placeholder="Search a Account" autocomplete="off">
                           </mat-form-field>
                         </div>
                         <div class="clear-btn-div">

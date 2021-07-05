@@ -18,7 +18,7 @@
             <div class="search-field-clear-area">   
               <div fxLayout fxLayoutAlign="center center">
                 <mat-form-field fxFlex="40%">
-                  <input matInput type="text" #prodFilter [value]="inpValue" (keyup)="doFilter($event.target.value)"  (focus)="doFilter($event.target.value)" placeholder="Search a Product">
+                  <input matInput type="text" #filterSearchInput [value]="searchInputValue" (keyup)="doFilter($event.target.value)"  (focus)="doFilter($event.target.value)" placeholder="Search a Product">
                 </mat-form-field>
               </div> 
               <div class="clear-btn-div">
@@ -59,7 +59,7 @@
               </table>
               <div class="grid-footer">
                 <div class="col_1">
-                  <a class="text-primary" (click)="goBackContractUpdate()">Back</a>
+                  <a class="text-primary" (click)="goBackPreviousNoFilter()">Back</a>
                 </div>
                 <div class="col_2">
                   <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
@@ -274,8 +274,8 @@
       </div> -->
       <div class="col-md-4">
         <div class="form-group">
-          <label>Minimum Deductible</label>
-          <input type="number" formControlName="aslMinDeductible" class="form-control"/>
+          <label>Minimum Deductible<small class="starmark">*</small></label>
+          <input type="number" formControlName="aslMinDeductible" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.aslMinDeductible.errors }"/>
         </div>
       </div>
     </div>
@@ -390,9 +390,9 @@
       <div class="modal-footer">
         <div class="modal-footer-btns">
           <div class="col_1">
-           <button type="button" class="btn btn-primary" *ngIf="isAddMode" routerLinkActive="active" (click)="goBackContractAdd()">Back</button>
-           <button type="button" class="btn btn-primary" *ngIf="!isAddMode" routerLinkActive="active" (click)="goBackContractUpdate()">Back</button>
-           <button class="btn btn-primary" routerLinkActive="active" [disabled]="isAddMode && !isAdded" (click)="gotoLasering()">Lasering</button>
+           <button type="button" class="btn btn-primary" *ngIf="isAddMode" routerLinkActive="active" (click)="goBackPreviousScreen()">Back</button>
+           <button type="button" class="btn btn-primary" *ngIf="!isAddMode" routerLinkActive="active" (click)="goBackCurrentScreen()">Back</button>
+           <button class="btn btn-primary" routerLinkActive="active" [disabled]="isAddMode && !isAdded" (click)="gotoLaseringUpdate()">Lasering</button>
            <button class="btn btn-primary" routerLinkActive="active" [disabled]="!isAdded" (click)="gotoPlanAdd()" *ngIf="isAddMode">
             Plan &amp; Tier
           </button>

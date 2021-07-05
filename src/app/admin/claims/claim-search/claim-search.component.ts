@@ -24,6 +24,7 @@ export class ClaimSearchComponent implements OnInit {
   submitted: boolean = false;
   claimSearchForm: FormGroup;
   maxDate: any;
+  today: string;
   isClaimSearchErr: boolean = false;
   claimIdErr = {isValid: false, errMsg: ''};
   memberIdErr = {isValid: false, errMsg: ''};
@@ -66,9 +67,7 @@ export class ClaimSearchComponent implements OnInit {
     setTimeout(()=>{
       this.focusTag.nativeElement.focus()
     }, 100)
-    this.f.fromDate.valueChanges.subscribe((data)=>{
-      
-    })
+    this.today=new Date().toJSON().split('T')[0];
   }
   clearErrorMessages(){  
     this.claimIdErr.isValid=false;

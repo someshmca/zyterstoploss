@@ -19,6 +19,7 @@ import { ContractService } from '../services/contract.service';
 import {CLAIM_BASIS_CONSTANT} from '../claim-basis.constant';
 import { HealthPlanService } from '../services/health-plan.service';
 import {NavPopupService} from '../services/nav-popup.service';
+import { IClientObj } from '../models/nav-popups.model';
 @Component({
   selector: 'app-product',
   templateUrl: './product.component.html',
@@ -33,7 +34,7 @@ export class ProductComponent implements OnInit {
     submitted = false;
     isCustomModalOpen: boolean = false;
     @ViewChild("focusElem") focusTag: ElementRef;
-    @ViewChild("prodFilter") productInputFilter: ElementRef;
+    @ViewChild("filterSearchInput") filterSearchInput: ElementRef;
   products:IProductAll[] = [];
   activeClients: IActiveClient[]=[];
   contractsByClientId: IContractsByClient[] = [];
@@ -58,7 +59,7 @@ export class ProductComponent implements OnInit {
     dateErrMsg: ''
   };
   contractIds:number;
-
+  tempProductObj: IClientObj;
   aslIncurredEndErr = {
     isDateErr: false,
     dateErrMsg: ''
@@ -81,7 +82,7 @@ export class ProductComponent implements OnInit {
   }
   isDisabled:boolean=false;
   isEditSelected: boolean = false;
-  inpValue: string='';
+  searchInputValue: string='';
   // contractAddStatus: boolean;
   // contractUpdateStatus: boolean;
   // productAddStatus: boolean;
@@ -130,7 +131,7 @@ export class ProductComponent implements OnInit {
 
       //below from aslDeductible to aslExpecteddClaimLiability are number fields
       aslDeductible:0,
-      aslMinDeductible:0,
+      aslMinDeductible:['', Validators.required],
       aslExpectedClaimLiability:0,
 
       aslIncurrredStartDate: ['', Validators.required],
@@ -171,60 +172,31 @@ export class ProductComponent implements OnInit {
     //this.getProductUpdateStatus();    
   }
   getProductStatus(){
-    this.navService.contractObj.subscribe((data)=>{
+    this.navService.productObj.subscribe((data)=>{
+      this.tempProductObj=data;
+      
       if(data.isAdd){
         this.productForm.patchValue({
           clientId: data.clientId
         });
         this.getContractIDs(data.clientId);
-        
-        this.openCustomModal(true, null);
+        this.openCustomModal(true,null);
       }
-      if(data.isUpdate){          
-        this.inpValue = data.clientName;
+      else if(data.isUpdate){          
+        this.searchInputValue = data.clientName;
+        
         setTimeout(()=>{
-            this.productInputFilter.nativeElement.focus();                  
+            this.filterSearchInput.nativeElement.focus();                  
          }, 1000);
+        this.doFilter(this.searchInputValue);
+      }
+      else{     
+        this.searchInputValue = '';
+        this.filterSearchInput.nativeElement.blur(); 
+        this.getAllProducts();
       }
     });
   }
-  // getProductUpdateStatus(){
-  //   this.productService.productUpdateStatus.subscribe((status)=>{
-  //       this.productUpdateStatus = status;
-  //       if(this.productUpdateStatus){
-  //         this.clientService.clientIdValue.subscribe(
-  //           (data)=>{                   
-  //             let d:string=data;
-  //             this.inpValue = d;
-  //             setTimeout(()=>{
-  //                 this.productInputFilter.nativeElement.focus();                  
-  //               }, 1000)              
-  //           })
-  //       }
-  //     })
-  // }
-
-  
-  // getContractAddStatus(){   
-  //   this.contractService.contractAddStatus.subscribe((status)=> {
-  //       this.contractAddStatus = status;        
-  //     });
-  // }
-  // getContractUpdateStatus(){       
-  //   this.contractService.contractUpdateStatus.subscribe((status)=> {
-  //       this.contractUpdateStatus = status;        
-  //     });
-  // }
-  // getPlanAddStatus(){   
-  //   this.planService.planAddStatus.subscribe((status)=> {
-  //       this.planAddStatus = status;        
-  //     });
-  // }
-  // getPlanUpdateStatus(){       
-  //   this.planService.planUpdateStatus.subscribe((status)=> {
-  //       this.planUpdateStatus = status;        
-  //     });
-  // }
   get f() { return this.productForm.controls; }
 
   checkMaxLiability(){    
@@ -409,6 +381,8 @@ if(aslTermVal!='' && this.productForm.valid){
       this.clearErrorMessages();
       this.isAddMode = false;
       this.isEditSelected = false;
+      this.searchInputValue='';
+      this.filterSearchInput.nativeElement.blur();
     }
     console.log("id inside modal: "+id);
     
@@ -488,48 +462,72 @@ if(aslTermVal!='' && this.productForm.valid){
             })
           });
           
-          //this.planService.setPlanAddStatus(false);
-          //this.contractService.setContractUpdateStatus(true);
-          //this.clientService.passClientId(id.clientName);
-          //this.planService.setPlanUpdateStatus(true);
 
 
          }
       }
       clearSearchInput(){
-        this.productInputFilter.nativeElement.value='';
-        this.productInputFilter.nativeElement.focus();
+        this.searchInputValue='';
+        this.filterSearchInput.nativeElement.focus();
       }
-      goBackContractAdd(){     
+      goBackPreviousNoFilter(){
         this.router.navigate(['/contracts']);
+        this.navService.resetContractObj();
       }
-      goBackContractUpdate(){  
-          this.navService.contractObj.subscribe((data)=>{
-            this.navService.setContractObj(data.clientId, data.clientName,false,true);          
-          });
-        this.router.navigate(['/contracts']);
+      goBackPreviousScreen(){  
+        if(this.isAdded){
+          this.openCustomModal(false,null);
+          this.searchInputValue = this.tempProductObj.clientName;
+          this.filterSearchInput.nativeElement.focus();
+        }
+        if(!this.isAdded){
+          this.router.navigate(['/contracts']);
+        }
+      }
+      goBackCurrentScreen(){  // from Update Modal going back to current screen
+          if(this.tempProductObj.isUpdate){
+            
+            this.openCustomModal(false,null);
+            this.searchInputValue=this.tempProductObj.clientName;
+            setTimeout(()=>this.filterSearchInput.nativeElement.focus(),500);
+          }
+          else{
+            this.openCustomModal(false,null);
+          }
       }
     gotoPlanAdd(){
-      this.router.navigate(['/health-plan']);
+      if(this.isAdded){
+        this.clientService.getClient(this.f.clientId.value).subscribe((data)=>{
+          this.navService.setPlanObj(data[0].clientId, data[0].clientName, true,false);
+          
+          this.router.navigate(['/health-plan']);
+        });
+      }
     }
     gotoPlanUpdate(){
-      this.clientService.getClient(this.f.clientId.value).subscribe((data)=>{ 
-        this.navService.setProductObj(data[0].clientId, data[0].clientName, false, true);
-        this.navService.productObj.subscribe((data)=>{
-          this.isAdded=data.isAdd;
-        })
-      });
-      this.router.navigate(['/health-plan']);
+      this.clientService.getClient(this.f.clientId.value).subscribe(
+        (data: IClient[]) => {                  
+          this.navService.setPlanObj(data[0].clientId, data[0].clientName, false, true);
+          this.isAdded = false;
+          this.router.navigate(['/health-plan']);   
+        });    
     }
-    gotoLasering(){
-      this.clientService.getClient(this.f.clientId.value).subscribe((data)=>{ 
-        this.navService.setProductObj(data[0].clientId, data[0].clientName, false, true);
-        this.navService.productObj.subscribe((data)=>{
-          this.isAdded=data.isAdd;
-          this.navService.setIsLasering(true);
-          this.router.navigate(['/member']);
-        })
-      });
+    gotoLaseringAdd(){
+      if(this.isAdded){
+        this.clientService.getClient(this.f.clientId.value).subscribe((data)=>{
+          this.navService.setLaseringObj(data[0].clientId, data[0].clientName, true,false);
+          
+          this.router.navigate(['/lasering']);
+        });
+      }
+    }
+    gotoLaseringUpdate(){
+      this.clientService.getClient(this.f.clientId.value).subscribe(
+        (data: IClient[]) => {                  
+          this.navService.setLaseringObj(data[0].clientId, data[0].clientName, false, true);
+          this.isAdded = false;
+          this.router.navigate(['/lasering']);
+        });
     }
       
 
@@ -589,19 +587,9 @@ private addProduct() {
       .pipe(first())
       .subscribe({ 
           next: () => {
-            this.getAllProducts();
-            //this.productForm.reset();    
-            this.clearErrorMessages();         
-            //this.openCustomModal(false, null);           
-              
-          // this.planService.setPlanAddStatus(true);
-          // this.planService.setPlanUpdateStatus(false);       
-            this.clientService.getClient(this.f.clientId.value).subscribe((data)=>{
-              this.navService.setProductObj(data[0].clientId, data[0].clientName, true, false);
-              this.navService.productObj.subscribe((data)=>{
-                this.isAdded=data.isAdd;
-              })
-            })
+            this.getAllProducts(); 
+            this.clearErrorMessages();              
+          this.isAdded=true;
               this.alertService.success('New Product added', { keepAfterRouteChange: true });
               // this.isDisabled=true;      
               //this.router.navigate(['../'], { relativeTo: this.route });
