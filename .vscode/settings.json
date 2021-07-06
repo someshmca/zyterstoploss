@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/9e4b168a-24c5-41c8-a993-25378c417340/resourceGroups/medica/providers/Microsoft.Web/sites/ZyterHealthSLUI",
+    "appService.deploySubpath": "."
+}
