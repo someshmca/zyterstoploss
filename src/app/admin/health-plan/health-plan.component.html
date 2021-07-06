@@ -18,7 +18,7 @@
                  <div class="search-field-clear-area">   
                   <div fxLayout fxLayoutAlign="center center">
                     <mat-form-field fxFlex="40%">
-                      <input matInput type="text" #filterSearchInput [value]="searchInputValue" (keyup)="doFilter($event.target.value)"  (focus)="doFilter($event.target.value)" placeholder="Search a  Plan">
+                      <input matInput type="text" #filterSearchInput [value]="searchInputValue" (keyup)="doFilter($event.target.value)"  (focus)="doFilter($event.target.value)" placeholder="Search a Plan &amp; Tier">
                     </mat-form-field>
                   </div>   
                   <div class="clear-btn-div">
@@ -114,7 +114,7 @@
                  </div>
                  <div class="col-md-4">  
                   <div class="form-group">
-                    <label>Account Name<small class="starmark">*</small> </label>
+                    <label>Account<small class="starmark">*</small> </label>
               <select formControlName="clientId" class="form-control" (change)="getContractsByClient($event)" [ngClass]="{ 'is-invalid': submitted && f.clientId.errors }">
                     <option *ngFor="let client of locClients" [value]="client.clientId">
                         {{client.clientName}}
@@ -126,7 +126,7 @@
                 <div class="row">
                     <div class="col-md-4">
                       <div class="form-group">
-                       <label>Contract ID<small class="starmark">*</small> </label>
+                       <label>Contract<small class="starmark">*</small> </label>
                        <select formControlName="contractId" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.contractId.errors }">
                         <option value=''>&nbsp;</option>
                          <option *ngFor="let contract of activeContracts" [value]="contract.contractId">

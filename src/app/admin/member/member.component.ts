@@ -194,6 +194,16 @@ export class MemberComponent implements OnInit {
       return;
       }
     }
+    // added by masool irfan
+    if(memberStartDate!=null && memberStartDate!='' && memberEndDate!=null && memberEndDate!=''){
+      if(memberStartDate=memberEndDate){
+      this.memStartDateErr.isValid=true;
+      this.memSearchError=false;
+      this.memStartDateErr.errMsg='Member Start Date should not be EQUAL to Member End Date';
+      return;
+      }
+    }
+    // till here
     if((memberStartDate==null || memberStartDate=='') && (memberEndDate!=null && memberEndDate!='')){
       this.memStartDateErr.isValid=true;
       this.memSearchError=false;

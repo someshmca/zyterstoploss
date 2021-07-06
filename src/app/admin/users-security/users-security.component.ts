@@ -26,6 +26,9 @@ export class UsersSecurityComponent implements OnInit {
   allUserIDDetails: IAllUserIDs[] = [];
   userDetails: IUserDetails[];
   roles: IRole[] = [];
+  // added by masool irfan
+  today: string;
+  // till here
 
   selectAll: string = "Select All";
   id: string;
@@ -68,6 +71,9 @@ export class UsersSecurityComponent implements OnInit {
         lastupdate: '',
         password: ''
   },{validator: this.dateLessThan('effectiveFrom', 'effectiveTo')},); 
+  //added by masool irfan
+    this.today=new Date().toJSON().split('T')[0];  
+    // till here
 
     this.getAllRoles();
     this.clearErrorMessages();
@@ -93,6 +99,7 @@ export class UsersSecurityComponent implements OnInit {
   }  
   dateLessThan(from: string, to: string) {
   
+    // added by masool irfan
     return (group: FormGroup): {[key: string]: any} => {
       this.clearErrorMessages();
       let f = group.controls[from];
@@ -111,6 +118,7 @@ export class UsersSecurityComponent implements OnInit {
       }
       return {};
     }
+    // till here
 }
 
 public doFilter = (value: string) => {
@@ -120,7 +128,7 @@ getAllRoles(){
   this.rolesService.getAllRoles().subscribe(
     (data: IRole[]) => {
         this.roles = data;
-        debugger;
+        
         //this.roles = data;
     }
   )
@@ -197,33 +205,33 @@ getAllRoles(){
 
        this.submitted = true;
        
-      let effectiveFrom = this.datePipe.transform(this.securityForm.get('effectiveFrom').value, 'yyyy-MM-dd');
-      let effectiveTo = this.datePipe.transform(this.securityForm.get('effectiveTo').value, 'yyyy-MM-dd');
-      let maxDate = this.datePipe.transform(new Date(Date.now()), 'yyyy-MM-dd');
-      if(effectiveFrom!=null && effectiveFrom!='' && effectiveTo!=null && effectiveTo!=''){
-        if(effectiveFrom>effectiveTo){
-        this.effectiveFrom.isValid=true;
-        this.effectiveFrom.errors='Effective From Date should not be greater than Effective To Date';
-        return;
-        }
-      }
-      if((effectiveFrom!==null || effectiveFrom!=='') && (effectiveTo!=null && effectiveTo!='')){
-        if(effectiveFrom==effectiveTo){
-        this.effectiveFrom.isValid=true;
-        this.effectiveFrom.errors='Effective From Date should not be EQUAL to Effective To Date';
-        return;
-        }
-      }
-      if((effectiveFrom!==null || effectiveFrom!=='') && (effectiveTo!=null && effectiveTo!='')){
-        if(effectiveTo > maxDate ){
-        this.effectiveFrom.isValid=true;
-        this.effectiveFrom.errors='Effective To date must be less than '+maxDate+' date';
-        return;
-        }
-      }
-
-
-      
+       // added by masool irfan  
+       let effectiveFrom = this.datePipe.transform(this.securityForm.get('effectiveFrom').value, 'yyyy-MM-dd');
+       let effectiveTo = this.datePipe.transform(this.securityForm.get('effectiveTo').value, 'yyyy-MM-dd');
+       let maxDate = this.datePipe.transform(new Date(Date.now()), 'yyyy-MM-dd');
+       if(effectiveFrom!=null && effectiveFrom!='' && effectiveTo!=null && effectiveTo!=''){
+         if(effectiveFrom>effectiveTo){
+         this.effectiveFrom.isValid=true;
+         this.effectiveFrom.errors='Effective From Date should not be greater than Effective To Date';
+         return;
+         }
+       }
+       if((effectiveFrom!==null || effectiveFrom!=='') && (effectiveTo!=null && effectiveTo!='')){
+         if(effectiveFrom==effectiveTo){
+         this.effectiveFrom.isValid=true;
+         this.effectiveFrom.errors='Effective From Date should not be EQUAL to Effective To Date';
+         return;
+         }
+       }
+       if((effectiveFrom!==null || effectiveFrom!=='') && (effectiveTo!=null && effectiveTo!='')){
+         if(effectiveTo > maxDate ){
+         this.effectiveFrom.isValid=true;
+         this.effectiveFrom.errors='Effective To date must be less than '+maxDate+' date';
+         return;
+         }
+       }
+ 
+       // till here
 
        // reset alerts on submit
        this.alertService.clear();

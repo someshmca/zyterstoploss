@@ -53,8 +53,8 @@ export class BatchSettingsComponent implements OnInit {
   //batchProcessColumns: string[] = ['batchProcess', 'description', 'status', 'lastRun','lastRunStatus','nextScheduleRun','frequency','batchProcessId', 'batchStatusId','createId','createDate', 'updateId','lastUpdateDate'];
   batchProcessGridSource: any;
   isDisabled: boolean=false;
-  @ViewChild(MatPaginator) paginator1: MatPaginator;
-  @ViewChild(MatSort) sort1: MatSort;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
   @ViewChild('BatchProcessPaginator', {static: true}) batchProcessPaginator: MatPaginator;
   @ViewChild('BatchProcessGridSort', {static: true}) batchProcessGridSort: MatSort;
 

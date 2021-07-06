@@ -7,14 +7,37 @@ import { catchError } from 'rxjs/operators';
 import {Paths} from '../admin-paths';
 
 import { BehaviorSubject } from 'rxjs';
+import { IClaimSearch } from '../models/claim-search.model';
 @Injectable({
   providedIn: 'root'
 })
 export class ClaimService {
-
   constructor(private http: HttpClient) {
 
   }
+  claimSearchInit:IClaimSearch={
+    claimId:'',
+    memberId:'',
+    firstName: '',
+    lastName: '',
+    dateOfBirth: '',
+    fromDate: '',
+    toDate: ''
+  }
+  claimSearchRequest=new BehaviorSubject<IClaimSearch>(this.claimSearchInit);
+  setClaimSearchRequest(request:IClaimSearch){
+    this.claimSearchRequest.next(request);
+    this.claimSearchRequest.asObservable();
+  }
+  resetClaimSearch(){
+    this.setClaimSearchRequest(this.claimSearchInit);
+  }
+  isClaimResult= new BehaviorSubject<boolean>(false);
+  setIsClaimResult(clres:boolean){
+    this.isClaimResult.next(clres);
+    this.isClaimResult.asObservable();
+  }
+
    private claimID = new BehaviorSubject<string>('');
     selectedClaimID = this.claimID.asObservable();
     setClaimId(claimID: string) {

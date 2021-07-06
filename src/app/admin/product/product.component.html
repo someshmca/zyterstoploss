@@ -108,7 +108,7 @@
             <div class="row">
               <div class="col-md-4">
                 <div class="form-group">
-                  <label>Account ID<small class="starmark">*</small> </label>
+                  <label>Account<small class="starmark">*</small> </label>
                   <select #focusElem formControlName="clientId" class="form-control" (change)="getContractIDs($event.target.value)" (focus)="getContractIDs($event.target.value)" [ngClass]="{ 'is-invalid': submitted && f.clientId.errors }">
                     <option *ngFor="let client of activeClients" [value]="client.clientId">
                       {{client.clientName}}
@@ -118,7 +118,7 @@
               </div>
               <div class="col-md-4">
                 <div class="form-group">
-                  <label>Contract ID<small class="starmark">*</small></label>
+                  <label>Contract<small class="starmark">*</small></label>
                   <select class="form-control" formControlName="contractId" [ngClass]="{ 'is-invalid': submitted && f.contractId.errors }">
                      <option value='' *ngIf="isAddMode"></option>
                     <option *ngFor="let obj of contractsByClientId" [value]="obj.contractId">
@@ -192,19 +192,19 @@
           <div class="row">
             <div class="col-md-4">
               <div class="form-group">
-                <label>Deductible<small class="starmark">*</small></label>
+                <label>Specific Deductible<small class="starmark">*</small></label>
                 <input type="number" formControlName="sslDeductible" class="form-control" [ngClass]="{ 'is-invalid': submitted && sslDeductibleErr.isValid }"/>
               </div>
             </div>
             <div class="col-md-4">
               <div class="form-group">
-                <label>Aggregate Specific Deductible</label>
+                <label>Aggregating Specific Deductible</label>
                 <input type="number" formControlName="sslAggDeductible" class="form-control"/>
               </div>
             </div> 
             <div class="col-md-4">
               <div class="form-group">
-                <label>Annual Limit</label>
+                <label>Limit of Liability - Annual</label>
                 <input type="number" formControlName="sslAnnualLimit" class="form-control"/>
               </div>              
             </div>
@@ -212,13 +212,13 @@
           <div class="row"> 
             <div class="col-md-4">
               <div class="form-group">
-                <label>Lifetime Limit</label>
+                <label>Limit of Liability - Lifetime</label>
                 <input type="number" formControlName="sslLifetimeLimit" class="form-control"/>
               </div>
             </div>
             <div class="col-md-4">
               <div class="form-group">
-                <label>Term Coverage Ext End date</label>
+                <label>Terminal Extension Coverage End Date</label>
                 <input type="date" formControlName="sslTermCoverageExtEndDate" class="form-control" [ngClass]="{ 'is-invalid': sslTermCovrErr.isDateErr }" max="2999-12-31"/>
               </div>
             </div>
@@ -232,7 +232,7 @@
           <div class="row"> 
             <div class="col-md-4">
               <div class="form-group">
-                <label>Covered Claims<small class="starmark">*</small></label>
+                <label>Covered Benefits<small class="starmark">*</small></label>
                 <select formControlName="sslCoveredClaims" class="form-control" multiple [ngClass]="{ 'is-invalid': submitted && f.sslCoveredClaims.errors }">
                   <option *ngFor="let coveredClaim of coveredClaims" [value]="coveredClaim.claimTypeCode">
                     {{coveredClaim.claimType}}
@@ -274,7 +274,7 @@
       </div> -->
       <div class="col-md-4">
         <div class="form-group">
-          <label>Minimum Deductible<small class="starmark">*</small></label>
+          <label>Min Aggregate Deductible<small class="starmark">*</small></label>
           <input type="number" formControlName="aslMinDeductible" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.aslMinDeductible.errors }"/>
         </div>
       </div>
@@ -288,13 +288,13 @@
       </div>
       <div class="col-md-4">
         <div class="form-group">
-          <label>Incurrred Start Date<small class="starmark">*</small></label>
+          <label>Incurred Start Date<small class="starmark">*</small></label>
           <input type="date" formControlName="aslIncurrredStartDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.aslIncurrredStartDate.errors }" max="2999-12-31"/>
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-group">
-          <label>Incurrred End Date<small class="starmark">*</small></label>
+          <label>Incurred End Date<small class="starmark">*</small></label>
           <input type="date" formControlName="aslIncurredEndDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.aslIncurredEndDate.errors }" max="2999-12-31"/>
         </div>
       </div>
@@ -322,13 +322,13 @@
     <div class="row">
       <div class="col-md-4">
         <div class="form-group">
-          <label>Annual Limit</label>
+          <label>Limit of Liability - Annual</label>
           <input type="number" formControlName="aslAnnualLimit" class="form-control"/>
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-group">
-          <label>Lifetime Limit</label>
+          <label>Limit of Liability - Lifetime</label>
           <input type="number" formControlName="aslLifeTimeLimit" class="form-control"/>
         </div>
       </div>
@@ -342,13 +342,13 @@
     <div class="row">
       <div class="col-md-4">
         <div class="form-group">
-          <label>Term Coverage Ext End Date</label>
+          <label>Terminal Extension Coverage End Date</label>
           <input type="date" formControlName="aslTermCoverageExtEndDate" class="form-control" [ngClass]="{ 'is-invalid': aslTermCovrErr.isDateErr }" max="2999-12-31" />
         </div>
       </div> 
       <div class="col-md-4">
         <div class="form-group">
-          <label>Covered Claims<small class="starmark">*</small></label>
+          <label>Covered Benefits<small class="starmark">*</small></label>
           <select formControlName="aslCoveredClaims" class="form-control" multiple [ngClass]="{ 'is-invalid': submitted && f.aslCoveredClaims.errors }">
             <option *ngFor="let coveredClaim of coveredClaims" [value]="coveredClaim.claimTypeCode">
               {{coveredClaim.claimType}}
@@ -372,14 +372,14 @@
       </div>
       <div class="col-md-4">
         <div class="form-group">
-          <label>IBNR Percentage</label>
+          <label>IBNR Reserve Percentage</label>
           <input type="number" formControlName="ibnrPercentage"   class="form-control" [ngClass]="{ 'is-invalid': submitted && f.ibnrPercentage.errors }"/>
         </div>
           <input type="hidden" formControlName="ibnrPercentage" class="form-control"/>
       </div>
       <div class="col-md-4">
         <div class="form-group">
-          <label>Deferred Percentage</label>
+          <label>Deferred Service Fee Percentage</label>
           <input type="number" formControlName="defferedFeePercentage" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.defferedFeePercentage.errors }"/>
         </div>
          <input type="hidden" formControlName="defferedFeePercentage" class="form-control"/>

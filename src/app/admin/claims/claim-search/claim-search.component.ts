@@ -26,6 +26,7 @@ export class ClaimSearchComponent implements OnInit {
   maxDate: any;
   today: string;
   isClaimSearchErr: boolean = false;
+  claimSearchRequest: IClaimSearch;
   claimIdErr = {isValid: false, errMsg: ''};
   memberIdErr = {isValid: false, errMsg: ''};
   dateErr = {
@@ -40,7 +41,7 @@ export class ClaimSearchComponent implements OnInit {
   dataSource: any;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  isClaimResults: boolean = false;
+  isClaimResult: boolean;
   claimSearchNotFound: boolean = false;
 
 
@@ -68,6 +69,15 @@ export class ClaimSearchComponent implements OnInit {
       this.focusTag.nativeElement.focus()
     }, 100)
     this.today=new Date().toJSON().split('T')[0];
+    this._claimService.isClaimResult.subscribe((value)=>{this.isClaimResult=value;});    
+    this._claimService.claimSearchRequest.subscribe((res)=>{
+      this.claimSearchRequest=res; 
+      if(this.isClaimResult){
+        this.claimSearchForm.patchValue(this.claimSearchRequest);
+        this.getClaimSearchResultsGrid(this.claimSearchRequest);
+      }
+    });
+    
   }
   clearErrorMessages(){  
     this.claimIdErr.isValid=false;
@@ -108,7 +118,8 @@ export class ClaimSearchComponent implements OnInit {
   resetClaimSearch(){
     this.claimSearchForm.reset();
     this.claimSearchNotFound = false;
-    this.isClaimResults = false;    
+    this._claimService.setIsClaimResult(false);
+    this._claimService.resetClaimSearch();
     this.clearErrorMessages();   
   }
   get f() { return this.claimSearchForm.controls; }
@@ -190,8 +201,13 @@ export class ClaimSearchComponent implements OnInit {
       toDate:  this.f.toDate.value==''?null: this.datePipe.transform(this.f.toDate.value, 'yyyy-MM-dd')    
     }
     console.log(claimRequestObj);
-    
-    this._claimReportService.getClaimReport(claimRequestObj).subscribe(
+    this._claimService.setClaimSearchRequest(claimRequestObj);
+    this._claimService.claimSearchRequest.subscribe((res)=>{this.claimSearchRequest=res;});
+    this.getClaimSearchResultsGrid(this.claimSearchRequest);
+   // this._claimReportService.getClaimReport("")
+  }
+  getClaimSearchResultsGrid(claimReq:IClaimSearch){
+    this._claimReportService.getClaimReport(claimReq).subscribe(
       (data) => {
         this.isClaimSearchErr=false;
         this.dateErr.fromDateErr= false;
@@ -226,7 +242,10 @@ export class ClaimSearchComponent implements OnInit {
 
 
             // -----------------------        
-            this.isClaimResults = true;
+            //this.isClaimResult = true;
+            this._claimService.setIsClaimResult(true);
+            console.log(this.isClaimResult);
+            
             this.claimSearchNotFound = false;
             this.claimResults = data;
             this.dataSource = new MatTableDataSource(this.claimResults);
@@ -240,13 +259,15 @@ export class ClaimSearchComponent implements OnInit {
       },
       (error) => {
         this.claimSearchNotFound = true;
-        this.isClaimResults = false;
+        this._claimService.setIsClaimResult(false);
 
       } 
-    );
-   // this._claimReportService.getClaimReport("")
+    )
   }
   setClaimId(id: string){
+    
+    console.log(this.claimSearchRequest);
+    
     this._claimService.setClaimId(id);
     console.log("Id : "+id);
    // this.isClaimReportsHidden= true;

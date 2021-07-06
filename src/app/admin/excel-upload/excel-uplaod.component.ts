@@ -50,9 +50,9 @@ export class ExcelUploadComponent implements OnInit {
         this.message="No file uploaded";
         return;
       }
-    this.isLoading = true;
-    this.button = 'Processing';
 
+  this.isLoading = true;
+  this.button = 'Processing';
     setTimeout(() => {
       let formData = new FormData();  
     formData.append('upload', this.fileInput.nativeElement.files[0])  
@@ -64,9 +64,11 @@ export class ExcelUploadComponent implements OnInit {
       for(let i in result){
         this.message+="- "+result[i]+'\n';
       }          
-    }); 
+      if(result){        
       this.isLoading = false;
-      this.button = 'Upload';     
+      this.button = 'Upload';   
+      }
+    });   
     }, 10000) 
       
   

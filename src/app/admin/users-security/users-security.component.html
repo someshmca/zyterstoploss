@@ -195,7 +195,9 @@
                       <div class="form-group">
                         <label>Effective To 
                            <small class="starmark">*</small></label>
-                            <input type="date" class="form-control field-input-text" formControlName="effectiveTo" [ngClass]="{ 'is-invalid': submitted && f.effectiveTo.errors }" max="2999-12-31"/>
+                            <!-- added by masool irfan -->
+                    <input type="date" class="form-control field-input-text" formControlName="effectiveTo" [ngClass]="{ 'is-invalid': submitted && f.effectiveTo.errors }" [max]="today"/>
+                    <!-- till here -->
                             <!-- <div class="invalid-feedback">
                             <div *ngIf="submitted && f.effectiveTo.errMsg">
                                 <div *ngIf="f.effectiveTo.errMsg.required">                      

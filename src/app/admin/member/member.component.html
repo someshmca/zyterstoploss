@@ -274,7 +274,7 @@
                <div class="col-md-4">
                   <div class="form-group">
                     <label>Member ID<small class="starmark">*</small></label>
-                    <input type="text" formControlName="memberId" maxlength="20"  class="form-control" [ngClass]="{ 'is-invalid': submitted && f.memberId.errors }"/>
+                    <input type="text" formControlName="memberId" maxlength="20"  class="form-control" [ngClass]="{ 'is-invalid':memIdErr.isValid }"/>
                   </div>
                 </div>
                 <div class="col-md-4">
