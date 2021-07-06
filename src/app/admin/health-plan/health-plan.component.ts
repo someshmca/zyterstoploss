@@ -119,6 +119,11 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
         this.planForm.patchValue({
           clientId: data.clientId
         });
+        this.planService.getContractsByClient(this.tempPlanObj.clientId).subscribe(
+          (data)=>{
+            this.activeContracts = data;    
+          }
+        )
         this.openCustomModal(true, null);
       }
       else if(data.isUpdate){          
