@@ -2,6 +2,7 @@ import { AfterViewInit,Component, OnInit } from '@angular/core';
 import { LoginService } from '../shared/services/login.service';
 import {NavPopupService} from '../admin/services/nav-popup.service';
 import * as $ from 'jquery';
+import { ClaimService } from '../admin/services/claim.service';
 @Component({
   selector: 'app-main-side-nav',
   templateUrl: './main-side-nav.component.html',
@@ -12,7 +13,7 @@ export class MainSideNavComponent implements OnInit, AfterViewInit {
   isLoggedIn: boolean;
   linkToHome: string='';
   roleName: string;                          
-  constructor(private loginService: LoginService, private navService: NavPopupService) { }
+  constructor(private loginService: LoginService, private claimService:ClaimService ,private navService: NavPopupService) { }
   
   ngOnInit(): void {
     if(this.isLoggedIn==true){
@@ -23,7 +24,7 @@ export class MainSideNavComponent implements OnInit, AfterViewInit {
     }
   }
   clearPopupSessions(){
-    
+    this.claimService.resetClaimSearch();
     this.navService.clearPopupSessions();
     
   }
