@@ -296,6 +296,10 @@ clearErrorMessages(){
       this.getAllContracts();
       this.contractForm.reset();
       this.isAddMode = false;
+      this.isAdded=false;
+      this.navService.resetContractObj();
+      this.filterSearchInput.nativeElement.value='';
+      this.filterSearchInput.nativeElement.blur();
     }
     console.log("id inside modal: "+id);
     //this.contId=id.contractId==0?"":id.contractId;
@@ -623,6 +627,7 @@ clearErrorMessages(){
     }
     clearSearchInput(){
       this.searchInputValue='';
+      this.filterSearchInput.nativeElement.value='';
       this.filterSearchInput.nativeElement.focus();
     }
     goBackPreviousNoFilter(){

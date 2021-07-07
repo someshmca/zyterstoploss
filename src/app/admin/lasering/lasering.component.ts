@@ -158,6 +158,7 @@ export class LaseringComponent implements OnInit {
   }
   clearSearchInput(){
     this.searchInputValue='';
+    this.filterSearchInput.nativeElement.value='';
     this.filterSearchInput.nativeElement.focus();
   }
   clearErrorMessages(){  
@@ -212,8 +213,10 @@ export class LaseringComponent implements OnInit {
     if (!open && id==null) {
       this.memberForm.reset();
       this.isAddMode = false;
-      this.searchInputValue='';
+      this.filterSearchInput.nativeElement.value='';
       this.filterSearchInput.nativeElement.blur();
+      this.isAdded=false;
+      this.navService.resetLaseringObj();
     }
     console.log("id inside modal: "+id);
 

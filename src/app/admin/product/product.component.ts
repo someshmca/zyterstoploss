@@ -382,6 +382,9 @@ if(aslTermVal!='' && this.productForm.valid){
       this.isAddMode = false;
       this.isEditSelected = false;
       this.searchInputValue='';
+      this.isAdded=false;
+      this.navService.resetProductObj();
+      this.filterSearchInput.nativeElement.value='';
       this.filterSearchInput.nativeElement.blur();
     }
     console.log("id inside modal: "+id);
@@ -468,6 +471,7 @@ if(aslTermVal!='' && this.productForm.valid){
       }
       clearSearchInput(){
         this.searchInputValue='';
+        this.filterSearchInput.nativeElement.value='';
         this.filterSearchInput.nativeElement.focus();
       }
       goBackPreviousNoFilter(){

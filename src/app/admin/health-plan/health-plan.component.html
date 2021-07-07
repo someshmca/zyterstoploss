@@ -36,7 +36,7 @@
                <table mat-table matSort #planTable [dataSource]="dataSource" class="table table-bordered table-striped table-hover card-table">
              
                  <ng-container matColumnDef="clientName">
-                   <th mat-header-cell *matHeaderCellDef mat-sort-header > Account Name </th>
+                   <th mat-header-cell *matHeaderCellDef mat-sort-header > Account </th>
                    <td mat-cell *matCellDef="let element"> {{element.clientName}} </td>
                  </ng-container>
                  <ng-container matColumnDef="planCode">
@@ -137,7 +137,7 @@
                     </div>
                     <div class="col-md-4">
                       <div class="form-group">
-                        <label>{{locTires[0].tierName}} Factor Amount</label>
+                        <label>Single Factor Amount</label>
                   <input type="text" formControlName="tier1Aggfactamt" [value]="locTires[0].tierId" class="form-control" />
                       </div>
                     </div>

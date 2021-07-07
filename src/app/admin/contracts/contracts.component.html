@@ -37,11 +37,11 @@
                     <table mat-table matSort #contractTable [dataSource]="dataSource" class="table table-bordered table-striped table-hover card-table">
                   
                       <ng-container matColumnDef="clientName">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header > Account Name </th>
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header > Account </th>
                         <td mat-cell *matCellDef="let element"> {{element.clientName}} </td>
                       </ng-container>
                       <ng-container matColumnDef="contractId">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header > Contract ID </th>
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header > Contract </th>
                         <td mat-cell *matCellDef="let element"> {{element.contractId}} </td>
                       </ng-container>                  
                       <ng-container matColumnDef="startDate">

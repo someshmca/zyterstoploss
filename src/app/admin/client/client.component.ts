@@ -285,7 +285,9 @@ async checkDuplicateAccountId(aid){
     if (!open && id==null) {
       this.clientForm.reset();
       this.isAddMode = false;
-      this.searchInputValue='';
+      this.isAdded=false;
+      this.navService.resetClientObj();
+      this.filterSearchInput.nativeElement.value='';
       this.filterSearchInput.nativeElement.blur();
     }
     this.getAllClients();
@@ -365,6 +367,7 @@ async checkDuplicateAccountId(aid){
     }
     clearSearchInput(){
       this.searchInputValue='';
+      this.filterSearchInput.nativeElement.value='';
       this.filterSearchInput.nativeElement.focus();
     }
     gotoUpdateContract(){

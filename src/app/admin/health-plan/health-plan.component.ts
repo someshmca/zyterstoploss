@@ -214,12 +214,14 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
       this.addPlanObj=null;
     }
     this.isCustomModalOpen = open;
-    if (!open) {
+    if (!open && elem==null) {
       this.planForm.reset();
       this.getAllPlans();
       this.isAddMode = false;
-      this.searchInputValue='';
+      this.filterSearchInput.nativeElement.value='';
       this.filterSearchInput.nativeElement.blur();
+      this.isAdded=false;
+      this.navService.resetPlanObj();      
     }
     if(elem!=null){
       this.isAddMode = false;
@@ -307,6 +309,7 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
   
   clearSearchInput(){
     this.searchInputValue='';
+    this.filterSearchInput.nativeElement.value='';
     this.filterSearchInput.nativeElement.focus();
   }
   // conven`ience getter for easy access to form fields
