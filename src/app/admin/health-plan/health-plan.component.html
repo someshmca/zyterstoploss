@@ -126,7 +126,7 @@
                 <div class="row">
                     <div class="col-md-4">
                       <div class="form-group">
-                       <label>Medica Contract<small class="starmark">*</small> </label>
+                       <label>Contract<small class="starmark">*</small> </label>
                        <select formControlName="contractId" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.contractId.errors }">
                         <option value=''>&nbsp;</option>
                          <option *ngFor="let contract of activeContracts" [value]="contract.contractId">
