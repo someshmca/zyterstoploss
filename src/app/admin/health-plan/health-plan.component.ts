@@ -85,6 +85,7 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
       planName:  ['', Validators.required],
       clientId: ['', Validators.required],
       contractId:['', Validators.required],
+      contractYear: [''],
       tier1Aggfactamt: '',
       tier2Aggfactamt: '',
       tier3Aggfactamt: '',
@@ -111,7 +112,17 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
   
   ngAfterViewInit(){
   }
-  
+  isValidYear: boolean=true;
+  isYear(){
+    let num1 = /^([0-9]+)$/; 
+    let a1=num1.test(this.f.contractYear.value);
+    if(!a1){
+      this.isValidYear=false;
+    }
+    else{
+      this.isValidYear=true;
+    } 
+  }
   getPlanStatus(){
     this.navService.planObj.subscribe((data)=>{
       this.tempPlanObj = data;
@@ -203,6 +214,7 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
   }
 
   openCustomModal(open: boolean, elem:any) {
+    this.alertService.clear();
     setTimeout(()=>{
       this.focusTag.nativeElement.focus()
     }, 100)

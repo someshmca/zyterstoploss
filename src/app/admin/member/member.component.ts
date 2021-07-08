@@ -184,7 +184,7 @@ export class MemberComponent implements OnInit {
     //let alphaNum = /^([a-zA-Z0-9 ]+)$/; 
     let num1 = /^([0-9]+)$/; 
     console.log(num1.test(memberId));
-    let a1=num1.test(memberId);
+    let a1=num1.test(memberId);           
     
     if(memberStartDate!=null && memberStartDate!='' && memberEndDate!=null && memberEndDate!=''){
       if(memberStartDate>memberEndDate){

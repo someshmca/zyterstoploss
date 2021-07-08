@@ -369,6 +369,7 @@ async checkDuplicateAccountId(aid){
       this.searchInputValue='';
       this.filterSearchInput.nativeElement.value='';
       this.filterSearchInput.nativeElement.focus();
+      this.getAllClients();
     }
     gotoUpdateContract(){
       this.clientService.getClient(this.f.clientId.value).subscribe(

@@ -5,7 +5,7 @@
      <div class="card-header">
            <h3>Plan &amp; Tier</h3>
             <div class="edit-update-alert">
-              <!-- <alert></alert> -->
+              <alert></alert>
            </div>           
      </div>
      <div class="card-body">
@@ -102,19 +102,19 @@
              <div class="row">
                  <div class="col-md-4">
                   <div class="form-group">
-                    <label>Plan ID<small class="starmark">*</small></label>
+                    <label>Medica Plan ID<small class="starmark">*</small></label>
                     <input #focusElem type="text" class="form-control" formControlName="planCode" [ngClass]="{ 'is-invalid': submitted && f.planCode.errors }" />
                   </div>
                  </div>
                  <div class="col-md-4">
                   <div class="form-group">
-                    <label>Plan Name<small class="starmark">*</small></label>
+                    <label>Medica Plan Name<small class="starmark">*</small></label>
                     <input type="text" formControlName="planName" maxlength="50" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.planName.errors }" />                
                         </div>   
                  </div>
                  <div class="col-md-4">  
                   <div class="form-group">
-                    <label>Account<small class="starmark">*</small> </label>
+                    <label>Medica Account<small class="starmark">*</small> </label>
               <select formControlName="clientId" class="form-control" (change)="getContractsByClient($event)" [ngClass]="{ 'is-invalid': submitted && f.clientId.errors }">
                     <option *ngFor="let client of locClients" [value]="client.clientId">
                         {{client.clientName}}
@@ -126,7 +126,7 @@
                 <div class="row">
                     <div class="col-md-4">
                       <div class="form-group">
-                       <label>Contract<small class="starmark">*</small> </label>
+                       <label>Medica Contract<small class="starmark">*</small> </label>
                        <select formControlName="contractId" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.contractId.errors }">
                         <option value=''>&nbsp;</option>
                          <option *ngFor="let contract of activeContracts" [value]="contract.contractId">
@@ -137,18 +137,24 @@
                     </div>
                     <div class="col-md-4">
                       <div class="form-group">
+                        <label>Contract Year</label>
+                        <input type="text" class="form-control" formControlName="contractYear" maxlength="4" [ngClass]="{ 'is-invalid': !isValidYear}" [placeholder]="isValidYear?'YYYY':'Invalid Year'" (keyup)="isYear()" />
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="form-group">
                         <label>Single Factor Amount</label>
                   <input type="text" formControlName="tier1Aggfactamt" [value]="locTires[0].tierId" class="form-control" />
                       </div>
                     </div>
+                   </div>  
+                   <div class="row">
                     <div class="col-md-4">
                       <div class="form-group">
                         <label>{{locTires[1].tierName}} Factor Amount</label>
                   <input type="text" formControlName="tier2Aggfactamt" [value]="locTires[1].tierId"  class="form-control" />
                       </div>
                     </div>
-                   </div>  
-                   <div class="row">
                      <div class="col-md-4">
                       <div class="form-group">
                         <label>{{locTires[2].tierName}} Factor Amount</label>
@@ -171,7 +177,7 @@
                    <div class="row">
                      <div class="col-md-4">
                       <div class="form-group switch-group">
-                        <label>Is Terminal Coverage</label>                        
+                        <label>Extension Terminal Coverage</label>                        
                         <label class="switch">
                           <input type="checkbox" class="success" formControlName="isTerminalExtCoverage">
                           <span class="slider round"></span>
