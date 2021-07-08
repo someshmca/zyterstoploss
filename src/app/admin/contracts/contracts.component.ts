@@ -653,12 +653,12 @@ clearErrorMessages(){
       this.isFilterOn=true;
       if(this.tempContractObj.isUpdate){
         
+        setTimeout(()=>{this.filterSearchInput.nativeElement.blur();},400);
         this.openCustomModal(false,null);
         this.searchInputValue=this.tempContractObj.clientName;
-        this.filterSearchInput.nativeElement.blur();
-        this.filterSearchInput.nativeElement.focus();
+       // this.filterSearchInput.nativeElement.focus();
 
-       // setTimeout(()=>{this.filterSearchInput.nativeElement.focus();},500);
+        setTimeout(()=>{this.filterSearchInput.nativeElement.focus();},800);
       }
       else{
         this.openCustomModal(false,null);
