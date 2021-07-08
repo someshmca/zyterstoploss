@@ -92,6 +92,7 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
       tier4Aggfactamt: '',
       familySpecificDeductible: '',
       status: true,
+      expectedClaimRate: [''],
       isTerminalExtCoverage:false,
       lstTblPlanTier: this.formBuilder.array([
         {
@@ -116,7 +117,7 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
   isYear(){
     let num1 = /^([0-9]+)$/; 
     let a1=num1.test(this.f.contractYear.value);
-    if(!a1){
+    if(!a1 && this.f.contractYear.value.length>0){
       this.isValidYear=false;
     }
     else{
