@@ -59,6 +59,7 @@ export class ContractsComponent implements OnInit {
   tempClientObj:IClientObj;
   tempContractObj:IClientObj;
   isDisabled: boolean;
+  isFilterOn: boolean = false;
   @ViewChild("focusElem") focusTag: ElementRef;
   @ViewChild("filterSearchInput") filterSearchInput: ElementRef;
   searchInputValue: string;
@@ -297,9 +298,11 @@ clearErrorMessages(){
       this.contractForm.reset();
       this.isAddMode = false;
       this.isAdded=false;
-      this.navService.resetContractObj();
-      this.filterSearchInput.nativeElement.value='';
-      this.filterSearchInput.nativeElement.blur();
+      if(!this.isFilterOn){
+        this.navService.resetContractObj();
+        this.filterSearchInput.nativeElement.value='';
+        this.filterSearchInput.nativeElement.blur();
+      }
     }
     console.log("id inside modal: "+id);
     //this.contId=id.contractId==0?"":id.contractId;
@@ -635,22 +638,27 @@ clearErrorMessages(){
       this.router.navigate(['/clients']);
     }
     goBackPreviousScreen(){
+      this.isFilterOn=true;
       if(this.isAdded){
         this.openCustomModal(false,null);
         this.searchInputValue = this.tempContractObj.clientName;
         this.filterSearchInput.nativeElement.focus();
+        //setTimeout(()=>{this.filterSearchInput.nativeElement.focus();},500);        
       }
       if(!this.isAdded){
         this.router.navigate(['/clients']);
       }
     }
     goBackCurrentScreen(){
-      
+      this.isFilterOn=true;
       if(this.tempContractObj.isUpdate){
         
         this.openCustomModal(false,null);
         this.searchInputValue=this.tempContractObj.clientName;
+        this.filterSearchInput.nativeElement.blur();
         this.filterSearchInput.nativeElement.focus();
+
+       // setTimeout(()=>{this.filterSearchInput.nativeElement.focus();},500);
       }
       else{
         this.openCustomModal(false,null);
