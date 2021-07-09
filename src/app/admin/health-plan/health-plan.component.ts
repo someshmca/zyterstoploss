@@ -92,7 +92,10 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
       tier4Aggfactamt: '',
       familySpecificDeductible: '',
       status: true,
-      expectedClaimRate: [''],
+      singleExpectedClaimRate: [''],
+      dualExpectedClaimRate: [''],
+      familyExpectedClaimRate: [''],
+      otherExpectedClaimRate: [''],
       isTerminalExtCoverage:false,
       lstTblPlanTier: this.formBuilder.array([
         {

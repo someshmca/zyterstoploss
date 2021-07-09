@@ -172,6 +172,26 @@
           <div class="row">
             <div class="col-md-4">
               <div class="form-group">
+                <label>Specific Start Date</label>
+                <input type="date" value="MM/DD/yyyy" formControlName="sslContractStartDate" class="form-control" max="2999-12-31"/>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Specific End Date</label>
+                <input type="date" value="MM/DD/yyyy" formControlName="sslContractEndDate" class="form-control" max="2999-12-31"/>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input"  formControlName="sslLasering">
+                <label class="custom-control-label">Lasering</label>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
                 <label>Paid Start Date<small class="starmark">*</small></label>
                 <input type="date" value="MM/DD/yyyy" formControlName="sslPaidStartDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.sslPaidStartDate.errors }" max="2999-12-31"/>
               </div>
@@ -296,6 +316,26 @@
         <div class="form-group">
           <label>Incurred End Date<small class="starmark">*</small></label>
           <input type="date" formControlName="aslIncurredEndDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.aslIncurredEndDate.errors }" max="2999-12-31"/>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="form-group">
+          <label>Aggregate Start Date</label>
+          <input type="date" formControlName="aslContractStartDate" class="form-control" max="2999-12-31"/>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <label>Aggregate End Date</label>
+          <input type="date" formControlName="aslContractEndDate" class="form-control" max="2999-12-31"/>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <label>Aggregate Corridor</label>
+          <input type="number" formControlName="aslCorridor" class="form-control"/>
         </div>
       </div>
     </div>

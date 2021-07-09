@@ -42,6 +42,7 @@ export class ProductComponent implements OnInit {
   dataSource: any;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  isFilterOn: boolean = false;
   coveredClaims: ICoveredClaims[] = [];
   listContractClaims: IListContractClaims[] = [];
   contractIDsAll: any[] = [];
@@ -115,6 +116,9 @@ export class ProductComponent implements OnInit {
       sslClaimBasis: ['', Validators.required],     
       sslIncurredStartDate: ['', Validators.required],
       sslIncurredEndDate: ['', Validators.required],
+      sslContractStartDate:[''],
+      sslContractEndDate: [''],
+
       sslPaidStartDate: ['', Validators.required],
       sslPaidEndDate: ['', Validators.required],
       //below from sslRunInLimit to sslLifetimeLimit are number fields
@@ -136,6 +140,11 @@ export class ProductComponent implements OnInit {
 
       aslIncurrredStartDate: ['', Validators.required],
       aslIncurredEndDate: ['', Validators.required],
+      
+      aslContractStartDate: [''],
+      aslContractEndDate: [''],
+      aslCorridor:[''],
+
       aslPaidStartDate:['', Validators.required],
       aslPaidEndDate:['', Validators.required],
       // below aslRunInLimit is a number field
@@ -148,6 +157,8 @@ export class ProductComponent implements OnInit {
       aslIsMonthlyAccomidation:false,
       aslTermCoverageExtEndDate:'',
       aslCoveredClaims: ['', Validators.required],
+      
+
 
       isMaxLiability:false,
       ibnrPercentage:['', Validators.required], // this is a number field
