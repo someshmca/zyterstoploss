@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import {
-  ITire, IPlanAll, IPlanAdd, IPlanUpdate, IActiveClient,IContracts, IPlanTierChild
+  ITire, IPlanAll, IPlanAdd, IPlanUpdate, IActiveClient,IContracts, IPlanTierChild, ITierObj
 } from '../models/health-plan.model';
 import { HealthPlanService } from '../services/health-plan.service';
 import { FormBuilder, FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
@@ -14,10 +14,9 @@ import {Router} from '@angular/router'
 import { AlertService } from '../services/alert.service';
 import { DatePipe } from '@angular/common';
 import { LoginService } from 'src/app/shared/services/login.service';
-import { ProductService } from '../services/product.service';
-import { ClientsService } from '../services/clients.service';
 import {NavPopupService} from '../services/nav-popup.service';
 import { IClientObj } from '../models/nav-popups.model';
+import { ContractService } from '../services/contract.service';
 
 @Component({
   selector: 'app-health-plan',
@@ -28,8 +27,9 @@ import { IClientObj } from '../models/nav-popups.model';
 export class HealthPlanComponent implements OnInit, AfterViewInit {
 
   plans: IPlanAll[] = [];
-  public Tires: ITire[] = [];
-  public activeClients: IActiveClient[]=[];
+  tires: ITire[] = [];
+  locTires: ITire[] = [];
+  activeClients: IActiveClient[]=[];
   rowData: any;
   isCustomModalOpen: boolean = false;
   planForm: FormGroup;
@@ -37,22 +37,20 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
   isAddMode: boolean;
   loading = false;
   submitted = false;
-  activeContracts: IContracts[]=[];
+  contractsByClientId: IContracts[]=[];
   planI:number;
   isStatusChecked: boolean = false;
-  locTires: ITire[] = [];
   locClients: IActiveClient[] = [];
   locClientName: string;
   addPlanObj: IPlanAdd;
   updatePlanObj: IPlanUpdate;
   searchInputValue: string='';
-  tierObj={
-    t1Amt:0, t2Amt:0, t3Amt:0, t4Amt:0
-  };
+  tierObj:ITierObj;
   updatePlanID: number;
   isNoFactAmount: boolean = false;
   isDisabled: boolean;
   isAdded: boolean;
+  isFilterOn: boolean = false;
   @ViewChild("focusElem") focusTag: ElementRef;
   @ViewChild("filterSearchInput") filterSearchInput: ElementRef;
   tempPlanObj:IClientObj;
@@ -64,8 +62,7 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private clientService: ClientsService,
-    private productService: ProductService,
+    private contractService: ContractService,
     private planService: HealthPlanService,
     private loginService: LoginService,
     private alertService: AlertService,
@@ -80,35 +77,36 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
 
     this.planForm = this.formBuilder.group({
       planID: 0,
-      planCode:  ['', Validators.required],
-      userId: '',
-      planName:  ['', Validators.required],
       clientId: ['', Validators.required],
       contractId:['', Validators.required],
+      userId: '',
+      planCode:  ['', Validators.required],
+      planName:  ['', Validators.required],
       contractYear: [''],
-      tier1Aggfactamt: '',
-      tier2Aggfactamt: '',
-      tier3Aggfactamt: '',
-      tier4Aggfactamt: '',
-      familySpecificDeductible: '',
-      status: true,
-      singleExpectedClaimRate: [''],
-      dualExpectedClaimRate: [''],
-      familyExpectedClaimRate: [''],
-      otherExpectedClaimRate: [''],
-      isTerminalExtCoverage:false,
-      lstTblPlanTier: this.formBuilder.array([
-        {
+      clientName: '',
+      status: 1,
+      factor1: '',
+      factor2: '',
+      factor3: '',
+      factor4: '',
+      expectedClaims1: [''],
+      expectedClaims2: [''],
+      expectedClaims3: [''],
+      expectedClaims4: [''],
+      isTerminalExtCoverage:'',
+      lstTblPlanTier: [{
           planId: 0,
           tierId: 0,
           tierAmount:0,
           expectedClaimsRate: 0
         }
-      ])
+      ]
     });
     this.isAdded=false;
-    this.getTires();
+    this.initLocalTires();
+    this.initTierObj();
     this.getAllPlans();
+    this.getTires();
     this.getActiveClients();
     this.getPlanStatus();
     this.isStatusChecked = true;
@@ -123,6 +121,9 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
     if(!a1 && this.f.contractYear.value.length>0){
       this.isValidYear=false;
     }
+    if(this.f.contractYear.value<1900 && this.f.contractYear.value>2999){
+      this.isValidYear=false;
+    }
     else{
       this.isValidYear=true;
     } 
@@ -134,11 +135,7 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
         this.planForm.patchValue({
           clientId: data.clientId
         });
-        this.planService.getContractsByClient(this.tempPlanObj.clientId).subscribe(
-          (data)=>{
-            this.activeContracts = data;    
-          }
-        )
+        this.getContractsByClientID(this.tempPlanObj.clientId);
         this.openCustomModal(true, null);
       }
       else if(data.isUpdate){          
@@ -167,15 +164,17 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
     )
   }
   getTires(){
-
     this.planService.getTires().subscribe(
     (data)=>{
-      this.Tires=data;
-      for(let i=0;i<this.Tires.length;i++){
-        this.locTires.push(this.Tires[i]);
-      }
-    }
-    )
+      this.tires=data;
+      this.locTires=this.tires;
+      
+      //  for(let i=0;i<this.tires.length;i++){
+      //    this.locTires.push(this.tires[i]);        
+      //  }
+      //  console.log(this.locTires);
+       
+    });
   }
   getActiveClients(){
 
@@ -190,28 +189,53 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
     )
   }
 
-  getContractsByClient(event: Event){
-
-    let selectElementText = event.target['options'][event.target['options'].selectedIndex].text;
-    this.locClientName = selectElementText;
-    let selectElementValue = event.target['options'][event.target['options'].selectedIndex].value;
-    this.planService.getContractsByClient(selectElementValue).subscribe(
-      (data)=>{
-        this.activeContracts = data;
-
-      }
-    )
-  }
-  getContractsByClientOnUpdate(clienId){
-
-    this.planService.getContractsByClient(clienId).subscribe(
-      (data)=>{
-        this.activeContracts = data;
-        
+  getContractsByClientID(clientId){
+    this.contractService.getContractsByClientID(clientId).subscribe((data)=>{
+      data.sort((x,y) => x.contractId - y.contractId);
+      this.contractsByClientId = data;      
+      
+      this.planForm.patchValue({
+        contractId: this.contractsByClientId[0].contractId
       })
+      console.log(this.planForm.value);
+    })
   }
-
-
+initLocalTires(){
+  this.locTires=[
+    {
+      tierId: 0,
+      tierName: '',
+      status: 1
+    },
+    {
+      tierId: 0,
+      tierName: '',
+      status: 1
+    },
+    {
+      tierId: 0,
+      tierName: '',
+      status: 1
+    },
+    {
+      tierId: 0,
+      tierName: '',
+      status: 1
+    }
+  ]
+}
+initTierObj(){  
+  this.tierObj={
+    factor1:0,
+    factor2:0, 
+    factor3:0, 
+    factor4:0, 
+    expectedClaims1:0,
+    expectedClaims2:0, 
+    expectedClaims3:0, 
+    expectedClaims4:0 
+  }
+}
 
   public doFilter = (value: string) => {
     this.dataSource.filter = value.trim().toLocaleLowerCase();
@@ -234,56 +258,70 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
       this.planForm.reset();
       this.getAllPlans();
       this.isAddMode = false;
-      this.filterSearchInput.nativeElement.value='';
-      this.filterSearchInput.nativeElement.blur();
       this.isAdded=false;
-      this.navService.resetPlanObj();      
+      if(!this.isFilterOn){
+        this.navService.resetPlanObj();
+        this.filterSearchInput.nativeElement.value='';
+        this.filterSearchInput.nativeElement.blur();
+      }
     }
-    if(elem!=null){
+    if(open && elem!=null){
+      
       this.isAddMode = false;
+      // let plansAll = this.plans;
+      // let uPlan = plansAll.filter((obj)=>{
+      //   return obj.planID == elem.planID;
+      // })
+      // console.log("uPlan "+ uPlan);
+      // 
       this.planI=elem.planID;
 
-      this.tierObj={
-        t1Amt:0, t2Amt:0, t3Amt:0, t4Amt:0
-      };
       console.log(elem.lstTblPlanTier.length);
+      
       for(let i=0;i<elem.lstTblPlanTier.length; i++){
-        if(elem.lstTblPlanTier[i].tierId==1){
-          this.tierObj.t1Amt=elem.lstTblPlanTier[i].tierAmount;
+        if(elem.lstTblPlanTier[i].tierId==1){          
+          this.tierObj.factor1=elem.lstTblPlanTier[i].tierAmount;
+          this.tierObj.expectedClaims1=elem.lstTblPlanTier[i].expectedClaimsRate;
         }
         else if(elem.lstTblPlanTier[i].tierId==2){
-          this.tierObj.t2Amt=elem.lstTblPlanTier[i].tierAmount;
+          this.tierObj.factor2=elem.lstTblPlanTier[i].tierAmount;
+          this.tierObj.expectedClaims2=elem.lstTblPlanTier[i].expectedClaimsRate;
         }
         else if(elem.lstTblPlanTier[i].tierId==3){
-          this.tierObj.t3Amt=elem.lstTblPlanTier[i].tierAmount;
+          this.tierObj.factor3=elem.lstTblPlanTier[i].tierAmount;
+          this.tierObj.expectedClaims3=elem.lstTblPlanTier[i].expectedClaimsRate;
         }
         else if(elem.lstTblPlanTier[i].tierId==4){
-          this.tierObj.t4Amt=elem.lstTblPlanTier[i].tierAmount;
+          this.tierObj.factor4=elem.lstTblPlanTier[i].tierAmount;
+          this.tierObj.expectedClaims4=elem.lstTblPlanTier[i].expectedClaimsRate;
         }
       }
+      this.updatePlanID = elem.planID;
+      
+      this.getContractsByClientID(elem.clientId);
+      this.planForm.patchValue({
+        planID: elem.planID,
+        clientId: elem.clientId,
+        contractId: elem.contractId,
+        userId: this.loginService.currentUserValue.name,
+        planCode: elem.planCode,
+        planName: elem.planName,
+        contractYear: elem.contractYear,
+        clientName: elem.clientName,
+        status: elem.status,
+        isTerminalExtCoverage: elem.isTerminalCoverage=='Y'?true:false,
+        factor1: this.tierObj.factor1==0?'':this.tierObj.factor1,
+        factor2: this.tierObj.factor2==0?'':this.tierObj.factor2,
+        factor3: this.tierObj.factor3==0?'':this.tierObj.factor3,
+        factor4: this.tierObj.factor4==0?'':this.tierObj.factor4,
+        expectedClaims1: this.tierObj.expectedClaims1,
+        expectedClaims2: this.tierObj.expectedClaims2,
+        expectedClaims3: this.tierObj.expectedClaims3,
+        expectedClaims4: this.tierObj.expectedClaims4,          
+      });
       console.log(this.tierObj);
-      //this.getContractsByClientOnUpdate(elem.clientId);
-      this.planService.getContractsByClient(elem.clientId).subscribe(
-        (data)=>{
-          this.activeContracts = data;
-            this.updatePlanID=elem.planID;
-            this.planForm.patchValue({
-              planID: this.updatePlanID,
-              planCode: elem.planCode,
-              userId: this.loginService.currentUserValue.name,
-              planName: elem.planName,
-              clientId: elem.clientId,
-              contractId: elem.contractId,
-              tier1Aggfactamt: this.tierObj.t1Amt==0?'':this.tierObj.t1Amt,
-              tier2Aggfactamt: this.tierObj.t2Amt==0?'':this.tierObj.t2Amt,
-              tier3Aggfactamt: this.tierObj.t3Amt==0?'':this.tierObj.t3Amt,
-              tier4Aggfactamt: this.tierObj.t4Amt==0?'':this.tierObj.t4Amt,
-              familySpecificDeductible: elem.familySpecificDeductible,
-              status: elem.status==1?true:false,
-              isTerminalExtCoverage: elem.isTerminalExtCoverage=='Y'?true:false,
-            });
-          
-        })
+      console.log(this.planForm.value);
+      
         setTimeout(()=>{
         },1000);
         console.log(elem.isTerminalExtCoverage);
@@ -312,6 +350,7 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
     }    
   }
   goBackCurrentScreen(){  
+    this.isFilterOn=true;
     if(this.tempPlanObj.isUpdate){
       
       this.openCustomModal(false,null);
@@ -340,10 +379,10 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
       if (this.planForm.invalid) {
           return;
       }
-      let t1=this.f.tier1Aggfactamt.value==null?'':this.f.tier1Aggfactamt.value;
-      let t2=this.f.tier2Aggfactamt.value==null?'':this.f.tier2Aggfactamt.value;
-      let t3=this.f.tier3Aggfactamt.value==null?'':this.f.tier3Aggfactamt.value;
-      let t4=this.f.tier4Aggfactamt.value==null?'':this.f.tier4Aggfactamt.value;
+      let t1=this.f.factor1.value==null?'':this.f.factor1.value;
+      let t2=this.f.factor2.value==null?'':this.f.factor2.value;
+      let t3=this.f.factor3.value==null?'':this.f.factor3.value;
+      let t4=this.f.factor4.value==null?'':this.f.factor4.value;
       
       if((t1=='' || t1==0) && (t2=='' || t2==0) && (t3=='' || t3==0) && (t4=='' || t4==0)){
         this.isNoFactAmount=true;
@@ -367,38 +406,43 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
       userId: this.loginService.currentUserValue.name,
       planCode: this.f.planCode.value,
       planName: this.f.planName.value,
+      contractYear: this.f.contractYear.value,
       clientName: this.locClientName,
       status: this.f.status.value==true?1:0,
       isTerminalExtCoverage: this.f.isTerminalExtCoverage.value==true?'Y':'N',
       lstTblPlanTier: []
     }
-    
-    if(this.f.tier1Aggfactamt.value!=null && this.f.tier1Aggfactamt.value!=''){
-      let tAmount = Number(this.f.tier1Aggfactamt.value);
-      let tId=1;
+    let date=new Date();
+    if(this.f.factor1.value!=null && this.f.factor1.value!=''){
       this.addPlanObj.lstTblPlanTier.push({
-        planId: 0, tierId: tId, tierAmount: tAmount, expectedClaimsRate: 0
+        planId: 0, 
+        tierId: 1, 
+        tierAmount: Number(this.f.factor1.value), 
+        expectedClaimsRate: Number(this.f.expectedClaims1.value)
       });
     }
-    if(this.f.tier2Aggfactamt.value!=null && this.f.tier2Aggfactamt.value!=''){
-      let tAmount = Number(this.f.tier2Aggfactamt.value);
-      let tId=2;
+    if(this.f.factor2.value!=null && this.f.factor2.value!=''){
       this.addPlanObj.lstTblPlanTier.push({
-        planId: 0, tierId: tId, tierAmount: tAmount, expectedClaimsRate: 0
+        planId: 0, 
+        tierId: 2, 
+        tierAmount: Number(this.f.factor2.value), 
+        expectedClaimsRate: Number(this.f.expectedClaims2.value)
       });
     }
-    if( this.f.tier3Aggfactamt.value!=null && this.f.tier3Aggfactamt.value!=''){
-      let tAmount = Number(this.f.tier3Aggfactamt.value);
-      let tId=3;
+    if(this.f.factor3.value!=null && this.f.factor3.value!=''){
       this.addPlanObj.lstTblPlanTier.push({
-        planId: 0, tierId: tId, tierAmount: tAmount, expectedClaimsRate: 0
+        planId: 0, 
+        tierId: 3, 
+        tierAmount: Number(this.f.factor1.value), 
+        expectedClaimsRate: Number(this.f.expectedClaims3.value)
       });
     }
-    if(this.f.tier4Aggfactamt.value!=null && this.f.tier4Aggfactamt.value!=''){
-      let tAmount = Number(this.f.tier4Aggfactamt.value);
-      let tId=4;
+    if(this.f.factor4.value!=null && this.f.factor4.value!=''){
       this.addPlanObj.lstTblPlanTier.push({
-        planId: 0, tierId: tId, tierAmount: tAmount, expectedClaimsRate: 0
+        planId: 0, 
+        tierId: 4, 
+        tierAmount: Number(this.f.factor4.value), 
+        expectedClaimsRate: Number(this.f.expectedClaims4.value)
       });
     }
       console.log(this.addPlanObj);
@@ -408,7 +452,6 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
           .pipe(first())
           .subscribe({
               next: () => {
-
                   this.planForm.reset();
                   this.openCustomModal(false, null);
                   //this.getAllPlans();
@@ -428,6 +471,9 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
   private updatePlan() {
     this.isDisabled=true;
     this.isNoFactAmount=false;
+    console.log(this.updatePlanID);
+    this.planForm.patchValue(this.planForm.value)
+    
     this.updatePlanObj = {
       planID: this.updatePlanID,
       clientId: this.f.clientId.value,
@@ -435,6 +481,7 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
       userId: this.loginService.currentUserValue.name,
       planCode: this.f.planCode.value,
       planName: this.f.planName.value,
+      contractYear: this.f.contractYear.value,
       clientName: this.locClientName,
       status: this.f.status.value==true?1:0,
       isTerminalExtCoverage: this.f.isTerminalExtCoverage.value==true?'Y':'N',
@@ -442,32 +489,36 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
     }
 
 
-    if(this.f.tier1Aggfactamt.value!='' || this.f.tier1Aggfactamt.value!=null){
-      let tAmount = Number(this.f.tier1Aggfactamt.value);
-      let tId=1;
+    if(this.f.factor1.value!=null && this.f.factor1.value!=''){
       this.updatePlanObj.lstTblPlanTier.push({
-        planId: this.updatePlanID, tierId: tId, tierAmount: tAmount, expectedClaimsRate: 0
+        planId: this.updatePlanID, 
+        tierId: 1, 
+        tierAmount: Number(this.f.factor1.value), 
+        expectedClaimsRate: Number(this.f.expectedClaims1.value)
       });
     }
-    if(this.f.tier2Aggfactamt.value!='' || this.f.tier2Aggfactamt.value!=null){
-      let tAmount = Number(this.f.tier2Aggfactamt.value);
-      let tId=2;
+    if(this.f.factor2.value!=null && this.f.factor2.value!=''){
       this.updatePlanObj.lstTblPlanTier.push({
-        planId: this.updatePlanID, tierId: tId, tierAmount: tAmount, expectedClaimsRate: 0
+        planId: this.updatePlanID, 
+        tierId: 2, 
+        tierAmount: Number(this.f.factor2.value), 
+        expectedClaimsRate: Number(this.f.expectedClaims2.value)
       });
     }
-    if(this.f.tier3Aggfactamt.value!='' || this.f.tier3Aggfactamt.value!=null){
-      let tAmount = Number(this.f.tier3Aggfactamt.value);
-      let tId=3;
+    if(this.f.factor3.value!=null && this.f.factor3.value!=''){
       this.updatePlanObj.lstTblPlanTier.push({
-        planId: this.updatePlanID, tierId: tId, tierAmount: tAmount, expectedClaimsRate: 0
+        planId:this.updatePlanID, 
+        tierId: 3, 
+        tierAmount: Number(this.f.factor1.value), 
+        expectedClaimsRate: Number(this.f.expectedClaims3.value)
       });
     }
-    if(this.f.tier4Aggfactamt.value!='' || this.f.tier4Aggfactamt.value!=null){
-      let tAmount = Number(this.f.tier4Aggfactamt.value);
-      let tId=4;
+    if(this.f.factor4.value!=null && this.f.factor4.value!=''){
       this.updatePlanObj.lstTblPlanTier.push({
-        planId: this.updatePlanID, tierId: tId, tierAmount: tAmount, expectedClaimsRate: 0
+        planId: this.updatePlanID, 
+        tierId: 4, 
+        tierAmount: Number(this.f.factor4.value), 
+        expectedClaimsRate: Number(this.f.expectedClaims4.value)
       });
     }
 
@@ -479,7 +530,7 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
               next: () => {
                   this.alertService.success('Plan & Tier updated', {
                     keepAfterRouteChange: true });
-
+                    this.getAllPlans();
                     this.openCustomModal(false,null);
                     this.planForm.reset();
               },

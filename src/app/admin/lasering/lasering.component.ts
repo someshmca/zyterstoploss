@@ -69,6 +69,7 @@ export class LaseringComponent implements OnInit {
   noSearchResultsFound: boolean = false;
   uMemberId: any;
   isDisabled: boolean=false;
+  isFilterOn: boolean = false;
 
   constructor(private mb: FormBuilder, 
     private fb: FormBuilder, 
@@ -213,10 +214,12 @@ export class LaseringComponent implements OnInit {
     if (!open && id==null) {
       this.memberForm.reset();
       this.isAddMode = false;
-      this.filterSearchInput.nativeElement.value='';
-      this.filterSearchInput.nativeElement.blur();
       this.isAdded=false;
-      this.navService.resetLaseringObj();
+      if(!this.isFilterOn){
+        this.navService.resetLaseringObj();
+        this.filterSearchInput.nativeElement.value='';
+        this.filterSearchInput.nativeElement.blur();
+      }
     }
     console.log("id inside modal: "+id);
 
@@ -322,6 +325,7 @@ goBackPreviousScreen(){
   }
 }
 goBackCurrentScreen(){  
+  this.isFilterOn=true;
   if(this.tempLaseringObj.isUpdate){
     
     this.openCustomModal(false,null);

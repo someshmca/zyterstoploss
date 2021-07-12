@@ -32,7 +32,12 @@ export interface IProductAll{
     defferedFeePercentage: number;
     status: number;
     clientName: string;
-    lstContractClaims: IListContractClaims[];
+    lstContractClaims: IListContractClaims[];    
+    aslContractStartDate: Date;
+    aslContractEndDate: Date;
+    sslContractStartDate: Date;
+    sslContractEndDate: Date;
+    aslCorridor: number;
 
 }
 export interface IProductAdd{
@@ -71,6 +76,11 @@ export interface IProductAdd{
     status: number;
     userId: string;
     lstContractClaims: IListContractClaims[];
+    aslContractStartDate: Date;
+    aslContractEndDate: Date;
+    sslContractStartDate: Date;
+    sslContractEndDate: Date;
+    aslCorridor: number;
 }
 export interface IProductUpdate{
   productId: number;
@@ -107,6 +117,11 @@ export interface IProductUpdate{
   status: number;
   userId: string;
   lstContractClaims: IListContractClaims[];
+  aslContractStartDate: Date;
+  aslContractEndDate: Date;
+  sslContractStartDate: Date;
+  sslContractEndDate: Date;
+  aslCorridor: number;
 }
 export interface IActiveClient{
     clientId: string;
@@ -137,6 +152,7 @@ export interface IProduct{
     sslLifetimeLimit: number;
     sslTermCoverageExtEndDate: Date;
     sslIsImmediateReimbursement: boolean;
+    sslLasering: boolean;
     aslClaimBasis:string;
     aslDeductible: number;
     aslMinDeductible: number;
@@ -156,6 +172,11 @@ export interface IProduct{
     status: number;
     clientId: string;
     lstContractClaims: IListContractClaims[];
+    aslContractStartDate: Date;
+    aslContractEndDate: Date;
+    sslContractStartDate: Date;
+    sslContractEndDate: Date;
+    aslCorridor: number;
 }
 
 export interface ICoveredClaims{

@@ -115,7 +115,7 @@
                  <div class="col-md-4">  
                   <div class="form-group">
                     <label>Medica Account<small class="starmark">*</small> </label>
-              <select formControlName="clientId" class="form-control" (change)="getContractsByClient($event)" [ngClass]="{ 'is-invalid': submitted && f.clientId.errors }">
+              <select formControlName="clientId" class="form-control" (change)="getContractsByClientID($event.target.value)" [ngClass]="{ 'is-invalid': submitted && f.clientId.errors }">
                     <option *ngFor="let client of locClients" [value]="client.clientId">
                         {{client.clientName}}
                     </option>
@@ -128,8 +128,7 @@
                       <div class="form-group">
                        <label>Contract<small class="starmark">*</small> </label>
                        <select formControlName="contractId" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.contractId.errors }">
-                        <option value=''>&nbsp;</option>
-                         <option *ngFor="let contract of activeContracts" [value]="contract.contractId">
+                         <option *ngFor="let contract of contractsByClientId" [value]="contract.contractId">
                            {{contract.contractId}}
                        </option>
                            </select>
@@ -144,7 +143,7 @@
                     <div class="col-md-4">
                       <div class="form-group">
                         <label>Single Factor Amount</label>
-                  <input type="text" formControlName="tier1Aggfactamt" [value]="locTires[0].tierId" class="form-control" />
+                  <input type="text" formControlName="factor1" [value]="locTires[0].tierId" class="form-control" />
                       </div>
                     </div>
                    </div>  
@@ -152,19 +151,19 @@
                     <div class="col-md-4">
                       <div class="form-group">
                         <label>{{locTires[1].tierName}} Factor Amount</label>
-                  <input type="text" formControlName="tier2Aggfactamt" [value]="locTires[1].tierId"  class="form-control" />
+                  <input type="text" formControlName="factor2" [value]="locTires[1].tierId"  class="form-control" />
                       </div>
                     </div>
                      <div class="col-md-4">
                       <div class="form-group">
                         <label>{{locTires[2].tierName}} Factor Amount</label>
-                  <input type="text" formControlName="tier3Aggfactamt" [value]="locTires[2].tierId" class="form-control" />
+                  <input type="text" formControlName="factor3" [value]="locTires[2].tierId" class="form-control" />
                       </div>
                      </div>
                      <div class="col-md-4">
                       <div class="form-group">
                      <label>{{locTires[3].tierName}} Factor Amount</label>
-               <input type="text" formControlName="tier4Aggfactamt" [value]="locTires[3].tierId" class="form-control" />
+               <input type="text" formControlName="factor4" [value]="locTires[3].tierId" class="form-control" />
                    </div>
                      </div>
                      <!-- <div class="col-md-4">
@@ -178,19 +177,19 @@
                     <div class="col-md-4">
                       <div class="form-group">
                         <label>Single Expected Claim Rate</label>
-                         <input type="text" formControlName="singleExpectedClaimRate" class="form-control" />
+                         <input type="text" formControlName="expectedClaims1" class="form-control" />
                       </div>
                     </div>
                     <div class="col-md-4">
                       <div class="form-group">
                         <label>Dual Expected Claim Rate</label>
-                         <input type="text" formControlName="dualExpectedClaimRate" class="form-control" />
+                         <input type="text" formControlName="expectedClaims2" class="form-control" />
                       </div>
                     </div>
                     <div class="col-md-4">
                       <div class="form-group">
                         <label>Family Expected Claim Rate</label>
-                         <input type="text" formControlName="familyExpectedClaimRate" class="form-control" />
+                         <input type="text" formControlName="expectedClaims3" class="form-control" />
                       </div>
                     </div>
                      <!-- <div class="col-md-4" *ngIf="!isAddMode">
@@ -207,7 +206,7 @@
                     <div class="col-md-4">
                       <div class="form-group">
                         <label>Other Expected Claim Rate</label>
-                         <input type="text" formControlName="otherExpectedClaimRate" class="form-control" />
+                         <input type="text" formControlName="expectedClaims4" class="form-control" />
                       </div>
                     </div>
                     <div class="col-md-4">

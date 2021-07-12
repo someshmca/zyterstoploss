@@ -38,6 +38,7 @@ export class ProductService {
  }
  addProduct(formData:IProductAdd ): Observable<IProductAdd>{
  const body = JSON.stringify(formData);
+ console.log(body);
  
  const headerOptions = new HttpHeaders({ 'Content-Type': 'application/json'});
   return this.http.post<IProductAdd

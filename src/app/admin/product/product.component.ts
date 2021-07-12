@@ -107,7 +107,7 @@ export class ProductComponent implements OnInit {
    }
    
 
-  ngOnInit(): void {  
+  ngOnInit() {  
 
     this.productForm = this.formBuilder.group({
       productId: 0,
@@ -176,10 +176,10 @@ export class ProductComponent implements OnInit {
     //this.getAllContracts();
     //this.isClientSelected = false;
     this.checkMaxLiability(); 
+    this.getProductStatus();
     // this.getContractAddStatus();
     // this.getContractUpdateStatus();
 
-    this.getProductStatus();
     //this.getProductUpdateStatus();    
   }
   getProductStatus(){
@@ -199,7 +199,7 @@ export class ProductComponent implements OnInit {
         setTimeout(()=>{
             this.filterSearchInput.nativeElement.focus();                  
          }, 1000);
-        this.doFilter(this.searchInputValue);
+        //this.doFilter(this.searchInputValue);
       }
       else{     
         this.searchInputValue = '';
@@ -234,16 +234,14 @@ export class ProductComponent implements OnInit {
     })
   }
   getContractIDs(clientId){
-    clientId = clientId;
-   
     this.contractService.getContractsByClientID(clientId).subscribe((data)=>{
       data.sort((x,y) => x.contractId - y.contractId);
-      this.contractsByClientId = data;      
-      
-      this.productForm.patchValue({
-        contractId: this.contractsByClientId[0].contractId
-      })
-      console.log(this.productForm.value);
+      this.contractsByClientId = data;     
+      if(this.contractsByClientId.length>0){
+        this.productForm.patchValue({
+          contractId: this.contractsByClientId[0].contractId
+        })
+      }
     })
   }
   getAllContracts(){
@@ -286,9 +284,9 @@ export class ProductComponent implements OnInit {
  
   onSubmit() {
     this.submitted = true;
+    this.alertService.clear();
 
     // reset alerts on submit
-    this.alertService.clear();
     this.clearErrorMessages();
     // stop here if form is invalid
    if (this.productForm.invalid) {
@@ -371,6 +369,7 @@ if(aslTermVal!='' && this.productForm.valid){
 }
 
   openCustomModal(open: boolean, id:any) {    
+    
     setTimeout(()=>{
       this.focusTag.nativeElement.focus()
     }, 100);
@@ -394,9 +393,11 @@ if(aslTermVal!='' && this.productForm.valid){
       this.isEditSelected = false;
       this.searchInputValue='';
       this.isAdded=false;
-      this.navService.resetProductObj();
-      this.filterSearchInput.nativeElement.value='';
-      this.filterSearchInput.nativeElement.blur();
+      if(!this.isFilterOn){
+        this.navService.resetProductObj();
+        this.filterSearchInput.nativeElement.value='';
+        this.filterSearchInput.nativeElement.blur();
+      }
     }
     console.log("id inside modal: "+id);
     
@@ -427,6 +428,8 @@ if(aslTermVal!='' && this.productForm.valid){
               clientId:this.uClientId,
               sslIncurredStartDate:this.datePipe.transform(new Date(x[0].sslIncurredStartDate), 'yyyy-MM-dd'),
               sslIncurredEndDate:this.datePipe.transform(new Date(x[0].sslIncurredEndDate), 'yyyy-MM-dd'),
+              sslContractStartDate:this.datePipe.transform(new Date(x[0].sslContractStartDate), 'yyyy-MM-dd'),
+              sslContractEndDate:this.datePipe.transform(new Date(x[0].sslContractEndDate), 'yyyy-MM-dd'),
               sslPaidStartDate:this.datePipe.transform(new Date(x[0].sslPaidStartDate), 'yyyy-MM-dd'),
               sslPaidEndDate:this.datePipe.transform(new Date(x[0].sslPaidEndDate), 'yyyy-MM-dd'),
               sslRunInLimit:x[0].sslRunInLimit,
@@ -437,12 +440,15 @@ if(aslTermVal!='' && this.productForm.valid){
               sslLifetimeLimit:x[0].sslLifetimeLimit,
               sslIsImmediateReimbursement:x[0].sslIsImmediateReimbursement,
               sslTermCoverageExtEndDate:x[0].sslTermCoverageExtEndDate==null?"":this.datePipe.transform(new Date(x[0].sslTermCoverageExtEndDate), 'yyyy-MM-dd'),
-              sslLasering: false,
+              sslLasering: x[0].sslLasering,
               aslDeductible:0,
               aslMinDeductible:x[0].aslMinDeductible,
               aslExpectedClaimLiability:x[0].aslExpectedClaimLiability,
               aslIncurrredStartDate:this.datePipe.transform(new Date(x[0].aslIncurrredStartDate), 'yyyy-MM-dd'),
               aslIncurredEndDate:this.datePipe.transform(new Date(x[0].aslIncurredEndDate), 'yyyy-MM-dd'),
+              aslContractStartDate:this.datePipe.transform(new Date(x[0].aslContractStartDate), 'yyyy-MM-dd'),
+              aslContractEndDate:this.datePipe.transform(new Date(x[0].aslContractEndDate), 'yyyy-MM-dd'),
+              aslCorridor: x[0].aslCorridor,
               aslPaidStartDate:this.datePipe.transform(new Date(x[0].aslPaidStartDate), 'yyyy-MM-dd'),
               aslPaidEndDate:this.datePipe.transform(new Date(x[0].aslPaidEndDate), 'yyyy-MM-dd'),
               aslRunInLimit:x[0].aslRunInLimit,
@@ -500,6 +506,7 @@ if(aslTermVal!='' && this.productForm.valid){
         }
       }
       goBackCurrentScreen(){  // from Update Modal going back to current screen
+        this.isFilterOn=true;
           if(this.tempProductObj.isUpdate){
             
             this.openCustomModal(false,null);
@@ -520,6 +527,7 @@ if(aslTermVal!='' && this.productForm.valid){
       }
     }
     gotoPlanUpdate(){
+      this.alertService.clear();
       this.clientService.getClient(this.f.clientId.value).subscribe(
         (data: IClient[]) => {                  
           this.navService.setPlanObj(data[0].clientId, data[0].clientName, false, true);
@@ -545,34 +553,48 @@ if(aslTermVal!='' && this.productForm.valid){
         });
     }
       
-
-private addProduct() {   
-  
-  console.log(this.addObj);
+patchProductForm(){
   this.productForm.patchValue({
-    contractId: this.contractsByClientId[0].contractId,
+    productId: 0,
+    contractId: Number(this.f.contractId.value),
     status:this.f.status.value==true?1:1,
-    aslIncurrredStartDate: this.productForm.get('aslIncurrredStartDate').value==""?null:this.datePipe.transform(this.f.aslIncurrredStartDate.value, 'yyyy-MM-dd'),
-    aslIncurredEndDate: this.productForm.get('aslIncurredEndDate').value==""?null:this.datePipe.transform(this.f.aslIncurredEndDate.value, 'yyyy-MM-dd'),
-    aslPaidStartDate: this.productForm.get('aslPaidStartDate').value==""?null:this.datePipe.transform(this.f.aslPaidStartDate.value, 'yyyy-MM-dd'),
-    aslPaidEndDate: this.productForm.get('aslPaidEndDate').value==""?null:this.datePipe.transform(this.f.aslPaidEndDate.value, 'yyyy-MM-dd'),
-    aslTermCoverageExtEndDate: this.productForm.get('aslTermCoverageExtEndDate').value==""?null:this.datePipe.transform(this.f.aslTermCoverageExtEndDate.value, 'yyyy-MM-dd'),
+    aslIncurrredStartDate: this.f.aslIncurrredStartDate.value==""?null:this.datePipe.transform(this.f.aslIncurrredStartDate.value, 'yyyy-MM-dd'),
+    aslIncurredEndDate: this.f.aslIncurredEndDate.value==""?null:this.datePipe.transform(this.f.aslIncurredEndDate.value, 'yyyy-MM-dd'),
+	aslContractStartDate:this.f.aslContractStartDate.value==""?null:this.datePipe.transform(this.f.aslContractStartDate.value, 'yyyy-MM-dd'),
+    aslContractEndDate: this.f.aslContractEndDate.value==""?null:this.datePipe.transform(this.f.aslContractEndDate.value, 'yyyy-MM-dd'),
+    aslPaidStartDate: this.f.aslPaidStartDate.value==""?null:this.datePipe.transform(this.f.aslPaidStartDate.value, 'yyyy-MM-dd'),
+    aslPaidEndDate: this.f.aslPaidEndDate.value==""?null:this.datePipe.transform(this.f.aslPaidEndDate.value, 'yyyy-MM-dd'),
+    aslTermCoverageExtEndDate: this.f.aslTermCoverageExtEndDate.value==""?null:this.datePipe.transform(this.f.aslTermCoverageExtEndDate.value, 'yyyy-MM-dd'),
+	aslCorridor: this.f.aslCorridor.value==''?Number(0):Number(this.f.aslCorridor.value),
     sslDeductible: this.f.sslDeductible.value==''?0:Number(this.f.sslDeductible.value),
-    sslIncurredStartDate:this.productForm.get('sslIncurredStartDate').value==""?null:this.datePipe.transform(this.f.sslIncurredStartDate.value, 'yyyy-MM-dd'),
-    sslIncurredEndDate: this.productForm.get('sslIncurredEndDate').value==""?null:this.datePipe.transform(this.f.sslIncurredEndDate.value, 'yyyy-MM-dd'),
-    sslPaidStartDate: this.productForm.get('sslPaidStartDate').value==""?null:this.datePipe.transform(this.f.sslPaidStartDate.value, 'yyyy-MM-dd'),
-    sslPaidEndDate: this.productForm.get('sslPaidEndDate').value==""?null:this.datePipe.transform(this.f.sslPaidEndDate.value, 'yyyy-MM-dd'),
-    sslTermCoverageExtEndDate: this.productForm.get('sslTermCoverageExtEndDate').value==""?null:this.datePipe.transform(this.f.sslTermCoverageExtEndDate.value, 'yyyy-MM-dd'),
+    sslIncurredStartDate:this.f.sslIncurredStartDate.value==""?null:this.datePipe.transform(this.f.sslIncurredStartDate.value, 'yyyy-MM-dd'),
+    sslIncurredEndDate: this.f.sslIncurredEndDate.value==""?null:this.datePipe.transform(this.f.sslIncurredEndDate.value, 'yyyy-MM-dd'),
+		
+	
+    sslContractStartDate:this.f.sslContractStartDate.value==""?null:this.datePipe.transform(this.f.sslContractStartDate.value, 'yyyy-MM-dd'),
+    sslContractEndDate: this.f.sslContractEndDate.value==""?null:this.datePipe.transform(this.f.sslContractEndDate.value, 'yyyy-MM-dd'),
+	sslLasering: this.f.sslLasering.value==null?false:true,
+	
+    sslPaidStartDate: this.f.sslPaidStartDate.value==""?null:this.datePipe.transform(this.f.sslPaidStartDate.value, 'yyyy-MM-dd'),
+    sslPaidEndDate: this.f.sslPaidEndDate.value==""?null:this.datePipe.transform(this.f.sslPaidEndDate.value, 'yyyy-MM-dd'),
+    sslTermCoverageExtEndDate: this.f.sslTermCoverageExtEndDate.value==""?null:this.datePipe.transform(this.f.sslTermCoverageExtEndDate.value, 'yyyy-MM-dd'),
     aslDeductible:0,
     userId: this.loginService.currentUserValue.name,
     sslCoveredClaims: this.f.sslCoveredClaims.value,
     aslCoveredClaims: this.f.aslCoveredClaims.value
   });
   console.log(this.productForm.value);
+  
+}
+private addProduct() {   
+  
 
   console.log(this.f.sslCoveredClaims.value); // 'M', 'P'
   console.log(this.f.aslCoveredClaims.value); // 'M'
+  
   this.listContractClaims=[];
+  this.productForm.patchValue(this.productForm.value);
+ this.patchProductForm();
   
   for(let i=0; i<this.f.sslCoveredClaims.value.length; i++){
     this.listContractClaims.push({
@@ -592,10 +614,6 @@ private addProduct() {
  this.productForm.patchValue({
   lstContractClaims: this.listContractClaims
  })
- this.productForm.patchValue(this.productForm.value);
- this.productForm.patchValue({
-  sslLasering: false
- });
  
  
   this.productService.addProduct(this.productForm.value)
@@ -603,9 +621,10 @@ private addProduct() {
       .subscribe({ 
           next: () => {
             this.getAllProducts(); 
-            this.clearErrorMessages();              
-          this.isAdded=true;
-              this.alertService.success('New Product added', { keepAfterRouteChange: true });
+            this.clearErrorMessages();           
+              this.alertService.success('New Product added', { keepAfterRouteChange: true });   
+              this.isAdded=true;
+                
               // this.isDisabled=true;      
               //this.router.navigate(['../'], { relativeTo: this.route });
           },
@@ -623,13 +642,11 @@ private addProduct() {
     this.f.contractId.enable();
 
     this.productForm.patchValue({  
-    contractId:this.contractsByClientId[0].contractId,
     status:this.f.status.value==true?1:0,
     aslTermCoverageExtEndDate: this.productForm.get('aslTermCoverageExtEndDate').value==""?null:this.datePipe.transform(this.f.aslTermCoverageExtEndDate.value, 'yyyy-MM-dd'),
     sslTermCoverageExtEndDate: this.productForm.get('sslTermCoverageExtEndDate').value==""?null:this.datePipe.transform(this.f.sslTermCoverageExtEndDate.value, 'yyyy-MM-dd')
   });
   this.productForm.patchValue(this.productForm.value);
-  console.log(this.productForm.value);
   console.log(this.f.ibnrPercentage.errors);
   console.log(this.f.defferedFeePercentage.errors);
   
@@ -653,17 +670,14 @@ private addProduct() {
  this.productForm.patchValue({
   lstContractClaims: this.listContractClaims
  })
- this.productForm.patchValue({
-  sslLasering: false
- });
-    
+ 
       this.productService.updateProduct(this.productForm.value)
           .pipe(first())
           .subscribe({
               next: () => {
                   this.getAllProducts();
-                  this.openCustomModal(false,null);                     
-                    this.productForm.reset();   
+                 // this.openCustomModal(false,null);                     
+                   // this.productForm.reset();   
                     
                     this.clearErrorMessages();
                   this.alertService.success('Product updated', { 

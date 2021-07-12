@@ -1,7 +1,17 @@
 export interface ITire{
     tierId: number;
     tierName: string;
-    status: boolean;
+    status: number;
+}
+export interface ITierObj{    
+    factor1:number; 
+    factor2:number; 
+    factor3:number; 
+    factor4:number;
+    expectedClaims1:number;
+    expectedClaims2:number;
+    expectedClaims3:number;
+    expectedClaims4:number;
 }
 export interface IPlanAll{
     planID: number;
@@ -10,51 +20,56 @@ export interface IPlanAll{
     userId: string;
     planCode: string;
     planName: string;
+    contractYear: string;
     clientName: string;
-    tier1Aggfactamt: number;
-    tier2Aggfactamt: number;
-    tier3Aggfactamt: number;
-    tier4Aggfactamt: number;
-    familySpecificDeductible: number;
     status: number;
-    isTerminalExtCoverage: string; // 'Y' or 'N'
+    isTerminalExtCoverage: string;
     lstTblPlanTier: [
-        {
-            planId: number;
-            tierId: number;
-            tierAmount: number;
-        }
+      {
+        planId: number;
+        tierId: number;
+        tierAmount: number;
+        expectedClaimsRate: number;
+        createdOn: Date;
+        userId: string;
+        updatedOn: Date
+      }
     ]
 }
 export interface IPlanAdd{    
-        planID: number;
-        clientId: string;
-        contractId:number;
-        userId: string;
-        planCode: string;
-        planName: string;
-        clientName: string;
-        status: number;
-        isTerminalExtCoverage: string;
-        lstTblPlanTier: IPlanTierChild[];   
+    planID: number;
+    clientId: string;
+    contractId: number;
+    userId: string;
+    planCode: string;
+    planName: string;
+    contractYear: string;
+    clientName: string;
+    status: number;
+    isTerminalExtCoverage: string;
+    lstTblPlanTier: IPlanTierChild[];  
 }
-export interface IPlanTierChild{        
-        planId: number;
-        tierId: number;
-        tierAmount: number;    
-        expectedClaimsRate: number;
+export interface IPlanTierChild{   
+    planId: number;
+    tierId: number;
+    tierAmount: number;
+    expectedClaimsRate: number;
+    createdOn?: Date;
+    userId?: string;
+    updatedOn?: Date;
 }
 export interface IPlanUpdate{
     planID: number;
     clientId: string;
-    contractId:number;
+    contractId: number;
     userId: string;
     planCode: string;
     planName: string;
+    contractYear: string;
     clientName: string;
     status: number;
     isTerminalExtCoverage: string;
-    lstTblPlanTier: IPlanTierChild[];   
+    lstTblPlanTier: IPlanTierChild[];  
 }
 export interface IActiveClient{
     clientId: string;
