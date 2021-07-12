@@ -183,11 +183,12 @@
               </div>
             </div>
             <div class="col-md-4">
-              <div class="custom-control custom-checkbox">
-                <input type="checkbox" id="s1" class="custom-control-input"  formControlName="sslLasering">
-                <label class="custom-control-label" for="s1">Lasering</label>
+              <div class="form-group">
+                <label>Run-In Limit</label>
+                <input type="number" formControlName="sslRunInLimit" class="form-control"/>
               </div>
             </div>
+            
           </div>
           <div class="row">
             <div class="col-md-4">
@@ -204,18 +205,12 @@
             </div>
             <div class="col-md-4">
               <div class="form-group">
-                <label>Run-In Limit</label>
-                <input type="number" formControlName="sslRunInLimit" class="form-control"/>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-4">
-              <div class="form-group">
                 <label>Specific Deductible<small class="starmark">*</small></label>
                 <input type="number" formControlName="sslDeductible" class="form-control" [ngClass]="{ 'is-invalid': submitted && sslDeductibleErr.isValid }"/>
               </div>
             </div>
+          </div>
+          <div class="row">
             <div class="col-md-4">
               <div class="form-group">
                 <label>Aggregating Specific Deductible</label>
@@ -228,14 +223,14 @@
                 <input type="number" formControlName="sslAnnualLimit" class="form-control"/>
               </div>              
             </div>
-          </div>
-          <div class="row"> 
             <div class="col-md-4">
               <div class="form-group">
                 <label>Limit of Liability - Lifetime</label>
                 <input type="number" formControlName="sslLifetimeLimit" class="form-control"/>
               </div>
             </div>
+          </div>
+          <div class="row"> 
             <div class="col-md-4">
               <div class="form-group">
                 <label>Terminal Extension Coverage End Date</label>
@@ -243,9 +238,21 @@
               </div>
             </div>
             <div class="col-md-4">
-              <div class="custom-control custom-checkbox">
-                <input type="checkbox" class="custom-control-input" formControlName="sslIsImmediateReimbursement" id="imReimb" checked>
-                <label class="custom-control-label" for="imReimb">Immediate Reimbursement</label>
+              <div class="form-group">
+                <label></label>
+                <div class="custom-control custom-checkbox">
+                  <input type="checkbox" id="s1" class="custom-control-input"  formControlName="sslLasering">
+                  <label class="custom-control-label" for="s1"> Lasering</label>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label></label>
+                <div class="custom-control custom-checkbox">
+                  <input type="checkbox" class="custom-control-input" formControlName="sslIsImmediateReimbursement" id="imReimb" checked>
+                  <label class="custom-control-label" for="imReimb"> Immediate Reimbursement</label>
+                </div>
               </div>
             </div>
           </div>	
@@ -298,14 +305,14 @@
           <input type="number" formControlName="aslMinDeductible" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.aslMinDeductible.errors }"/>
         </div>
       </div>
-    </div>
-    <div class="row">
       <div class="col-md-4">
         <div class="form-group">
           <label>Expected Claim Liability</label>
           <input type="number" formControlName="aslExpectedClaimLiability" class="form-control"/>
         </div>
       </div>
+    </div>
+    <div class="row">
       <div class="col-md-4">
         <div class="form-group">
           <label>Incurred Start Date<small class="starmark">*</small></label>
@@ -316,6 +323,12 @@
         <div class="form-group">
           <label>Incurred End Date<small class="starmark">*</small></label>
           <input type="date" formControlName="aslIncurredEndDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.aslIncurredEndDate.errors }" max="2999-12-31"/>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <label>Run-In Limit</label>
+          <input type="number" formControlName="aslRunInLimit" class="form-control"/>
         </div>
       </div>
     </div>
@@ -354,18 +367,12 @@
       </div>
       <div class="col-md-4">
         <div class="form-group">
-          <label>Run-In Limit</label>
-          <input type="number" formControlName="aslRunInLimit" class="form-control"/>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-4">
-        <div class="form-group">
           <label>Limit of Liability - Annual</label>
           <input type="number" formControlName="aslAnnualLimit" class="form-control"/>
         </div>
       </div>
+    </div>
+    <div class="row">
       <div class="col-md-4">
         <div class="form-group">
           <label>Limit of Liability - Lifetime</label>
@@ -373,19 +380,22 @@
         </div>
       </div>
       <div class="col-md-4">
-        <div class="custom-control custom-checkbox">
-          <input type="checkbox" class="custom-control-input" formControlName="aslIsMonthlyAccomidation" id="aslMonAcc" checked>
-          <label class="custom-control-label" for="aslMonAcc">Monthly Accomodation</label>
+        <div class="form-group">
+          <label></label>
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" formControlName="aslIsMonthlyAccomidation" id="aslMonAcc" checked>
+            <label class="custom-control-label" for="aslMonAcc"> Monthly Accomodation</label>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="row">
       <div class="col-md-4">
         <div class="form-group">
           <label>Terminal Extension Coverage End Date</label>
           <input type="date" formControlName="aslTermCoverageExtEndDate" class="form-control" [ngClass]="{ 'is-invalid': aslTermCovrErr.isDateErr }" max="2999-12-31" />
         </div>
       </div> 
+    </div>
+    <div class="row">
       <div class="col-md-4">
         <div class="form-group">
           <label>Covered Benefits<small class="starmark">*</small></label>

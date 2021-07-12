@@ -290,6 +290,7 @@ clearErrorMessages(){
     this.isDisabled=false;
     if(open && id==null){
       this.isAddMode = true;
+      this.isFilterOn=false;
     }
     this.clearErrorMessages();
     this.isCustomModalOpen = open;
@@ -300,14 +301,14 @@ clearErrorMessages(){
       this.isAdded=false;
       if(!this.isFilterOn){
         this.navService.resetContractObj();
-        this.filterSearchInput.nativeElement.value='';
-        this.filterSearchInput.nativeElement.blur();
+        this.clearSearchInput();
       }
     }
     console.log("id inside modal: "+id);
     //this.contId=id.contractId==0?"":id.contractId;
     if(id!=null && open){
       this.isAddMode = false;
+      this.isFilterOn=false;
       this.getContract(id);
       this.getClientDetails(id.clientId);
       
@@ -632,6 +633,7 @@ clearErrorMessages(){
       this.searchInputValue='';
       this.filterSearchInput.nativeElement.value='';
       this.filterSearchInput.nativeElement.focus();
+      this.getAllContracts();
     }
     goBackPreviousNoFilter(){
       this.navService.resetClientObj();
@@ -643,9 +645,11 @@ clearErrorMessages(){
         this.openCustomModal(false,null);
         this.searchInputValue = this.tempContractObj.clientName;
         this.filterSearchInput.nativeElement.focus();
-        //setTimeout(()=>{this.filterSearchInput.nativeElement.focus();},500);        
+        //setTimeout(()=>{this.filterSearchInput.nativeElement.focus();},500);    
+            
       }
-      if(!this.isAdded){
+      else{
+        
         this.router.navigate(['/clients']);
       }
     }

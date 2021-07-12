@@ -287,10 +287,9 @@ async checkDuplicateAccountId(aid){
       this.isAddMode = false;
       this.isAdded=false;
       this.navService.resetClientObj();
-      this.filterSearchInput.nativeElement.value='';
-      this.filterSearchInput.nativeElement.blur();
+      this.clearSearchInput();
     }
-    this.getAllClients();
+   // this.getAllClients();
     console.log("id inside modal: "+id);
     this.clientForm.patchValue(this.clientForm.value);
     if(id!=null && open){
@@ -481,7 +480,6 @@ async checkDuplicateAccountId(aid){
         .subscribe({
             next: () => {
               this.isDisabled=true;
-              //this.openCustomModal(false, null);
               this.getAllClients();
               this.clientService.getClient(this.f.clientId.value).subscribe((data)=>{
                 this.navService.setClientObj(data[0].clientId, data[0].clientName, true,false);
@@ -517,7 +515,6 @@ async checkDuplicateAccountId(aid){
                     this.getAllClients();
 
                     this.uAccountName='';
-                    //this.openCustomModal(false,null);
                     //this.clientForm.reset();
                     this.alertService.success('Client updated', {
                       keepAfterRouteChange: true });

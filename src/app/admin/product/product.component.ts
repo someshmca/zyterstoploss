@@ -51,6 +51,7 @@ export class ProductComponent implements OnInit {
   uClientId: string;
   uContractId: number;
   claimBasis : string[];
+  toSwitchOtherScreen: boolean=false;
   sslIncurredEndErr = {
     isDateErr: false,
     dateErrMsg: ''
@@ -169,6 +170,7 @@ export class ProductComponent implements OnInit {
       lstContractClaims: []
     });
     this.isAdded=false;
+    this.toSwitchOtherScreen=false;
     this.claimBasis = CLAIM_BASIS_CONSTANT.values;
     this.getAllProducts();
     this.getActiveClients();   
@@ -379,6 +381,7 @@ if(aslTermVal!='' && this.productForm.valid){
     if(open && id==null){
       this.isAddMode = true;    
       this.isEditSelected = false;
+      this.isFilterOn=false;
       this.f.clientId.enable();
       this.f.contractId.enable();
     }
@@ -395,8 +398,7 @@ if(aslTermVal!='' && this.productForm.valid){
       this.isAdded=false;
       if(!this.isFilterOn){
         this.navService.resetProductObj();
-        this.filterSearchInput.nativeElement.value='';
-        this.filterSearchInput.nativeElement.blur();
+        this.clearSearchInput();        
       }
     }
     console.log("id inside modal: "+id);
@@ -404,6 +406,7 @@ if(aslTermVal!='' && this.productForm.valid){
     if(id!=null && open){
       this.isAddMode = false;
       this.isEditSelected = true;
+      this.isFilterOn=false;
 
       this.f.clientId.disable();
       this.f.contractId.disable();
@@ -490,8 +493,10 @@ if(aslTermVal!='' && this.productForm.valid){
         this.searchInputValue='';
         this.filterSearchInput.nativeElement.value='';
         this.filterSearchInput.nativeElement.focus();
+        this.getAllProducts();
       }
       goBackPreviousNoFilter(){
+        this.toSwitchOtherScreen=true;
         this.router.navigate(['/contracts']);
         this.navService.resetContractObj();
       }
@@ -501,7 +506,7 @@ if(aslTermVal!='' && this.productForm.valid){
           this.searchInputValue = this.tempProductObj.clientName;
           this.filterSearchInput.nativeElement.focus();
         }
-        if(!this.isAdded){
+        else{
           this.router.navigate(['/contracts']);
         }
       }
@@ -518,6 +523,7 @@ if(aslTermVal!='' && this.productForm.valid){
           }
       }
     gotoPlanAdd(){
+      this.toSwitchOtherScreen=true;
       if(this.isAdded){
         this.clientService.getClient(this.f.clientId.value).subscribe((data)=>{
           this.navService.setPlanObj(data[0].clientId, data[0].clientName, true,false);
@@ -527,15 +533,16 @@ if(aslTermVal!='' && this.productForm.valid){
       }
     }
     gotoPlanUpdate(){
-      this.alertService.clear();
+      this.toSwitchOtherScreen=true;
       this.clientService.getClient(this.f.clientId.value).subscribe(
-        (data: IClient[]) => {                  
+        (data: IClient[]) => {    
+          this.isFilterOn=false;
           this.navService.setPlanObj(data[0].clientId, data[0].clientName, false, true);
-          this.isAdded = false;
           this.router.navigate(['/health-plan']);   
         });    
     }
     gotoLaseringAdd(){
+      this.toSwitchOtherScreen=true;
       if(this.isAdded){
         this.clientService.getClient(this.f.clientId.value).subscribe((data)=>{
           this.navService.setLaseringObj(data[0].clientId, data[0].clientName, true,false);
@@ -545,6 +552,7 @@ if(aslTermVal!='' && this.productForm.valid){
       }
     }
     gotoLaseringUpdate(){
+      this.toSwitchOtherScreen=true;
       this.clientService.getClient(this.f.clientId.value).subscribe(
         (data: IClient[]) => {                  
           this.navService.setLaseringObj(data[0].clientId, data[0].clientName, false, true);
@@ -670,7 +678,7 @@ private addProduct() {
  this.productForm.patchValue({
   lstContractClaims: this.listContractClaims
  })
- 
+    if(!this.toSwitchOtherScreen){
       this.productService.updateProduct(this.productForm.value)
           .pipe(first())
           .subscribe({
@@ -680,6 +688,7 @@ private addProduct() {
                    // this.productForm.reset();   
                     
                     this.clearErrorMessages();
+                    
                   this.alertService.success('Product updated', { 
                     keepAfterRouteChange: true });
                     this.isDisabled=true;
@@ -690,6 +699,7 @@ private addProduct() {
                   this.loading = false;
               }
           });
+        }
   }
 
 

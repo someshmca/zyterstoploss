@@ -167,12 +167,12 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
     this.planService.getTires().subscribe(
     (data)=>{
       this.tires=data;
-      this.locTires=this.tires;
+    //  this.locTires=this.tires;
       
-      //  for(let i=0;i<this.tires.length;i++){
-      //    this.locTires.push(this.tires[i]);        
-      //  }
-      //  console.log(this.locTires);
+       for(let i=0;i<this.tires.length;i++){
+         this.locTires.push(this.tires[i]);        
+       }
+       console.log(this.locTires);
        
     });
   }
@@ -251,6 +251,7 @@ initTierObj(){
     if(open && elem==null){
 
       this.isAddMode = true;
+      this.isFilterOn=false;
       this.addPlanObj=null;
     }
     this.isCustomModalOpen = open;
@@ -261,12 +262,11 @@ initTierObj(){
       this.isAdded=false;
       if(!this.isFilterOn){
         this.navService.resetPlanObj();
-        this.filterSearchInput.nativeElement.value='';
-        this.filterSearchInput.nativeElement.blur();
+        this.clearSearchInput();
       }
     }
     if(open && elem!=null){
-      
+      this.isFilterOn=false;      
       this.isAddMode = false;
       // let plansAll = this.plans;
       // let uPlan = plansAll.filter((obj)=>{
@@ -309,7 +309,7 @@ initTierObj(){
         contractYear: elem.contractYear,
         clientName: elem.clientName,
         status: elem.status,
-        isTerminalExtCoverage: elem.isTerminalCoverage=='Y'?true:false,
+        isTerminalExtCoverage: elem.isTerminalExtCoverage=='Y'?true:false,
         factor1: this.tierObj.factor1==0?'':this.tierObj.factor1,
         factor2: this.tierObj.factor2==0?'':this.tierObj.factor2,
         factor3: this.tierObj.factor3==0?'':this.tierObj.factor3,
@@ -345,7 +345,7 @@ initTierObj(){
       this.searchInputValue = this.tempPlanObj.clientName;
       this.filterSearchInput.nativeElement.focus();
     }
-    if(!this.isAdded){
+    else{
       this.router.navigate(['/product']);
     }    
   }
@@ -366,6 +366,7 @@ initTierObj(){
     this.searchInputValue='';
     this.filterSearchInput.nativeElement.value='';
     this.filterSearchInput.nativeElement.focus();
+    this.getAllPlans();
   }
   // conven`ience getter for easy access to form fields
   get f() { return this.planForm.controls; }
@@ -452,8 +453,8 @@ initTierObj(){
           .pipe(first())
           .subscribe({
               next: () => {
-                  this.planForm.reset();
-                  this.openCustomModal(false, null);
+                  //this.planForm.reset();
+                  //this.openCustomModal(false, null);
                   //this.getAllPlans();
                   this.getTires();
                   this.getAllPlans();
@@ -531,8 +532,8 @@ initTierObj(){
                   this.alertService.success('Plan & Tier updated', {
                     keepAfterRouteChange: true });
                     this.getAllPlans();
-                    this.openCustomModal(false,null);
-                    this.planForm.reset();
+                    //this.openCustomModal(false,null);
+                    //this.planForm.reset();
               },
               error: error => {
                   this.alertService.error(error);
