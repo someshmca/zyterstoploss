@@ -239,11 +239,11 @@ export class ProductComponent implements OnInit {
     this.contractService.getContractsByClientID(clientId).subscribe((data)=>{
       data.sort((x,y) => x.contractId - y.contractId);
       this.contractsByClientId = data;     
-      if(this.contractsByClientId.length>0){
+      //if(this.contractsByClientId.length>0){
         this.productForm.patchValue({
           contractId: this.contractsByClientId[0].contractId
         })
-      }
+      //}
     })
   }
   getAllContracts(){

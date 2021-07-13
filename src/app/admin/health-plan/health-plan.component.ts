@@ -103,7 +103,7 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
       ]
     });
     this.isAdded=false;
-    this.initLocalTires();
+    //this.initLocalTires();
     this.initTierObj();
     this.getAllPlans();
     this.getTires();
