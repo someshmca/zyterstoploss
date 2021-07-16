@@ -108,6 +108,7 @@
             <div *ngIf="runOutStartErr.isDateErr">{{runOutStartErr.dateErrMsg}}</div>
             <div *ngIf="runOutEndErr.isDateErr">{{runOutEndErr.dateErrMsg}}</div>
             <div *ngIf="terminationDateErr.isDateErr">{{terminationDateErr.dateErrMsg}}</div>
+            <div *ngIf="checkPolicyYearErr.isValid">{{checkPolicyYearErr.errMsg}}</div><!--Modified by venkatesh Enigonda-->
             <div *ngIf="isContractStartDateInvalid">{{contractStartDateErrMsg}}</div>
             <!-- <div *ngIf="startDateRangeErr.isDateErr">{{startDateRangeErr.dateErrMsg}}</div> -->
            </div>  

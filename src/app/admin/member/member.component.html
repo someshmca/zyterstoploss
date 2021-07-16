@@ -11,6 +11,10 @@
                 <div *ngIf="memSearchSubmitted && !memberSearchForm.valid">Please enter atleast one field</div>
                 <div *ngIf="noSearchFieldEntered">Please enter atleast one field</div>
                 <div *ngIf="memIdErr.isValid">{{memIdErr.errMsg}}</div>
+                <div *ngIf="memSubIdErr.isValid">{{memSubIdErr.errMsg}}</div><!--Modified by Venkatesh Enigonda-->
+                <div *ngIf="memFnameErr.isValid">{{memFnameErr.errMsg}}</div><!--Modified by Venkatesh Enigonda-->
+                <div *ngIf="memMnameErr.isValid">{{memMnameErr.errMsg}}</div><!--Modified by Venkatesh Enigonda-->
+                <div *ngIf="memLnameErr.isValid">{{memLnameErr.errMsg}}</div><!--Modified by Venkatesh Enigonda-->
                 <div *ngIf="memStartDateErr.isValid">{{memStartDateErr.errMsg}}</div>
                 <div *ngIf="memEndDateErr.isValid">{{memEndDateErr.errMsg}}</div>
               </div>  
@@ -20,32 +24,32 @@
                         <label>Member ID</label>
                     </div>
                     <div class="form-field-input">
-                        <input #focusMemSearch type="text" class="form-control field-input-text" formControlName="MemberId"/>                        
+                      <input #focusMemSearch type="text" class="form-control field-input-text" formControlName="MemberId" [ngClass]="{ 'is-invalid': memIdErr.isValid }"/>   <!--Modified by Venkatesh Enigonda-->
                     </div>
                 </div>
                 <div class="form-field">
                     <label class="form-field-label">
                         Subscriber ID</label>
                     <div class="form-field-input">
-                        <input type="text" class="form-control field-input-text" formControlName="SubscriberId" />
+                      <input type="text" class="form-control field-input-text" formControlName="SubscriberId"[ngClass]="{ 'is-invalid': memSubIdErr.isValid }" /><!--Modified by Venkatesh Enigonda-->
                     </div>
                 </div>
                 <div class="form-field">
                     <label class="form-field-label">Member First Name</label>
                     <div class="form-field-input">
-                        <input type="text" class="form-control field-input-text" formControlName="Fname"/>
+                      <input type="text" class="form-control field-input-text" formControlName="Fname" [ngClass]="{ 'is-invalid': memFnameErr.isValid }"/><!--Modified by Venkatesh Enigonda-->
                     </div>
                 </div>
                 <div class="form-field">
                     <label class="form-field-label">Member Last Name</label>
                     <div class="form-field-input">
-                        <input type="text" class="form-control field-input-text" formControlName="Lname"/>
+                      <input type="text" class="form-control field-input-text" formControlName="Lname" [ngClass]="{ 'is-invalid':memLnameErr.isValid }"/><!--Modified by Venkatesh Enigonda-->
                     </div>
                 </div>
                 <div class="form-field">
                     <label class="form-field-label">Member Middle Name</label>
                     <div class="form-field-input">
-                        <input type="text" class="form-control field-input-text" formControlName="Mname"/>
+                      <input type="text" class="form-control field-input-text" formControlName="Mname" [ngClass]="{ 'is-invalid':memMnameErr.isValid }"/>
                     </div>
                 </div>
                 <div class="form-field">

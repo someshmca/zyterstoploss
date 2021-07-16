@@ -29,10 +29,14 @@ export class ClaimSearchComponent implements OnInit {
   claimSearchRequest: IClaimSearch;
   claimIdErr = {isValid: false, errMsg: ''};
   memberIdErr = {isValid: false, errMsg: ''};
+  memberFnameErr = { isValid: false, errMsg: '' }; //  by Venkatesh Enigonda
+  memberLnameErr = { isValid: false, errMsg: '' }; //  by Venkatesh Enigonda
   dateErr = {
     fromDateErr: false,
     fromDateInvalid: false,
-    toDateInvalid: false
+    toDateInvalid: false,
+    dateErr: false,
+    dateMsg:''
   };
   dateErrorMessage: string = '';
   
@@ -63,8 +67,10 @@ export class ClaimSearchComponent implements OnInit {
       fromDate:[''],
       toDate: ['']
     },{validator: this.dateLessThan('fromDate', 'toDate')});
-    this.maxDate = this.datePipe.transform(new Date(Date.now()), 'yyyy-MM-dd');
-    this.maxDate= '2999-12-31';
+    //this.maxDate = this.datePipe.transform(new Date(Date.now()), 'yyyy-MM-dd');
+    this.maxDate= new Date('2999-12-31');
+    console.log(this.maxDate);
+    debugger;
     setTimeout(()=>{
       this.focusTag.nativeElement.focus()
     }, 100)
@@ -84,32 +90,41 @@ export class ClaimSearchComponent implements OnInit {
     this.claimIdErr.errMsg='';
     this.memberIdErr.isValid=false;
     this.memberIdErr.errMsg='';    
-    this.dateErr.fromDateErr=false;
+    this.memberFnameErr.isValid = false; //start by Venkatesh Enigonda
+    this.memberFnameErr.errMsg = '';
+    this.memberLnameErr.isValid = false;
+    this.memberLnameErr.errMsg = '';  //end by Venkatesh Enigonda
+    this.dateErr.fromDateErr=false; 
+    this.dateErr.dateErr=false;  
+    this.dateErr.dateMsg='';  
     this.dateErr.fromDateInvalid=false;
     this.dateErr.toDateInvalid=false;
     this.dateErrorMessage='';
     this.isClaimSearchErr=false;
     this.claimSearchNotFound = false;
   }
-  dateLessThan(from: string, to: string) {  
-    return (group: FormGroup): {[key: string]: any} => {
-      let f = group.controls[from];
-      let t = group.controls[to];
-      if (f.value > t.value) {
-        this.dateErr.fromDateErr= true;
-        
-        this.isClaimSearchErr = false;
-        // return {
-        //   dates: "From Date should be greater than To Date"
-        // }
-      }
-      else{
-        
-        this.dateErr.fromDateErr= false;
-        this.isClaimSearchErr = false;
-      }
-      return {};
+dateLessThan(from: string, to: string) {  
+  return (group: FormGroup): {[key: string]: any} => {
+    this.clearErrorMessages();
+    let f = group.controls[from];
+    let t = group.controls[to];
+    if (f.value > t.value) {
+      this.dateErr.fromDateErr= true;
+      this.isClaimSearchErr = false;
+      this.dateErr.dateMsg='';  
+      //new added by masool irfan
+    } else if (f.value!=null && t.value!=null && f.value == t.value){
+      //till here
+      this.dateErr.dateErr= true; 
+      this.isClaimSearchErr = false;   
+      this.dateErr.dateMsg='';  
+    } else{
+      this.dateErr.fromDateErr= false;
+      this.dateErr.dateErr= false;
+      this.isClaimSearchErr = false;
     }
+    return {};
+  }
 }
   // setMaxDate(): string{
   //     return new Date().toISOString().split('T')[0];
@@ -154,6 +169,15 @@ export class ClaimSearchComponent implements OnInit {
       this.isClaimSearchErr = false;
       return;
     }
+    //new added by masool irfan
+    if(this.dateErr.dateErr)
+    {      
+      this.dateErrorMessage='';
+      this.dateErrorMessage = "From date should not be EQUAL with To date";
+      this.isClaimSearchErr = false;
+      return;
+    }
+    //till here
     if(this.f.fromDate.value!=null && (this.f.toDate.invalid || this.f.toDate.value==null)){
       this.dateErrorMessage='';
       this.dateErrorMessage = "End date is invalid. Enter valid End date";
@@ -179,6 +203,12 @@ export class ClaimSearchComponent implements OnInit {
     let checkId = /^([A-Za-z0-9]+)$/; 
     console.log(checkId.test(this.f.claimId.value));
     let a1=checkId.test(this.f.claimId.value);
+
+    let checkName = /^([a-zA-Z]+)$/; //start by Venkatesh Enigonda
+    console.log(checkName.test(this.f.firstName.value));
+    let a2 = checkName.test(this.f.firstName.value);
+    console.log(checkName.test(this.f.lastName.value));
+    let a3 = checkName.test(this.f.lastName.value); //End by Venkatesh Enigonda
     
     if(!a1 && this.f.claimId.value!=''){
       this.claimIdErr.isValid=true;
@@ -190,6 +220,17 @@ export class ClaimSearchComponent implements OnInit {
       this.memberIdErr.errMsg='Member Id is not valid';
       return;
     }
+
+    if (!a2 && this.f.firstName.value != '') {  //start by Venkatesh Enigonda
+      this.memberFnameErr.isValid = true;
+      this.memberFnameErr.errMsg = 'Fisrt name is not valid.It should be Alphabet';
+      return;
+    }
+    if (!a3 && this.f.lastName.value != '') {
+      this.memberLnameErr.isValid = true;
+      this.memberLnameErr.errMsg = 'Last name is not valid.It should be Alphabet';
+      return;
+    }//end by Venkatesh Enigonda
 
     let claimRequestObj = {
       claimId: this.f.claimId.value,

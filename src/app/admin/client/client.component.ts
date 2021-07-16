@@ -68,8 +68,13 @@ export class ClientComponent implements OnInit {
   searchInputValue: string= '';
   startDateErr = {isDateErr: false,dateErrMsg: ''};
   endDateErr = {isDateErr: false,dateErrMsg: ''};
+  accountIdErr=  {isValid: false, errMsg: ''};// Modified by Venkatesh Enigonda
+  accountNameErr={isValid: false, errMsg: ''};// Modified by Venkatesh Enigonda
   accNameErr = {isDuplicate: false, errMsg: ''};
   accIdErr = {isDuplicate: false, errMsg: ''};
+  subSubIdAcErr = { isValid: false, errMsg: '' };// Modified by Venkatesh Enigonda
+  subChkErr = { isValid: false, errMsg: '' };
+  subSubChkErr = { isValid: false, errMsg: '' };
   tempClientObj:IClientObj;
   @ViewChild("focusElem") focusTag: ElementRef;
   @ViewChild("filterSearchInput") filterSearchInput: ElementRef;
@@ -217,10 +222,21 @@ clearErrorMessages(){
   this.startDateErr.dateErrMsg='';
   this.endDateErr.isDateErr=false;
   this.endDateErr.dateErrMsg='';
+  this.accountIdErr.isValid=false; // Start by Venkatesh Enigonda
+  this.accountIdErr.errMsg='';
+  this.accountNameErr.isValid=false;
+  this.accountNameErr.errMsg='';// End by Venkatesh Enigonda
+
   this.accNameErr.isDuplicate=false;
   this.accNameErr.errMsg='';
   this.accIdErr.isDuplicate=false;
   this.accIdErr.errMsg='';
+    this.subSubIdAcErr.isValid = false;//Modified by Venkatesh Enigonda
+    this.subSubIdAcErr.errMsg = '';
+    this.subChkErr.isValid = false;//Modified by Venkatesh Enigonda
+    this.subChkErr.errMsg = '';
+    this.subSubChkErr.isValid = false;//Modified by Venkatesh Enigonda
+    this.subSubChkErr.errMsg = '';
 }
 checkDuplicateAccountName(aname){
   return this.clientService.checkDuplicateAccountName(aname).toPromise();
@@ -390,9 +406,70 @@ async checkDuplicateAccountId(aid){
       }
       this.clientForm.patchValue(this.clientForm.value);
       // stop here if form is invalid
-      let startDateValue=this.f.startDate.value;
-      let endDateValue=this.f.endDate.value;
 
+      let checkAccountId = /^([a-zA-Z0-9]+)$/; // start by Venkatesh Enigonda
+     
+      console.log(checkAccountId.test(this.f.clientId.value));
+      let accountIdTest=checkAccountId.test(this.f.clientId.value);
+
+      console.log(checkAccountId.test(this.f.clientName.value));
+      let AccountNameCheck=checkAccountId.test(this.f.clientName.value); // end by Venkatesh Enigonda
+      
+
+      //let subid = this.f.subAccountid.value;
+      let subSubid = this.f.subSubAccountid.value;
+  
+      let subSubId: any;// Modified by Venkatesh Enigonda
+      let startDateValue = this.f.startDate.value;
+      let endDateValue = this.f.endDate.value;
+
+      if(!accountIdTest && this.f.clientId.value!=''){ // Start by Venkatesh Enigonda
+        this.accountIdErr.isValid=true;
+        this.accountIdErr.errMsg='Account Id is not valid.Special Characters not Allowed';
+        return;
+      }
+      if(!AccountNameCheck && this.f.clientName.value!=''){
+        this.accountNameErr.isValid=true;
+        this.accountNameErr.errMsg='Account Name is not valid.Special Characters not Allowed';
+        return;
+      } // End by Venkatesh Enigonda
+
+
+      let alphaNum = /^([A-Za-z0-9]+)$/; //From line number 336 to 341 Modified by Venkatesh Enigonda
+      console.log(alphaNum.test(this.f.subAccountid.value));
+      let checkSubId = alphaNum.test(this.f.subAccountid.value);
+  
+      console.log(alphaNum.test(this.f.subSubAccountid.value));
+      let checksubSubId = alphaNum.test(this.f.subSubAccountid.value);
+  
+      if (!checkSubId && this.f.subAccountid.value != '') { // From Line 343 to 352 Modified by Venkatesh Enigonda 
+        this.subChkErr.isValid = true;
+        this.subChkErr.errMsg = 'Sub-Account Id is not Valid.Special Characters not Allowed';
+        return;
+      }
+      if (!checksubSubId && this.f.subSubAccountid.value != '') {
+        this.subSubChkErr.isValid = true;
+        this.subSubChkErr.errMsg = 'Sub Sub-Account is not Valid.Special Characters not Allowed';
+        return;
+      }
+  
+      if (this.f.subAccountid.value !== null)// Modified by Venkatesh Enigonda
+      {
+        subSubId = this.f.subAccountid.value.length;
+      }
+      else {
+        subSubId = 0;
+      }
+      console.log(subSubid);// Modified by Venkatesh Enigonda
+      if (subSubid == null) {
+        console.log(subSubid);
+      }
+      else if (subSubid != '' && subSubId == 0) {
+        console.log(subSubId);
+        this.subSubIdAcErr.isValid = true;
+        this.subSubIdAcErr.errMsg = ' Sub-Account ID Required*';//// Modified by Venkatesh Enigonda
+        return;
+      }
       if(this.clientForm.valid){
         if(this.isAddMode){
           const cid= this.clientService.checkDuplicateAccountId(this.f.clientId.value);

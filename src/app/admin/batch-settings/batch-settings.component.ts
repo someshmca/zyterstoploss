@@ -55,16 +55,22 @@ export class BatchSettingsComponent implements OnInit {
   isDisabled: boolean=false;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  @ViewChild('BatchProcessPaginator', {static: true}) batchProcessPaginator: MatPaginator;
-  @ViewChild('BatchProcessGridSort', {static: true}) batchProcessGridSort: MatSort;
+  // @ViewChild('BatchProcessPaginator', {static: true}) batchProcessPaginator: MatPaginator;
+  // @ViewChild('BatchProcessGridSort', {static: true}) batchProcessGridSort: MatSort;
+  @ViewChild('BatchProcessPaginator') public batchProcessPaginator: MatPaginator;
+  @ViewChild('BatchProcessGridSort') public batchProcessGridSort: MatSort;
 
+  
   
   historyGridColumns: string[] = ['started', 'completed', 'scheduled', 'failed','failedReason'];
   historyGridSource: any;
   // @ViewChild(MatPaginator) paginator2: MatPaginator;
   // @ViewChild(MatSort) sort2: MatSort;
-  @ViewChild('HistoryGridPaginator', {static: true}) historyGridPaginator: MatPaginator;
-  @ViewChild('HistoryGridSort', {static: true}) historyGridSort: MatSort;
+  // @ViewChild('HistoryGridPaginator', {static: true}) historyGridPaginator: MatPaginator;
+  // @ViewChild('HistoryGridSort', {static: true}) historyGridSort: MatSort;
+
+  @ViewChild('HistoryGridPaginator') public historyGridPaginator: MatPaginator;
+  @ViewChild('HistoryGridSort') public historyGridSort: MatSort;
 
   selectedRow : Number;
   //setClickedRow : Function;
@@ -161,7 +167,7 @@ export class BatchSettingsComponent implements OnInit {
       status: '',
       lastRunStatus: "Completed",
       lastRun: '',
-      nextScheduleRun: '',
+      nextScheduleRun: ['',Validators.required],
       frequency: "Daily",
       createId: '',
       createDate: '',

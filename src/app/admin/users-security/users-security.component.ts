@@ -39,6 +39,10 @@ export class UsersSecurityComponent implements OnInit {
 
   effectiveFrom = {isValid: false, errors: ''};
   effectiveTo = {isValid: false, errors: ''}; 
+  userFnameErr = {isValid: false, errMsg: ''}; // Start by Venkatesh Enigonda
+  userMnameErr = {isValid: false, errMsg: ''};
+  userLnameErr = {isValid: false, errMsg: ''};// End by Venkatesh Enigonda
+
 
   @ViewChild("focusElem") focusTag: ElementRef;
 
@@ -84,6 +88,12 @@ export class UsersSecurityComponent implements OnInit {
     this.effectiveFrom.errors='';
     this.effectiveTo.isValid=false;
     this.effectiveTo.errors='';
+    this.userFnameErr.isValid=false; // STart by Venkatesh Enigonda
+    this.userFnameErr.errMsg='';
+    this.userMnameErr.isValid=false; 
+    this.userMnameErr.errMsg='';
+    this.userLnameErr.isValid=false;
+    this.userLnameErr.errMsg='';  // End by Venkatesh Enigonda
   }
 
   getAllUsersList(){    
@@ -204,6 +214,15 @@ getAllRoles(){
       this.clearErrorMessages();
 
        this.submitted = true;
+       let nam1 = /^([a-zA-Z]+)$/; // Start by Venkatesh Enigonda
+       console.log(nam1.test(this.f.firstName.value));;
+       let a1=nam1.test(this.f.firstName.value);
+
+       console.log(nam1.test(this.f.middleName.value));
+       let a2=nam1.test(this.f.middleName.value);
+
+       console.log(nam1.test(this.f.lastName.value));
+       let a3=nam1.test(this.f.lastName.value);  // End by Venkatesh Enigonda
        
        // added by masool irfan  
        let effectiveFrom = this.datePipe.transform(this.securityForm.get('effectiveFrom').value, 'yyyy-MM-dd');
@@ -232,6 +251,21 @@ getAllRoles(){
        }
  
        // till here
+      if(!a1 && this.f.firstName.value!=''){  // Start by Venkatesh Enigonda
+        this.userFnameErr.isValid=true;
+        this.userFnameErr.errMsg='First Name is not valid. It should be a Alphabet';
+        return;
+      }
+      if(!a2 && this.f.middleName.value!=''){    
+        this.userMnameErr.isValid=true;
+        this.userMnameErr.errMsg='Middle Name is not valid. It should be a Alphabet';
+        return;
+      }
+      if(!a3 && this.f.lastName.value!=''){
+        this.userLnameErr.isValid=true;
+        this.userLnameErr.errMsg='Last Name is not valid. It should be a Alphabet';
+        return;
+      } // End by Venkatesh Enigonda
 
        // reset alerts on submit
        this.alertService.clear();

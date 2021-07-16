@@ -112,22 +112,30 @@
              <div class="mandate-fields">
                <div *ngIf="submitted && (!clientForm.valid && !clientForm.errors?.dates)">Fields marked with * are mandatory</div>
                <div *ngIf="clientForm.errors">{{ clientForm.errors?.dates | json }}</div>
+               <div *ngIf="accountIdErr.isValid">{{accountIdErr.errMsg}}</div><!---- modified by Venkatesh Enigonda-->
+               <div *ngIf="accountNameErr.isValid">{{accountNameErr.errMsg}}</div><!--- modified by Venkatesh Enigonda-->
                <div *ngIf="startDateErr.isDateErr">{{startDateErr.dateErrMsg}}</div>
                <div *ngIf="endDateErr.isDateErr">{{endDateErr.dateErrMsg}}</div>
                <div *ngIf="accIdErr.isDuplicate">{{accIdErr.errMsg}}</div>
                <div *ngIf="accNameErr.isDuplicate">{{accNameErr.errMsg}}</div>
+               <div *ngIf="subSubIdAcErr.isValid">{{subSubIdAcErr.errMsg}}</div>
+               <!--Modified by Venkatesh Enigonda-->
+               <div *ngIf="subChkErr.isValid">{{subChkErr.errMsg}}</div>
+               <!--Modified by Venkatesh Enigonda-->
+               <div *ngIf="subSubChkErr.isValid">{{subSubChkErr.errMsg}}</div>
+               <!--Modified by Venkatesh Enigonda-->  
             </div>
              <div class="row">
               <div class="col-md-6">
                  <div class="form-group">
                    <label>Medica Account ID<small *ngIf="isAddMode" class="starmark">*</small></label>
-             <input #focusElem type="text" maxlength="15" formControlName="clientId" [readonly]="!isAddMode" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.clientId.errors }" />
+             <input #focusElem type="text" maxlength="15" formControlName="clientId" [readonly]="!isAddMode" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.clientId.errors || accountIdErr.isValid }"/>
                  </div>
                 </div>
                 <div class="col-md-6">
                  <div class="form-group">
                    <label>Medica Account Name<small class="starmark">*</small></label>
-             <input type="text" formControlName="clientName" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.clientName.errors }" />
+             <input type="text" formControlName="clientName" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.clientName.errors || accountNameErr.isValid}" /><!--Modified by Venkatesh Enigonda-->
                  </div>
                 </div>
               </div>
@@ -149,7 +157,8 @@
                 <div class="col-md-6">
                   <div class="form-group">
                     <label>Medica Sub Account ID</label>
-                    <input type="text" value="" formControlName="subAccountid" class="form-control"  maxlength="25"/>
+                    <input type="text" value="" formControlName="subAccountid" class="form-control" maxlength="25"
+                      [ngClass]="{ 'is-invalid': subChkErr.isValid || subSubIdAcErr.isValid}" />
                     <!-- <select formControlName="parentID" class="form-control"> -->
                       <!-- <option *ngFor="let client of parentClientIds; let index=i" [selected]="i==2?true:null" [value]="client.parentID">
                         {{client.parentName}}
@@ -172,7 +181,7 @@
                 <div class="col-md-6">
                   <div class="form-group">
                     <label>Medica Sub Sub-Account ID</label>
-                    <input type="text" value="" formControlName="subSubAccountid" class="form-control"  maxlength="25"/>
+                    <input type="text" value="" formControlName="subSubAccountid" class="form-control"  maxlength="25" [ngClass]="{ 'is-invalid':subSubChkErr.isValid}"/> <!--Modified by Venkatesh Enigonda-->
                    </div>
                 </div>
               </div>

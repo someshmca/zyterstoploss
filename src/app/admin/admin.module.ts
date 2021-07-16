@@ -7,7 +7,7 @@ import { MatSortModule } from '@angular/material/sort';
 
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
-
+import { DecimalPipe } from '@angular/common';
 import { AdminRoutingModule } from './admin-routing.module';
 import { ClaimSearchComponent } from './claims/claim-search/claim-search.component';
 import { ClaimResultComponent } from './claims/claim-result/claim-result.component';
@@ -65,7 +65,8 @@ import { LaseringComponent } from './lasering/lasering.component';
   ],
   providers: [
     ClaimReportService,
-    BenefitService
+    BenefitService,
+    DecimalPipe
   ]
 })
 export class AdminModule { }

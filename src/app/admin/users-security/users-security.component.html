@@ -2,7 +2,7 @@
   <div class="page-content">
     <div class="card custom-card">
       <div class="card-header">
-         User Adminstration
+         User Security
          <alert></alert>
       </div>
       <div class="card-body">
@@ -87,6 +87,9 @@
             <span *ngIf="submitted && !securityForm.valid">Fields marked with * are mandatory</span>
             <div *ngIf="effectiveFrom.isValid">{{effectiveFrom.errors}}</div>
             <div *ngIf="effectiveTo.isValid">{{effectiveTo.errors}}</div>
+            <div *ngIf="userFnameErr.isValid">{{userFnameErr.errMsg}}</div>
+            <div *ngIf="userMnameErr.isValid">{{userMnameErr.errMsg}}</div><!-- line 91 & 92 Modified by Venkatesh Enigonda-->
+            <div *ngIf="userLnameErr.isValid">{{userLnameErr.errMsg}}</div>
             <!-- <span *ngIf="submitted && !securityForm1.valid">please select a valid date range</span> -->
           </div>                     
             <div class="row">
@@ -94,8 +97,8 @@
                     <div class="form-group">                     
                       <label>First Name 
                         <small class="starmark">*</small>
-                      </label>                     
-                      <input type="text" class="form-control" #focusElem  placeholder="First Name" formControlName="firstName"  [ngClass]="{ 'is-invalid': submitted && f.firstName.errors }" />
+                      </label>                          
+                      <input type="text" class="form-control" #focusElem  placeholder="First Name" formControlName="firstName"  [ngClass]="{ 'is-invalid': submitted && f.firstName.errors ||userFnameErr.isValid}" /><!--Modified by Venkatesh Enigonda-->
                         <!-- <div class="invalid-feedback">
                             <div *ngIf="submitted && f.firstName.errors" >
                                 <div *ngIf="f.firstName.errors.required">First Name is required</div>
@@ -107,7 +110,7 @@
                       <div class="form-group">
                         <label>Middle Name 
                         </label>
-                        <input type="text" class="form-control" placeholder=" Middle Name" formControlName="middleName" [ngClass]="{ 'is-invalid': submitted && f.middleName.errors }">
+                        <input type="text" class="form-control" placeholder=" Middle Name" formControlName="middleName" [ngClass]="{ 'is-invalid': submitted && f.middleName.errors || userMnameErr.isValid }"><!--Modified by Venkatesh Enigonda-->
                         
                       </div>
                     </div>  
@@ -118,7 +121,7 @@
                           <label>Last Name 
                             <small class="starmark">*</small>
                           </label>
-                          <input type="text" class="form-control" placeholder="Last Name" formControlName="lastName" [ngClass]="{ 'is-invalid': submitted && f.lastName.errors }">
+                          <input type="text" class="form-control" placeholder="Last Name" formControlName="lastName" [ngClass]="{ 'is-invalid': submitted && f.lastName.errors || userLnameErr.isValid }"><!--Modified by Venkatesh Enigonda-->
                           <!-- <div class="invalid-feedback">
                             <div *ngIf="submitted && f.lastName.errors">
                               <div *ngIf="f.lastName.errors.required">                      

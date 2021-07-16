@@ -119,7 +119,7 @@
               <div class="col-md-4">
                 <div class="form-group">
                   <label>Contract<small class="starmark">*</small></label>
-                  <select class="form-control" formControlName="contractId" [ngClass]="{ 'is-invalid': submitted && f.contractId.errors }">
+                  <select class="form-control" formControlName="contractId"  [ngClass]="{ 'is-invalid': submitted && f.contractId.errors }">
                      <option value='' *ngIf="isAddMode"></option>
                     <option *ngFor="let obj of contractsByClientId" [value]="obj.contractId">
                       {{obj.contractId}} 
@@ -301,7 +301,7 @@
       </div> -->
       <div class="col-md-4">
         <div class="form-group">
-          <label>Min Aggregate Deductible<small class="starmark">*</small></label>
+          <label>Min Aggregate Deductible <small class="starmark">*</small></label>
           <input type="number" formControlName="aslMinDeductible" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.aslMinDeductible.errors }"/>
         </div>
       </div>

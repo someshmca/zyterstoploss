@@ -11,35 +11,40 @@
                   <!-- <span *ngIf="submitted && !claimSearchForm.valid"></span> -->
                   <span *ngIf="isClaimSearchErr">Please enter atleast one field</span>
                   <span *ngIf="dateErr.fromDateErr">{{dateErrorMessage}}</span>
+                  <!-- added by masool irfan -->
+                  <span *ngIf="dateErr.dateErr">{{dateErrorMessage}}</span>
+                  <!-- till here -->
                   <span *ngIf="dateErr.fromDateInvalid">{{dateErrorMessage}}</span>
                   <span *ngIf="dateErr.toDateInvalid">{{dateErrorMessage}}</span>
                   <div *ngIf="claimIdErr.isValid">{{claimIdErr.errMsg}}</div>
-                  <div *ngIf="memberIdErr.isValid">{{memberIdErr.errMsg}}</div>                  
+                  <div *ngIf="memberIdErr.isValid">{{memberIdErr.errMsg}}</div>     
+                  <div *ngIf="memberFnameErr.isValid">{{memberFnameErr.errMsg}}</div><!--Modified by Venkatesh Enigonda-->
+                  <div *ngIf="memberLnameErr.isValid">{{memberLnameErr.errMsg}}</div> <!--Modified by Venkatesh Enigonda-->                                          
                 </div> 
                 <div class="form-row">
                 <div class="form-field">
                     <label class="form-field-label">
                         Member ID</label>
-                    <div class="form-field-input">
-                        <input type="text" #focusElem class="form-control field-input-text" formControlName="memberId" [ngClass]="{ 'is-invalid': memberIdErr.isValid }"/>
-                    </div>
+                        <div class="form-field-input">
+                            <input type="text" #focusElem class="form-control field-input-text" formControlName="memberId" [ngClass]="{ 'is-invalid': memberIdErr.isValid }"/><!--Modified by Venkatesh Enigonda-->
+                        </div>
                 </div>
                 <div class="form-field">
                     <label class="form-field-label">Member First Name</label>
                     <div class="form-field-input">
-                        <input type="text" class="form-control field-input-text" formControlName="firstName"/>
+                        <input type="text" class="form-control field-input-text" formControlName="firstName" [ngClass]="{ 'is-invalid': memberFnameErr.isValid }"/><!--Modified by Venkatesh Enigonda-->
                     </div>
                 </div>
                 <div class="form-field">
                     <label class="form-field-label">Member Last Name</label>
                     <div class="form-field-input">
-                        <input type="text" class="form-control field-input-text" formControlName="lastName"/>
+                        <input type="text" class="form-control field-input-text" formControlName="lastName" [ngClass]="{ 'is-invalid': memberLnameErr.isValid }"/><!--Modified by Venkatesh Enigonda-->
                     </div>
                 </div>
                 <div class="form-field">
                     <label class="form-field-label">Member Birth Date</label>
                     <div class="form-field-input">
-                        <input type="date" class="form-control field-input-text" value="MM/DD/YYYY" formControlName="dateOfBirth" [max]="today"/>
+                        <input type="date" class="form-control field-input-text" value="MM/DD/YYYY" formControlName="dateOfBirth" [max]="today"/> <!-- Venkata Reddy -->
                     </div>
                 </div>
                 <div class="form-field">

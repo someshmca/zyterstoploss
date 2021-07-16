@@ -209,7 +209,7 @@
       <div class="col-md-6">
         <div class="form-group">
           <label>Next Schedule Run<small class="starmark">*</small> </label>
-          <input type="date" class="form-control" formControlName="nextScheduleRun" max="2999-12-31">  
+          <input type="date" class="form-control" value="MM/DD/YYYY" formControlName="nextScheduleRun" max="2999-12-31"  [ngClass]="{ 'is-invalid': submitted && f.nextScheduleRun.errors }"/>  
         </div>
       </div>
       <!-- <div class="col-md-6">

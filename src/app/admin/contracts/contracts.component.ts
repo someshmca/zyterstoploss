@@ -54,12 +54,14 @@ export class ContractsComponent implements OnInit {
     runInStartErr = {isDateErr: false, dateErrMsg: ''};
     runInEndErr = {isDateErr: false, dateErrMsg: ''};
     runOutStartErr = {isDateErr: false, dateErrMsg: ''};
+    checkPolicyYearErr= {isValid: false, errMsg: ''};//Modified by Venkatesh Enigonda
     runOutEndErr = {isDateErr: false, dateErrMsg: ''};
     terminationDateErr = {isDateErr: false, dateErrMsg: ''};
   tempClientObj:IClientObj;
   tempContractObj:IClientObj;
   isDisabled: boolean;
   isFilterOn: boolean = false;
+  productObj: IClientObj;
   @ViewChild("focusElem") focusTag: ElementRef;
   @ViewChild("filterSearchInput") filterSearchInput: ElementRef;
   searchInputValue: string;
@@ -121,6 +123,7 @@ export class ContractsComponent implements OnInit {
       policyYear: '',
       description: ''
     });
+    this.navService.productObj.subscribe((data)=>{this.productObj = data;});
     this.getContractStatus();
     //this.getContractAddStatus();
     //this.getContractUpdateStatus();
@@ -132,11 +135,15 @@ export class ContractsComponent implements OnInit {
     this.navService.contractObj.subscribe(
       (data)=>{
         this.tempContractObj = data;
-        if(data.isAdd){
+        if(data.isAdd && !this.productObj.isAdd){
           this.contractForm.patchValue({
             clientId: data.clientId
           });
           this.openCustomModal(true, null);
+        }
+        else if(data.isAdd && this.productObj.isAdd){
+          this.searchInputValue=data.clientName;
+          setTimeout(()=>{this.filterSearchInput.nativeElement.focus()},1000);
         }
         else if(data.isUpdate){          
           this.searchInputValue = data.clientName;
@@ -271,6 +278,8 @@ clearErrorMessages(){
   this.startDateRangeErr.dateErrMsg='';
   this.runInStartErr.dateErrMsg='';
   this.runInStartErr.isDateErr=false;
+  this.checkPolicyYearErr.isValid=false; // by Venkatesh Enigonda
+  this.checkPolicyYearErr.errMsg='';     // by Venkatesh Enigonda
   this.runInEndErr.dateErrMsg='';
   this.runInEndErr.isDateErr=false;
   this.runOutStartErr.isDateErr=false;
@@ -348,6 +357,10 @@ clearErrorMessages(){
       return;
      }
       //call service
+      let checkAlphaNum =/^([a-zA-Z0-9]+)$/;  // Start by Venkatesh Enigonda
+      console.log(checkAlphaNum.test(this.f.policyYear.value));
+      let PolicyYearTest=checkAlphaNum.test(this.f.policyYear.value);  // End by Venkatesh Enigonda
+
       let clientId:string = this.f.clientId.value;
       let ContractStartDate = this.datePipe.transform(startDateValue, 'MM-dd-yyyy');  
       this.contractService.validateContractStartDate(clientId, ContractStartDate).pipe(first())    
@@ -370,6 +383,12 @@ clearErrorMessages(){
                 this.contractForm.patchValue(this.contractForm.value);
                 console.log(this.contractForm.value);
                 
+                if(!PolicyYearTest && this.f.policyYear.value!=''){ // Start by Venkatesh Enigonda
+                  this.checkPolicyYearErr.isValid=true;
+                  this.checkPolicyYearErr.errMsg='Special Characters Not Allowed';
+                  return;
+                }// End by Venkatesh Enigonda
+  
                 if(this.contractForm.valid){
                   if(startDateValue!=null && endDateValue!=null && startDateValue!='' && endDateValue!=''){
                     if(startDateValue > endDateValue){

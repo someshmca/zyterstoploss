@@ -60,9 +60,13 @@ export class MemberComponent implements OnInit {
   show: boolean = true;
   memberSearchErr: any;
   memIdErr = {isValid: false, errMsg: ''};
+  memSubIdErr={isValid: false, errMsg: ''}; // Start by Venkatesh Enigonda
+  memFnameErr = {isValid: false, errMsg: ''};
+  memMnameErr= {isValid: false, errMsg: ''};
+  memLnameErr= {isValid: false, errMsg: ''}; // End by Venkatesh Enigonda 
   memStartDateErr = {isValid: false, errMsg: ''};
   memEndDateErr = {isValid: false, errMsg: ''};
-
+  
   isSearchDataThere: boolean = false;
   noSearchResultsFound: boolean = false;
   uMemberId: any;
@@ -109,10 +113,19 @@ export class MemberComponent implements OnInit {
   clearErrorMessages(){  
     this.memIdErr.isValid=false;
     this.memIdErr.errMsg='';
+    this.memSubIdErr.isValid=false; // From Line 116 to 123 Modified by Venkatesh Enigonda
+    this.memSubIdErr.errMsg='';
+    this.memFnameErr.isValid=false;
+    this.memFnameErr.errMsg='';
+    this.memMnameErr.isValid=false;
+    this.memMnameErr.errMsg='';
+    this.memLnameErr.isValid=false;
+    this.memLnameErr.errMsg='';
     this.memStartDateErr.isValid=false;
     this.memStartDateErr.errMsg='';
     this.memEndDateErr.isValid=false;
     this.memEndDateErr.errMsg='';
+    this.noSearchFieldEntered=false; //Modified by Venkatesh Enigonda
   }
   initMemberSearchForm(){    
     this.memberSearchForm = this.mb.group({
@@ -182,9 +195,19 @@ export class MemberComponent implements OnInit {
    let memberEndDate=this.memberSearchForm.get("MemberEndDate").value;
     console.log(this.memberSearchForm.value);
     //let alphaNum = /^([a-zA-Z0-9 ]+)$/; 
+    let alphaNum = /^([a-zA-Z0-9]+)$/; //Modified by venkatesh Enigonda
     let num1 = /^([0-9]+)$/; 
+    let nam1 = /^([a-zA-Z]+)$/; //Modified by Venkatesh Enigonda
     console.log(num1.test(memberId));
-    let a1=num1.test(memberId);           
+    let a1=num1.test(memberId);
+    console.log(nam1.test(fname)); // From line 202 to 209 Modified by Venkatesh Enigonda
+    let a2=nam1.test(fname);
+    console.log(nam1.test(mname));
+    let a3=nam1.test(mname);
+    console.log(nam1.test(lname));
+    let a4=nam1.test(lname);
+    console.log(alphaNum.test(subscriberId));
+    let a5=alphaNum.test(subscriberId);      
     
     if(memberStartDate!=null && memberStartDate!='' && memberEndDate!=null && memberEndDate!=''){
       if(memberStartDate>memberEndDate){
@@ -222,6 +245,29 @@ export class MemberComponent implements OnInit {
       return;
 
     }
+
+
+    if(!a2 && fname!=''){    // Start by Venkatesh Enigonda
+      this.memFnameErr.isValid=true;
+      this.memFnameErr.errMsg='First Name is not valid. It should be a Alphabet';
+      return;
+    }
+    if(!a3 && mname!=''){
+      this.memMnameErr.isValid=true;
+      this.memMnameErr.errMsg='Middle Name is not valid. It should be a Alphabet';
+      return;
+    }
+    if(!a4 && lname!=''){
+      this.memLnameErr.isValid=true;
+      this.memLnameErr.errMsg='Last Name is not valid. It should be a Alphabet';
+      return;
+    }
+    if(!a5 && subscriberId!=''){
+      this.memSubIdErr.isValid=true;
+      this.memSubIdErr.errMsg='Invalid Subscriber Id. Special Chracters not allowed';
+      return;
+    }   // End by Venkatesh Enigonda
+
    // stop here if form is invalid
    if (this.memberSearchForm.invalid || this.memberSearchForm.value=='') {
      this.memSearchError=true;
