@@ -18,6 +18,7 @@ import { ClientsService } from '../services/clients.service';
 import { ContractService } from '../services/contract.service';
 import { HealthPlanService } from '../services/health-plan.service';
 import {NavPopupService} from '../services/nav-popup.service';
+import { LoaderService } from '../services/loader.service';//added by Venkatesh Enigonda
 
 @Component({
   selector: 'app-member',
@@ -71,7 +72,7 @@ export class MemberComponent implements OnInit {
   noSearchResultsFound: boolean = false;
   uMemberId: any;
   isDisabled: boolean=false;
-  constructor(private mb: FormBuilder, private fb: FormBuilder, private memberService:MemberService, private alertService: AlertService, private datePipe: DatePipe, private loginService: LoginService, private clientService: ClientsService, private contractService: ContractService, private planService: HealthPlanService, private navService: NavPopupService) { }
+  constructor(public loaderService: LoaderService, private mb: FormBuilder, private fb: FormBuilder, private memberService:MemberService, private alertService: AlertService, private datePipe: DatePipe, private loginService: LoginService, private clientService: ClientsService, private contractService: ContractService, private planService: HealthPlanService, private navService: NavPopupService) { }
 
   ngOnInit() {
     this.show=true;

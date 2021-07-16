@@ -6,6 +6,9 @@
             <div class="card-header">
                 Member Search
             </div>
+            <div *ngIf="loaderService.isLoading | async"><!--added by venkatesh Enigonda-->
+              <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+             </div><!--Ends Here-->
             <div class="card-body">
               <div class="mandate-fields">
                 <div *ngIf="memSearchSubmitted && !memberSearchForm.valid">Please enter atleast one field</div>

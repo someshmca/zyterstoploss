@@ -10,6 +10,7 @@ import { FormGroup, FormArray, FormBuilder,
   import { formatDate, DatePipe } from '@angular/common';
   import { AlertService } from '../services/alert.service';
 import { LoginService } from 'src/app/shared/services/login.service';
+import { LoaderService } from '../services/loader.service';//added by Venkatesh Enigonda
 @Component({
   selector: 'app-batch-settings',
   templateUrl: './batch-settings.component.html',
@@ -74,7 +75,7 @@ export class BatchSettingsComponent implements OnInit {
 
   selectedRow : Number;
   //setClickedRow : Function;
-  constructor(private batchSettingService: BatchSettingService,private fb: FormBuilder, private alertService: AlertService, private datePipe: DatePipe, private loginService: LoginService) { 
+  constructor(private batchSettingService: BatchSettingService,public loaderService: LoaderService, private fb: FormBuilder, private alertService: AlertService, private datePipe: DatePipe, private loginService: LoginService) { 
     
     
   }

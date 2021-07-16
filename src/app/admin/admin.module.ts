@@ -41,6 +41,10 @@ import { MatSelectModule } from '@angular/material/select';
 import { ExcelUploadComponent } from '../admin/excel-upload/excel-uplaod.component';
 import { Nl2brPipe } from '../nl2br.pipe';
 import { LaseringComponent } from './lasering/lasering.component';
+import { MatProgressBarModule } from '@angular/material/progress-bar';//added by Venkatesh Enigonda
+import{InterceptorService} from'./services/interceptor.service';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+
 
 @NgModule({
   declarations: [BatchSettingsComponent, ClaimSearchComponent, ClaimResultComponent, ClaimComponent, BenefitsComponent, ProgramsComponent, ContractsComponent, RoleComponent, RulesComponent, ClientComponent, AttributesComponent, UsersSecurityComponent, MemberComponent, AlertComponent, HealthPlanComponent, ProductComponent, ExcelUploadComponent, Nl2brPipe, LaseringComponent],
@@ -61,12 +65,14 @@ import { LaseringComponent } from './lasering/lasering.component';
     MatTooltipModule,
     MatStepperModule,
     MatIconModule,
-    AdminRoutingModule
+    AdminRoutingModule,
+    MatProgressBarModule
   ],
   providers: [
     ClaimReportService,
     BenefitService,
-    DecimalPipe
+    DecimalPipe,
+    {provide:HTTP_INTERCEPTORS,useClass:InterceptorService,multi:true}
   ]
 })
 export class AdminModule { }

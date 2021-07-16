@@ -1,4 +1,7 @@
-
+<div *ngIf="loaderService.isLoading | async"> <!--starts here added by venkatesh Enigonda-->
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    </div><!--ends here-->
+      
   <div class="container-fluid p-0">
 	<div class="login-container">
 	<div class="login-form-area" [hidden]="submitted">

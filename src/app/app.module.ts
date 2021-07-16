@@ -23,6 +23,8 @@ import { JwtInterceptor } from './shared/helpers/jwt.interceptor';
 import { SSLReportComponent } from './reports/ssl-report/ssl-report.component';
 import { ASLReportComponent } from './reports/asl-report/asl-report.component';
 import { MAXLiabilityReportComponent } from './reports/max-liability-report/max-liability-report.component';
+import { MatProgressBarModule } from '@angular/material/progress-bar'; //added by Venkatesh Enigonda
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -46,7 +48,8 @@ import { MAXLiabilityReportComponent } from './reports/max-liability-report/max-
     SharedModule,
     AdminModule,
     AppRoutingModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    MatProgressBarModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

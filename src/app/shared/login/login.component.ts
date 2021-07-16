@@ -10,7 +10,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
 
 import { AuthService } from '../services/auth.service';
-
+import {LoaderService} from '../../admin/services/loader.service';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -18,7 +18,7 @@ import { AuthService } from '../services/auth.service';
 })
 export class LoginComponent implements OnInit {
 
-  constructor(private loginService: LoginService, private router: Router) { }
+  constructor(private loginService: LoginService, public loaderService: LoaderService, private router: Router) { }
 
   @ViewChild('loginForm') loginForm: NgForm;
   loginData: any;
