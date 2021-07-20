@@ -51,8 +51,10 @@
                  <ng-container matColumnDef="planID">
                    <th mat-header-cell *matHeaderCellDef> Action </th>
                    <td mat-cell *matCellDef="let element" class="action-link"> 
+                    <span class="view-icon" 
+                          (click)="openViewModal(true, element)" title="View"></span>
                      <span class="fa fa-edit" 
-                           (click)="openCustomModal(true, element)"></span>
+                           (click)="openCustomModal(true, element)" title="Update"></span>
                    </td>
                  </ng-container>
                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -76,7 +78,7 @@
    
    
    <!-- Add/Update Plans Modal -->
-   <div class="modal fade" role="dialog" [ngStyle]="{'display': isCustomModalOpen ? 'block' : 'none', 'opacity': 1}">
+   <div class="modal fade" role="dialog" [ngClass]="{'view-modal':isViewModal}" [ngStyle]="{'display': isCustomModalOpen ? 'block' : 'none', 'opacity': 1}">
     <div class="modal-dialog modal-dialog-centered" style="max-width: 850px;">
       <div class="modal-content">        
         <!-- Modal Header -->
@@ -235,7 +237,7 @@
                </div>
             <div class="col_2">
               <button type="button" class="btn btn-outline-primary" (click)="openCustomModal(false, null)">Cancel</button>
-              <button type="submit" class="btn btn-primary" *ngIf="!isAddMode" [disabled]="isDisabled">Update</button>
+              <button type="submit" class="btn btn-primary" *ngIf="!isAddMode && !isViewModal" [disabled]="isDisabled">Update</button>
               <button type="submit" class="btn btn-primary" [disabled]="isDisabled" *ngIf="isAddMode">Add</button>
             </div>
           </div>

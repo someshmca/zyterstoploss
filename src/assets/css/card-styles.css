@@ -180,4 +180,54 @@ input[type='date'].form-control{
     padding-top: 4px;
     padding-bottom: 4px;
 }
+.view-form .row{
+    margin-left: -13px;
+    margin-right: -13px;
+}
+.view-form .row:nth-child(odd){
+    background: #f0f0f0;
+}
+.view-form .form-group label{
+    font-weight: 700;
+}
+.view-form .form-group .form-control{
+    background: none !important;
+    border: 0;
+    padding: 0;
+}
 
+
+.view-modal .row{
+    margin-left: -13px;
+    margin-right: -13px;
+}
+.view-modal .mandate-fields{
+    display: none;
+}
+.view-modal .row:nth-child(odd){
+    background: #f0f0f0;
+}
+.view-modal .form-group label{
+    font-weight: 700;
+    padding-top: 6px;
+}
+.view-modal .form-group label .starmark, 
+.view-modal .form-group .starmark {
+    display: none;
+}
+.view-modal .form-group .form-control{
+    background: none !important;
+    border: 0;
+    padding: 0 !important;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+}
+.view-modal input[type=date]::-webkit-calendar-picker-indicator {
+    -webkit-appearance: none;
+    display: none;
+  }
+  .view-modal input[type=date]::-moz-calendar-picker-indicator {
+      -webkit-appearance: none;
+      display: none;
+    }

@@ -75,6 +75,7 @@ export class ContractsComponent implements OnInit {
   displayedColumns: string[] = ['clientName','contractId', 'startDate', 'endDate', 'clientId'];
   dataSource: any;
   isAdded: boolean;
+  isViewModal: boolean;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   constructor(
@@ -290,6 +291,10 @@ clearErrorMessages(){
   this.contractStartDateErrMsg = '';
   this.isContractStartDateInvalid=false;
 }
+openViewModal(bool, id:any){
+  this.isViewModal = true;
+  this.openCustomModal(bool, id);
+}
   openCustomModal(open: boolean, id:any) {
     setTimeout(()=>{
       this.focusTag.nativeElement.focus();
@@ -307,6 +312,7 @@ clearErrorMessages(){
       this.getAllContracts();
       this.contractForm.reset();
       this.isAddMode = false;
+      this.isViewModal=false;
       this.isAdded=false;
       if(!this.isFilterOn){
         this.navService.resetContractObj();
@@ -323,7 +329,13 @@ clearErrorMessages(){
       
       //   this.clientService.passClientId(id.clientName);
       // 
-      console.log(this.updateObj);          
+      console.log(this.updateObj);        
+      if(this.isViewModal==true){
+        this.contractForm.disable();
+      }  
+      else{
+        this.contractForm.enable();
+      }
     }
   }
   public doFilter = (value: string) => {
@@ -556,7 +568,7 @@ clearErrorMessages(){
         .subscribe({
             next: (data) => {
                 console.log(data);
-              debugger;
+              
               this.navService.setContractID(data.id);
               //this.openCustomModal(false, null);
               this.getAllContracts();

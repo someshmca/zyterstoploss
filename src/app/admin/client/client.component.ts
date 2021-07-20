@@ -43,7 +43,6 @@ export class ClientComponent implements OnInit {
 
   contractIDs: IContract[];
   clientForm: FormGroup;
-  clientViewForm: FormGroup;
   id: string;
   isAddMode: boolean;
   isViewMode: boolean;
@@ -61,7 +60,6 @@ export class ClientComponent implements OnInit {
   isDateValid:boolean;
   isDisabled:boolean;
   isCustomModalOpen: boolean = false;
-  isViewModalOpen: boolean=false;
   accIdStatus: number;
   accNameStatus: number;
   
@@ -82,12 +80,12 @@ export class ClientComponent implements OnInit {
   @ViewChild("focusElem") focusTag: ElementRef;
   @ViewChild("filterSearchInput") filterSearchInput: ElementRef;
   isYearValid: boolean=true;
+  isViewModal: boolean;
   ngOnInit() {
     this.getAllClients();
     this.getAllContracts();
     this.getParentClient();
     this.clientFormInit();
-    this.clientViewFormInit();
     this.clientService.getActiveClients().subscribe(
       (data) => {
         data.filter((value,index)=>data.indexOf(value)===index);
@@ -164,22 +162,6 @@ export class ClientComponent implements OnInit {
       userId: ''//this.loginService.currentUserValue.name
     })//,{validator: this.dateLessThan('startDate', 'endDate')});
   }
-  clientViewFormInit(){
-    this.clientViewForm = this.fb.group({
-      clientId: [''],
-      clientName:  [''],
-      startDate: null,
-      endDate:null,
-      claimsAdministrator: '',
-      pharmacyClaimsAdministrator: '',
-      subAccountid: '',
-      subSubAccountid: '',
-      ftn: '',
-      ftnname: '',
-      status:false,
-      userId: ''
-    })
-  }
   getAllClients(){
     this.clientService.getAllClients().subscribe(
       (data: IClient[]) => {
@@ -238,7 +220,6 @@ export class ClientComponent implements OnInit {
   }
 
   get f() { return this.clientForm.controls; }
-  get v() { return this.clientViewForm.controls; }
 
 clearErrorMessages(){
   this.startDateErr.isDateErr=false;
@@ -350,11 +331,16 @@ checkYear(event:any, fieldName:string){
   //this.maxDate = new Date(2999, 0, 1);
   // this.maxDate=this.f.startDate.value;
   // let maxYear=this.maxDate.getFullYear();
-  // debugger; 
+  //  
   // console.log(this.maxDate.getUTCFullYear());
   // console.log(this.maxDate);
-  // debugger;
+  // 
 
+}
+openViewModal(bool, id:any){
+  this.isViewModal = true;
+  
+  this.openCustomModal(bool, id);
 }
   openCustomModal(open: boolean, id:any) {
     setTimeout(()=>{
@@ -372,6 +358,7 @@ checkYear(event:any, fieldName:string){
     if (!open && id==null) {
       this.clientForm.reset();
       this.isAddMode = false;
+      this.isViewModal=false;
       this.isAdded=false;
       this.navService.resetClientObj();
       this.clearSearchInput();
@@ -380,7 +367,7 @@ checkYear(event:any, fieldName:string){
     console.log("id inside modal: "+id);
     this.clientForm.patchValue(this.clientForm.value);
     if(id!=null && open){
-      this.isAddMode = false;
+      this.isAddMode = false;  
       if(id!=null){
         this.isAddMode = false;
 
@@ -411,8 +398,17 @@ checkYear(event:any, fieldName:string){
             createdon: x[0].createdon
           });
           this.uAccountName = x[0].clientName;
-          this.navService.setClientObj(x[0].clientId, x[0].clientName, false, true);
+          this.navService.setClientObj(x[0].clientId, x[0].clientName, false, true);          
+         
         });
+        if(this.isViewModal==true){
+          
+          this.clientForm.disable();
+          return;
+        }  
+        else{
+          this.clientForm.enable();
+        }
         //this.uAccountId = this.f.clientId.value;
        }
 
@@ -465,13 +461,13 @@ checkYear(event:any, fieldName:string){
           this.route.navigate(['/contracts']);   
         });   
     }
-    gotoViewContract(){
-      this.clientService.getClient(this.v.clientId.value).subscribe(
-        (data: IClient[]) => {                  
-          this.navService.setContractObj(data[0].clientId, data[0].clientName, false, true);
-          this.route.navigate(['/contracts']);   
-        });   
-    }
+    // gotoViewContract(){
+    //   this.clientService.getClient(this.v.clientId.value).subscribe(
+    //     (data: IClient[]) => {                  
+    //       this.navService.setContractObj(data[0].clientId, data[0].clientName, false, true);
+    //       this.route.navigate(['/contracts']);   
+    //     });   
+    // }
     onSubmit() {
       this.submitted = true;
 
@@ -686,50 +682,6 @@ checkYear(event:any, fieldName:string){
     }
 
     
-  openViewModal(open: boolean, id:any) {
-    this.isViewMode=true;
-    setTimeout(()=>{
-      this.focusTag.nativeElement.focus()
-    }, 100);
-	
-    this.isViewModalOpen = open;
-    if (!open && id==null) {
-      this.isViewMode=false;
-      this.clearSearchInput();
-    }
-    if(id!=null && open){
-      this.isViewMode=true;
-        console.log(this.activeClients.length);
-
-        let index = this.activeClients.findIndex(x => x.clientName == id.clientName);
-        console. log(index);
-
-        this.activeClients.splice(index, 1);
-        this.ustartDate = this.datePipe.transform(id.startDate, 'yyyy-MM-dd');
-        this.uendDate = this.datePipe.transform(id.endDate, 'yyyy-MM-dd');
-
-        this.clientService.getClient(id.clientId).subscribe(x => {
-
-        console.log(x[0].clientId);
-         this.clientViewForm.patchValue({
-            clientId:x[0].clientId,
-            clientName:x[0].clientName,
-            startDate:  this.datePipe.transform(x[0].startDate, 'yyyy-MM-dd'),
-            endDate:  this.datePipe.transform(x[0].endDate, 'yyyy-MM-dd'),
-            claimsAdministrator: x[0].claimsAdministrator,
-            pharmacyClaimsAdministrator: x[0].pharmacyClaimsAdministrator,
-            subAccountid: x[0].subAccountid,
-            subSubAccountid: x[0].subSubAccountid,
-            ftn: x[0].ftn,
-            ftnname: x[0].ftnname,
-            status:x[0].status,
-            createdon: x[0].createdon
-          });
-          this.uAccountName = x[0].clientName;
-          this.navService.setClientObj(x[0].clientId, x[0].clientName, false, true);
-        });
-  }
-}
 
 
 

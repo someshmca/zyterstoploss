@@ -54,7 +54,7 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
   @ViewChild("focusElem") focusTag: ElementRef;
   @ViewChild("filterSearchInput") filterSearchInput: ElementRef;
   tempPlanObj:IClientObj;
-
+  isViewModal: boolean;
   displayedColumns: string[] = ['clientName', 'planCode', 'planName','planID'];
   dataSource: any;
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -242,6 +242,10 @@ initTierObj(){
     this.dataSource.filter = value.trim().toLocaleLowerCase();
   }
 
+  openViewModal(bool, id:any){
+    this.isViewModal = true;
+    this.openCustomModal(bool, id);
+  }
   openCustomModal(open: boolean, elem:any) {
     this.alertService.clear();
     setTimeout(()=>{
@@ -261,6 +265,7 @@ initTierObj(){
       this.getAllPlans();
       this.isAddMode = false;
       this.isAdded=false;
+      this.isViewModal=false;
       if(!this.isFilterOn){
         this.navService.resetPlanObj();
         this.clearSearchInput();
@@ -320,6 +325,12 @@ initTierObj(){
         expectedClaims3: this.tierObj.expectedClaims3,
         expectedClaims4: this.tierObj.expectedClaims4,          
       });
+      if(this.isViewModal==true){
+        this.planForm.disable();
+      }
+      else{
+        this.planForm.enable();
+      }
       console.log(this.tierObj);
       console.log(this.planForm.value);
       

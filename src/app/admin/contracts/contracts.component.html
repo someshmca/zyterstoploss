@@ -55,8 +55,10 @@
                       <ng-container matColumnDef="clientId">
                         <th mat-header-cell *matHeaderCellDef> Action </th>
                         <td mat-cell *matCellDef="let element" class="action-link"> 
+                          <span class="view-icon" 
+                                (click)="openViewModal(true, element.contractId)" title="View"></span>
                           <span class="fa fa-edit" 
-                                (click)="openCustomModal(true, element.contractId)"></span>
+                                (click)="openCustomModal(true, element.contractId)" title="Update"></span>
                         </td>
                       </ng-container>
                       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -78,15 +80,16 @@
   </div>
 </div>
 <!-- Add/Update Plans Modal -->
-<div class="modal fade contract-modal" role="dialog" [ngStyle]="{'display': isCustomModalOpen ? 'block' : 'none', 'opacity': 1}">
+<div class="modal fade contract-modal" [ngClass]="{'view-modal':isViewModal}" role="dialog" [ngStyle]="{'display': isCustomModalOpen ? 'block' : 'none', 'opacity': 1}">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">        
       <!-- Modal Header -->
       <div class="modal-header">
-          <h4 class="modal-title">
+          <h4 class="modal-title" *ngIf="!isViewModal">
               <span *ngIf="isAddMode">Add Contract</span>
               <span *ngIf="!isAddMode">Update Contract</span>
           </h4>
+          <h4 class="modal-title" *ngIf="isViewModal">Contract</h4>
           <div>
             <alert></alert>
             <a class="fa fa-2x fa-times-circle" (click)="openCustomModal(false, null)">
@@ -223,7 +226,7 @@
             </div>
             <div class="col_2">
               <button type="button"  class="btn btn-outline-primary" (click)="openCustomModal(false, null)">Cancel</button>
-              <button type="submit" class="btn btn-primary" *ngIf="!isAddMode" [disabled]="isDisabled">Update</button>
+              <button type="submit" class="btn btn-primary" *ngIf="!isAddMode && !isViewModal" [disabled]="isDisabled">Update</button>
               <button type="submit" id="btnSave" class="btn btn-primary" [disabled]="isDisabled" *ngIf="isAddMode">Add</button>
             </div>
           </div>

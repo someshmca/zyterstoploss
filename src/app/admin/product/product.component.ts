@@ -54,6 +54,7 @@ export class ProductComponent implements OnInit {
   claimBasis : string[];
   toSwitchOtherScreen: boolean=false;
   format = '2.2-2';
+  isViewModal: boolean;
   sslIncurredEndErr = {
     isDateErr: false,
     dateErrMsg: ''
@@ -186,7 +187,7 @@ export class ProductComponent implements OnInit {
     //this.isClientSelected = false;
     this.checkMaxLiability(); 
     this.navService.planObj.subscribe((data)=>{this.planObj=data;})
-    this.navService.contractID.subscribe((data)=>{this.sharedContractID=Number(data.id); debugger; })
+    this.navService.contractID.subscribe((data)=>{this.sharedContractID=Number(data.id);  })
     this.getProductStatus();
     // this.getContractAddStatus();
     // this.getContractUpdateStatus();
@@ -383,6 +384,10 @@ if(aslTermVal!='' && this.productForm.valid){
     
 }
 
+openViewModal(bool, id:any){
+  this.isViewModal = true;
+  this.openCustomModal(bool, id);
+}
   openCustomModal(open: boolean, id:any) {    
     
     setTimeout(()=>{
@@ -409,6 +414,7 @@ if(aslTermVal!='' && this.productForm.valid){
       this.isEditSelected = false;
       this.searchInputValue='';
       this.isAdded=false;
+      this.isViewModal=false;
       if(!this.isFilterOn){
         this.navService.resetProductObj();
         this.navService.resetContractID();
@@ -501,7 +507,12 @@ if(aslTermVal!='' && this.productForm.valid){
             console.log(this.productForm.value);
             
           });
-          
+          if(this.isViewModal){
+            this.productForm.disable();
+          }
+          else{
+            this.productForm.enable();
+          }
          }
       }
       clearSearchInput(){
@@ -686,7 +697,7 @@ private addProduct() {
   contractId: this.sharedContractID>0?this.sharedContractID:this.f.contractId.value,  
   lstContractClaims: this.listContractClaims
  })
- debugger;
+ 
  
   this.productService.addProduct(this.productForm.value)
       .pipe(first())
