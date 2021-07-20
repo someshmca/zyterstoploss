@@ -191,6 +191,12 @@ export class BatchSettingsComponent implements OnInit {
               this.noRecsFoundBatchDetails=true;
               this.selectedStatus = status;
             }
+            if(status=='All'||'Completed'||'Running'||'InActive'||'ACtive') // Starts here Modified by Venkatesh Enigonda    
+            {
+              this.isHistoryPresent = false;
+              this.isHistoryNotPresent=false;
+
+            } // Ends Here  
             
          this.allBatchIDDetails = data;    
          this.batchProcessGridSource = new MatTableDataSource(this.allBatchIDDetails);
@@ -280,6 +286,8 @@ export class BatchSettingsComponent implements OnInit {
 
 private addBatchProcess() {
   this.isDisabled=true;
+  this.isHistoryPresent = false; // Modified by Venkatesh Enigonda
+  this.isHistoryNotPresent=false; // Modified by Venkatesh Enigonda
   
   console.log(this.batchStatusList.length);
   console.log(this.batchStatusList[2].batchStatus);
@@ -324,6 +332,8 @@ private addBatchProcess() {
 
   private updateBatchProcess() {
     this.isDisabled=true;
+    this.isHistoryPresent = false; // Modified by Venkatesh Enigonda
+    this.isHistoryNotPresent=false; // Modified by Venkatesh Enigonda
     
   let nextScheduleRunValue = this.f.nextScheduleRun.value == ""? this.datePipe.transform(new Date('04/04/2021'), 'yyyy-MM-dd'):this.datePipe.transform(this.f.nextScheduleRun.value, 'yyyy-MM-dd');
   

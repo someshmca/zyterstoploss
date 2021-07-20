@@ -131,6 +131,7 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
   getPlanStatus(){
     this.navService.planObj.subscribe((data)=>{
       this.tempPlanObj = data;
+      ;
       if(data.isAdd){
         this.planForm.patchValue({
           clientId: data.clientId
@@ -341,9 +342,12 @@ initTierObj(){
   }
   goBackPreviousScreen(){     
     if(this.isAdded){
+      this.isFilterOn=true;
       this.openCustomModal(false,null);
       this.searchInputValue = this.tempPlanObj.clientName;
-      this.filterSearchInput.nativeElement.focus();
+      ;
+      setTimeout(()=>this.filterSearchInput.nativeElement.blur(),500);
+      setTimeout(()=>this.filterSearchInput.nativeElement.focus(),1000);
     }
     else{
       this.router.navigate(['/product']);
@@ -359,6 +363,8 @@ initTierObj(){
     }
     else{
       this.openCustomModal(false,null);
+      this.searchInputValue=this.tempPlanObj.clientName;
+      setTimeout(()=>this.filterSearchInput.nativeElement.focus(),500);
     }
   }
   

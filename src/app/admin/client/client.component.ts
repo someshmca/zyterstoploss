@@ -43,8 +43,10 @@ export class ClientComponent implements OnInit {
 
   contractIDs: IContract[];
   clientForm: FormGroup;
+  clientViewForm: FormGroup;
   id: string;
   isAddMode: boolean;
+  isViewMode: boolean;
   isAdded: boolean;
   loading = false;
   submitted = false;
@@ -59,6 +61,7 @@ export class ClientComponent implements OnInit {
   isDateValid:boolean;
   isDisabled:boolean;
   isCustomModalOpen: boolean = false;
+  isViewModalOpen: boolean=false;
   accIdStatus: number;
   accNameStatus: number;
   
@@ -78,12 +81,13 @@ export class ClientComponent implements OnInit {
   tempClientObj:IClientObj;
   @ViewChild("focusElem") focusTag: ElementRef;
   @ViewChild("filterSearchInput") filterSearchInput: ElementRef;
-
+  isYearValid: boolean=true;
   ngOnInit() {
     this.getAllClients();
     this.getAllContracts();
     this.getParentClient();
     this.clientFormInit();
+    this.clientViewFormInit();
     this.clientService.getActiveClients().subscribe(
       (data) => {
         data.filter((value,index)=>data.indexOf(value)===index);
@@ -93,6 +97,7 @@ export class ClientComponent implements OnInit {
     // this.getContractAddStatus();
     // this.getContractUpdateStatus();
     //this.getClientUpdateStatus();
+
     this.getClientStatus();
   }
   
@@ -101,7 +106,8 @@ export class ClientComponent implements OnInit {
       this.tempClientObj = data;
       if(data.isAdd){
         this.searchInputValue = data.clientName;
-        setTimeout(()=>{this.filterSearchInput.nativeElement.focus();}, 1000);        
+          setTimeout(()=>{this.filterSearchInput.nativeElement.blur()},500);
+          setTimeout(()=>{this.filterSearchInput.nativeElement.focus()},1000);  
       }
       else if(data.isUpdate){          
           this.searchInputValue = data.clientName;
@@ -156,7 +162,23 @@ export class ClientComponent implements OnInit {
       ftnname: '',
       status:false,
       userId: ''//this.loginService.currentUserValue.name
-  })//,{validator: this.dateLessThan('startDate', 'endDate')});
+    })//,{validator: this.dateLessThan('startDate', 'endDate')});
+  }
+  clientViewFormInit(){
+    this.clientViewForm = this.fb.group({
+      clientId: [''],
+      clientName:  [''],
+      startDate: null,
+      endDate:null,
+      claimsAdministrator: '',
+      pharmacyClaimsAdministrator: '',
+      subAccountid: '',
+      subSubAccountid: '',
+      ftn: '',
+      ftnname: '',
+      status:false,
+      userId: ''
+    })
   }
   getAllClients(){
     this.clientService.getAllClients().subscribe(
@@ -216,6 +238,7 @@ export class ClientComponent implements OnInit {
   }
 
   get f() { return this.clientForm.controls; }
+  get v() { return this.clientViewForm.controls; }
 
 clearErrorMessages(){
   this.startDateErr.isDateErr=false;
@@ -284,6 +307,54 @@ async checkDuplicateAccountId(aid){
   //     }
   //   }
   // );
+}
+checkYear(event:any, fieldName:string){
+  if(fieldName=='startDate'){
+    let dateVal:Date=new Date(event.target.value);
+    console.log("Full Year value : "+dateVal.getFullYear());
+    if(dateVal!=null){
+      if(dateVal.getFullYear() > 9999 || isNaN(dateVal.getFullYear())){
+        this.startDateErr.isDateErr=true;
+        this.startDateErr.dateErrMsg="Invalid Year in Start Date. Please enter valid year";
+        // this.isYearValid = false;
+        // this.startDateErr.dateErrMsg=''
+      }
+      else{
+        //this.isYearValid=true;
+        this.startDateErr.isDateErr=false;
+        this.startDateErr.dateErrMsg="";
+      }
+    }
+  }
+  if(fieldName=='endDate'){
+    let dateVal:Date=new Date(event.target.value);
+    console.log("Full Year value : "+dateVal.getFullYear());
+    if(dateVal!=null){
+      if(dateVal.getFullYear() > 9999 || isNaN(dateVal.getFullYear())){
+        this.endDateErr.isDateErr=true;
+        this.endDateErr.dateErrMsg="Invalid Year in End Date. Please enter valid year";
+        // this.isYearValid = false;
+        // this.startDateErr.dateErrMsg=''
+      }
+      else{
+        //this.isYearValid=true;
+        this.endDateErr.isDateErr=false;
+        this.endDateErr.dateErrMsg="";
+      } 
+    }   
+  }
+
+  
+  //this.maxDate="2999-12-31";
+  //this.maxDate = this.datePipe.transform(new Date(2999, 0, 1), "yyyy-MM-dd");
+  //this.maxDate = new Date(2999, 0, 1);
+  // this.maxDate=this.f.startDate.value;
+  // let maxYear=this.maxDate.getFullYear();
+  // debugger; 
+  // console.log(this.maxDate.getUTCFullYear());
+  // console.log(this.maxDate);
+  // debugger;
+
 }
   openCustomModal(open: boolean, id:any) {
     setTimeout(()=>{
@@ -394,6 +465,13 @@ async checkDuplicateAccountId(aid){
           this.route.navigate(['/contracts']);   
         });   
     }
+    gotoViewContract(){
+      this.clientService.getClient(this.v.clientId.value).subscribe(
+        (data: IClient[]) => {                  
+          this.navService.setContractObj(data[0].clientId, data[0].clientName, false, true);
+          this.route.navigate(['/contracts']);   
+        });   
+    }
     onSubmit() {
       this.submitted = true;
 
@@ -404,6 +482,7 @@ async checkDuplicateAccountId(aid){
       if (this.clientForm.invalid) {
         return;
       }
+      if(!this.isYearValid){return;}
       this.clientForm.patchValue(this.clientForm.value);
       // stop here if form is invalid
 
@@ -605,4 +684,54 @@ async checkDuplicateAccountId(aid){
                 }
             });
     }
+
+    
+  openViewModal(open: boolean, id:any) {
+    this.isViewMode=true;
+    setTimeout(()=>{
+      this.focusTag.nativeElement.focus()
+    }, 100);
+	
+    this.isViewModalOpen = open;
+    if (!open && id==null) {
+      this.isViewMode=false;
+      this.clearSearchInput();
+    }
+    if(id!=null && open){
+      this.isViewMode=true;
+        console.log(this.activeClients.length);
+
+        let index = this.activeClients.findIndex(x => x.clientName == id.clientName);
+        console. log(index);
+
+        this.activeClients.splice(index, 1);
+        this.ustartDate = this.datePipe.transform(id.startDate, 'yyyy-MM-dd');
+        this.uendDate = this.datePipe.transform(id.endDate, 'yyyy-MM-dd');
+
+        this.clientService.getClient(id.clientId).subscribe(x => {
+
+        console.log(x[0].clientId);
+         this.clientViewForm.patchValue({
+            clientId:x[0].clientId,
+            clientName:x[0].clientName,
+            startDate:  this.datePipe.transform(x[0].startDate, 'yyyy-MM-dd'),
+            endDate:  this.datePipe.transform(x[0].endDate, 'yyyy-MM-dd'),
+            claimsAdministrator: x[0].claimsAdministrator,
+            pharmacyClaimsAdministrator: x[0].pharmacyClaimsAdministrator,
+            subAccountid: x[0].subAccountid,
+            subSubAccountid: x[0].subSubAccountid,
+            ftn: x[0].ftn,
+            ftnname: x[0].ftnname,
+            status:x[0].status,
+            createdon: x[0].createdon
+          });
+          this.uAccountName = x[0].clientName;
+          this.navService.setClientObj(x[0].clientId, x[0].clientName, false, true);
+        });
+  }
+}
+
+
+
+
 }

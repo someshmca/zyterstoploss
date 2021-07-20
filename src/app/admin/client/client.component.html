@@ -24,7 +24,7 @@
                       <div class="search-field-clear-area">
                         <div fxLayout fxLayoutAlign="center center">
                           <mat-form-field fxFlex="40%">
-                            <input matInput [value]="searchInputValue" #filterSearchInput type="text" (keyup)="doFilter($event.target.value)" placeholder="Search a Account" autocomplete="off">
+                            <input matInput [value]="searchInputValue" #filterSearchInput type="text" (focus)="doFilter($event.target.value)" (keyup)="doFilter($event.target.value)" placeholder="Search a Account" autocomplete="off">
                           </mat-form-field>
                         </div>
                         <div class="clear-btn-div">
@@ -67,6 +67,7 @@
                       <ng-container matColumnDef="userId">
                         <th mat-header-cell *matHeaderCellDef class="c-action"> Action </th>
                         <td mat-cell *matCellDef="let element" class="action-link c-action">
+                          <span class="view-icon" title="View" (click)="openViewModal(true, element)"></span>
                           <span class="fa fa-edit"
                            (click)="openCustomModal(true, element)" title="Edit"></span>
                         </td>
@@ -119,6 +120,7 @@
                <div *ngIf="accIdErr.isDuplicate">{{accIdErr.errMsg}}</div>
                <div *ngIf="accNameErr.isDuplicate">{{accNameErr.errMsg}}</div>
                <div *ngIf="subSubIdAcErr.isValid">{{subSubIdAcErr.errMsg}}</div>
+               <div *ngIf="!isYearValid">Invalid Year. Please enter proper Year</div>
                <!--Modified by Venkatesh Enigonda-->
                <div *ngIf="subChkErr.isValid">{{subChkErr.errMsg}}</div>
                <!--Modified by Venkatesh Enigonda-->
@@ -143,13 +145,13 @@
                 <div class="col-md-6">
                   <div class="form-group">
                     <label>Start Date</label>
-                    <input type="date" value="MM/dd/yyyy" formControlName="startDate" class="form-control"  max="2999-12-31"/>
+                    <input type="date" value="MM/dd/yyyy" formControlName="startDate" class="form-control" (blur)="checkYear($event, 'startDate')"  [ngClass]="{ 'is-invalid': startDateErr.isDateErr}"/>
                 </div>
                 </div>
                 <div class="col-md-6">
                   <div class="form-group">
                     <label>End Date</label>
-                    <input type="date" value="MM/dd/yyyy" formControlName="endDate" class="form-control"  max="2999-12-31" />
+                    <input type="date" value="MM/dd/yyyy" (blur)="checkYear($event, 'endDate')"  formControlName="endDate" class="form-control"  max="2999-12-31" [ngClass]="{ 'is-invalid': endDateErr.isDateErr}" />
                    </div>
                 </div>
               </div>
@@ -232,3 +234,119 @@
         </div>
       </div>
     </div>
+
+
+    <!-- View Modal -->
+    
+<!-- The View Client Modal -->
+<div class="modal fade custom-modal" role="dialog" [ngStyle]="{'display': isViewModalOpen ? 'block' : 'none', 'opacity': 1}">
+
+  <!-- Add/Update Plans Modal -->
+   <div class="modal-dialog modal-dialog-centered">
+     <div class="modal-content">
+       <!-- Modal Header -->
+       <div class="modal-header">
+           <h4 class="modal-title">
+               <span>Account</span>
+           </h4>
+           <div>
+             <alert></alert>
+             <a class="fa fa-2x fa-times-circle" (click)="openViewModal(false, null)">
+             </a>
+           </div>
+       </div>
+       <!-- Modal body -->
+     <form [formGroup]="clientViewForm">
+       <div class="modal-body">
+         <div class="client-form-area view-form">
+            <div class="row">
+             <div class="col-md-6">
+                <div class="form-group">
+                  <label>Medica Account ID</label>
+            <input type="text" class="form-control" maxlength="15" formControlName="clientId" disabled/>
+      
+                </div>
+               </div>
+               <div class="col-md-6">
+                <div class="form-group">
+                  <label>Medica Account Name</label>
+            <input type="text" formControlName="clientName" class="form-control" disabled/>
+                </div>
+               </div>
+             </div>
+             <div class="row">
+               <div class="col-md-6">
+                 <div class="form-group">
+                   <label>Start Date</label>
+                   <input type="date" value="MM/dd/yyyy" formControlName="startDate" class="form-control" disabled />
+               </div>
+               </div>
+               <div class="col-md-6">
+                 <div class="form-group">
+                   <label>End Date</label>
+                   <input type="date" value="MM/dd/yyyy" formControlName="endDate" class="form-control" disabled />
+                  </div>
+               </div>
+             </div>
+             <div class="row">
+               <div class="col-md-6">
+                 <div class="form-group">
+                   <label>Medica Sub Account ID</label>
+                   <input type="text" formControlName="subAccountid" class="form-control" maxlength="25" disabled/>                    
+                 </div>
+               </div>
+               <div class="col-md-6">
+                 <div class="form-group">
+                   <label>Medica Sub Sub-Account ID</label>
+                   <input type="text" value="" formControlName="subSubAccountid" class="form-control"  maxlength="25" disabled />
+                  </div>
+               </div>
+             </div>
+             <div class="row">
+               <div class="col-md-6">
+                 <div class="form-group">
+                   <label>FTN</label>
+                   <input type="text" value="" formControlName="ftn" class="form-control"  maxlength="50" disabled/>
+                  </div>
+               </div>
+               <div class="col-md-6">
+                 <div class="form-group">
+                   <label>FTN Name</label>
+                   <input type="text" value="" formControlName="ftnname" class="form-control"  maxlength="50" disabled/>
+                  </div>
+               </div>
+             </div>
+             <div class="row">
+               <div class="col-md-6">
+                 <div class="form-group">
+                   <label>Claims Administrator</label>
+                   <input type="text" value="" formControlName="claimsAdministrator" class="form-control"  maxlength="50" disabled/>
+                  </div>
+               </div>
+               <div class="col-md-6">
+                 <div class="form-group">
+                   <label>Pharmacy Claims Administrator</label>
+                   <input type="text" value="" formControlName="pharmacyClaimsAdministrator" class="form-control"  maxlength="50" disabled/>
+                  </div>
+               </div>
+             </div>
+         </div>
+       </div>
+       <div class="modal-footer">
+         <div class="modal-footer-btns">
+           <div class="col_1">
+             <button type="button" class="btn btn-primary" (click)="gotoViewContract()">Contracts</button>
+           </div>
+           <div class="col_2">
+             <button type="button" class="btn btn-outline-primary" (click)="openViewModal(false, null)">Cancel</button>    
+           </div>
+         </div>          
+       </div>
+     </form>
+       </div>
+     </div>
+   </div>
+
+
+
+    

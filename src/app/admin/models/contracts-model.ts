@@ -66,7 +66,7 @@ export interface IContractAdd{
 }
 
 export interface IAddContractSuccess{
-    id: string;
+    id: number;
     message: string;
 }
 

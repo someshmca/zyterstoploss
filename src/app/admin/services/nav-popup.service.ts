@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {IClientObj} from '../models/nav-popups.model';
+import {IClientObj, ISharedContractID} from '../models/nav-popups.model';
 import {BehaviorSubject, Observable} from 'rxjs';
 @Injectable({
   providedIn: 'root'
@@ -13,8 +13,14 @@ export class NavPopupService  {
     isAdd: false,
     isUpdate: false
   }
-  
+  contractIDInit:ISharedContractID={
+    id:0
+  }
+
   clientObj= new BehaviorSubject<IClientObj>(this.clientObjInit);
+
+  contractID=new BehaviorSubject<ISharedContractID>(this.contractIDInit);
+
   setClientObj(clientId, clientName, isAdd, isUpdate){
     this.clientObj.next({
       clientId: clientId,
@@ -28,7 +34,14 @@ export class NavPopupService  {
     this.clientObj.next(this.clientObjInit);
     this.clientObj.asObservable();
   }
-
+  setContractID(contractID:number){
+    this.contractID.next({id:contractID});
+    this.contractID.asObservable();
+  }
+  resetContractID(){
+    this.contractID.next(this.contractIDInit);
+    this.contractID.asObservable();
+  }
   contractObj= new BehaviorSubject<IClientObj>(this.clientObjInit);
   setContractObj(clientId, clientName, isAdd, isUpdate){
     this.contractObj.next({

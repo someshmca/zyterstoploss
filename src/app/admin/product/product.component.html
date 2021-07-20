@@ -120,7 +120,7 @@
                 <div class="form-group">
                   <label>Contract<small class="starmark">*</small></label>
                   <select class="form-control" formControlName="contractId"  [ngClass]="{ 'is-invalid': submitted && f.contractId.errors }">
-                     <option value='' *ngIf="isAddMode"></option>
+                     <!-- <option value='' *ngIf="isAddMode"></option> -->
                     <option *ngFor="let obj of contractsByClientId" [value]="obj.contractId">
                       {{obj.contractId}} 
                       <!-- <span *ngIf="obj.description.length>0">({{obj.description}})</span> -->

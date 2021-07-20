@@ -87,6 +87,7 @@ export class ProductComponent implements OnInit {
   isDisabled:boolean=false;
   isEditSelected: boolean = false;
   searchInputValue: string='';
+  sharedContractID: number;
   // contractAddStatus: boolean;
   // contractUpdateStatus: boolean;
   // productAddStatus: boolean;
@@ -185,6 +186,7 @@ export class ProductComponent implements OnInit {
     //this.isClientSelected = false;
     this.checkMaxLiability(); 
     this.navService.planObj.subscribe((data)=>{this.planObj=data;})
+    this.navService.contractID.subscribe((data)=>{this.sharedContractID=Number(data.id); debugger; })
     this.getProductStatus();
     // this.getContractAddStatus();
     // this.getContractUpdateStatus();
@@ -196,22 +198,22 @@ export class ProductComponent implements OnInit {
       this.tempProductObj=data;
       
       if(data.isAdd && !this.planObj.isAdd){
+        this.getContractIDs(data.clientId);        
         this.productForm.patchValue({
-          clientId: data.clientId
+          clientId: data.clientId,
+          contractId: this.sharedContractID
         });
-        this.getContractIDs(data.clientId);
         this.openCustomModal(true,null);
       }
       else if(data.isAdd && this.planObj.isAdd){
         this.searchInputValue=data.clientName;
-        setTimeout(()=>this.filterSearchInput.nativeElement.focus(),1000);
+        setTimeout(()=>{this.filterSearchInput.nativeElement.blur()},500);
+        setTimeout(()=>{this.filterSearchInput.nativeElement.focus()},1000);
       }
       else if(data.isUpdate){          
-        this.searchInputValue = data.clientName;
-        
-        setTimeout(()=>{
-            this.filterSearchInput.nativeElement.focus();                  
-         }, 1000);
+        this.searchInputValue = data.clientName;       
+        setTimeout(()=>{this.filterSearchInput.nativeElement.blur()},500);
+        setTimeout(()=>{this.filterSearchInput.nativeElement.focus()},1000);
         //this.doFilter(this.searchInputValue);
       }
       else{     
@@ -250,11 +252,11 @@ export class ProductComponent implements OnInit {
     this.contractService.getContractsByClientID(clientId).subscribe((data)=>{
       data.sort((x,y) => x.contractId - y.contractId);
       this.contractsByClientId = data;     
-      //if(this.contractsByClientId.length>0){
+      if(this.sharedContractID>0){
         this.productForm.patchValue({
-          contractId: this.contractsByClientId[0].contractId
+          contractId: this.sharedContractID
         })
-      //}
+      }
     })
   }
   getAllContracts(){
@@ -409,6 +411,7 @@ if(aslTermVal!='' && this.productForm.valid){
       this.isAdded=false;
       if(!this.isFilterOn){
         this.navService.resetProductObj();
+        this.navService.resetContractID();
         this.clearSearchInput();        
       }
     }
@@ -514,6 +517,7 @@ if(aslTermVal!='' && this.productForm.valid){
       }
       goBackPreviousScreen(){  
         if(this.isAdded){
+          this.isFilterOn=true;
           this.openCustomModal(false,null);
           this.searchInputValue = this.tempProductObj.clientName;
           this.filterSearchInput.nativeElement.focus();
@@ -607,7 +611,7 @@ if(aslTermVal!='' && this.productForm.valid){
 patchProductForm(){
   this.productForm.patchValue({
     productId: 0,
-    contractId: Number(this.f.contractId.value),
+    contractId: this.sharedContractID>0?this.sharedContractID:Number(this.f.contractId.value),
     status:this.f.status.value==true?1:1,
     //clientId: string;
     //sslClaimBasis: string;
@@ -679,10 +683,10 @@ private addProduct() {
  console.log(this.listContractClaims);
  this.productForm.patchValue({
   clientId: this.f.clientId.value,
-  contractId: this.f.contractId.value,  
+  contractId: this.sharedContractID>0?this.sharedContractID:this.f.contractId.value,  
   lstContractClaims: this.listContractClaims
  })
- 
+ debugger;
  
   this.productService.addProduct(this.productForm.value)
       .pipe(first())
@@ -712,7 +716,7 @@ private addProduct() {
     this.f.contractId.enable();
     this.productForm.patchValue({  
     clientId: this.f.clientId.value,
-    contractId: this.f.contractId.value,  
+    contractId: this.sharedContractID>0?this.sharedContractID:this.f.contractId.value,  
     status:this.f.status.value==true?1:0,
     aslTermCoverageExtEndDate: this.productForm.get('aslTermCoverageExtEndDate').value==""?null:this.datePipe.transform(this.f.aslTermCoverageExtEndDate.value, 'yyyy-MM-dd'),
     sslTermCoverageExtEndDate: this.productForm.get('sslTermCoverageExtEndDate').value==""?null:this.datePipe.transform(this.f.sslTermCoverageExtEndDate.value, 'yyyy-MM-dd')

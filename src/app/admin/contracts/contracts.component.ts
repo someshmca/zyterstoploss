@@ -143,13 +143,13 @@ export class ContractsComponent implements OnInit {
         }
         else if(data.isAdd && this.productObj.isAdd){
           this.searchInputValue=data.clientName;
+          setTimeout(()=>{this.filterSearchInput.nativeElement.blur()},500);
           setTimeout(()=>{this.filterSearchInput.nativeElement.focus()},1000);
         }
         else if(data.isUpdate){          
           this.searchInputValue = data.clientName;
-          setTimeout(()=>{
-              this.filterSearchInput.nativeElement.focus();                  
-            }, 1000);
+          setTimeout(()=>{this.filterSearchInput.nativeElement.blur()},500);
+          setTimeout(()=>{this.filterSearchInput.nativeElement.focus()},1000);
         }
         else{          
           this.searchInputValue = '';
@@ -554,7 +554,10 @@ clearErrorMessages(){
     this.contractService.addContract(addObj)
         .pipe(first())
         .subscribe({
-            next: () => {
+            next: (data) => {
+                console.log(data);
+              debugger;
+              this.navService.setContractID(data.id);
               //this.openCustomModal(false, null);
               this.getAllContracts();
               //this.contractForm.reset();                   
@@ -661,6 +664,7 @@ clearErrorMessages(){
     goBackPreviousScreen(){
       this.isFilterOn=true;
       if(this.isAdded){
+        this.isFilterOn=true;
         this.openCustomModal(false,null);
         this.searchInputValue = this.tempContractObj.clientName;
         this.filterSearchInput.nativeElement.focus();

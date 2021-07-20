@@ -86,6 +86,23 @@
     width: 120px;
     text-align: center;
 }
+.view-icon{
+    height: 12px;
+    width: 12px;
+    background: url("../images/detail-icon-small.jpg") 0 0 no-repeat;
+    background-size: 100%;
+    cursor: pointer;
+    display: inline-block;
+    border: none;
+    margin: 0 6px;
+    position: relative;
+    top: 2px;
+}
+.card-table-area .mat-table.card-table tr .c-action .fa, 
+.card-table-area .card-table tr .c-action .fa{
+    margin: 0 5px;
+    cursor: pointer;
+}
 .card-table-area .mat-table.card-table tr th:last-child, 
 .card-table-area .card-table tr th:last-child, 
 .card-table-area .mat-table.card-table tr td:last-child, 

@@ -5,3 +5,6 @@ export interface IClientObj{
    isAdd: boolean;
    isUpdate: boolean;
 }
+export interface ISharedContractID{
+   id: number;
+}
