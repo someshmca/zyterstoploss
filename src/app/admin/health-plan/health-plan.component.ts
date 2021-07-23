@@ -238,9 +238,17 @@ initTierObj(){
   }
 }
 
-  public doFilter = (value: string) => {
-    this.dataSource.filter = value.trim().toLocaleLowerCase();
-  }
+doFilter(filterValue:string){ //added by Venkatesh Enigonda
+  this.dataSource.filter=filterValue.trim().toLowerCase();
+  this.dataSource.filterPredicate = (data:IPlanAll, filter: string) => {
+    const Id=data.planID.toString();
+    const CompareData=data.clientName.toLowerCase() ||'';
+    const CompareData1=Id||'';
+    const CompareData2=data.planName.toLowerCase() ||'';
+    return CompareData.indexOf(filter)!==-1|| CompareData1.indexOf(filter)!==-1|| CompareData2.indexOf(filter)!==-1
+  };
+
+}//Ends here
 
   openViewModal(bool, id:any){
     this.isViewModal = true;
@@ -370,12 +378,14 @@ initTierObj(){
       
       this.openCustomModal(false,null);
       this.searchInputValue=this.tempPlanObj.clientName;
-      setTimeout(()=>this.filterSearchInput.nativeElement.focus(),500);
+      setTimeout(()=>this.filterSearchInput.nativeElement.blur(),500);
+      setTimeout(()=>this.filterSearchInput.nativeElement.focus(),1000);
     }
     else{
       this.openCustomModal(false,null);
       this.searchInputValue=this.tempPlanObj.clientName;
-      setTimeout(()=>this.filterSearchInput.nativeElement.focus(),500);
+      setTimeout(()=>this.filterSearchInput.nativeElement.blur(),500);
+      setTimeout(()=>this.filterSearchInput.nativeElement.focus(),1000);
     }
   }
   

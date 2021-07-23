@@ -73,7 +73,9 @@ export class BatchSettingsComponent implements OnInit {
   @ViewChild('HistoryGridPaginator') public historyGridPaginator: MatPaginator;
   @ViewChild('HistoryGridSort') public historyGridSort: MatSort;
 
-  selectedRow : Number;
+  selectedRow : Number; 
+  isViewModal: boolean;
+  
   //setClickedRow : Function;
   constructor(private batchSettingService: BatchSettingService,public loaderService: LoaderService, private fb: FormBuilder, private alertService: AlertService, private datePipe: DatePipe, private loginService: LoginService) { 
     
@@ -208,6 +210,10 @@ export class BatchSettingsComponent implements OnInit {
   
   get f() { return this.batchProcessForm.controls; }
    
+  openViewModal(bool, id:any){
+    this.isViewModal = true;
+    this.openCustomModal(bool, id);
+  }
   openCustomModal(open: boolean, id:string) {
 
    setTimeout(()=>{
@@ -230,6 +236,7 @@ export class BatchSettingsComponent implements OnInit {
      this.listBatchProcessGrid();
       this.batchProcessForm.reset();
       this.isAddMode = false;
+      this.isViewModal=false;
     }
     console.log("id inside modal: "+id);
     
@@ -257,6 +264,12 @@ export class BatchSettingsComponent implements OnInit {
       //   frequency: this.f.frequency.value==''?'Daily':this.f.frequency.value,
       //   batchType:this.f.batchType.value==''?'ASL':this.f.batchType.value
       // });
+      if(this.isViewModal==true){
+        this.batchProcessForm.disable();
+      }
+      else{
+        this.batchProcessForm.enable();
+      }
       console.log(this.batchProcessForm.value);
       
       

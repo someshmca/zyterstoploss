@@ -231,3 +231,11 @@ input[type='date'].form-control{
       -webkit-appearance: none;
       display: none;
     }
+
+    .form-group .mat-form-field-infix{
+        border-top: 0;
+    }
+    
+    .product-form-wrap .mat-form-field-underline  {
+        background-color: transparent;
+    }

@@ -105,7 +105,8 @@
               <span *ngIf="sslTermCovrErr.isDateErr">{{sslTermCovrErr.dateErrMsg}}</span>
               <span *ngIf="aslTermCovrErr.isDateErr">{{aslTermCovrErr.dateErrMsg}}</span>
               <span *ngIf="sslDeductibleErr.isValid">{{sslDeductibleErr.errMsg}}</span>
-
+              <span *ngIf="sslClaimBasisErr.isValid">{{sslClaimBasisErr.errMsg}}</span>
+              <span *ngIf="aslClaimBasisErr.isValid">{{aslClaimBasisErr.errMsg}}</span>
              
              </div>  
             <div class="row">
@@ -147,16 +148,18 @@
               <div class="form-group">
                 <label>Claim Basis<small class="starmark">*</small></label>
                 <!-- <input type="text" formControlName="sslClaimBasis" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.sslClaimBasis.errors }"/> -->
-                <select class="form-control" formControlName="sslClaimBasis" [ngClass]="{ 'is-invalid': submitted && f.sslClaimBasis.errors }">
+                <!-- <select class="form-control" formControlName="sslClaimBasis" [ngClass]="{ 'is-invalid': submitted && f.sslClaimBasis.errors }"> -->
                   <!-- <option value="12/12">12/12</option>
                   <option value="12/15">12/15</option>
                   <option value="12/18">12/18</option>
                   <option value="15/12">15/12</option>
                   <option value="24/12">24/12</option> -->
-            <option [value]="i" *ngFor="let i of claimBasis">
+            <!-- <option [value]="i" *ngFor="let i of claimBasis">
               {{i}}
               </option>
-                </select> 
+                </select>  -->
+
+                <input type="text" formControlName="sslClaimBasis" class="form-control" placeholder="MM/MM" maxlength="5" [ngClass]="{ 'is-invalid': submitted && f.sslClaimBasis.errors || sslClaimBasisErr.isValid }"/><!--Modified by Venkatesh Enigonda-->
               </div>                
             </div>
             <div class="col-md-4">
@@ -263,12 +266,20 @@
             <div class="col-md-4">
               <div class="form-group">
                 <label>Covered Benefits<small class="starmark">*</small></label>
-                <select formControlName="sslCoveredClaims" class="form-control" multiple [ngClass]="{ 'is-invalid': submitted && f.sslCoveredClaims.errors }">
+                <!-- <select formControlName="sslCoveredClaims" class="form-control" multiple [ngClass]="{ 'is-invalid': submitted && f.sslCoveredClaims.errors }">
                   <option *ngFor="let coveredClaim of coveredClaims" [value]="coveredClaim.claimTypeCode">
                     {{coveredClaim.claimType}}
                   </option>
-               </select>                 
-              </div>
+               </select>  -->    
+              
+                <div>
+                  <mat-form-field>
+                    <mat-select class="form-control" formControlName="sslCoveredClaims"  multiple [ngClass]="{ 'is-invalid': submitted && f.sslCoveredClaims.errors }">
+                      <mat-option *ngFor="let coveredClaim of coveredClaims" [value]="coveredClaim.claimTypeCode">{{coveredClaim.claimType}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+               </div>
             </div>
             <div class="col-md-4"> </div>
             <div class="col-md-4">
@@ -284,16 +295,18 @@
         <div class="form-group">
           <label>Claim Basis<small class="starmark">*</small></label>
           <!-- <input type="text" formControlName="aslClaimBasis" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.aslClaimBasis.errors }"/> -->
-          <select class="form-control" formControlName="aslClaimBasis" [ngClass]="{ 'is-invalid': submitted && f.aslClaimBasis.errors }">
+          <!-- <select class="form-control" formControlName="aslClaimBasis" [ngClass]="{ 'is-invalid': submitted && f.aslClaimBasis.errors }"> -->
             <!-- <option value="12/12">12/12</option>
             <option value="12/15">12/15</option>
             <option value="12/18">12/18</option>
             <option value="15/12">15/12</option>
             <option value="24/12">24/12</option> -->
-            <option [value]="i" *ngFor="let i of claimBasis">
+            <!-- <option [value]="i" *ngFor="let i of claimBasis">
             {{i}}
             </option>
-          </select> 
+          </select>  -->
+
+          <input type="text" formControlName="aslClaimBasis" class="form-control" placeholder="MM/MM" maxlength="5" [ngClass]="{ 'is-invalid': submitted && f.aslClaimBasis.errors || aslClaimBasisErr.isValid  }"/><!--Modified By Venkatesh Enigonda-->
         </div>
       </div>
       <!-- <div class="col-md-4">
@@ -402,11 +415,18 @@
       <div class="col-md-4">
         <div class="form-group">
           <label>Covered Benefits<small class="starmark">*</small></label>
-          <select formControlName="aslCoveredClaims" class="form-control" multiple [ngClass]="{ 'is-invalid': submitted && f.aslCoveredClaims.errors }">
+          <!-- <select formControlName="aslCoveredClaims" class="form-control" multiple [ngClass]="{ 'is-invalid': submitted && f.aslCoveredClaims.errors }">
             <option *ngFor="let coveredClaim of coveredClaims" [value]="coveredClaim.claimTypeCode">
               {{coveredClaim.claimType}}
             </option>
-         </select>                 
+         </select>-->
+         <div>
+            <mat-form-field>
+            <mat-select class="form-control" formControlName="aslCoveredClaims"  multiple [ngClass]="{ 'is-invalid': submitted && f.aslCoveredClaims.errors }">
+              <mat-option *ngFor="let coveredClaim of coveredClaims" [value]="coveredClaim.claimTypeCode">{{coveredClaim.claimType}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>   
         </div>
       </div>
       <div class="col-md-4">

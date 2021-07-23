@@ -53,6 +53,9 @@ export class ProductComponent implements OnInit {
   uContractId: number;
   claimBasis : string[];
   toSwitchOtherScreen: boolean=false;
+  sslClaimBasisErr = {isValid: false,errMsg:''};
+  aslClaimBasisErr = {isValid: false,errMsg:''};
+
   format = '2.2-2';
   isViewModal: boolean;
   sslIncurredEndErr = {
@@ -277,9 +280,18 @@ export class ProductComponent implements OnInit {
       }
     )
   }  
-  public doFilter = (value: string) => {
-    this.dataSource.filter = value.trim().toLocaleLowerCase();
-  }
+ 
+  doFilter(filterValue:string){ //added by Venkatesh Enigonda
+    this.dataSource.filter=filterValue.trim().toLowerCase();
+    this.dataSource.filterPredicate = (data:IProductAll, filter: string) => {
+      const Id=data.contractId.toString();
+      const CompareData=data.clientName.toLowerCase() ||'';
+      const CompareData1=Id||'';
+      const CompareData2=data.aslClaimBasis.toLowerCase() ||'';
+      return CompareData.indexOf(filter)!==-1 || CompareData1.indexOf(filter)!==-1 || CompareData2.indexOf(filter)!==-1;
+    };
+
+  }//Ends here
   
   clearErrorMessages(){
     this.sslIncurredEndErr.isDateErr=false;
@@ -296,6 +308,10 @@ export class ProductComponent implements OnInit {
     this.aslTermCovrErr.dateErrMsg=''; 
     this.sslDeductibleErr.isValid=false;
     this.sslDeductibleErr.errMsg='';
+    this.sslClaimBasisErr.isValid=false;
+    this.sslClaimBasisErr.errMsg='';
+    this.aslClaimBasisErr.isValid=false;
+    this.aslClaimBasisErr.errMsg='';
   }
  
   onSubmit() {
@@ -309,7 +325,34 @@ export class ProductComponent implements OnInit {
      this.clearErrorMessages();
      return;
    }
-   
+
+   if( this.f.sslClaimBasis.value.length < 5 ) // starts here added by Venkatesh Enigonda
+   {
+    this.sslClaimBasisErr.isValid=true;
+    this.sslClaimBasisErr.errMsg='In-Valid Format in Specific ClaimBasis';
+    return;
+   }
+  
+   if(this.f.sslClaimBasis.value.charAt(2)!='/')
+   {  
+     this.sslClaimBasisErr.isValid=true;
+     this.sslClaimBasisErr.errMsg='In-Valid Format in Specific ClaimBasis';
+     return;
+   }
+   if( this.f.aslClaimBasis.value.length < 5 )
+   {
+    this.aslClaimBasisErr.isValid=true;
+    this.aslClaimBasisErr.errMsg='In-Valid Format in Aggregate ClaimBasis';
+    return;
+   }
+  
+   if(this.f.aslClaimBasis.value.charAt(2)!='/')
+   {
+     this.aslClaimBasisErr.isValid=true;
+     this.aslClaimBasisErr.errMsg='In-Valid Format in Aggregate ClaimBasis';
+     return;
+   }// Ends Here
+      
    if(this.productForm.valid && this.f.sslIncurredStartDate.value > this.f.sslIncurredEndDate.value){
     this.sslIncurredEndErr.isDateErr=true;
     this.sslIncurredEndErr.dateErrMsg = 'SSL Incurred start date should not be greater than SSL Incurred End date';
@@ -503,7 +546,8 @@ openViewModal(bool, id:any){
             this.productForm.patchValue({
               sslCoveredClaims: sslCc,
               aslCoveredClaims: aslCc
-            })
+            });
+            this.checkMaxLiability();
             console.log(this.productForm.value);
             
           });
@@ -531,7 +575,8 @@ openViewModal(bool, id:any){
           this.isFilterOn=true;
           this.openCustomModal(false,null);
           this.searchInputValue = this.tempProductObj.clientName;
-          this.filterSearchInput.nativeElement.focus();
+          setTimeout(()=>this.filterSearchInput.nativeElement.blur(),500);
+          setTimeout(()=>this.filterSearchInput.nativeElement.focus(),1000);
         }
         else{
           this.router.navigate(['/contracts']);

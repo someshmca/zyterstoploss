@@ -36,7 +36,7 @@ export class LaseringComponent implements OnInit {
   
   @ViewChild("focusElem") focusTag: ElementRef;
   @ViewChild("filterSearchInput") filterSearchInput: ElementRef;
-  laseringColumns: string[] = ['fname', 'lname', 'memberId', 'laserValue'];
+  laseringColumns: string[] = ['fname', 'lname', 'memberId', 'laserValue', 'clientId'];
   laseringDataSource: any;
   
   uClientId:any;
@@ -70,6 +70,7 @@ export class LaseringComponent implements OnInit {
   uMemberId: any;
   isDisabled: boolean=false;
   isFilterOn: boolean = false;
+  isViewModal: boolean;
 
   constructor(private mb: FormBuilder, 
     private fb: FormBuilder, 
@@ -201,6 +202,11 @@ export class LaseringComponent implements OnInit {
       }
     )
   }
+  
+  openViewModal(bool, id:any){
+    this.isViewModal = true;
+    this.openCustomModal(bool, id);
+  }
   openCustomModal(open: boolean, id:any) {
     this.isDisabled=false;
     setTimeout(()=>{
@@ -214,6 +220,7 @@ export class LaseringComponent implements OnInit {
     if (!open && id==null) {
       this.memberForm.reset();
       this.isAddMode = false;
+      this.isViewModal=false;
       this.isAdded=false;
       if(!this.isFilterOn){
         this.navService.resetLaseringObj();
@@ -271,6 +278,14 @@ export class LaseringComponent implements OnInit {
             this.f.laserValue.disable();
           } 
           //this.isUnlimitedChecked();
+          if(this.isViewModal==true){
+            this.memberForm.disable();
+          }
+          else{
+            this.memberForm.disable();
+            this.f.laserValue.enable();
+            this.f.isUnlimited.enable(); 
+          }
        }        
   }
  }
@@ -394,8 +409,8 @@ goBackCurrentScreen(){
           .pipe(first())
           .subscribe({
               next: () => {
-                  this.openCustomModal(false,null); 
-                  this.memberForm.reset();
+                  //this.openCustomModal(false,null); 
+                  //this.memberForm.reset();
                   
                   this.alertService.success('Member updated', { 
                     keepAfterRouteChange: true });

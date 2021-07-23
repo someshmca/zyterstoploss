@@ -98,6 +98,11 @@
     position: relative;
     top: 2px;
 }
+.view-icon:hover{
+    transform: scale(1.5);
+    transition: ease;
+    filter: drop-shadow(1px 1px 3px #0148b3) saturate(80%);
+}
 .card-table-area .mat-table.card-table tr .c-action .fa, 
 .card-table-area .card-table tr .c-action .fa{
     margin: 0 5px;

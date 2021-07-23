@@ -82,8 +82,10 @@
                 <ng-container matColumnDef="batchProcessId">
                   <th mat-header-cell *matHeaderCellDef class="c-action"> Action </th>
                   <td mat-cell *matCellDef="let element" class="action-link c-action"> 
+                    <span class="view-icon" 
+                          (click)="openViewModal(true, element)" title="View"></span>
                     <span class="fa fa-edit" 
-                          (click)="openCustomModal(true, element); $event.stopPropagation();"></span>
+                          (click)="openCustomModal(true, element); $event.stopPropagation();" title="Update"></span>
                   </td>
                 </ng-container>
                 <tr mat-header-row *matHeaderRowDef="batchProcessColumns"></tr>
@@ -161,16 +163,17 @@
 
 
 <!-- The Add/Update Modal -->
-<div class="modal fade" role="dialog" [ngStyle]="{'display': isCustomModalOpen? 'block' : 'none', 'opacity': 1}">
+<div class="modal fade" role="dialog" [ngClass]="{'view-modal':isViewModal}" [ngStyle]="{'display': isCustomModalOpen? 'block' : 'none', 'opacity': 1}">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
 
       <!-- Modal Header -->
       <div class="modal-header">
-          <h4 class="modal-title">
+          <h4 class="modal-title" *ngIf="!isViewModal">
             <span *ngIf="isAddMode">Add Batch Process</span>
             <span *ngIf="!isAddMode">Update Batch Process</span>
           </h4>
+          <h4 class="modal-title" *ngIf="isViewModal">Batch Process</h4>
           <a class="fa fa-2x fa-times-circle" (click)="openCustomModal(false, null)">
           </a>
       </div>
@@ -253,7 +256,7 @@
       <div class="col_2">
           <button type="button" class="btn btn-outline-primary" tabindex="9" (click)="openCustomModal(false, null)">Cancel</button>
           <button type="submit" class="btn btn-primary" [disabled]="isDisabled" *ngIf="isAddMode">Add</button>
-          <button type="submit" class="btn btn-primary" [disabled]="isDisabled" *ngIf="!isAddMode">Update</button>
+          <button type="submit" class="btn btn-primary" [disabled]="isDisabled" *ngIf="!isAddMode && !isViewModal">Update</button>
        </div>
       </div>
       </div>  

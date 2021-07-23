@@ -18,6 +18,7 @@ import { Router } from '@angular/router';
 import { ɵbypassSanitizationTrustStyle } from '@angular/core';
 import {NavPopupService} from '../services/nav-popup.service';
 import { IClientObj } from '../models/nav-popups.model';
+import { LoaderService } from '../services/loader.service';//added by Venkatesh Enigonda
 
 let dp = new DatePipe(navigator.language);
 let p = 'y-MM-dd'; // YYYY-MM-DD
@@ -142,9 +143,18 @@ export class ClientComponent implements OnInit {
   //     });
   // }
 
-  public doFilter = (value: string) => {
-    this.dataSource.filter = value.trim().toLocaleLowerCase();
-  }
+
+  doFilter(filterValue:string){ //added by Venkatesh Enigonda
+    this.dataSource.filter=filterValue.trim().toLowerCase();
+    this.dataSource.filterPredicate = (data:IClient, filter: string) => {
+      const CompareData=  data.clientName.toLowerCase() ||'';
+      const CompareData1=  data.clientId.toLowerCase() ||'';
+      const CompareData2=data.startDate ||'';
+      const CompareData3=data.endDate ||'';
+      return CompareData.indexOf(filter)!==-1 || CompareData1.indexOf(filter)!==-1 || CompareData2.indexOf(filter)!==-1 || CompareData3.indexOf(filter)!==-1;
+    };
+
+  }//Ends here
 
   clientFormInit(){
     this.clientForm = this.fb.group({

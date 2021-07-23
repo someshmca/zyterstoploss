@@ -338,9 +338,19 @@ openViewModal(bool, id:any){
       }
     }
   }
-  public doFilter = (value: string) => {
-    this.dataSource.filter = value.trim().toLowerCase();    
-  }
+
+  doFilter(filterValue:string){ //added by Venkatesh Enigonda
+    this.dataSource.filter=filterValue.trim().toLowerCase();
+    this.dataSource.filterPredicate = (data1:IContract, filter: string) => {
+      const Id=data1.contractId.toString();
+      const CompareData=data1.clientName.toLowerCase() ||'';
+      const CompareData1=Id ||'';
+      const CompareData2=data1.endDate ||'';
+      const CompareData3=data1.startDate ||'';
+      return CompareData.indexOf(filter)!==-1  || CompareData1.indexOf(filter)!==-1 || CompareData2.indexOf(filter)!==-1 || CompareData3.indexOf(filter)!==-1;
+    };
+
+  }//Ends here
   get f() { return this.contractForm.controls; }
 
   onSubmit() {

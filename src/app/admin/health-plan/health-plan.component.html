@@ -83,10 +83,11 @@
       <div class="modal-content">        
         <!-- Modal Header -->
         <div class="modal-header">
-            <h4 class="modal-title">
+            <h4 class="modal-title" *ngIf="!isViewModal">
                 <span *ngIf="isAddMode">Add Plan &amp; Tier</span>
                 <span *ngIf="!isAddMode">Update Plan &amp; Tier</span>
             </h4>
+            <h4 class="modal-title" *ngIf="isViewModal">Plan &amp; Tier</h4>
             <div>
               <alert></alert>
               <a class="fa fa-2x fa-times-circle" (click)="openCustomModal(false, null)">
