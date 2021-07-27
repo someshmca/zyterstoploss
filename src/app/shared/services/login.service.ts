@@ -16,6 +16,8 @@ export class LoginService {
 
   username: string;
   password: string;
+
+  public isAdmin:boolean;
   // above paht will give following re3sponse
 /*  {
     "name": "Ashwani",
@@ -44,12 +46,23 @@ export class LoginService {
     this.loggedUserName.next(loggedUser)
   }
 
-  private loggedRoleName = new BehaviorSubject<string>('');
+  loggedRoleName = new BehaviorSubject<string>('');
   loggedRole = this.loggedRoleName.asObservable();
   setLoggedRole(loggedRole: string) {
     this.loggedRoleName.next(loggedRole)
   }
 
+  getLoggedInRole(){
+    this.loggedRole.subscribe((data)=>{
+      if(data=='Admin'){
+        this.isAdmin=true;
+      }
+      if(data=='User'){
+        this.isAdmin=false;
+      }
+      debugger;
+    });
+  }
 
   constructor(private http: HttpClient) {
     this.currentUserSubject =

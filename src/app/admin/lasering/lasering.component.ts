@@ -268,24 +268,25 @@ export class LaseringComponent implements OnInit {
           
           
           console.log(this.memberForm.value);
+          debugger;
           this.memberForm.disable();
           this.f.laserValue.enable();
           this.f.isUnlimited.enable(); 
-          if(this.f.isUnlimited.value || id.isUnlimited=='Y'){
+          //this.isUnlimitedChecked();
+          if(this.isViewModal==true){
+            this.memberForm.disable();
+          }
+          if(this.isViewModal==false){
+            this.memberForm.disable();
+            this.f.laserValue.enable();
+            this.f.isUnlimited.enable(); 
+          }
+          if(this.f.isUnlimited.value==true || id.isUnlimited=='Y'){
             this.memberForm.patchValue({
               laserValue: 0
             });
             this.f.laserValue.disable();
           } 
-          //this.isUnlimitedChecked();
-          if(this.isViewModal==true){
-            this.memberForm.disable();
-          }
-          else{
-            this.memberForm.disable();
-            this.f.laserValue.enable();
-            this.f.isUnlimited.enable(); 
-          }
        }        
   }
  }

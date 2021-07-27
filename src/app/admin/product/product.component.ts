@@ -101,6 +101,7 @@ export class ProductComponent implements OnInit {
   
   isAdded: boolean;
   planObj:IClientObj;
+  isAdmin: boolean;
   constructor(
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
@@ -196,6 +197,8 @@ export class ProductComponent implements OnInit {
     // this.getContractUpdateStatus();
 
     //this.getProductUpdateStatus();    
+    this.loginService.getLoggedInRole();
+    this.isAdmin = this.loginService.isAdmin;
   }
   getProductStatus(){
     this.navService.productObj.subscribe((data)=>{
@@ -556,6 +559,8 @@ openViewModal(bool, id:any){
           }
           else{
             this.productForm.enable();
+            this.f.clientId.disable();
+            this.f.contractId.disable();
           }
          }
       }

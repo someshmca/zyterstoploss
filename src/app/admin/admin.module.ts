@@ -44,10 +44,11 @@ import { LaseringComponent } from './lasering/lasering.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';//added by Venkatesh Enigonda
 import{InterceptorService} from'./services/interceptor.service';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { PlanFactorComponent } from './health-plan/plan-factor/plan-factor.component';
 
 
 @NgModule({
-  declarations: [BatchSettingsComponent, ClaimSearchComponent, ClaimResultComponent, ClaimComponent, BenefitsComponent, ProgramsComponent, ContractsComponent, RoleComponent, RulesComponent, ClientComponent, AttributesComponent, UsersSecurityComponent, MemberComponent, AlertComponent, HealthPlanComponent, ProductComponent, ExcelUploadComponent, Nl2brPipe, LaseringComponent],
+  declarations: [BatchSettingsComponent, ClaimSearchComponent, ClaimResultComponent, ClaimComponent, BenefitsComponent, ProgramsComponent, ContractsComponent, RoleComponent, RulesComponent, ClientComponent, AttributesComponent, UsersSecurityComponent, MemberComponent, AlertComponent, HealthPlanComponent, ProductComponent, ExcelUploadComponent, Nl2brPipe, LaseringComponent, PlanFactorComponent],
   imports: [
     CommonModule,
     FormsModule,

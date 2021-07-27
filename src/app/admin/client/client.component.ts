@@ -82,6 +82,7 @@ export class ClientComponent implements OnInit {
   @ViewChild("filterSearchInput") filterSearchInput: ElementRef;
   isYearValid: boolean=true;
   isViewModal: boolean;
+  isAdmin: boolean;
   ngOnInit() {
     this.getAllClients();
     this.getAllContracts();
@@ -98,6 +99,9 @@ export class ClientComponent implements OnInit {
     //this.getClientUpdateStatus();
 
     this.getClientStatus();
+    
+    this.loginService.getLoggedInRole();
+    this.isAdmin = this.loginService.isAdmin;
   }
   
   getClientStatus(){

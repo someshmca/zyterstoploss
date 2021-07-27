@@ -55,6 +55,7 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
   @ViewChild("filterSearchInput") filterSearchInput: ElementRef;
   tempPlanObj:IClientObj;
   isViewModal: boolean;
+  isAdmin: boolean;
   displayedColumns: string[] = ['clientName', 'planCode', 'planName','planID'];
   dataSource: any;
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -110,6 +111,8 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
     this.getActiveClients();
     this.getPlanStatus();
     this.isStatusChecked = true;
+    this.loginService.getLoggedInRole();
+    this.isAdmin = this.loginService.isAdmin;
   }
   
   ngAfterViewInit(){

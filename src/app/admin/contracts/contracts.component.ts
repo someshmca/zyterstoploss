@@ -76,6 +76,7 @@ export class ContractsComponent implements OnInit {
   dataSource: any;
   isAdded: boolean;
   isViewModal: boolean;
+  isAdmin: boolean;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   constructor(
@@ -131,6 +132,8 @@ export class ContractsComponent implements OnInit {
     //this.getClientUpdateStatus();    
     // this.getProductAddStatus();
     // this.getProductUpdateStatus(); 
+    this.loginService.getLoggedInRole();
+    this.isAdmin = this.loginService.isAdmin;
   }
   getContractStatus(){
     this.navService.contractObj.subscribe(

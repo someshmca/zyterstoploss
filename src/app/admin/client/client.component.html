@@ -35,7 +35,7 @@
             </div>
               <div class="card-table-area clients-table-area">
                   <div class="cust-add-area">
-                      <span class="fa fa-plus-circle" (click)="openCustomModal(true, null)"></span>
+                      <span class="fa fa-plus-circle" (click)="openCustomModal(true, null)" *ngIf="isAdmin"></span>
                   </div>
                   <div class="table-responsive">
 
@@ -71,7 +71,7 @@
                                 (click)="openViewModal(true, element)" title="View"></span>
                           <!-- <span class="view-icon" title="View" (click)="openViewModal(true, element)"></span> -->
                           <span class="fa fa-edit"
-                           (click)="openCustomModal(true, element)" title="Update"></span>
+                           (click)="openCustomModal(true, element)" title="Update" *ngIf="isAdmin"></span>
                         </td>
                       </ng-container>
                       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

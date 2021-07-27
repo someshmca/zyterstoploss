@@ -89,6 +89,7 @@ export class LoginComponent implements OnInit {
                 this.loginData = data;
                 
                 this.loginService.setMenu(this.loginData.menuDetails); 
+                
                 this.loginService.setToken(this.loginData.token);
                 this.loginService.curToken.subscribe(d => {                    
                   console.log("cur token value : "+d);
@@ -97,6 +98,7 @@ export class LoginComponent implements OnInit {
                 //
                 this.responseName = this.loginData.name;
                 this.responseRoleName = this.loginData.roleName;
+                
                 this.loginService.setLoggedInUser(this.responseName);
                 this.loginService.setLoggedRole(this.responseRoleName);
                 // if((this.userName=="ashwani.kumar@infinite.com" && this.password=="pass@1234") || (this.userName=="admin@infinite.com" && this.password=="pass@1234")){

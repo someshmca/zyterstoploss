@@ -75,6 +75,7 @@ export class BatchSettingsComponent implements OnInit {
 
   selectedRow : Number; 
   isViewModal: boolean;
+  isAdmin: boolean;
   
   //setClickedRow : Function;
   constructor(private batchSettingService: BatchSettingService,public loaderService: LoaderService, private fb: FormBuilder, private alertService: AlertService, private datePipe: DatePipe, private loginService: LoginService) { 
@@ -85,6 +86,8 @@ export class BatchSettingsComponent implements OnInit {
     this.getBatchStatusList();
     this.listBatchProcessGrid();
     this.initBatchProcessForm();
+    this.loginService.getLoggedInRole();
+    this.isAdmin = this.loginService.isAdmin;
     
   }
   getBatchStatusList(){

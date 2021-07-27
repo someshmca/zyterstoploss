@@ -21,7 +21,7 @@
           <div class="card-table-area batch-process-table-area">
           <div class="table-responsive"> 
             <div class="cust-add-area">
-                <span class="fa fa-plus-circle" (click)="openCustomModal(true, null)"></span>
+                <span class="fa fa-plus-circle" (click)="openCustomModal(true, null)" *ngIf="isAdmin"></span>
             </div>               
             <div class="mat-elevation-z8">
               <table mat-table matSort #BatchProcessGridSort="matSort" [dataSource]="batchProcessGridSource" class="table table-bordered table-striped table-hover card-table">          
@@ -85,7 +85,7 @@
                     <span class="view-icon" 
                           (click)="openViewModal(true, element)" title="View"></span>
                     <span class="fa fa-edit" 
-                          (click)="openCustomModal(true, element); $event.stopPropagation();" title="Update"></span>
+                          (click)="openCustomModal(true, element); $event.stopPropagation();" title="Update" *ngIf="isAdmin"></span>
                   </td>
                 </ng-container>
                 <tr mat-header-row *matHeaderRowDef="batchProcessColumns"></tr>

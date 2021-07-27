@@ -30,7 +30,7 @@
           <div class="card-table-area rules-table-area">
           <div class="table-responsive">
               <div class="cust-add-area">
-                <span class="fa fa-plus-circle" (click)="openCustomModal(true, null)"></span>
+                <span class="fa fa-plus-circle" (click)="openCustomModal(true, null)" *ngIf="isAdmin"></span>
               </div> 
                
               <div class="mat-elevation-z8">
@@ -53,8 +53,10 @@
                   <ng-container matColumnDef="updatedId">
                     <th mat-header-cell *matHeaderCellDef class="c-action"> Action </th>
                     <td mat-cell *matCellDef="let element" class="action-link c-action"> 
+                      <span class="view-icon" 
+                            (click)="openViewModal(true, element)" title="View"></span>
                       <span class="fa fa-edit" 
-                            (click)="openCustomModal(true,element.userId)"></span>
+                            (click)="openCustomModal(true,element.userId)" *ngIf="isAdmin"></span>
                     </td>
                   </ng-container>
                   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -68,15 +70,16 @@
       </div>
   </div>
 </div>
-<div class="modal fade security-add-modal" role="dialog" [ngStyle]="{'display': isCustomModalOpen ? 'block' : 'none', 'opacity': 1}">
+<div class="modal fade security-add-modal" role="dialog" [ngClass]="{'view-modal':isViewModal}" [ngStyle]="{'display': isCustomModalOpen ? 'block' : 'none', 'opacity': 1}">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">  
         <!-- Modal Header -->
         <div class="modal-header">
-            <h4 class="modal-title">
+            <h4 class="modal-title" *ngIf="!isViewModal">
               <span *ngIf="isAddMode">Add User</span>
               <span *ngIf="!isAddMode">Update User</span>
             </h4>
+            <h4 class="modal-title" *ngIf="isViewModal"><span>User</span></h4>
             <a class="fa fa-2x fa-times-circle" (click)="openCustomModal(false, null)">
             </a>
         </div>
@@ -224,7 +227,7 @@
                       <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
                       Add
                   </button>
-                  <button [disabled]="loading" class="btn btn-primary" *ngIf="!isAddMode">
+                  <button [disabled]="loading" class="btn btn-primary" *ngIf="!isAddMode && !isViewModal">
                       <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
                       Update
                   </button>

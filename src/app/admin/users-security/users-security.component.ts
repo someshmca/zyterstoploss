@@ -12,6 +12,7 @@ import { MatSort } from '@angular/material/sort';
 import { first } from 'rxjs/operators';
 import { formatDate, DatePipe } from '@angular/common';
 import { AlertService } from '../services/alert.service';
+import { LoginService } from 'src/app/shared/services/login.service';
 
 @Component({
   selector: 'app-users-security',
@@ -36,7 +37,8 @@ export class UsersSecurityComponent implements OnInit {
   loading = false;
   submitted = false;
   isCustomModalOpen: boolean = false;
-
+  isViewModal: boolean;
+  isAdmin: boolean;
   effectiveFrom = {isValid: false, errors: ''};
   effectiveTo = {isValid: false, errors: ''}; 
   userFnameErr = {isValid: false, errMsg: ''}; // Start by Venkatesh Enigonda
@@ -51,7 +53,7 @@ export class UsersSecurityComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private userSecurityService: UserSecurityService, private fb: FormBuilder,private rolesService: RolesService, private alertService: AlertService, private datePipe: DatePipe) { 
+  constructor(private userSecurityService: UserSecurityService, private fb: FormBuilder,private rolesService: RolesService, private alertService: AlertService, private datePipe: DatePipe, private loginService: LoginService) { 
     
   
   }
@@ -81,6 +83,8 @@ export class UsersSecurityComponent implements OnInit {
 
     this.getAllRoles();
     this.clearErrorMessages();
+    this.loginService.getLoggedInRole();
+    this.isAdmin = this.loginService.isAdmin;
    
   }
   clearErrorMessages(){  
@@ -164,6 +168,10 @@ getAllRoles(){
      }
      get f() { return this.securityForm.controls; }
    
+openViewModal(bool, id:any){
+  this.isViewModal = true;
+  this.openCustomModal(bool, id);
+}
      openCustomModal(open: boolean, id:string) {
       setTimeout(()=>{
         this.focusTag.nativeElement.focus()
@@ -178,6 +186,7 @@ getAllRoles(){
         this.getAllUsersList();
          this.securityForm.reset();
          this.isAddMode = false;
+         this.isViewModal=false;
        }
        console.log("id inside modal: "+id);
        
@@ -204,8 +213,13 @@ getAllRoles(){
                 createdOn: "2020-10-01",
                 lastupdate: "2021-10-10"
               });          
+            });
+            if(this.isViewModal){
+              this.securityForm.disable();
             }
-         );
+            else{
+              this.securityForm.enable();
+            }
        }
      }
      

@@ -1,0 +1,78 @@
+<!-- <header>
+    <div>
+      <h1>Inline Editable Table</h1>
+    </div>
+    <mat-icon (click)="toggleTheme()" title="Change theme">format_color_fill</mat-icon>
+  </header> -->
+    <form [formGroup]="userTable">
+        <div class="plan-factor-grid">
+            <table class="plan-factor-table table-border" [ngClass]="{'table-dark': mode}">
+                <thead class="text-nowrap">
+                <th>Stop Loss Tier<span class="ui-column-resizer" dragableColumn> </span></th>
+                <th>Stop Loss Tier Factor<span class="ui-column-resizer" dragableColumn> </span></th>
+                <th>Expected Claim Rate<span class="ui-column-resizer" dragableColumn> </span></th>
+                <th>Terminal Extension Coverage (Y/N)<span class="ui-column-resizer" dragableColumn> </span></th>
+                <th></th>
+                </thead>
+                <tbody>
+                <ng-container formArrayName="tableRows" *ngFor="let group of getFormControls.controls ; let i=index">
+                    <tr *ngIf="group.get('isEditable').value" [formGroupName]="i">
+                    <td>
+                        <mat-form-field>
+                        <input matInput type="text" formControlName="stopLossTier">
+                        </mat-form-field>
+                    </td>
+                    <td>
+                        <mat-form-field>
+                        <input matInput type="text" formControlName="stopLossTierFactor">
+                        </mat-form-field>
+                    </td>
+                    <td>
+                        <mat-form-field>
+                        <input matInput type="text" formControlName="expectedClaimRate">
+                        </mat-form-field>
+                    </td>
+                    <td>
+                        <mat-form-field>
+                        <input matInput type="text" formControlName="terminationExtCoverage">
+                        </mat-form-field>
+                    </td>
+                    <td>
+                        <mat-icon class="delete" (click)="deleteRow(i)">delete_forever</mat-icon>
+                        <mat-icon class="done" (click)="doneRow(group)">done</mat-icon>
+                    </td>
+                    </tr>
+                    <tr *ngIf="!group.get('isEditable').value" >
+                    <td>
+                        {{group.get('name').value}}
+                    </td>
+                    <td>
+                        {{group.get('email').value}}
+                    </td>
+                    <td>
+                        {{group.get('email').value}}
+                    </td>
+                    <td>
+                        {{group.get('bloodGroup').value}}
+                    </td>
+                    <td>
+                        {{group.get('mobNumber').value}}
+                    </td>
+                    <td>
+                        <mat-icon class="edit" (click)="editRow(group)">edit</mat-icon>
+                    </td>
+                    </tr>
+                </ng-container>
+                </tbody>
+            </table>
+        </div>
+        <div class="action-container">
+            <button mat-raised-button type="submit" (click)="addRow()">Add row</button>
+            <button mat-raised-button [disabled]="userTable.invalid" type="submit" (click)="submitForm()">Submit</button>
+        </div>
+        </form>
+    <!-- <div class="output">
+      <p>Form Data:  {{userTable.value | json}}</p>
+        <p>Is Valid: {{userTable.valid}}</p>
+    </div> -->
+

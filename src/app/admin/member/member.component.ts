@@ -72,6 +72,8 @@ export class MemberComponent implements OnInit {
   noSearchResultsFound: boolean = false;
   uMemberId: any;
   isDisabled: boolean=false;
+  isViewModal: boolean=false;
+  isAdmin: boolean;
   constructor(public loaderService: LoaderService, private mb: FormBuilder, private fb: FormBuilder, private memberService:MemberService, private alertService: AlertService, private datePipe: DatePipe, private loginService: LoginService, private clientService: ClientsService, private contractService: ContractService, private planService: HealthPlanService, private navService: NavPopupService) { }
 
   ngOnInit() {
@@ -109,6 +111,8 @@ export class MemberComponent implements OnInit {
     }, 200);
     this.getActiveClients();
     this.clearErrorMessages();    
+    this.loginService.getLoggedInRole();
+    this.isAdmin = this.loginService.isAdmin;
   }  // end of ngOnInit 
 
   clearErrorMessages(){  
@@ -315,6 +319,10 @@ export class MemberComponent implements OnInit {
    )
   }
 
+  openViewModal(bool, id:any){
+    this.isViewModal = true;
+    this.openCustomModal(bool, id);
+  }
   openCustomModal(open: boolean, id:any) {
     this.isDisabled=false;
     setTimeout(()=>{
@@ -328,6 +336,7 @@ export class MemberComponent implements OnInit {
     if (!open && id==null) {
       this.memberForm.reset();
       this.isAddMode = false;
+      this.isViewModal=false;
     }
     console.log("id inside modal: "+id);
 
@@ -379,6 +388,15 @@ export class MemberComponent implements OnInit {
             this.f.laserValue.disable();
           } 
           //this.isUnlimitedChecked();
+          
+          if(this.isViewModal){
+            this.memberForm.disable();
+          }
+          else{
+            this.memberForm.disable();
+            this.f.laserValue.enable();
+            this.f.isUnlimited.enable(); 
+          }
        }        
   }
 }
