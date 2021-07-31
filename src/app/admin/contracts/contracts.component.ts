@@ -291,6 +291,7 @@ clearErrorMessages(){
   this.runOutEndErr.isDateErr=false;
   this.runOutEndErr.dateErrMsg='';
   this.terminationDateErr.dateErrMsg='';
+  this.terminationDateErr.isDateErr=false;
   this.contractStartDateErrMsg = '';
   this.isContractStartDateInvalid=false;
 }
@@ -424,6 +425,16 @@ openViewModal(bool, id:any){
                     }
 
                   }
+                  // Starts here added by Venkatesh Enigonda
+                  if(startDateValue!=null && endDateValue!=null && startDateValue!='' && endDateValue!=''){
+                    if(startDateValue == endDateValue){
+                      this.startDateErr.isDateErr=true;
+                      this.startDateErr.dateErrMsg = 'Contract Start date should not be Equal to Contract End date'; 
+                      flag=false;     
+                      return;
+                    }
+
+                  } //Ends here
                   // if((startDateValue < this.clientStartDate && startDateValue!= this.clientStartDate) || (startDateValue>this.clientEndDate && startDateValue!= this.clientEndDate)){
                   //   this.startDateRangeErr.isDateErr=true;
                   //   this.startDateRangeErr.dateErrMsg = 'Contract start date should be in between Account Start and End Date'; 
@@ -449,6 +460,15 @@ openViewModal(bool, id:any){
                       flag=false;          
                       return;
                     }
+                    // Starts here added by Venkatesh Enigonda
+                    if(runInStartValue!=null && runInEndValue!=null && runInStartValue!='' && runInEndValue!=''){
+                      if(runInStartValue == runInEndValue){
+                        this.runInStartErr.isDateErr=true;
+                        this.runInStartErr.dateErrMsg = 'Run-In Start date should not be Equal to Run-In End date';  
+                        flag=false;          
+                        return;
+                      }
+                    } // Ends here
                     const newDate = new Date(startDateValue);
                     const runInEndValueDate = new Date(runInEndValue);
                     const startDateValueRed = new Date(newDate.setDate(newDate.getDate()-1));
@@ -479,6 +499,13 @@ openViewModal(bool, id:any){
                     flag=false;           
                     return;
                   }
+                  // Starts here Venkatesh Enigonda
+                  if(runOutStartValue == runOutEndValue){
+                    this.runOutStartErr.isDateErr=true;
+                    this.runOutStartErr.dateErrMsg = 'Run-Out Start date should not be Equal to Run-Out End date'; 
+                    flag=false;           
+                    return;
+                  }//Ends here
                   const newEndDate = new Date(endDateValue);
                   const runOutStartValueDate = new Date(runOutStartValue);
                   const endDateValueRed = new Date(newEndDate.setDate(newEndDate.getDate()+1));
@@ -502,8 +529,18 @@ openViewModal(bool, id:any){
                     flag=false;         
                     return;
                   }
+                  //starts here Added by Venkatesh Enigonda
+                  if(terminationDateValue !='' && terminationDateValue!=null){
+                    if(terminationDateValue == startDateValue || terminationDateValue == endDateValue){        
+                      this.terminationDateErr.isDateErr=true;
+                      this.terminationDateErr.dateErrMsg = 'Termination date should not be Equal to Contract Start and End Dates'; 
+                      flag=false;          
+                      return;
+                    }
+                  }//Ends here
                 if(terminationDateValue !='' && terminationDateValue!=null){
-                    if(terminationDateValue < startDateValue || terminationDateValue > endDateValue){        
+                    if(terminationDateValue < startDateValue || terminationDateValue > endDateValue){   
+                      debugger;     
                       this.terminationDateErr.isDateErr=true;
                       this.terminationDateErr.dateErrMsg = 'Termination date should be between Contract Start and End Dates'; 
                       flag=false;          

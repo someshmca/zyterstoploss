@@ -182,13 +182,14 @@
       <div class="modal-body">   
     <div class="mandate-fields">
       <span *ngIf="submitted && !batchProcessForm.valid">Fields marked with * are mandatory</span>
+      <span *ngIf="batchIdErr.isValid">{{batchIdErr.errMsg}}</span> <!--(V.E 27-Jul-2021 )-->
     </div>  
     <div class="row">
       <div class="col-md-6">
         <div class="form-group">
           <label >Batch Process 
             <small class="starmark">*</small></label>
-          <input type="text" #focusElem class="form-control" formControlName="batchProcess" [ngClass]="{ 'is-invalid': submitted && f.batchProcess.errors }" >  
+            <input type="text" #focusElem class="form-control" formControlName="batchProcess" [ngClass]="{ 'is-invalid': submitted && f.batchProcess.errors || batchIdErr.isValid}" > <!--(V.E 27-Jul-2021 )-->
         </div>
       </div>
       <div class="col-md-6">

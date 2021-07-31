@@ -31,7 +31,7 @@ export class MemberComponent implements OnInit {
   searchResult: any;
   memberForm: FormGroup;
   searchErrorMessage: string;
-  displayedColumns: string[] = ['memberId', 'clientId', 'contractId', 'planId', 'tierId', 'fname', 'lname', 'mname', 'gender','memberStartDate', 'memberEndDate','dateOfBirth', 'subscriberId', 'laserValue', 'isUnlimited', 'status','userId'];
+  displayedColumns: string[] = ['memberId', 'clientId', 'contractId', 'planId', 'tierId', 'fname', 'lname', 'mname', 'gender','memberStartDate', 'memberEndDate','dateOfBirth', 'subscriberId','alternateId', 'laserValue', 'isUnlimited','tier','benefitPlanId','userId'];    //(VE 30-Jul-2021)
   searchDataSource: any;
 
   
@@ -101,7 +101,9 @@ export class MemberComponent implements OnInit {
       contractId: ['', Validators.required],
       planId: ['', Validators.required],
       tierId: ['', Validators.required],
-      dateOfBirth: ['', Validators.required]
+      dateOfBirth: ['', Validators.required],
+      tier:[''],//(VE 30-07-2021)
+      benefitPlanId:['']//(VE 30-07-2021)
     });
     //this.today=this.datePipe.transform(new Date(Date.now()), "MM/dd/yyyy");    
     this.today=new Date().toJSON().split('T')[0];
@@ -113,6 +115,9 @@ export class MemberComponent implements OnInit {
     this.clearErrorMessages();    
     this.loginService.getLoggedInRole();
     this.isAdmin = this.loginService.isAdmin;
+    if(!this.isAdmin){
+      this.isViewModal=true;
+    }
   }  // end of ngOnInit 
 
   clearErrorMessages(){  
@@ -142,7 +147,13 @@ export class MemberComponent implements OnInit {
       Lname: [''],
       Mname: '',
       DateOfBirth:[''],
-      Gender: ['']
+      Gender: [''],
+      //(VE 30-Jul-2021 starts)
+      clientId:[''],
+      benefitPlanId:[''],
+      tier:[''],
+      alternateId:[''],
+      //(VE 30-Jul-2021 ends)
     });
   }
 
@@ -198,6 +209,12 @@ export class MemberComponent implements OnInit {
    let dob=this.memberSearchForm.get("DateOfBirth").value;
    let memberStartDate=this.memberSearchForm.get("MemberStartDate").value;
    let memberEndDate=this.memberSearchForm.get("MemberEndDate").value;
+   //(VE 30-Jul-2021  starts)
+   let benefitPlanId=this.memberSearchForm.get("benefitPlanId").value;
+   let clientId =this.memberSearchForm.get("clientId").value;
+   let tier =this.memberSearchForm.get("tier").value;
+   let alternateId=this.memberSearchForm.get("alternateId").value;
+   //(VE 30-Jul-2021  ends)
     console.log(this.memberSearchForm.value);
     //let alphaNum = /^([a-zA-Z0-9 ]+)$/; 
     let alphaNum = /^([a-zA-Z0-9]+)$/; //Modified by venkatesh Enigonda
@@ -278,15 +295,16 @@ export class MemberComponent implements OnInit {
      this.memSearchError=true;
        return;
    }
-   if(memberId=='' && fname=='' && mname=='' && lname=='' && subscriberId=='' && dob=='' && Gender=='' && memberStartDate=='' && memberEndDate==''){
+   if(memberId=='' && fname=='' && mname=='' && lname=='' && subscriberId=='' && dob=='' && Gender=='' && memberStartDate=='' && memberEndDate=='' && clientId=='' && tier=='' && alternateId=='' && benefitPlanId =='')  {  //(VE 28-Jul-2021 )
     this.noSearchFieldEntered = true;
      return;
    }
    console.log(JSON.stringify(formData.value));
    console.log(this.m.Gender.value);
    console.log(memberId);
-   this.memberService.memberSearch(memberId,fname,mname, lname, subscriberId, dob, Gender, memberStartDate, memberEndDate).subscribe(
-     (data:IMemberSearchResponse[])=>{
+
+   this.memberService.memberSearch(memberId,fname,mname, lname, subscriberId, dob, Gender, memberStartDate,memberEndDate,benefitPlanId,clientId,tier,alternateId).subscribe(    //(VE 30-Jul-2021  )    
+    (data:IMemberSearchResponse[])=>{
        console.log(data);
        this.clearErrorMessages();
        console.log(data[0].memberId)
@@ -357,7 +375,10 @@ export class MemberComponent implements OnInit {
               clientId: id.clientId,
               contractId: id.contractId,
               planId: id.planId,
-              tierId: id.tierId,
+              tier:id.tier,
+              benefitPlanId:id.benefitPlanId, //(VE 30-07-2021)
+              tierId: id.tierId,//(VE 30-07-2021)
+              alternateId:id.alternateId,
               fname: id.fname,
               lname: id.lname,
               mname: id.mname,
@@ -380,38 +401,40 @@ export class MemberComponent implements OnInit {
           console.log(this.memberForm.value);
           this.memberForm.disable();
           this.f.laserValue.enable();
-          this.f.isUnlimited.enable(); 
-          if(this.f.isUnlimited.value || id.isUnlimited=='Y'){
-            this.memberForm.patchValue({
-              laserValue: 0
-            });
-            this.f.laserValue.disable();
-          } 
+         // this.f.isUnlimited.enable(); 
           //this.isUnlimitedChecked();
           
-          if(this.isViewModal){
+          if(this.isViewModal==true){
             this.memberForm.disable();
+            //this.f.isUnlimited.disable(); 
           }
-          else{
+          if(this.isViewModal==false){
             this.memberForm.disable();
-            this.f.laserValue.enable();
-            this.f.isUnlimited.enable(); 
+             this.f.laserValue.enable();
+            // this.f.isUnlimited.enable(); 
+            // if(this.f.isUnlimited.value==true || id.isUnlimited=='Y'){
+            //   this.memberForm.patchValue({
+            //     laserValue: 0
+            //   });
+            //   this.f.laserValue.disable();
+            // }
           }
+         
        }        
   }
 }
-isUnlimitedChecked(){  
-  if(this.f.isUnlimited.value){
-    this.memberForm.patchValue({
-      laserValue: 0
-    });
+// isUnlimitedChecked(){  
+//   if(this.f.isUnlimited.value){
+//     this.memberForm.patchValue({
+//       laserValue: 0
+//     });
 
-    this.f.laserValue.disable();
-  }
-  else{
-    this.f.laserValue.enable();            
-  }
-}
+//     this.f.laserValue.disable();
+//   }
+//   else{
+//     this.f.laserValue.enable();            
+//   }
+// }
 get m(){return this.memberSearchForm.controls}
 get f(){return this.memberForm.controls}
   onSubmit() {

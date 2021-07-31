@@ -60,7 +60,7 @@ export class LoginService {
       if(data=='User'){
         this.isAdmin=false;
       }
-      debugger;
+      
     });
   }
 

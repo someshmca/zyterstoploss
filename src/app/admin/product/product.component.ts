@@ -72,6 +72,16 @@ export class ProductComponent implements OnInit {
     isDateErr: false,
     dateErrMsg: ''
   };
+  sslSPecificErr= // starts here Venkatesh Enigonda
+  {
+    isDateErr:false,
+    dateErrMsg:''
+  };
+  
+  aslAggregateErr = {
+    isDateErr: false,
+    dateErrMsg: ''
+  }; //Ends Here
   aslPaidEndErr = {
     isDateErr: false,
     dateErrMsg: ''
@@ -186,7 +196,6 @@ export class ProductComponent implements OnInit {
     
     this.getAllProducts();
     this.getActiveClients();   
-    this.getCoveredClaims();
     //this.getAllContracts();
     //this.isClientSelected = false;
     this.checkMaxLiability(); 
@@ -250,11 +259,7 @@ export class ProductComponent implements OnInit {
         this.activeClients = data;        
       })
   }
-  getCoveredClaims(){
-    this.productService.getCoveredClaims().subscribe((data)=>{
-        this.coveredClaims = data;
-    })
-  }
+  
   getContractIDs(clientId){
     this.contractService.getContractsByClientID(clientId).subscribe((data)=>{
       data.sort((x,y) => x.contractId - y.contractId);
@@ -315,6 +320,10 @@ export class ProductComponent implements OnInit {
     this.sslClaimBasisErr.errMsg='';
     this.aslClaimBasisErr.isValid=false;
     this.aslClaimBasisErr.errMsg='';
+    this.sslSPecificErr.isDateErr=false;// starts here added by Venkatesh Enigonda
+    this.sslSPecificErr.dateErrMsg='';
+    this.aslAggregateErr.isDateErr=false;
+    this.aslAggregateErr.dateErrMsg='';//Ends Here
   }
  
   onSubmit() {
@@ -363,26 +372,99 @@ export class ProductComponent implements OnInit {
     return;
   }
   
+  // Starts here added by Venkatesh Enigonda
+  if(this.productForm.valid && this.f.sslIncurredStartDate.value == this.f.sslIncurredEndDate.value){
+ 
+    this.sslIncurredEndErr.isDateErr=true;
+    this.sslIncurredEndErr.dateErrMsg = 'SSL Incurred start date should not be Equal to SSL Incurred End date';
+    
+    return;
+  }//Ends here
   if(this.productForm.valid && this.f.sslPaidStartDate.value > this.f.sslPaidEndDate.value){
    this.sslPaidEndErr.isDateErr=true;
    this.sslPaidEndErr.dateErrMsg = 'SSL Paid Start date should not be greater than SSL Paid End date';
    
    return;
  }
+//Starts here added by Venkatesh Enigonda
+if(this.productForm.valid && this.f.sslPaidStartDate.value == this.f.sslPaidEndDate.value){
+ 
+  this.sslPaidEndErr.isDateErr=true;
+  this.sslPaidEndErr.dateErrMsg ='SSL Paid Start date should not be Equal to SSL Paid End date';
+    
+  return;
+}
+if(this.productForm.valid && this.f.sslContractStartDate.value == this.f.sslContractEndDate.value){
 
+  this.sslSPecificErr.isDateErr=true;
+  this.sslSPecificErr.dateErrMsg ='SSL Specific Start date should not be Equal to SSL Specific End date' ;
+  
+  return;
+}
+// Ends here
  if(this.productForm.valid && this.f.aslIncurrredStartDate.value > this.f.aslIncurredEndDate.value){
   this.aslIncurredEndErr.isDateErr=true;
   this.aslIncurredEndErr.dateErrMsg = 'ASL Incurred start date should not be greater than ASL Incurred End date';
   
   return;
 }
+ //Starts here added by Venkatesh Enigonda
+ if(this.productForm.valid && this.f.sslPaidStartDate.value == this.f.sslPaidEndDate.value){
+ 
+  this.sslPaidEndErr.isDateErr=true;
+  this.sslPaidEndErr.dateErrMsg ='SSL Paid Start date should not be Equal to SSL Paid End date';
+  
+  return;
+}
+if(this.productForm.valid && this.f.sslContractStartDate.value == this.f.sslContractEndDate.value){
 
+  this.sslSPecificErr.isDateErr=true;
+  this.sslSPecificErr.dateErrMsg ='SSL Specific Start date should not be Equal to SSL Specific End date' ;
+  
+  return;
+}
+// Ends here
 if(this.productForm.valid && this.f.aslPaidStartDate.value > this.f.aslPaidEndDate.value){
  this.aslPaidEndErr.isDateErr=true;
  this.aslPaidEndErr.dateErrMsg = 'ASL Paid Start date should not be greater than ASL Paid End date';
  
  return;
 }
+// Starts here added by Venkatesh Enigonda
+if(this.productForm.valid && this.f.aslIncurrredStartDate.value ==this.f.aslIncurredEndDate.value){
+  this.aslIncurredEndErr.isDateErr=true;
+  this.aslIncurredEndErr.dateErrMsg = 'ASL Incurred start date should not be Equal to ASL Incurred End date ' ;
+  
+  return;
+}
+if(this.productForm.valid && this.f.aslContractStartDate.value == this.f.aslContractEndDate.value){
+
+  this.aslAggregateErr.isDateErr=true;
+  this.aslAggregateErr.dateErrMsg ='ASL Aggregate Start date should not be Equal to ASL Aggregate End date ';
+  
+  return;
+}
+if(this.productForm.valid && this.f.aslContractStartDate.value > this.f.aslContractEndDate.value){
+
+  this.aslAggregateErr.isDateErr=true;
+  this.aslAggregateErr.dateErrMsg =' ASL Aggregate Start date should not be greater than ASL Aggregate End date ';
+  
+  return;
+}
+if(this.productForm.valid && this.f.aslPaidStartDate.value > this.f.aslPaidEndDate.value){
+ this.aslPaidEndErr.isDateErr=true;
+ this.aslPaidEndErr.dateErrMsg = 'ASL Paid Start date should not be greater than ASL Paid End date';
+ 
+ return;
+}
+// starts here added by Venkatesh Enigonda
+if(this.productForm.valid && this.f.aslPaidStartDate.value == this.f.aslPaidEndDate.value){
+  this.aslPaidEndErr.isDateErr=true;
+  this.aslPaidEndErr.dateErrMsg = 'ASL Paid Start date should not be Equal to ASL Paid End date ';
+  
+  return;
+ }
+ //Ends here
 if(this.productForm.valid && Number(this.f.sslDeductible.value)<=0){
   this.sslDeductibleErr.isValid=true;
   this.sslDeductibleErr.errMsg="SSL Deductible value should be greater than 0";

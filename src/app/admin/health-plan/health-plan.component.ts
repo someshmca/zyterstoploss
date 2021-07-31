@@ -11,6 +11,7 @@ import {BehaviorSubject } from 'rxjs';
 import { elementAt, first } from 'rxjs/operators';
 import {Router} from '@angular/router'
 
+import { combineLatest } from 'rxjs'; //(V.E 27-Jul-2021 )
 import { AlertService } from '../services/alert.service';
 import { DatePipe } from '@angular/common';
 import { LoginService } from 'src/app/shared/services/login.service';
@@ -51,6 +52,11 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
   isDisabled: boolean;
   isAdded: boolean;
   isFilterOn: boolean = false;
+  planIdStatus;//(V.E 27-Jul-2021 )
+  uPlanName;//(V.E 27-Jul-2021 )
+  uplanId;//(V.E 27-Jul-2021 )
+  planIdErr={isDuplicate: false, errMsg:''}; //(V.E 27-Jul-2021 )
+  planNameErr={isDuplicate: false, errMsg:''};//(V.E 27-Jul-2021 )
   @ViewChild("focusElem") focusTag: ElementRef;
   @ViewChild("filterSearchInput") filterSearchInput: ElementRef;
   tempPlanObj:IClientObj;
@@ -240,7 +246,35 @@ initTierObj(){
     expectedClaims4:0 
   }
 }
+//(V.E 27-Jul-2021 starts)
+checkDuplicatePlanName(PName){
+  return this.planService.checkDuplicatePlanName(PName).toPromise();
+}
 
+async checkDuplicatePlanId(PId){
+  const promise = this.planService.checkDuplicatePlanId(PId).toPromise();
+  promise.then((data)=>{
+    console.log("Promise resolved with: " + data);
+    this.planIdStatus = data;
+    
+      if(this.planIdStatus>0){
+        this.planIdErr.isDuplicate=true;
+        this.planIdErr.errMsg='The Plan Id '+this.f.planCode.value+' already exists. Please enter different Plan Id';
+        return;
+      }
+    
+
+  }).catch((error)=>{
+    console.log("Promise rejected with " + JSON.stringify(error));
+  });
+}
+clearErrorMessages(){
+  this.planIdErr.isDuplicate=false;
+  this.planIdErr.errMsg='';
+  this.planNameErr.isDuplicate=false;
+  this.planNameErr.errMsg='';
+}
+//(V.E 27-Jul-2021 Ends)
 doFilter(filterValue:string){ //added by Venkatesh Enigonda
   this.dataSource.filter=filterValue.trim().toLowerCase();
   this.dataSource.filterPredicate = (data:IPlanAll, filter: string) => {
@@ -291,6 +325,13 @@ doFilter(filterValue:string){ //added by Venkatesh Enigonda
       // })
       // console.log("uPlan "+ uPlan);
       // 
+
+      //(V.E 27-Jul-2021 starts )
+      console.log(this.uPlanName=elem.planName);
+      this.uPlanName=elem.planName;
+      console.log(this.uplanId=elem.planCode);
+      this.uplanId=elem.planCode;
+      //(V.E 27-Jul-2021 Ends )
       this.planI=elem.planID;
 
       console.log(elem.lstTblPlanTier.length);
@@ -402,6 +443,7 @@ doFilter(filterValue:string){ //added by Venkatesh Enigonda
   get f() { return this.planForm.controls; }
 
   onSubmit() {
+    this.clearErrorMessages();//(V.E 27-Jul-2021 )
       this.submitted = true;
       // reset alerts on submit
       this.alertService.clear();
@@ -418,14 +460,86 @@ doFilter(filterValue:string){ //added by Venkatesh Enigonda
       if((t1=='' || t1==0) && (t2=='' || t2==0) && (t3=='' || t3==0) && (t4=='' || t4==0)){
         this.isNoFactAmount=true;
         return;
+      } //(V.E 27-Jul-2021 starts )
+      if(this.planForm.valid){
+        if(this.isAddMode){
+          const pid= this.planService.checkDuplicatePlanId(this.f.planCode.value);
+          const pname = this.planService.checkDuplicatePlanName(this.f.planName.value);
+          const connectStream = combineLatest([pid, pname]);
+          connectStream.subscribe(
+            ([id,name]) => {
+              console.log('plan Id : '+id);
+              console.log('plan Namem : '+name);
+              if(id>0 && name>0){
+                this.planIdErr.isDuplicate=true;
+                this.planNameErr.isDuplicate=true;
+                this.planIdErr.errMsg="Plan Name "+this.f.planName.value +" and Plan ID "+this.f.planCode.value+" already exists";
+                return;
+              }
+              if(id>0){
+                this.planIdErr.isDuplicate=true;
+                this.planIdErr.errMsg="Plan ID "+this.f.planCode.value +" already exists";
+                return;
+              }
+              if(name>0){
+                this.planNameErr.isDuplicate=true;
+                this.planNameErr.errMsg="Plan Name "+this.f.planName.value+" already exists";
+                return;
+              }
+              
+              this.addPlan();
+
+            });
+        }
+
       }
+     
+      
       this.loading = true;
-      if (this.isAddMode) {
-          this.addPlan();
-      } else {
-          this.updatePlan();
-      }
-  }
+      if(!this.isAddMode){
+        const pid= this.planService.checkDuplicatePlanId(this.f.planCode.value);
+        const pname = this.planService.checkDuplicatePlanName(this.f.planName.value);
+        const connectStream = combineLatest([pid, pname]);
+        connectStream.subscribe(
+          ([id,name]) => {
+            console.log('plan Id : '+id);
+            console.log('plan Namem : '+name);
+            if((this.uplanId.toLowerCase()!==this.f.planCode.value.toLowerCase())&& (this.uPlanName.toLowerCase()!==this.f.planName.value.toLowerCase()))
+            {
+            if(id>0 && name>0){
+              this.planIdErr.isDuplicate=true;
+              this.planNameErr.isDuplicate=true;
+              this.planIdErr.errMsg="Plan Name "+this.f.planName.value +" and Plan ID "+this.f.planCode.value+" already exists";
+              return;
+            }
+          }
+            if(this.uplanId.toLowerCase()!==this.f.planCode.value.toLowerCase())
+            {
+            if(id>0){
+              this.planIdErr.isDuplicate=true;
+              this.planIdErr.errMsg="Plan ID "+this.f.planCode.value +" already exists.Please enter different Plan Id";
+              return;
+            }
+          }
+          if(this.uPlanName.toLowerCase()!==this.f.planName.value.toLowerCase())
+            {
+            if(name>0){
+              this.planNameErr.isDuplicate=true;
+              this.planNameErr.errMsg="Plan Name "+this.f.planName.value+" already exists.Please enter different Plan Name";
+              return;
+            }
+          }
+            
+            this.updatePlan();
+
+          });
+        }
+          
+
+
+        
+
+       }//(V.E 27-Jul-2021 Ends)
 
   private addPlan() {
     this.isDisabled=true;
@@ -562,6 +676,8 @@ doFilter(filterValue:string){ //added by Venkatesh Enigonda
                   this.alertService.success('Plan & Tier updated', {
                     keepAfterRouteChange: true });
                     this.getAllPlans();
+                    this.uPlanName=''; //(V.E 27-Jul-2021 )
+                    this.uplanId=''//(V.E 27-Jul-2021 )
                     //this.openCustomModal(false,null);
                     //this.planForm.reset();
               },

@@ -559,6 +559,39 @@ openViewModal(bool, id:any){
         this.subSubIdAcErr.errMsg = ' Sub-Account ID Required*';//// Modified by Venkatesh Enigonda
         return;
       }
+       // starts here added by Venkatesh Enigonda
+       let StartDate = this.datePipe.transform(this.clientForm.get('startDate').value, 'yyyy-MM-dd');
+       let EndDate = this.datePipe.transform(this.clientForm.get('endDate').value, 'yyyy-MM-dd');
+ 
+ 
+       if(StartDate!=null && StartDate!='' && EndDate!=null && EndDate!=''){
+         if(StartDate>EndDate){
+           this.startDateErr.isDateErr=true;
+           this.startDateErr.dateErrMsg = 'Start date should not be greater than End date'
+         return;
+         }
+       }
+       if(StartDate!=null && StartDate!='' && EndDate!=null && EndDate!=''){
+         if(StartDate==EndDate){
+           this.startDateErr.isDateErr=true;
+           this.endDateErr.isDateErr=true;
+           this.startDateErr.dateErrMsg = ' Start date should not be Equal to End date '
+         return;
+         }
+       }
+       if((StartDate==null || StartDate=='') && EndDate!='' && EndDate!=null){
+         this.startDateErr.isDateErr=true;
+         this.startDateErr.dateErrMsg = 'Start date should not be empty or Invalid';
+ 
+         return;
+       }
+       if((EndDate==null || EndDate=='') && StartDate!='' && StartDate!=null){
+       this.endDateErr.isDateErr=true;
+       this.endDateErr.dateErrMsg = 'End date should not be empty or Invalid';
+ 
+       return;
+     }
+     //Ends Here
       if(this.clientForm.valid){
         if(this.isAddMode){
           const cid= this.clientService.checkDuplicateAccountId(this.f.clientId.value);
@@ -644,15 +677,20 @@ openViewModal(bool, id:any){
     this.clientService.addClient(this.clientForm.value)
         .pipe(first())
         .subscribe({
-            next: () => {
-              this.isDisabled=true;
-              this.getAllClients();
-              this.clientService.getClient(this.f.clientId.value).subscribe((data)=>{
-                this.navService.setClientObj(data[0].clientId, data[0].clientName, true,false);
-              });              
-              this.isAdded = true;
-              //this.getContractAddStatus();
-              this.alertService.success('New Client added', { keepAfterRouteChange: true });
+            next: (data) => {
+              if(data.id==null){
+                this.alertService.success(data.message, { keepAfterRouteChange: true });
+              }
+              else{
+                this.isDisabled=true;
+                this.getAllClients();
+                this.clientService.getClient(this.f.clientId.value).subscribe((data)=>{
+                  this.navService.setClientObj(data[0].clientId, data[0].clientName, true,false);
+                });              
+                this.isAdded = true;
+                //this.getContractAddStatus();
+                this.alertService.success('New Client added', { keepAfterRouteChange: true });
+              }
             },
             error: error => {
                 this.alertService.error(error);

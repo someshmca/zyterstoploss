@@ -30,7 +30,7 @@
              <div class="card-table-area">
          <div class="table-responsive">
              <div class="cust-add-area">
-                 <span class="fa fa-plus-circle" (click)="openCustomModal(true, null)" *ngIf="isAdmin"></span>
+                 <span class="fa fa-plus-circle" (click)="openCustomModal(true, null)"></span>
              </div>    
              <div class="mat-elevation-z8">
                <table mat-table matSort #planTable [dataSource]="dataSource" class="table table-bordered table-striped table-hover card-table">
@@ -54,7 +54,7 @@
                     <span class="view-icon" 
                           (click)="openViewModal(true, element)" title="View"></span>
                      <span class="fa fa-edit" 
-                           (click)="openCustomModal(true, element)" title="Update" *ngIf="isAdmin"></span>
+                           (click)="openCustomModal(true, element)" title="Update"></span>
                    </td>
                  </ng-container>
                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -143,14 +143,44 @@
                         <input type="text" class="form-control" formControlName="contractYear" maxlength="4" [ngClass]="{ 'is-invalid': !isValidYear}" [placeholder]="isValidYear?'YYYY':'Invalid Year'" (keyup)="isYear()" />
                       </div>
                     </div>
-                    <div class="col-md-4">
+                    <!-- <div class="col-md-4">
                       <div class="form-group">
                         <label>Single Factor Amount</label>
                   <input type="text" formControlName="factor1" [value]="locTires[0].tierId" class="form-control" />
                       </div>
-                    </div>
+                    </div> -->
                    </div>  
-                   <div class="row">
+                   <table class="table table-striped table-bordered">
+                     <thead>
+                       <tr>
+                          <th>Stop Loss Tier</th>
+                          <th>Stop Loss Tier Amount</th>
+                          <th>Expected Claim Rate</th>
+                          <th>Is Terminal Extension Coverage</th>
+                        </tr>
+                     </thead>
+                     <tbody>
+                       <tr>
+                         <td>{{locTires[1].tierName}}</td>
+                         <td>
+                            <input type="text" formControlName="factor2" [value]="locTires[1].tierId"  class="form-control" />
+                         </td>
+                         <td>
+                          <input type="text" formControlName="expectedClaims1" class="form-control" />
+                         </td>
+                         <td>
+                          <div class="form-group switch-group">
+                            <label></label>                        
+                            <label class="switch">
+                              <input type="checkbox" class="success" formControlName="isTerminalExtCoverage">
+                              <span class="slider round"></span>
+                            </label>  
+                          </div>
+                         </td>
+                       </tr>
+                     </tbody>
+                   </table>
+                   <!-- <div class="row">
                     <div class="col-md-4">
                       <div class="form-group">
                         <label>{{locTires[1].tierName}} Factor Amount</label>
@@ -169,14 +199,8 @@
                <input type="text" formControlName="factor4" [value]="locTires[3].tierId" class="form-control" />
                    </div>
                      </div>
-                     <!-- <div class="col-md-4">
-                      <div class="form-group">
-                        <label>Family Specific Deductible</label>
-                  <input type="text" formControlName="familySpecificDeductible" class="form-control" />
-                      </div>
-                     </div> -->
                    </div>
-                   <!-- <div class="row">
+                   <div class="row">
                     <div class="col-md-4">
                       <div class="form-group">
                         <label>Single Expected Claim Rate</label>
@@ -195,8 +219,8 @@
                          <input type="text" formControlName="expectedClaims3" class="form-control" />
                       </div>
                     </div>
-                   </div> -->
-                   <!-- <div class="row">
+                   </div>
+                   <div class="row">
                     <div class="col-md-4">
                       <div class="form-group">
                         <label>Other Expected Claim Rate</label>
@@ -218,7 +242,6 @@
              
           
           </div> 
-          <plan-factor></plan-factor>
         </div>    
         
           

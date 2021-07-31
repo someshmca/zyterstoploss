@@ -21,19 +21,46 @@ header {
   }
   
   .plan-factor-table {
-    padding: 20px;
+    padding: 0;
+    border-collapse: collapse;
   }
   
-  .plan-factor-table tbody tr td,
-  .plan-factor-table thead th,
-  .plan-factor-table thead {
-    border-left: 1px solid #dee2e6;
-    border-right: 1px solid #dee2e6;
+  .plan-factor-table tbody td,
+  .plan-factor-table thead th{
+    border: 1px solid #f0f0f0;
+    padding: 3px 4px;
+  }
+  .plan-factor-table tbody td span, .plan-factor-table tbody td input{
+   width: auto;
+   padding: 0;
+   margin: 0;
+   font-size: 12px;
+  }
+  .plan-factor-table tr th:nth-child(1),
+  .plan-factor-table tr td:nth-child(1){
+    width: 120px;
+  }
+  .plan-factor-table tr th:nth-child(2),
+  .plan-factor-table tr td:nth-child(2){
+    width: 120px;
+  }
+  .plan-factor-table tr th:nth-child(3),
+  .plan-factor-table tr td:nth-child(3){
+    width: 120px;
+  }
+  .plan-factor-table tr th:nth-child(4),
+  .plan-factor-table tr td:nth-child(4){
+    width: 120px;
+  }
+  .plan-factor-table tr th:nth-child(5),
+  .plan-factor-table tr td:nth-child(5){
+    width: 120px;
   }
   .plan-factor-grid{
       width: 100%;
-      overflow: auto;
+      /* overflow: auto;
       max-height: 450px;
+      min-height: 200px; */
   }
   .output {
     padding: 20px;
@@ -57,4 +84,3 @@ header {
     padding: 30px;
   
   }
-  

@@ -141,7 +141,7 @@
               <div class="col-md-4">
                 <div class="form-group">
                   <label>Contract Start Date<small class="starmark">*</small></label>
-                  <input type="date" value="MM/dd/yyyy" formControlName="startDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.startDate.errors}"/> 
+                  <input type="date" value="MM/dd/yyyy" formControlName="startDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.startDate.errors || startDateErr.isDateErr}"/> 
                 </div>
               </div>
             </div>
@@ -155,19 +155,19 @@
               <div class="col-md-4">
                 <div class="form-group">
                   <label>Contract End Date<small class="starmark">*</small></label>
-                  <input type="date" value="MM/dd/yyyy" formControlName="endDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.endDate.errors }" max="2999-12-31"/> 
+                  <input type="date" value="MM/dd/yyyy" formControlName="endDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.endDate.errors  || startDateErr.isDateErr }" max="2999-12-31"/> 
                 </div>
               </div>
               <div class="col-md-4">
                 <div class="form-group">
                   <label>Run In Start Date</label>
-                  <input type="date" value="MM/dd/yyyy" formControlName="runInStartDate" class="form-control"  max="2999-12-31"/> 
+                  <input type="date" value="MM/dd/yyyy" formControlName="runInStartDate" class="form-control"  max="2999-12-31"  [ngClass]="{ 'is-invalid': runInStartErr.isDateErr}"/> 
                 </div>
               </div>
               <div class="col-md-4">
                 <div class="form-group">
                   <label>Run In End Date</label>
-                  <input type="date" value="MM/dd/yyyy" formControlName="runInEndDate" class="form-control" max="2999-12-31"/> 
+                  <input type="date" value="MM/dd/yyyy" formControlName="runInEndDate" class="form-control" max="2999-12-31" [ngClass]="{ 'is-invalid': runInStartErr.isDateErr}"/> 
                 </div>
               </div>
             </div>
@@ -175,19 +175,19 @@
               <div class="col-md-4">
                 <div class="form-group">
                   <label>Run Out Start Date</label>
-                  <input type="date" value="MM/dd/yyyy" formControlName="runOutStartDate" class="form-control" max="2999-12-31" /> 
+                  <input type="date" value="MM/dd/yyyy" formControlName="runOutStartDate" class="form-control" max="2999-12-31" [ngClass]="{ 'is-invalid': runOutStartErr.isDateErr}" /> 
                 </div>
               </div>
               <div class="col-md-4">
                 <div class="form-group">
                   <label>Run Out End Date</label>
-                  <input type="date" value="MM/dd/yyyy" formControlName="runOutEndDate" class="form-control" max="2999-12-31" /> 
+                  <input type="date" value="MM/dd/yyyy" formControlName="runOutEndDate" class="form-control"  max="2999-12-31" [ngClass]="{ 'is-invalid': runOutStartErr.isDateErr}" /> 
                 </div>
               </div>
               <div class="col-md-4">
                 <div class="form-group">
                   <label>Termination Date</label>
-                  <input type="date" value="MM/dd/yyyy" formControlName="terminationDate" class="form-control" max="2999-12-31" /> 
+                  <input type="date" value="MM/dd/yyyy" formControlName="terminationDate" class="form-control" max="2999-12-31" [ngClass]="{ 'is-invalid': submitted &&  terminationDateErr.isDateErr}" /> 
                 </div>  
               </div>
             </div>

@@ -43,3 +43,16 @@
     background: none;
     border-top: none;
 }
+.members-table-area .member-table-wrap{
+    overflow-x: auto;
+}
+.members-table-area table.table{
+    width: 1600px;
+}
+.members-table-area .table tr th:last-child,
+.members-table-area .table tr td:last-child{
+    /* position: absolute;
+    right: 0; */
+    width: 60px;
+    border-left: 1px solid #c0c0c0;
+}

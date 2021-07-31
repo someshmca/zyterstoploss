@@ -1,9 +1,17 @@
-export interface IClaimSearch{    
-    claimId: string;
-    memberId: string;
-    firstName: string;
-    lastName: string;
-    dateOfBirth: string;
-    fromDate: string;
-    toDate: string;
+export interface IClaimSearch{   
+        claimId: string;
+        memberId: string;
+        firstName: string;
+        lastName: string;
+        dateOfBirth: string;
+        fromDate: string;
+        toDate: string;
+        clientId: string;
+        sequenceNumber?: number;
+        dollorAmount?: number;
+        diagnosisCode: string;
+        claimSource: string;
+        claimType: string;
+        alternateId: string;
+        paidDate: string
 }

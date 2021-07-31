@@ -5,6 +5,13 @@
     width:20px;
     height:20px;
 }
+.form-field-label{
+    min-width: 140px;
+    font-size: 12px;
+}
+.form-field-input{
+    width: 90px;
+}
 
 /*::ng-deep .mat-form-field-underline {
     display: none;

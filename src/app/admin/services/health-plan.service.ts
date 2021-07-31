@@ -56,6 +56,16 @@ export class HealthPlanService {
    >(Paths.planUpdate, body,{headers: headerOptions} ).pipe(catchError(this.handleError.bind(this)));
   
   }
+  //(V.E 27-Jul-2021 starts)
+  checkDuplicatePlanId(PId: string){
+  
+    return this.http.get(Paths.duplicatePlanId+PId).pipe(catchError(this.handleError.bind(this)));
+  }
+  checkDuplicatePlanName(PName: string){
+  
+    return this.http.get(Paths.duplicatePlanName+PName).pipe(catchError(this.handleError.bind(this)));
+  }
+  //(V.E 27-Jul-2021 Ends )
   handleError(errorResponse: HttpErrorResponse) {
     if (errorResponse.error instanceof ErrorEvent) {
       console.error('Client Side Error :', errorResponse.error.message);

@@ -31,6 +31,7 @@ export class ClaimResultComponent implements OnInit, AfterViewInit  {
     this._claimReportService.claimResultsVal.subscribe(
       (data) =>{
         this.claimResults = data;
+        
         this.dataSource = new MatTableDataSource(this.claimResults);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;

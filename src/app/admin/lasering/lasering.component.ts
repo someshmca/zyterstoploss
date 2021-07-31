@@ -71,7 +71,7 @@ export class LaseringComponent implements OnInit {
   isDisabled: boolean=false;
   isFilterOn: boolean = false;
   isViewModal: boolean;
-
+  isAdmin: boolean;
   constructor(private mb: FormBuilder, 
     private fb: FormBuilder, 
     private laseringService:LaseringService, 
@@ -115,7 +115,12 @@ export class LaseringComponent implements OnInit {
     this.getLaseringStatus();
     this.getAllMembers();
     this.getActiveClients();
-    this.clearErrorMessages();  
+    this.clearErrorMessages(); 
+    this.loginService.getLoggedInRole();
+    this.isAdmin = this.loginService.isAdmin;
+    if(!this.isAdmin){
+      this.isViewModal=true;
+    }
   } // end of ngOninit() method 
   
   public doFilter = (value: string) => {
@@ -271,7 +276,7 @@ export class LaseringComponent implements OnInit {
           debugger;
           this.memberForm.disable();
           this.f.laserValue.enable();
-          this.f.isUnlimited.enable(); 
+         // this.f.isUnlimited.enable(); 
           //this.isUnlimitedChecked();
           if(this.isViewModal==true){
             this.memberForm.disable();
@@ -279,29 +284,30 @@ export class LaseringComponent implements OnInit {
           if(this.isViewModal==false){
             this.memberForm.disable();
             this.f.laserValue.enable();
-            this.f.isUnlimited.enable(); 
-          }
-          if(this.f.isUnlimited.value==true || id.isUnlimited=='Y'){
-            this.memberForm.patchValue({
-              laserValue: 0
-            });
-            this.f.laserValue.disable();
-          } 
+            // this.f.isUnlimited.enable(); 
+            // if(this.f.isUnlimited.value==true || id.isUnlimited=='Y'){
+            //   this.memberForm.patchValue({
+            //     laserValue: 0
+            //   });
+            //   this.f.laserValue.disable();
+            // } 
+          }          
+          
        }        
   }
  }
- isUnlimitedChecked(){  
-   if(this.f.isUnlimited.value){
-     this.memberForm.patchValue({
-       laserValue: 0
-     });
+//  isUnlimitedChecked(){  
+//    if(this.f.isUnlimited.value){
+//      this.memberForm.patchValue({
+//        laserValue: 0
+//      });
  
-     this.f.laserValue.disable();
-   }
-   else{
-     this.f.laserValue.enable();            
-   }
- }
+//      this.f.laserValue.disable();
+//    }
+//    else{
+//      this.f.laserValue.enable();            
+//    }
+//  }
  get f(){return this.memberForm.controls}
  onSubmit() {
     

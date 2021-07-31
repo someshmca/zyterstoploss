@@ -43,6 +43,12 @@ getBatchProcessDetails(status: string): Observable<IBatchDetails[]> {
      >(Paths.BatchProcessUpdate, body,{headers: headerOptions} ).pipe(catchError(this.handleError.bind(this)));
     
     }
+    //(V.E 27-Jul-2021 starts )
+    checkDuplicateBatchId(batchId: string){
+  
+      return this.http.get(Paths.duplicateBatchProcess+batchId).pipe(catchError(this.handleError.bind(this)));
+    }
+    //(V.E 27-Jul-2021 Ends)
     calculateOnStart(batchid:any,userid:string,startDate:any,lastRunTime:any,frequency:string,nextScheduleRun:any, batchType: string){ 
       
       let params = new HttpParams();

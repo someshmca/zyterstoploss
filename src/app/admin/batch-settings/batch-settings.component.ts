@@ -39,12 +39,17 @@ export class BatchSettingsComponent implements OnInit {
   isAddMode: boolean;
   loading = false;
   submitted = false;
+  loadStop=true;
   isCustomModalOpen: boolean = false;
   fLastRun: any = '';
   updateBatchObj: IBatchPUpdate;
   uBatchProcessId: number;
+  uBatchProcess;//(V.E 27-Jul-2021 )
   ulastRun: string;  
   uCreatedOn: any;
+  batchIdStatus; //(V.E 27-Jul-2021 )
+  batchIdErr={isValid: false, errMsg:''};//(V.E 27-Jul-2021 )
+
   @ViewChild("focusElem") focusTag: ElementRef;
   show: boolean=true;
   noRecsFoundBatchDetails: boolean = false;
@@ -99,6 +104,12 @@ export class BatchSettingsComponent implements OnInit {
         this.locLastRunStatus = this.batchStatusList[1].batchStatus;
       }
     );
+  }
+
+  //(V.E 27-Jul-2021 starts)
+  clearErrorMessages(){
+    this.batchIdErr.isValid=false;
+    this.batchIdErr.errMsg='';
   }
   showRowHistory(row, index){
     this.selectedRow = index;
@@ -224,6 +235,8 @@ export class BatchSettingsComponent implements OnInit {
    }, 100);
     this.submitted = false;
     this.isDisabled=false;
+    this.loadStop=true;
+    this.clearErrorMessages();//(V.E 27-Jul-2021 )
     this.loading = false;
     if(open && id==null){
       this.batchProcessForm.patchValue({        
@@ -275,12 +288,19 @@ export class BatchSettingsComponent implements OnInit {
       }
       console.log(this.batchProcessForm.value);
       
-      
+      //(V.E 27-Jul-2021 starts)
+      this.uBatchProcess=this.f.batchProcess.value;
+      console.log(this.uBatchProcess);
+      //(V.E 27-Jul-2021 Ends)
     }
   }
   
+ 
   onSubmit() {
+    this.clearErrorMessages();//(V.E 27-Jul-2021)
     this.submitted = true;
+    this.loadStop=false;
+
 
     // reset alerts on submit
     this.alertService.clear();
@@ -289,17 +309,60 @@ export class BatchSettingsComponent implements OnInit {
     if (this.batchProcessForm.invalid) {
         return;
     }
-
-    this.loading = true;
-    if (this.isAddMode) {
+    //(V.E 27-Jul-2021 starts)
+    
+    if (!this.isAddMode) {
+      console.log(this.uBatchProcess.toLowerCase());
+      console.log(this.f.batchProcess.value.toLowerCase());
+      if(this.uBatchProcess.toLowerCase()!== this.f.batchProcess.value.toLowerCase())
+      {
       
-        this.addBatchProcess();
-    } else {
+      
+          this.batchSettingService.checkDuplicateBatchId(this.f.batchProcess.value).subscribe(id=>
+            {
+              console.log(id);
+               if(id>0)
+              {
+                this.batchIdErr.isValid=true;
+                this.batchIdErr.errMsg="The Batch Process "+this.f.batchProcess.value+" already exists. Please enter different Batch Process";
+                return;
+
+              }
+              else{
+
+                this.updateBatchProcess();
+              }
+              
+        })
+      }else  {
         this.updateBatchProcess();
-        
-    }
+      }
 }
 
+
+    this.loading = true;
+    if (this.isAddMode) 
+    {
+      this.batchSettingService.checkDuplicateBatchId(this.f.batchProcess.value).subscribe(id=>
+        {
+          if(id>0)
+          {
+            this.batchIdErr.isValid=true;
+            this.batchIdErr.errMsg="The Batch Process "+this.f.batchProcess.value+" already exists. Please enter different Batch Process"
+            return;
+
+          }
+          this.addBatchProcess();
+
+
+         })
+
+
+    }
+    
+    
+}
+//(V.E 27-Jul-2021 Ends )
 private addBatchProcess() {
   this.isDisabled=true;
   this.isHistoryPresent = false; // Modified by Venkatesh Enigonda
@@ -377,6 +440,7 @@ private addBatchProcess() {
               next: () => {                
                   this.openCustomModal(false,null); 
                   this.batchProcessForm.reset();
+                  this.uBatchProcess=''; //(V.E 27-Jul-2021 )
                   this.listBatchProcessGrid();
                   this.alertService.success('Batch Process updated', { 
                     keepAfterRouteChange: true });

@@ -21,7 +21,9 @@
  .claim-results-area .card{
      margin: 0 20px;
  }
- 
+ .claim-form-wrap .form-group{
+     margin-bottom: 0;
+ }
  .claim-results-area .card-body{
     padding-left: 0;
     padding-right: 0;
@@ -29,4 +31,22 @@
 .claim-search .card-footer{
     background: none;
     border-top: none;
+}
+.form-field-label{
+    min-width: 140px;
+}
+.claim-results-grid-wrap{
+    width: 100%;
+    position: relative;
+    overflow-x: auto;
+}
+.claim-results-grid-wrap table{
+    width: 1600px;
+}
+.claim-results-grid-wrap table tr th:last-child,
+.claim-results-grid-wrap table tr td:last-child{
+    /* position: absolute;
+    right: 0; */
+    width: 60px;
+    border-left: 1px solid #c0c0c0;
 }

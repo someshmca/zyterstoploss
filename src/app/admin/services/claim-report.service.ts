@@ -28,6 +28,7 @@ export class ClaimReportService {
 
    }
    getClaimReport(formData: IClaimSearch): Observable<IClaimReportsModel[]> {
+     
     const body = JSON.stringify(formData);
     const headerOptions = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.http.post<IClaimReportsModel[]>(Paths.reportPath, body, {

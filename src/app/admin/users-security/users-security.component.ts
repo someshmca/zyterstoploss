@@ -135,9 +135,21 @@ export class UsersSecurityComponent implements OnInit {
     // till here
 }
 
+
+// starts here added by Venkatesh Enigonda
 public doFilter = (value: string) => {
   this.dataSource.filter = value.trim().toLocaleLowerCase();
-}  
+
+  this.dataSource.filterPredicate = (data1:IAllUserIDs, filter: string) => {
+    const Id=data1.status;
+    const stat :string=String(Id);
+    const CompareData=data1.userName.toLowerCase() ||'';
+    const CompareData1=stat.toLocaleLowerCase() ||'';
+    const CompareData2=data1.userId.toLowerCase() ||'';
+    return CompareData.indexOf(filter)!==-1  || CompareData1.indexOf(filter)!==-1 ||  CompareData2.indexOf(filter)!==-1;
+  };
+}
+//Ends here   
 getAllRoles(){    
   this.rolesService.getAllRoles().subscribe(
     (data: IRole[]) => {
@@ -257,9 +269,9 @@ openViewModal(bool, id:any){
          }
        }
        if((effectiveFrom!==null || effectiveFrom!=='') && (effectiveTo!=null && effectiveTo!='')){
-         if(effectiveTo > maxDate ){
+         if(effectiveTo < maxDate ){
          this.effectiveFrom.isValid=true;
-         this.effectiveFrom.errors='Effective To date must be less than '+maxDate+' date';
+         this.effectiveFrom.errors='Effective To date must be greater than '+maxDate+' date';
          return;
          }
        }

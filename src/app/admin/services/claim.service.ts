@@ -22,10 +22,19 @@ export class ClaimService {
     lastName: '',
     dateOfBirth: '',
     fromDate: '',
-    toDate: ''
+    toDate: '',
+    sequenceNumber: 0,
+    clientId: '',
+    dollorAmount: 0,
+    diagnosisCode: '',
+    claimSource: '',
+    claimType: '',
+    alternateId: '',
+    paidDate: ''
   }
   claimSearchRequest=new BehaviorSubject<IClaimSearch>(this.claimSearchInit);
   setClaimSearchRequest(request:IClaimSearch){
+    
     this.claimSearchRequest.next(request);
     this.claimSearchRequest.asObservable();
   }
