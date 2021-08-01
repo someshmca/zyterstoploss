@@ -101,7 +101,8 @@ export class ClaimSearchComponent implements OnInit {
       this.focusTag.nativeElement.focus()
     }, 100)
     this.today=new Date().toJSON().split('T')[0];
-    this._claimService.isClaimResult.subscribe((value)=>{this.isClaimResult=value;});    
+    this.isClaimResult=false;
+   // this._claimService.isClaimResult.subscribe((value)=>{this.isClaimResult=value;});    
     // this._claimService.claimSearchRequest.subscribe((res)=>{
     //   this.claimSearchRequest=res; 
     //   if(this.isClaimResult){
@@ -166,7 +167,8 @@ dateLessThan(from: string, to: string) {
   resetClaimSearch(){
     this.claimSearchForm.reset();
     this.claimSearchNotFound = false;
-    this._claimService.setIsClaimResult(false);
+    //this._claimService.setIsClaimResult(false);
+    this.isClaimResult=false;
     this._claimService.resetClaimSearch();
     this.clearErrorMessages();   
   }
@@ -408,9 +410,8 @@ onSubmit() {
         
         this.submitted = true;
         this.dateErrorMessage='';
-        
-        this._claimService.setIsClaimResult(true);
-        console.log(this.isClaimResult);
+        this.isClaimResult = true;
+       // this._claimService.setIsClaimResult(true);
         
         this.claimSearchNotFound = false;
         this.claimResults = data;
@@ -423,7 +424,7 @@ onSubmit() {
       },
       (error) => {
         this.claimSearchNotFound = true;
-        this._claimService.setIsClaimResult(false);
+       // this._claimService.setIsClaimResult(false);
 
       } 
     )

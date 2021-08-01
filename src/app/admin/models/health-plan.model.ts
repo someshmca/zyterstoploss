@@ -3,15 +3,7 @@ export interface ITire{
     tierName: string;
     status: number;
 }
-export interface ITierObj{    
-    factor1:number; 
-    factor2:number; 
-    factor3:number; 
-    factor4:number;
-    expectedClaims1:number;
-    expectedClaims2:number;
-    expectedClaims3:number;
-    expectedClaims4:number;
+export interface ITierObj{ 
 }
 export interface IPlanAll{
     planID: number;
@@ -23,18 +15,7 @@ export interface IPlanAll{
     contractYear: string;
     clientName: string;
     status: number;
-    isTerminalExtCoverage: string;
-    lstTblPlanTier: [
-      {
-        planId: number;
-        tierId: number;
-        tierAmount: number;
-        expectedClaimsRate: number;
-        createdOn: Date;
-        userId: string;
-        updatedOn: Date
-      }
-    ]
+    lstTblPlanTier: IPlanTierChild[]
 }
 export interface IPlanAdd{    
     planID: number;
@@ -44,16 +25,17 @@ export interface IPlanAdd{
     planCode: string;
     planName: string;
     contractYear: string;
-    clientName: string;
+    //clientName: string;
     status: number;
-    isTerminalExtCoverage: string;
     lstTblPlanTier: IPlanTierChild[];  
 }
 export interface IPlanTierChild{   
     planId: number;
     tierId: number;
     tierAmount: number;
+    tierName: string;
     expectedClaimsRate: number;
+    isTerminalExtCoverage: string;
     createdOn?: Date;
     userId?: string;
     updatedOn?: Date;
@@ -66,9 +48,8 @@ export interface IPlanUpdate{
     planCode: string;
     planName: string;
     contractYear: string;
-    clientName: string;
+    //clientName: string;
     status: number;
-    isTerminalExtCoverage: string;
     lstTblPlanTier: IPlanTierChild[];  
 }
 export interface IActiveClient{

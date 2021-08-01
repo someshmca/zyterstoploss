@@ -11,6 +11,7 @@ export interface IProductAll{
     sslAggDeductible: number;
     sslAnnualLimit: number;
     sslLifetimeLimit: number;
+    sslPartcipantLimit: number;
     sslTermCoverageExtEndDate: Date;
     sslIsImmediateReimbursement: boolean;
     sslLasering: boolean;
@@ -54,6 +55,7 @@ export interface IProductAdd{
     sslAggDeductible: number;
     sslAnnualLimit: number;
     sslLifetimeLimit: number;
+    sslPartcipantLimit: number;
     sslTermCoverageExtEndDate: string;
     sslIsImmediateReimbursement: boolean;
     sslLasering: boolean;
@@ -95,6 +97,7 @@ export interface IProductUpdate{
   sslAggDeductible: number;
   sslAnnualLimit: number;
   sslLifetimeLimit: number;
+  sslPartcipantLimit: number;
   sslTermCoverageExtEndDate: string;
   sslIsImmediateReimbursement: boolean;
   sslLasering: boolean;
@@ -150,6 +153,7 @@ export interface IProduct{
     sslAggDeductible: number;
     sslAnnualLimit: number;
     sslLifetimeLimit: number;
+    sslPartcipantLimit: number;
     sslTermCoverageExtEndDate: Date;
     sslIsImmediateReimbursement: boolean;
     sslLasering: boolean;

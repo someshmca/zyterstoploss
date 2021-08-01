@@ -41,11 +41,11 @@ export class ClaimService {
   resetClaimSearch(){
     this.setClaimSearchRequest(this.claimSearchInit);
   }
-  isClaimResult= new BehaviorSubject<boolean>(false);
-  setIsClaimResult(clres:boolean){
-    this.isClaimResult.next(clres);
-    this.isClaimResult.asObservable();
-  }
+  // isClaimResult= new BehaviorSubject<boolean>(false);
+  // setIsClaimResult(clres:boolean){
+  //   this.isClaimResult.next(clres);
+  //   this.isClaimResult.asObservable();
+  // }
 
    private claimID = new BehaviorSubject<string>('');
     selectedClaimID = this.claimID.asObservable();

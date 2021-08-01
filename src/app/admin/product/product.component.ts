@@ -149,6 +149,7 @@ export class ProductComponent implements OnInit {
       sslAggDeductible:0,
       sslAnnualLimit:0,
       sslLifetimeLimit:0,
+      sslPartcipantLimit:0,//(VE 1-08-2021 starts)
 
       sslIsImmediateReimbursement:false,
       sslTermCoverageExtEndDate:'',
@@ -195,7 +196,8 @@ export class ProductComponent implements OnInit {
     this.claimBasis = CLAIM_BASIS_CONSTANT.values;
     
     this.getAllProducts();
-    this.getActiveClients();   
+    this.getActiveClients();     
+    this.getCoveredClaims();
     //this.getAllContracts();
     //this.isClientSelected = false;
     this.checkMaxLiability(); 
@@ -260,6 +262,11 @@ export class ProductComponent implements OnInit {
       })
   }
   
+  getCoveredClaims(){
+    this.productService.getCoveredClaims().subscribe((data)=>{
+        this.coveredClaims = data;
+    })
+  }
   getContractIDs(clientId){
     this.contractService.getContractsByClientID(clientId).subscribe((data)=>{
       data.sort((x,y) => x.contractId - y.contractId);
@@ -589,6 +596,7 @@ openViewModal(bool, id:any){
               sslAggDeductible:x[0].sslAggDeductible,
               sslAnnualLimit:x[0].sslAnnualLimit,
               sslLifetimeLimit:x[0].sslLifetimeLimit,
+              sslPartcipantLimit:x[0].sslPartcipantLimit,//(VE 1-08-2021 starts)
               sslIsImmediateReimbursement:x[0].sslIsImmediateReimbursement,
               sslTermCoverageExtEndDate:x[0].sslTermCoverageExtEndDate==null?"":this.datePipe.transform(new Date(x[0].sslTermCoverageExtEndDate), 'yyyy-MM-dd'),
               sslLasering: x[0].sslLasering,
@@ -767,6 +775,7 @@ patchProductForm(){
     sslAggDeductible: this.decimalValue(this.f.sslAggDeductible.value),
     sslAnnualLimit: this.decimalValue(this.f.sslAnnualLimit.value),
     sslLifetimeLimit: this.decimalValue(this.f.sslLifetimeLimit.value),
+    sslPartcipantLimit:this.decimalValue(this.f.sslPartcipantLimit.value),//(VE 1-08-2021 starts)
     sslTermCoverageExtEndDate: this.dateValue(this.f.sslTermCoverageExtEndDate.value),
     //sslIsImmediateReimbursement: boolean;
     sslLasering: this.f.sslLasering.value==null?false:true,

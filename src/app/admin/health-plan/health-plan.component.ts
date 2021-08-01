@@ -92,26 +92,11 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
       contractYear: [''],
       clientName: '',
       status: 1,
-      factor1: '',
-      factor2: '',
-      factor3: '',
-      factor4: '',
-      expectedClaims1: [''],
-      expectedClaims2: [''],
-      expectedClaims3: [''],
-      expectedClaims4: [''],
-      isTerminalExtCoverage:'',
-      lstTblPlanTier: [{
-          planId: 0,
-          tierId: 0,
-          tierAmount:0,
-          expectedClaimsRate: 0
-        }
-      ]
+      lstTblPlanTier: new FormArray([])
+      
     });
     this.isAdded=false;
     //this.initLocalTires();
-    this.initTierObj();
     this.getAllPlans();
     this.getTires();
     this.getActiveClients();
@@ -119,6 +104,45 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
     this.isStatusChecked = true;
     this.loginService.getLoggedInRole();
     this.isAdmin = this.loginService.isAdmin;
+    //this.initTier();
+    this.t.value;
+    debugger;
+  }
+  // conven`ience getter for easy access to form fields
+  get f() { return this.planForm.controls; }
+  get t() { return this.f.lstTblPlanTier as FormArray; }
+  get tierFormGroups() { return this.t.controls as FormGroup[]; }
+
+
+    initTier(){
+      debugger;
+          return this.t.push(this.formBuilder.group({
+            tierId: [''],
+            tierAmount: [''],
+            expectedClaimsRate: [''],
+            isTerminalExtCoverage: ['']
+        }));
+    }
+  addTier(){
+    //const numberOfTiers = e.target.value || 0;
+      //  if (this.t.length < numberOfTickets) {
+          //  for (let i = this.t.length; i < numberOfTickets; i++) {
+                this.t.push(this.formBuilder.group({
+                    tierId: [''],
+                    tierAmount: [''],
+                    expectedClaimsRate: [''],
+                    isTerminalExtCoverage: ['']
+                }));
+           // }
+       // } else {
+            // for (let i = this.t.length; i >= numberOfTickets; i--) {
+            //     this.t.removeAt(i);
+            // }
+        
+  }
+  fetchTiers(){
+    console.log(this.t.length);
+    
   }
   
   ngAfterViewInit(){
@@ -234,18 +258,7 @@ initLocalTires(){
     }
   ]
 }
-initTierObj(){  
-  this.tierObj={
-    factor1:0,
-    factor2:0, 
-    factor3:0, 
-    factor4:0, 
-    expectedClaims1:0,
-    expectedClaims2:0, 
-    expectedClaims3:0, 
-    expectedClaims4:0 
-  }
-}
+
 //(V.E 27-Jul-2021 starts)
 checkDuplicatePlanName(PName){
   return this.planService.checkDuplicatePlanName(PName).toPromise();
@@ -301,6 +314,7 @@ doFilter(filterValue:string){ //added by Venkatesh Enigonda
     if(open && elem==null){
 
       this.isAddMode = true;
+      this.initTier();
       this.isFilterOn=false;
       this.addPlanObj=null;
     }
@@ -311,6 +325,7 @@ doFilter(filterValue:string){ //added by Venkatesh Enigonda
       this.isAddMode = false;
       this.isAdded=false;
       this.isViewModal=false;
+      this.t.clear();
       if(!this.isFilterOn){
         this.navService.resetPlanObj();
         this.clearSearchInput();
@@ -336,26 +351,28 @@ doFilter(filterValue:string){ //added by Venkatesh Enigonda
 
       console.log(elem.lstTblPlanTier.length);
       
-      for(let i=0;i<elem.lstTblPlanTier.length; i++){
-        if(elem.lstTblPlanTier[i].tierId==1){          
-          this.tierObj.factor1=elem.lstTblPlanTier[i].tierAmount;
-          this.tierObj.expectedClaims1=elem.lstTblPlanTier[i].expectedClaimsRate;
-        }
-        else if(elem.lstTblPlanTier[i].tierId==2){
-          this.tierObj.factor2=elem.lstTblPlanTier[i].tierAmount;
-          this.tierObj.expectedClaims2=elem.lstTblPlanTier[i].expectedClaimsRate;
-        }
-        else if(elem.lstTblPlanTier[i].tierId==3){
-          this.tierObj.factor3=elem.lstTblPlanTier[i].tierAmount;
-          this.tierObj.expectedClaims3=elem.lstTblPlanTier[i].expectedClaimsRate;
-        }
-        else if(elem.lstTblPlanTier[i].tierId==4){
-          this.tierObj.factor4=elem.lstTblPlanTier[i].tierAmount;
-          this.tierObj.expectedClaims4=elem.lstTblPlanTier[i].expectedClaimsRate;
-        }
-      }
-      this.updatePlanID = elem.planID;
       
+      this.updatePlanID = elem.planID;
+      //this.fetchTiers();
+      console.log(elem.lstTblPlanTier.length);
+      // this.t.setValue(elem.lstTblPlanTier);
+      // console.log(this.t)
+      
+
+      if(elem.lstTblPlanTier.length>0){
+        //this.t.setValue(elem.lstTblPlanTier);
+     //  console.log(this.t.value);
+       
+        for (let i = 0; i < elem.lstTblPlanTier.length; i++) {
+          this.t.push(this.formBuilder.group({
+              tierId: elem.lstTblPlanTier.tierId,
+              tierAmount: elem.lstTblPlanTier.tierAmount,
+              expectedClaimsRate: elem.lstTblPlanTier.expectedClaimsRate,
+              isTerminalExtCoverage: elem.lstTblPlanTier.isTerminalExtCoverage=='Y'?true:false
+          }));
+      }
+        
+      }
       this.getContractsByClientID(elem.clientId);
       this.planForm.patchValue({
         planID: elem.planID,
@@ -367,16 +384,11 @@ doFilter(filterValue:string){ //added by Venkatesh Enigonda
         contractYear: elem.contractYear,
         clientName: elem.clientName,
         status: elem.status,
-        isTerminalExtCoverage: elem.isTerminalExtCoverage=='Y'?true:false,
-        factor1: this.tierObj.factor1==0?'':this.tierObj.factor1,
-        factor2: this.tierObj.factor2==0?'':this.tierObj.factor2,
-        factor3: this.tierObj.factor3==0?'':this.tierObj.factor3,
-        factor4: this.tierObj.factor4==0?'':this.tierObj.factor4,
-        expectedClaims1: this.tierObj.expectedClaims1,
-        expectedClaims2: this.tierObj.expectedClaims2,
-        expectedClaims3: this.tierObj.expectedClaims3,
-        expectedClaims4: this.tierObj.expectedClaims4,          
+        lstTblPlanTier: elem.lstTblPlanTier
       });
+      console.log(this.planForm.value);
+      console.log(this.t);
+      
       if(this.isViewModal==true){
         this.planForm.disable();
       }
@@ -439,9 +451,6 @@ doFilter(filterValue:string){ //added by Venkatesh Enigonda
     this.filterSearchInput.nativeElement.focus();
     this.getAllPlans();
   }
-  // conven`ience getter for easy access to form fields
-  get f() { return this.planForm.controls; }
-
   onSubmit() {
     this.clearErrorMessages();//(V.E 27-Jul-2021 )
       this.submitted = true;
@@ -452,15 +461,8 @@ doFilter(filterValue:string){ //added by Venkatesh Enigonda
       if (this.planForm.invalid) {
           return;
       }
-      let t1=this.f.factor1.value==null?'':this.f.factor1.value;
-      let t2=this.f.factor2.value==null?'':this.f.factor2.value;
-      let t3=this.f.factor3.value==null?'':this.f.factor3.value;
-      let t4=this.f.factor4.value==null?'':this.f.factor4.value;
       
-      if((t1=='' || t1==0) && (t2=='' || t2==0) && (t3=='' || t3==0) && (t4=='' || t4==0)){
-        this.isNoFactAmount=true;
-        return;
-      } //(V.E 27-Jul-2021 starts )
+       //(V.E 27-Jul-2021 starts )
       if(this.planForm.valid){
         if(this.isAddMode){
           const pid= this.planService.checkDuplicatePlanId(this.f.planCode.value);
@@ -544,6 +546,12 @@ doFilter(filterValue:string){ //added by Venkatesh Enigonda
   private addPlan() {
     this.isDisabled=true;
     this.isNoFactAmount=false;
+    console.log(this.f.lstTblPlanTier.value[0].isTerminalExtCoverage);
+    for (let i = 0; i < this.f.lstTblPlanTier.value.length; i++) {
+      this.f.lstTblPlanTier.value[i].planId=0;
+        this.f.lstTblPlanTier.value[i].tierId=Number(this.f.lstTblPlanTier.value[i].tierId);
+        this.f.lstTblPlanTier.value[i].isTerminalExtCoverage=this.f.lstTblPlanTier.value[i].isTerminalExtCoverage==true?'Y':'N'
+    }
     this.addPlanObj = {
       planID: 0,
       clientId: this.f.clientId.value,
@@ -552,47 +560,14 @@ doFilter(filterValue:string){ //added by Venkatesh Enigonda
       planCode: this.f.planCode.value,
       planName: this.f.planName.value,
       contractYear: this.f.contractYear.value,
-      clientName: this.locClientName,
+      //clientName: this.locClientName,
       status: this.f.status.value==true?1:0,
-      isTerminalExtCoverage: this.f.isTerminalExtCoverage.value==true?'Y':'N',
-      lstTblPlanTier: []
+      lstTblPlanTier: this.f.lstTblPlanTier.value
     }
     let date=new Date();
-    if(this.f.factor1.value!=null && this.f.factor1.value!=''){
-      this.addPlanObj.lstTblPlanTier.push({
-        planId: 0, 
-        tierId: 1, 
-        tierAmount: Number(this.f.factor1.value), 
-        expectedClaimsRate: Number(this.f.expectedClaims1.value)
-      });
-    }
-    if(this.f.factor2.value!=null && this.f.factor2.value!=''){
-      this.addPlanObj.lstTblPlanTier.push({
-        planId: 0, 
-        tierId: 2, 
-        tierAmount: Number(this.f.factor2.value), 
-        expectedClaimsRate: Number(this.f.expectedClaims2.value)
-      });
-    }
-    if(this.f.factor3.value!=null && this.f.factor3.value!=''){
-      this.addPlanObj.lstTblPlanTier.push({
-        planId: 0, 
-        tierId: 3, 
-        tierAmount: Number(this.f.factor1.value), 
-        expectedClaimsRate: Number(this.f.expectedClaims3.value)
-      });
-    }
-    if(this.f.factor4.value!=null && this.f.factor4.value!=''){
-      this.addPlanObj.lstTblPlanTier.push({
-        planId: 0, 
-        tierId: 4, 
-        tierAmount: Number(this.f.factor4.value), 
-        expectedClaimsRate: Number(this.f.expectedClaims4.value)
-      });
-    }
       console.log(this.addPlanObj);
       console.log(JSON.stringify(this.addPlanObj));
-
+    debugger;
       this.planService.addPlan(this.addPlanObj)
           .pipe(first())
           .subscribe({
@@ -618,7 +593,11 @@ doFilter(filterValue:string){ //added by Venkatesh Enigonda
     this.isNoFactAmount=false;
     console.log(this.updatePlanID);
     this.planForm.patchValue(this.planForm.value)
-    
+    console.log(this.f.lstTblPlanTier.value[0].isTerminalExtCoverage);
+    for (let i = 0; i < this.f.lstTblPlanTier.value.length; i++) {
+        this.f.lstTblPlanTier.value[i].tierId=Number(this.f.lstTblPlanTier.value[i].tierId);
+        this.f.lstTblPlanTier.value[i].isTerminalExtCoverage=this.f.lstTblPlanTier.value[i].isTerminalExtCoverage==true?'Y':'N'
+    }
     this.updatePlanObj = {
       planID: this.updatePlanID,
       clientId: this.f.clientId.value,
@@ -627,49 +606,16 @@ doFilter(filterValue:string){ //added by Venkatesh Enigonda
       planCode: this.f.planCode.value,
       planName: this.f.planName.value,
       contractYear: this.f.contractYear.value,
-      clientName: this.locClientName,
+     // clientName: this.locClientName,
       status: this.f.status.value==true?1:0,
-      isTerminalExtCoverage: this.f.isTerminalExtCoverage.value==true?'Y':'N',
-      lstTblPlanTier: []
+      lstTblPlanTier: this.f.lstTblPlanTier.value
     }
-
-
-    if(this.f.factor1.value!=null && this.f.factor1.value!=''){
-      this.updatePlanObj.lstTblPlanTier.push({
-        planId: this.updatePlanID, 
-        tierId: 1, 
-        tierAmount: Number(this.f.factor1.value), 
-        expectedClaimsRate: Number(this.f.expectedClaims1.value)
-      });
-    }
-    if(this.f.factor2.value!=null && this.f.factor2.value!=''){
-      this.updatePlanObj.lstTblPlanTier.push({
-        planId: this.updatePlanID, 
-        tierId: 2, 
-        tierAmount: Number(this.f.factor2.value), 
-        expectedClaimsRate: Number(this.f.expectedClaims2.value)
-      });
-    }
-    if(this.f.factor3.value!=null && this.f.factor3.value!=''){
-      this.updatePlanObj.lstTblPlanTier.push({
-        planId:this.updatePlanID, 
-        tierId: 3, 
-        tierAmount: Number(this.f.factor1.value), 
-        expectedClaimsRate: Number(this.f.expectedClaims3.value)
-      });
-    }
-    if(this.f.factor4.value!=null && this.f.factor4.value!=''){
-      this.updatePlanObj.lstTblPlanTier.push({
-        planId: this.updatePlanID, 
-        tierId: 4, 
-        tierAmount: Number(this.f.factor4.value), 
-        expectedClaimsRate: Number(this.f.expectedClaims4.value)
-      });
-    }
+    this.planForm.patchValue(this.planForm.value)
+    debugger;
 
       console.log(this.updatePlanObj);
 
-      this.planService.updatePlan(this.updatePlanObj)
+      this.planService.updatePlan(this.planForm.value)
           .pipe(first())
           .subscribe({
               next: () => {
