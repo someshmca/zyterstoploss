@@ -401,13 +401,8 @@ if(this.productForm.valid && this.f.sslPaidStartDate.value == this.f.sslPaidEndD
     
   return;
 }
-if(this.productForm.valid && this.f.sslContractStartDate.value == this.f.sslContractEndDate.value){
 
-  this.sslSPecificErr.isDateErr=true;
-  this.sslSPecificErr.dateErrMsg ='SSL Specific Start date should not be Equal to SSL Specific End date' ;
-  
-  return;
-}
+
 // Ends here
  if(this.productForm.valid && this.f.aslIncurrredStartDate.value > this.f.aslIncurredEndDate.value){
   this.aslIncurredEndErr.isDateErr=true;
@@ -423,12 +418,22 @@ if(this.productForm.valid && this.f.sslContractStartDate.value == this.f.sslCont
   
   return;
 }
-if(this.productForm.valid && this.f.sslContractStartDate.value == this.f.sslContractEndDate.value){
-
-  this.sslSPecificErr.isDateErr=true;
-  this.sslSPecificErr.dateErrMsg ='SSL Specific Start date should not be Equal to SSL Specific End date' ;
+if(this.f.sslContractStartDate.value !=null && this.f.sslContractStartDate.value !='' && this.f.sslContractEndDate.value!=null && this.f.sslContractEndDate.value!=''){
+  if(this.productForm.valid && this.f.sslContractStartDate.value == this.f.sslContractEndDate.value){
   
-  return;
+    this.sslSPecificErr.isDateErr=true;
+    this.sslSPecificErr.dateErrMsg ='SSL Specific Start date should not be Equal to SSL Specific End date' ;
+    
+    return;
+  }
+  if(this.productForm.valid && this.f.sslContractStartDate.value == this.f.sslContractEndDate.value){
+
+    this.sslSPecificErr.isDateErr=true;
+    this.sslSPecificErr.dateErrMsg ='SSL Specific Start date should not be Equal to SSL Specific End date' ;
+    
+    return;
+  }
+
 }
 // Ends here
 if(this.productForm.valid && this.f.aslPaidStartDate.value > this.f.aslPaidEndDate.value){
@@ -444,19 +449,21 @@ if(this.productForm.valid && this.f.aslIncurrredStartDate.value ==this.f.aslIncu
   
   return;
 }
-if(this.productForm.valid && this.f.aslContractStartDate.value == this.f.aslContractEndDate.value){
+if(this.f.aslContractStartDate.value !=null && this.f.aslContractStartDate.value !='' && this.f.aslContractEndDate.value!=null && this.f.aslContractEndDate.value!=''){
+  if(this.productForm.valid && this.f.aslContractStartDate.value == this.f.aslContractEndDate.value){
 
-  this.aslAggregateErr.isDateErr=true;
-  this.aslAggregateErr.dateErrMsg ='ASL Aggregate Start date should not be Equal to ASL Aggregate End date ';
+    this.aslAggregateErr.isDateErr=true;
+    this.aslAggregateErr.dateErrMsg ='ASL Aggregate Start date should not be Equal to ASL Aggregate End date ';
+    
+    return;
+  }
+  if(this.productForm.valid && this.f.aslContractStartDate.value > this.f.aslContractEndDate.value){
   
-  return;
-}
-if(this.productForm.valid && this.f.aslContractStartDate.value > this.f.aslContractEndDate.value){
-
-  this.aslAggregateErr.isDateErr=true;
-  this.aslAggregateErr.dateErrMsg =' ASL Aggregate Start date should not be greater than ASL Aggregate End date ';
-  
-  return;
+    this.aslAggregateErr.isDateErr=true;
+    this.aslAggregateErr.dateErrMsg =' ASL Aggregate Start date should not be greater than ASL Aggregate End date ';
+    
+    return;
+  }
 }
 if(this.productForm.valid && this.f.aslPaidStartDate.value > this.f.aslPaidEndDate.value){
  this.aslPaidEndErr.isDateErr=true;
