@@ -192,6 +192,8 @@ openViewModal(bool, id:any){
        this.loading = false;
        if(open && id==null){
          this.isAddMode = true;
+         this.isViewModal=false;
+         this.securityForm.enable();
        }
        this.isCustomModalOpen = open;
        if (!open && id==null) {

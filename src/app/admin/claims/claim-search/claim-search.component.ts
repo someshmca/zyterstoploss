@@ -80,8 +80,8 @@ export class ClaimSearchComponent implements OnInit {
       fromDate:[null],
       toDate: [null],
       clientId: [''],
-      sequenceNumber: [0],
-      dollorAmount: [0],  
+      sequenceNumber: [''],
+      dollorAmount: [''],  
       diagnosisCode: [''],
       claimSource: [''],
       claimType: [''],
@@ -226,7 +226,7 @@ openCustomModal(open: boolean, id:any) {
     
     this.isAddMode = false;   
       console.log(id);
-      debugger;
+      
           this.claimForm.patchValue({    
             claimId: id.claimId,
             clientId:  id.clientId,
@@ -289,6 +289,7 @@ onSubmit() {
     this.isClaimResult=false;
     console.log(this.dateErr.fromDateErr); 
     this.clearErrorMessages();
+    
     this.claimSearchForm.patchValue(this.claimSearchForm.value);
        console.log(this.claimSearchForm.value);
     // this.claimSearchForm.patchValue({

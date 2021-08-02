@@ -31,7 +31,7 @@ export class MemberComponent implements OnInit {
   searchResult: any;
   memberForm: FormGroup;
   searchErrorMessage: string;
-  displayedColumns: string[] = ['memberId', 'clientId', 'contractId', 'planId', 'tierId', 'fname', 'lname', 'mname', 'gender','memberStartDate', 'memberEndDate','dateOfBirth', 'subscriberId','alternateId', 'laserValue', 'isUnlimited','tier','benefitPlanId','userId'];    //(VE 30-Jul-2021)
+  displayedColumns: string[] = ['memberId', 'clientName', 'contractId', 'planId', 'tierId', 'fname', 'lname', 'mname', 'gender','memberStartDate', 'memberEndDate','dateOfBirth', 'subscriberId','alternateId', 'laserValue', 'isUnlimited','tier','benefitPlanId','userId'];    //(VE 30-Jul-2021)
   searchDataSource: any;
 
   
@@ -231,34 +231,35 @@ export class MemberComponent implements OnInit {
     console.log(alphaNum.test(subscriberId));
     let a5=alphaNum.test(subscriberId);      
     
-    if(memberStartDate!=null && memberStartDate!='' && memberEndDate!=null && memberEndDate!=''){
-      if(memberStartDate>memberEndDate){
-      this.memStartDateErr.isValid=true;
-      this.memSearchError=false;
-      this.memStartDateErr.errMsg='Member Start Date should not be greater than Member End Date';
-      return;
-      }
-      if(memberStartDate==memberEndDate){
-      this.memStartDateErr.isValid=true;
-      this.memSearchError=false;
-      this.memStartDateErr.errMsg='Member Start Date should not be EQUAL to Member End Date';
-      return;
-      }
-    }
+    // if(memberStartDate!=null && memberStartDate!='' && memberEndDate!=null && memberEndDate!=''){
+    //   if(memberStartDate>memberEndDate){
+    //   this.memStartDateErr.isValid=true;
+    //   this.memSearchError=false;
+    //   this.memStartDateErr.errMsg='Member Start Date should not be greater than Member End Date';
+    //   return;
+    //   }
+    //   if(memberStartDate==memberEndDate){
+    //   this.memStartDateErr.isValid=true;
+    //   this.memSearchError=false;
+    //   this.memStartDateErr.errMsg='Member Start Date should not be EQUAL to Member End Date';
+    //   return;
+    //   }
+    // }
     
     // till here
-    if((memberStartDate==null || memberStartDate=='') && (memberEndDate!=null && memberEndDate!='')){
-      this.memStartDateErr.isValid=true;
-      this.memSearchError=false;
-      this.memStartDateErr.errMsg='Member Start Date should not be empty or Invalid';
-      return;
-    }
-    if((memberEndDate==null || memberEndDate=='') && (memberStartDate!=null && memberStartDate!='')){
-      this.memEndDateErr.isValid=true;
-      this.memSearchError=false;
-      this.memEndDateErr.errMsg='Member End Date should not be empty or Invalid';
-      return;
-    }
+    // if((memberStartDate==null || memberStartDate=='') && (memberEndDate!=null && memberEndDate!='')){
+    //   this.memStartDateErr.isValid=true;
+    //   this.memSearchError=false;
+    //   this.memStartDateErr.errMsg='Member Start Date should not be empty or Invalid';
+    //   return;
+    // }
+    // if((memberEndDate==null || memberEndDate=='') && (memberStartDate!=null && memberStartDate!='')){
+    //   this.memEndDateErr.isValid=true;
+    //   this.memSearchError=false;
+    //   this.memEndDateErr.errMsg='Member End Date should not be empty or Invalid';
+    //   return;
+    // }
+    
     if(!a1 && memberId!=''){
       this.memIdErr.isValid=true;
       this.memIdErr.errMsg='Member Id is not valid. It should be a number';
