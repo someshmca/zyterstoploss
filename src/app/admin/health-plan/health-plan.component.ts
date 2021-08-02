@@ -64,6 +64,11 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
   isAdmin: boolean;
   displayedColumns: string[] = ['clientName', 'planCode', 'planName','planID'];
   dataSource: any;
+  isAddTier: boolean;
+  tiersLimitExceeded={
+    flag: false,
+    value: ''
+  } 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
@@ -106,7 +111,7 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
     this.isAdmin = this.loginService.isAdmin;
     //this.initTier();
     this.t.value;
-    debugger;
+    this.isAddTier=true;
   }
   // conven`ience getter for easy access to form fields
   get f() { return this.planForm.controls; }
@@ -115,24 +120,34 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
 
 
     initTier(){
-      debugger;
           return this.t.push(this.formBuilder.group({
             tierId: [''],
             tierAmount: [''],
             expectedClaimsRate: [''],
-            isTerminalExtCoverage: ['']
+            isTerminalExtCoverage: [false]
         }));
     }
   addTier(){
+        this.isAddTier= true;
     //const numberOfTiers = e.target.value || 0;
       //  if (this.t.length < numberOfTickets) {
           //  for (let i = this.t.length; i < numberOfTickets; i++) {
-                this.t.push(this.formBuilder.group({
+                
+
+                if(this.t.length>8){
+                  this.tiersLimitExceeded.flag=true;
+                  this.tiersLimitExceeded.value='Maximum Eight Rows are allowed';
+                }
+                else{
+                  this.t.push(this.formBuilder.group({
                     tierId: [''],
                     tierAmount: [''],
                     expectedClaimsRate: [''],
                     isTerminalExtCoverage: ['']
                 }));
+                  this.tiersLimitExceeded.flag=false;
+                  this.tiersLimitExceeded.value='';
+                }
            // }
        // } else {
             // for (let i = this.t.length; i >= numberOfTickets; i--) {
@@ -365,12 +380,14 @@ doFilter(filterValue:string){ //added by Venkatesh Enigonda
        
         for (let i = 0; i < elem.lstTblPlanTier.length; i++) {
           this.t.push(this.formBuilder.group({
+              planId: elem.lstTblPlanTier.planId,
               tierId: elem.lstTblPlanTier.tierId,
               tierAmount: elem.lstTblPlanTier.tierAmount,
               expectedClaimsRate: elem.lstTblPlanTier.expectedClaimsRate,
               isTerminalExtCoverage: elem.lstTblPlanTier.isTerminalExtCoverage=='Y'?true:false
           }));
       }
+      
         
       }
       this.getContractsByClientID(elem.clientId);
@@ -544,55 +561,59 @@ doFilter(filterValue:string){ //added by Venkatesh Enigonda
        }//(V.E 27-Jul-2021 Ends)
 
   private addPlan() {
-    this.isDisabled=true;
-    this.isNoFactAmount=false;
-    console.log(this.f.lstTblPlanTier.value[0].isTerminalExtCoverage);
-    for (let i = 0; i < this.f.lstTblPlanTier.value.length; i++) {
-      this.f.lstTblPlanTier.value[i].planId=0;
-        this.f.lstTblPlanTier.value[i].tierId=Number(this.f.lstTblPlanTier.value[i].tierId);
-        this.f.lstTblPlanTier.value[i].isTerminalExtCoverage=this.f.lstTblPlanTier.value[i].isTerminalExtCoverage==true?'Y':'N'
-    }
-    this.addPlanObj = {
-      planID: 0,
-      clientId: this.f.clientId.value,
-      contractId: Number(this.f.contractId.value),
-      userId: this.loginService.currentUserValue.name,
-      planCode: this.f.planCode.value,
-      planName: this.f.planName.value,
-      contractYear: this.f.contractYear.value,
-      //clientName: this.locClientName,
-      status: this.f.status.value==true?1:0,
-      lstTblPlanTier: this.f.lstTblPlanTier.value
-    }
-    let date=new Date();
-      console.log(this.addPlanObj);
-      console.log(JSON.stringify(this.addPlanObj));
-    debugger;
-      this.planService.addPlan(this.addPlanObj)
-          .pipe(first())
-          .subscribe({
-              next: () => {
-                  //this.planForm.reset();
-                  //this.openCustomModal(false, null);
-                  //this.getAllPlans();
-                  this.getTires();
-                  this.getAllPlans();
-                  this.getActiveClients();
-                  this.isAdded=true;
-                  this.alertService.success('New Plan & Tier added', { keepAfterRouteChange: true });
-              },
-              error: error => {
-                  this.alertService.error(error);
-                  this.loading = false;
-              }
-          });
+    if(!this.isAddTier){
+        this.isDisabled=true;
+        this.isNoFactAmount=false;
+        console.log(this.f.lstTblPlanTier.value[0].isTerminalExtCoverage);
+        this.planForm.patchValue(this.planForm.value);
+        for (let i = 0; i < this.f.lstTblPlanTier.value.length; i++) {
+          this.f.lstTblPlanTier.value[i].planId=0;
+            this.f.lstTblPlanTier.value[i].tierId=Number(this.f.lstTblPlanTier.value[i].tierId);
+            this.f.lstTblPlanTier.value[i].isTerminalExtCoverage=this.f.lstTblPlanTier.value[i].isTerminalExtCoverage==true?'Y':'N'
+        }
+        this.addPlanObj = {
+          planID: 0,
+          clientId: this.f.clientId.value,
+          contractId: Number(this.f.contractId.value),
+          userId: this.loginService.currentUserValue.name,
+          planCode: this.f.planCode.value,
+          planName: this.f.planName.value,
+          contractYear: this.f.contractYear.value,
+          //clientName: this.locClientName,
+          status: this.f.status.value==true?1:0,
+          lstTblPlanTier: this.f.lstTblPlanTier.value
+        }
+        let date=new Date();
+          console.log(this.addPlanObj);
+          console.log(JSON.stringify(this.addPlanObj));
+        
+          this.planService.addPlan(this.addPlanObj)
+              .pipe(first())
+              .subscribe({
+                  next: () => {
+                      //this.planForm.reset();
+                      //this.openCustomModal(false, null);
+                      //this.getAllPlans();
+                      this.getTires();
+                      this.getAllPlans();
+                      this.getActiveClients();
+                      this.isAdded=true;
+                      this.alertService.success('New Plan & Tier added', { keepAfterRouteChange: true });
+                  },
+                  error: error => {
+                      this.alertService.error(error);
+                      this.loading = false;
+                  }
+              });
+      }
   }
 
   private updatePlan() {
     this.isDisabled=true;
     this.isNoFactAmount=false;
     console.log(this.updatePlanID);
-    this.planForm.patchValue(this.planForm.value)
+    this.planForm.patchValue(this.planForm.value);
+    
     console.log(this.f.lstTblPlanTier.value[0].isTerminalExtCoverage);
     for (let i = 0; i < this.f.lstTblPlanTier.value.length; i++) {
         this.f.lstTblPlanTier.value[i].tierId=Number(this.f.lstTblPlanTier.value[i].tierId);
@@ -610,20 +631,29 @@ doFilter(filterValue:string){ //added by Venkatesh Enigonda
       status: this.f.status.value==true?1:0,
       lstTblPlanTier: this.f.lstTblPlanTier.value
     }
+    
     this.planForm.patchValue(this.planForm.value)
-    debugger;
+    
 
       console.log(this.updatePlanObj);
 
-      this.planService.updatePlan(this.planForm.value)
+      this.planService.updatePlan(this.updatePlanObj)
           .pipe(first())
           .subscribe({
               next: () => {
                   this.alertService.success('Plan & Tier updated', {
                     keepAfterRouteChange: true });
                     this.getAllPlans();
-                    this.uPlanName=''; //(V.E 27-Jul-2021 )
-                    this.uplanId=''//(V.E 27-Jul-2021 )
+                    this.planForm.patchValue(this.planForm.value);
+                    console.log(this.updatePlanObj);
+                    console.log(this.planForm.value);
+                    
+    for (let i = 0; i < this.updatePlanObj.lstTblPlanTier.length; i++) {
+      this.f.lstTblPlanTier.value[i].isTerminalExtCoverage=this.updatePlanObj.lstTblPlanTier[i].isTerminalExtCoverage=='Y'?true:false
+  }
+                    
+                   // this.uPlanName=''; //(V.E 27-Jul-2021 )
+                   // this.uplanId=''//(V.E 27-Jul-2021 )
                     //this.openCustomModal(false,null);
                     //this.planForm.reset();
               },

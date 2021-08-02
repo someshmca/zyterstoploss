@@ -14,6 +14,7 @@ export class LaseringService {
 
   constructor(private http: HttpClient) { }
   getAllMembers(){
+    
     return this.http.get(Paths.memberAll).pipe(catchError(this.handleError.bind(this)));
   }
   getMember(clientId){

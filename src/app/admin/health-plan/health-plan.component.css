@@ -12,7 +12,52 @@
 .form-field-input{
     width: 90px;
 }
-
+.tier-table-wrap{
+    position: relative;
+}
+.tier-table-scroll{    
+    max-height: 230px;
+    overflow-y: auto;
+}
+.tier-add-icon .fa {
+    cursor: pointer;
+    position: absolute;
+    top: -21px;
+    right: 11px;
+    color: #003847;
+    display: inline-block;
+    width: 20px;
+}
+.tier-add-icon span {
+    font-size: 2.6rem;
+    color: #008000;
+    cursor: pointer;
+}
+.tier-table-wrap tr{
+    height: 40px;
+}
+.tier-table-wrap tr th{
+    vertical-align: middle;
+}
+.tier-table-wrap tr th, 
+.tier-table-wrap tr td{
+    padding: 5px;
+    line-height: normal;
+    margin: 0;
+    height: 40px;
+    vertical-align: middle;
+}
+.tier-table-wrap tr:nth-child(even) td .form-group.switch-group{
+    background: #ffffff;
+}
+.tier-table-wrap tr td .form-group.switch-group{
+    margin-bottom: 0 !important;
+    justify-content: center;
+}
+.tier-table-wrap tr td .form-control{
+    margin: 0;
+    height: 30px;
+}
 /*::ng-deep .mat-form-field-underline {
     display: none;
   }

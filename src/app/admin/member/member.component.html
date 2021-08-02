@@ -52,7 +52,7 @@
                 </div>
                 <div class="form-field">
                     <label class="form-field-label">
-                        Member Subscriber ID</label>
+                        Medica Subscriber ID</label>
                     <div class="form-field-input">
                       <input type="text" class="form-control field-input-text" formControlName="SubscriberId"[ngClass]="{ 'is-invalid': memSubIdErr.isValid }" /><!--Modified by Venkatesh Enigonda-->
                     </div>
@@ -156,13 +156,17 @@
                       <div class="member-table-wrap">
                         <table mat-table matSort #memberSearchTable [dataSource]="searchDataSource" class="table table-bordered table-striped card-table">
                       
+                          <ng-container matColumnDef="memberId">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header  > Medica Member ID </th>
+                            <td mat-cell *matCellDef="let element"> {{element.memberId}} </td>
+                          </ng-container>
                           <ng-container matColumnDef="clientId">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header [hidden]="show">Client ID </th>
-                            <td mat-cell *matCellDef="let element" [hidden]="show"> {{element.clientId}} </td>
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header >Client ID </th>
+                            <td mat-cell *matCellDef="let element"> {{element.clientId}} </td>
                           </ng-container>
                           <ng-container matColumnDef="contractId">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header [hidden]="show">Contract ID </th>
-                            <td mat-cell *matCellDef="let element" [hidden]="show"> {{element.contractId}} </td>
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Contract ID </th>
+                            <td mat-cell *matCellDef="let element"> {{element.contractId}} </td>
                           </ng-container>  
                           <!--(VE 30-07-2021 starts)-->
                           <ng-container matColumnDef="benefitPlanId">
@@ -181,10 +185,6 @@
                           <ng-container matColumnDef="tierId"><!--(VE 30-07-2021)-->
                             <th mat-header-cell *matHeaderCellDef mat-sort-header [hidden]="show" > Tier Id</th><!--(VE 30-07-2021)-->
                             <td mat-cell *matCellDef="let element" [hidden]="show"> {{element.tierId}} </td>
-                          </ng-container>
-                          <ng-container matColumnDef="memberId">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header  > Medica Member ID </th>
-                            <td mat-cell *matCellDef="let element"> {{element.memberId}} </td>
                           </ng-container>
                           <ng-container matColumnDef="subscriberId">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header >Medica Subscriber ID</th>
@@ -399,7 +399,7 @@
                <div class="row">
                 <div class="col-md-4">
                      <div class="form-group">
-                        <label>Subscriber ID</label> 
+                        <label>Medica Subscriber ID</label> 
                         <input type="text" formControlName="subscriberId" maxlength="20" class="form-control"/>                        
                       </div>
                 </div>

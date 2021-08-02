@@ -47,7 +47,7 @@ export class ClaimSearchComponent implements OnInit {
   coveredClaims: ICoveredClaims[] = [];
   
   claimResults: IClaimReportsModel[] = [];
-  displayedColumns: any[] = ['claimId', 'clientId', 'clientName', 'memberId', 'firstName', 'lastName', 'paidAmount', 'climReceivedOn','paidDate','dateOfBirth','serviceStartDate','serviceEndDate','alternateId'];
+  displayedColumns: any[] = ['claimId', 'clientId', 'clientName', 'memberId', 'firstName', 'lastName', 'paidAmount', 'climReceivedOn','paidDate','dateOfBirth','serviceStartDate','serviceEndDate','sequenceNumber','diagnosisCode','claimSource','claimType','subscriberFirstName','subscriberLastName','alternateId'];
   dataSource: any;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;

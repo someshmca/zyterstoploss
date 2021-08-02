@@ -36,7 +36,7 @@ export class LaseringComponent implements OnInit {
   
   @ViewChild("focusElem") focusTag: ElementRef;
   @ViewChild("filterSearchInput") filterSearchInput: ElementRef;
-  laseringColumns: string[] = ['fname', 'lname', 'memberId', 'laserValue', 'clientId'];
+  laseringColumns: string[] = ['clientName','fname', 'lname', 'memberId', 'laserValue', 'clientId'];
   laseringDataSource: any;
   
   uClientId:any;
@@ -273,7 +273,7 @@ export class LaseringComponent implements OnInit {
           
           
           console.log(this.memberForm.value);
-          debugger;
+          
           this.memberForm.disable();
           this.f.laserValue.enable();
          // this.f.isUnlimited.enable(); 

@@ -418,21 +418,28 @@ if(this.productForm.valid && this.f.sslPaidStartDate.value == this.f.sslPaidEndD
   
   return;
 }
-if(this.f.sslContractStartDate.value !=null && this.f.sslContractStartDate.value !='' && this.f.sslContractEndDate.value!=null && this.f.sslContractEndDate.value!=''){
-  if(this.productForm.valid && this.f.sslContractStartDate.value == this.f.sslContractEndDate.value){
-  
+if(this.f.sslContractStartDate.value !=null && this.f.sslContractStartDate.value !='' && this.f.sslContractEndDate.value!=null && this.f.sslContractEndDate.value!=''){  
+  if(this.f.sslContractStartDate.value == this.f.sslContractEndDate.value){  
     this.sslSPecificErr.isDateErr=true;
-    this.sslSPecificErr.dateErrMsg ='SSL Specific Start date should not be Equal to SSL Specific End date' ;
-    
+    this.sslSPecificErr.dateErrMsg ='SSL Specific Start date should not be Equal to SSL Specific End date' ;    
     return;
   }
-  if(this.productForm.valid && this.f.sslContractStartDate.value == this.f.sslContractEndDate.value){
+  if(this.f.sslContractStartDate.value == this.f.sslContractEndDate.value){
+    this.sslSPecificErr.isDateErr=true;
+    this.sslSPecificErr.dateErrMsg ='SSL Specific Start date should not be Equal to SSL Specific End date' ;    
+    return;
+  }
+}
+if((this.f.sslContractStartDate.value ==null || this.f.sslContractStartDate.value =='') && this.f.sslContractEndDate.value!=null && this.f.sslContractEndDate.value!=''){  
+  this.sslSPecificErr.isDateErr=true;
+  this.sslSPecificErr.dateErrMsg ='SSL Specific Start date is not valid' ;    
+  return;
 
-    this.sslSPecificErr.isDateErr=true;
-    this.sslSPecificErr.dateErrMsg ='SSL Specific Start date should not be Equal to SSL Specific End date' ;
-    
-    return;
-  }
+}
+if(this.f.sslContractStartDate.value !=null && this.f.sslContractStartDate.value !='' && (this.f.sslContractEndDate.value==null || this.f.sslContractEndDate.value=='')){  
+  this.sslSPecificErr.isDateErr=true;
+  this.sslSPecificErr.dateErrMsg ='SSL Specific End date is not valid' ;    
+  return;
 
 }
 // Ends here
@@ -453,17 +460,27 @@ if(this.f.aslContractStartDate.value !=null && this.f.aslContractStartDate.value
   if(this.productForm.valid && this.f.aslContractStartDate.value == this.f.aslContractEndDate.value){
 
     this.aslAggregateErr.isDateErr=true;
-    this.aslAggregateErr.dateErrMsg ='ASL Aggregate Start date should not be Equal to ASL Aggregate End date ';
+    this.aslAggregateErr.dateErrMsg ='Aggregate Start date should not be Equal to Aggregate End date ';
     
     return;
   }
   if(this.productForm.valid && this.f.aslContractStartDate.value > this.f.aslContractEndDate.value){
   
     this.aslAggregateErr.isDateErr=true;
-    this.aslAggregateErr.dateErrMsg =' ASL Aggregate Start date should not be greater than ASL Aggregate End date ';
+    this.aslAggregateErr.dateErrMsg =' Aggregate Start date should not be greater than Aggregate End date ';
     
     return;
   }
+}
+if((this.f.aslContractStartDate.value ==null || this.f.aslContractStartDate.value =='') && this.f.aslContractEndDate.value!=null && this.f.aslContractEndDate.value!=''){  
+  this.sslSPecificErr.isDateErr=true;
+  this.sslSPecificErr.dateErrMsg ='Aggregate Start date is not valid' ;    
+  return;
+}
+if(this.f.aslContractStartDate.value !=null && this.f.aslContractStartDate.value !='' && (this.f.aslContractEndDate.value==null || this.f.aslContractEndDate.value=='')){  
+  this.sslSPecificErr.isDateErr=true;
+  this.sslSPecificErr.dateErrMsg ='Aggregate End date is not valid' ;    
+  return;
 }
 if(this.productForm.valid && this.f.aslPaidStartDate.value > this.f.aslPaidEndDate.value){
  this.aslPaidEndErr.isDateErr=true;
@@ -593,8 +610,8 @@ openViewModal(bool, id:any){
               clientId:this.uClientId,
               sslIncurredStartDate:this.datePipe.transform(new Date(x[0].sslIncurredStartDate), 'yyyy-MM-dd'),
               sslIncurredEndDate:this.datePipe.transform(new Date(x[0].sslIncurredEndDate), 'yyyy-MM-dd'),
-              sslContractStartDate:this.datePipe.transform(new Date(x[0].sslContractStartDate), 'yyyy-MM-dd'),
-              sslContractEndDate:this.datePipe.transform(new Date(x[0].sslContractEndDate), 'yyyy-MM-dd'),
+              sslContractStartDate:x[0].sslContractStartDate==null?"":this.datePipe.transform(new Date(x[0].sslContractStartDate), 'yyyy-MM-dd'),
+              sslContractEndDate:x[0].sslContractEndDate==null?"":this.datePipe.transform(new Date(x[0].sslContractEndDate), 'yyyy-MM-dd'),
               sslPaidStartDate:this.datePipe.transform(new Date(x[0].sslPaidStartDate), 'yyyy-MM-dd'),
               sslPaidEndDate:this.datePipe.transform(new Date(x[0].sslPaidEndDate), 'yyyy-MM-dd'),
               sslRunInLimit:x[0].sslRunInLimit,
@@ -612,8 +629,8 @@ openViewModal(bool, id:any){
               aslExpectedClaimLiability:x[0].aslExpectedClaimLiability,
               aslIncurrredStartDate:this.datePipe.transform(new Date(x[0].aslIncurrredStartDate), 'yyyy-MM-dd'),
               aslIncurredEndDate:this.datePipe.transform(new Date(x[0].aslIncurredEndDate), 'yyyy-MM-dd'),
-              aslContractStartDate:this.datePipe.transform(new Date(x[0].aslContractStartDate), 'yyyy-MM-dd'),
-              aslContractEndDate:this.datePipe.transform(new Date(x[0].aslContractEndDate), 'yyyy-MM-dd'),
+              aslContractStartDate:x[0].aslContractStartDate==null?"":this.datePipe.transform(new Date(x[0].aslContractStartDate), 'yyyy-MM-dd'),
+              aslContractEndDate:x[0].aslContractEndDate==null?"":this.datePipe.transform(new Date(x[0].aslContractEndDate), 'yyyy-MM-dd'),
               aslCorridor: x[0].aslCorridor,
               aslPaidStartDate:this.datePipe.transform(new Date(x[0].aslPaidStartDate), 'yyyy-MM-dd'),
               aslPaidEndDate:this.datePipe.transform(new Date(x[0].aslPaidEndDate), 'yyyy-MM-dd'),
@@ -785,7 +802,7 @@ patchProductForm(){
     sslPartcipantLimit:this.decimalValue(this.f.sslPartcipantLimit.value),//(VE 1-08-2021 starts)
     sslTermCoverageExtEndDate: this.dateValue(this.f.sslTermCoverageExtEndDate.value),
     //sslIsImmediateReimbursement: boolean;
-    sslLasering: this.f.sslLasering.value==null?false:true,
+    sslLasering: this.f.sslLasering.value,
 
     //aslClaimBasis: string;
    // aslDeductible:0, // not using currently
@@ -878,7 +895,12 @@ private addProduct() {
     contractId: this.sharedContractID>0?this.sharedContractID:this.f.contractId.value,  
     status:this.f.status.value==true?1:0,
     aslTermCoverageExtEndDate: this.productForm.get('aslTermCoverageExtEndDate').value==""?null:this.datePipe.transform(this.f.aslTermCoverageExtEndDate.value, 'yyyy-MM-dd'),
-    sslTermCoverageExtEndDate: this.productForm.get('sslTermCoverageExtEndDate').value==""?null:this.datePipe.transform(this.f.sslTermCoverageExtEndDate.value, 'yyyy-MM-dd')
+    sslTermCoverageExtEndDate: this.productForm.get('sslTermCoverageExtEndDate').value==""?null:this.datePipe.transform(this.f.sslTermCoverageExtEndDate.value, 'yyyy-MM-dd'),
+    sslContractStartDate:this.productForm.get('sslContractStartDate').value==""?null:this.datePipe.transform(this.f.sslContractStartDate.value,'yyyy-MM-dd'),
+    sslContractEndDate:this.productForm.get('sslContractEndDate').value==""?null:this.datePipe.transform(this.f.sslContractEndDate.value,'yyyy-MM-dd'),
+    aslContractStartDate:this.productForm.get('aslContractStartDate').value==""?null:this.datePipe.transform(this.f.aslContractStartDate.value,'yyyy-MM-dd'),
+    aslContractEndDate:this.productForm.get('aslContractEndDate').value==""?null:this.datePipe.transform(this.f.aslContractEndDate.value,'yyyy-MM-dd')
+    
   });
   //this.productForm.patchValue(this.productForm.value);
   console.log(this.f.ibnrPercentage.errors);

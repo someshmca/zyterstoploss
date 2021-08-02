@@ -151,46 +151,55 @@
                     </div> -->
                    </div>  
                    <div class="tier-grid-area">
-                     <button (click)="addTier()">Add Plan Tier</button>
-                      <table class="table table-striped table-bordered">
-                        <thead>
-                          <tr>
-                              <th>Stop Loss Tier</th>
-                              <th>Stop Loss Tier Amount</th>
-                              <th>Expected Claim Rate</th>
-                              <th>Is Terminal Extension Coverage</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                          <ng-container *ngFor="let tier of tierFormGroups; let i = index">
-                          <tr [formGroup]="tier">
-                            <td>
-                                <select class="form-control" formControlName="tierId">
-                                  <option value="1">Single</option>
-                                  <option value="2">Dual</option>
-                                  <option value="3">Family</option>
-                                  <option value="4">Others</option>
-                                </select> 
-                            </td>
-                            <td>
-                                <input type="number" formControlName="tierAmount" class="form-control" />
-                            </td>
-                            <td>
-                              <input type="number" formControlName="expectedClaimsRate" class="form-control" />
-                            </td>
-                            <td>
-                              <div class="form-group switch-group">
-                                <label></label>                        
-                                <label class="switch">
-                                  <input type="checkbox" class="success"  formControlName="isTerminalExtCoverage">
-                                  <span class="slider round"></span>
-                                </label>  
-                              </div>
-                            </td>
-                          </tr>
-                          </ng-container>
-                        </tbody>
-                      </table>
+                     <div *ngIf="tiersLimitExceeded.flag" class="text-danger">
+                       {{tiersLimitExceeded.value}}
+                     </div>
+                     <div class="tier-table-wrap">
+                        <div class="tier-add-icon">
+                          <span class="fa fa-plus-circle" (click)="addTier()"></span>
+                          </div>   
+                          <div class="tier-table-scroll">
+                          <table class="table table-striped table-bordered tier-table">
+                            <thead>
+                              <tr>
+                                  <th>Stop Loss Tier</th>
+                                  <th>Stop Loss Tier Amount</th>
+                                  <th>Expected Claim Rate</th>
+                                  <th>Is Terminal Extension Coverage</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                              <ng-container *ngFor="let tier of tierFormGroups; let i = index">
+                              <tr [formGroup]="tier">
+                                <td>
+                                    <select class="form-control" formControlName="tierId">
+                                      <option value="1">Single</option>
+                                      <option value="2">Dual</option>
+                                      <option value="3">Family</option>
+                                      <option value="4">Others</option>
+                                    </select> 
+                                </td>
+                                <td>
+                                    <input type="number" formControlName="tierAmount" class="form-control" />
+                                </td>
+                                <td>
+                                  <input type="number" formControlName="expectedClaimsRate" class="form-control" />
+                                </td>
+                                <td>
+                                  <div class="form-group switch-group">
+                                    <label></label>                        
+                                    <label class="switch">
+                                      <input type="checkbox" class="success"  formControlName="isTerminalExtCoverage">
+                                      <span class="slider round"></span>
+                                    </label>  
+                                  </div>
+                                </td>
+                              </tr>
+                              </ng-container>
+                            </tbody>
+                          </table>
+                          </div>
+                        </div>
                     </div>
                    <!-- <div class="row">
                     <div class="col-md-4">
