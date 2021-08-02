@@ -130,7 +130,7 @@
                <div *ngIf="subChkErr.isValid">{{subChkErr.errMsg}}</div>
                <!--Modified by Venkatesh Enigonda-->
                <div *ngIf="subSubChkErr.isValid">{{subSubChkErr.errMsg}}</div>
-               <!--Modified by Venkatesh Enigonda-->  
+               <div *ngIf="isHRIdInvalid.flag">{{isHRIdInvalid.message}}</div>  
             </div>
              <div class="row">
               <div class="col-md-6">

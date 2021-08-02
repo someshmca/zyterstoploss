@@ -559,8 +559,10 @@ openViewModal(bool, id:any){
       this.isAddMode = true;    
       this.isEditSelected = false;
       this.isFilterOn=false;
-      this.f.clientId.enable();
-      this.f.contractId.enable();
+      // this.f.clientId.enable();
+      // this.f.contractId.enable();
+      this.isViewModal=false;
+      this.productForm.enable();
     }
     
    

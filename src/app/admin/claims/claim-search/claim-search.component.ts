@@ -286,6 +286,7 @@ onSubmit() {
 
 
   searchClaim(form: FormGroup) {
+    this.isClaimResult=false;
     console.log(this.dateErr.fromDateErr); 
     this.clearErrorMessages();
     this.claimSearchForm.patchValue(this.claimSearchForm.value);

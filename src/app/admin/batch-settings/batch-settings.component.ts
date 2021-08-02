@@ -246,6 +246,8 @@ export class BatchSettingsComponent implements OnInit {
         lastRun: this.datePipe.transform(new Date('02/25/2021'), 'yyyy-MM-dd')
       });
       this.isAddMode = true;   
+      this.isViewModal=false;
+      this.batchProcessForm.enable();
     }
     this.isCustomModalOpen = open;
     if (!open && id==null) {

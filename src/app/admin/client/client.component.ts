@@ -83,6 +83,10 @@ export class ClientComponent implements OnInit {
   isYearValid: boolean=true;
   isViewModal: boolean;
   isAdmin: boolean;
+  isHRIdInvalid={
+    flag: false,
+    message: ''
+  }
   ngOnInit() {
     this.getAllClients();
     this.getAllContracts();
@@ -367,6 +371,8 @@ openViewModal(bool, id:any){
     this.clearErrorMessages();
     if(open && id==null){
       this.isAddMode = true;
+      this.isViewModal=false;
+      this.clientForm.enable();
     }
     this.isCustomModalOpen = open;
     if (!open && id==null) {
@@ -374,6 +380,8 @@ openViewModal(bool, id:any){
       this.isAddMode = false;
       this.isViewModal=false;
       this.isAdded=false;
+      this.isHRIdInvalid.flag=false;
+      this.isHRIdInvalid.message='';
       this.navService.resetClientObj();
       this.clearSearchInput();
     }
@@ -679,10 +687,15 @@ openViewModal(bool, id:any){
         .subscribe({
             next: (data) => {
               if(data.id==null){
-                this.alertService.success(data.message, { keepAfterRouteChange: true });
+                //this.alertService.success(data.message, { keepAfterRouteChange: true });
+                this.isHRIdInvalid.flag=true;
+                this.isHRIdInvalid.message=data.message;
+
               }
               else{
                 this.isDisabled=true;
+                this.isHRIdInvalid.flag=false;
+                this.isHRIdInvalid.message='';
                 this.getAllClients();
                 this.clientService.getClient(this.f.clientId.value).subscribe((data)=>{
                   this.navService.setClientObj(data[0].clientId, data[0].clientName, true,false);

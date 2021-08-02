@@ -111,7 +111,7 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
     this.isAdmin = this.loginService.isAdmin;
     //this.initTier();
     this.t.value;
-    this.isAddTier=true;
+    this.isAddTier=false;
   }
   // conven`ience getter for easy access to form fields
   get f() { return this.planForm.controls; }
@@ -134,7 +134,7 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
           //  for (let i = this.t.length; i < numberOfTickets; i++) {
                 
 
-                if(this.t.length>8){
+                if(this.t.length>7){
                   this.tiersLimitExceeded.flag=true;
                   this.tiersLimitExceeded.value='Maximum Eight Rows are allowed';
                 }
@@ -335,12 +335,15 @@ doFilter(filterValue:string){ //added by Venkatesh Enigonda
     }
     this.isCustomModalOpen = open;
     if (!open && elem==null) {
+      this.planForm.enable();
       this.planForm.reset();
       this.getAllPlans();
       this.isAddMode = false;
       this.isAdded=false;
       this.isViewModal=false;
       this.t.clear();
+      this.tiersLimitExceeded.flag=false;
+      this.tiersLimitExceeded.value='';
       if(!this.isFilterOn){
         this.navService.resetPlanObj();
         this.clearSearchInput();
@@ -561,16 +564,36 @@ doFilter(filterValue:string){ //added by Venkatesh Enigonda
        }//(V.E 27-Jul-2021 Ends)
 
   private addPlan() {
+    this.isAddTier=false;
     if(!this.isAddTier){
+      
         this.isDisabled=true;
         this.isNoFactAmount=false;
         console.log(this.f.lstTblPlanTier.value[0].isTerminalExtCoverage);
-        this.planForm.patchValue(this.planForm.value);
+        
+        
+        //let tiersArr=this.f.lstTblPlanTier.value;
         for (let i = 0; i < this.f.lstTblPlanTier.value.length; i++) {
+          if(this.f.lstTblPlanTier.value[i].tierId=='' && this.f.lstTblPlanTier.value[i].tierAmount=='' && this.f.lstTblPlanTier.value[i].expectedClaimsRate=='' && this.f.lstTblPlanTier.value[i].isTerminalExtCoverage==''){
+          //  this.f.lstTblPlanTier.value.splice(i,1);
+           
+            this.f.lstTblPlanTier.value.splice(i,1);
+            this.t.removeAt(i);
+            this.planForm.patchValue(
+              {
+                lstTblPlanTier: this.f.lstTblPlanTier.value
+              }
+            );
+            this.planForm.patchValue(this.planForm.value)
+            
+          }
           this.f.lstTblPlanTier.value[i].planId=0;
             this.f.lstTblPlanTier.value[i].tierId=Number(this.f.lstTblPlanTier.value[i].tierId);
-            this.f.lstTblPlanTier.value[i].isTerminalExtCoverage=this.f.lstTblPlanTier.value[i].isTerminalExtCoverage==true?'Y':'N'
+            this.f.lstTblPlanTier.value[i].tierAmount=Number(this.f.lstTblPlanTier.value[i].tierAmount);
+            this.f.lstTblPlanTier.value[i].isTerminalExtCoverage=this.f.lstTblPlanTier.value[i].isTerminalExtCoverage==true?'Y':'N';
         }
+        //this.planForm.patchValue(this.planForm.value);
+        
         this.addPlanObj = {
           planID: 0,
           clientId: this.f.clientId.value,
@@ -586,6 +609,7 @@ doFilter(filterValue:string){ //added by Venkatesh Enigonda
         let date=new Date();
           console.log(this.addPlanObj);
           console.log(JSON.stringify(this.addPlanObj));
+          
         
           this.planService.addPlan(this.addPlanObj)
               .pipe(first())
@@ -594,6 +618,8 @@ doFilter(filterValue:string){ //added by Venkatesh Enigonda
                       //this.planForm.reset();
                       //this.openCustomModal(false, null);
                       //this.getAllPlans();
+                      console.log(this.planForm.value);
+                      
                       this.getTires();
                       this.getAllPlans();
                       this.getActiveClients();
@@ -603,6 +629,7 @@ doFilter(filterValue:string){ //added by Venkatesh Enigonda
                   error: error => {
                       this.alertService.error(error);
                       this.loading = false;
+                      this.isAdded=false;
                   }
               });
       }

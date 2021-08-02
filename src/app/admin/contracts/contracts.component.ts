@@ -309,6 +309,8 @@ openViewModal(bool, id:any){
     if(open && id==null){
       this.isAddMode = true;
       this.isFilterOn=false;
+      this.isViewModal=false;
+      this.contractForm.enable();
     }
     this.clearErrorMessages();
     this.isCustomModalOpen = open;
