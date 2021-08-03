@@ -47,7 +47,7 @@ export class ClaimSearchComponent implements OnInit {
   coveredClaims: ICoveredClaims[] = [];
   
   claimResults: IClaimReportsModel[] = [];
-  displayedColumns: any[] = ['claimId', 'clientId', 'clientName', 'memberId', 'firstName', 'lastName', 'paidAmount', 'climReceivedOn','paidDate','dateOfBirth','serviceStartDate','serviceEndDate','sequenceNumber','diagnosisCode','claimSource','claimType','subscriberFirstName','subscriberLastName','alternateId'];
+  displayedColumns: any[] = ['claimId','sequenceNumber', 'clientName', 'memberId', 'firstName', 'lastName', 'paidAmount', 'climReceivedOn','paidDate','dateOfBirth','serviceStartDate','serviceEndDate','diagnosisCode','claimSource','claimType','subscriberFirstName','subscriberLastName','alternateId'];
   dataSource: any;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -306,7 +306,7 @@ onSubmit() {
     // this.f.firstName.value==' '?'':this.f.firstName.value;
     // this.f.lastName.value==' '?'':this.f.lastName.value;
     
-    if(this.f.claimId.value=='' && this.f.memberId.value=='' && this.f.firstName.value=='' && this.f.lastName.value=='' && this.f.dateOfBirth.value==null && this.f.clientId.value=='' && this.f.fromDate.value==null && this.f.toDate.value==null && this.f.sequenceNumber.value==0 && this.f.dollorAmount.value==0 && this.f.diagnosisCode.value=='' && this.f.claimSource.value=='' && this.f.claimType.value=='' && this.f.alternateId.value=='' && this.f.paidDate.value==null){
+    if(this.f.claimId.value=='' && this.f.memberId.value=='' && this.f.firstName.value=='' && this.f.lastName.value=='' && this.f.dateOfBirth.value==null && this.f.clientId.value=='' && this.f.fromDate.value==null && this.f.toDate.value==null && this.f.sequenceNumber.value=='' && this.f.dollorAmount.value=='' && this.f.diagnosisCode.value=='' && this.f.claimSource.value=='' && this.f.claimType.value=='' && this.f.alternateId.value=='' && this.f.paidDate.value==null){
                     
       this.isClaimSearchErr = true;
       return;
@@ -391,8 +391,8 @@ onSubmit() {
       fromDate:  this.f.fromDate.value==''?null: this.datePipe.transform(this.f.fromDate.value, 'yyyy-MM-dd'),
       toDate:  this.f.toDate.value==''?null: this.datePipe.transform(this.f.toDate.value, 'yyyy-MM-dd'),
       clientId: this.f.clientId.value,
-      sequenceNumber : Number(this.f.sequenceNumber.value)==0?0:Number(this.f.sequenceNumber.value),
-     // dollorAmount: Number(this.f.dollorAmount.value)==0?0:Number(this.f.dollorAmount.value),
+      sequenceNumber : this.f.sequenceNumber.value==''?0:Number(this.f.sequenceNumber.value),
+      dollorAmount: this.f.dollorAmount.value==''?0:Number(this.f.dollorAmount.value),
       diagnosisCode: this.f.diagnosisCode.value,
       claimSource: this.f.claimSource.value,
       claimType: this.f.claimType.value,
@@ -401,6 +401,7 @@ onSubmit() {
     }
    // this._claimService.setClaimSearchRequest(claimRequestObj);
     // this._claimService.claimSearchRequest.subscribe((res)=>{this.claimSearchRequest=res;});
+    
      this.getClaimSearchResultsGrid(claimRequestObj);
      
      

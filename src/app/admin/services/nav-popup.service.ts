@@ -5,7 +5,7 @@ import {BehaviorSubject, Observable} from 'rxjs';
   providedIn: 'root'
 })
 export class NavPopupService  {
-
+ // isStopScroll:boolean;
   constructor() { }
   clientObjInit: IClientObj ={
     clientId: '',
@@ -107,6 +107,21 @@ export class NavPopupService  {
     this.isLasering.next(status);
     this.isLasering.asObservable();
   }
+  // stopScroll= new BehaviorSubject<boolean>(false);
+  // setStopScroll(status:boolean){
+  //   this.stopScroll.next(status);
+  //   this.stopScroll.asObservable();
+  // }
+  // getStopScroll(){
+  //   this.stopScroll.subscribe((data)=>{
+  //     if(data){
+  //       this.isStopScroll=true;
+  //     }
+  //     else{
+  //       this.isStopScroll=false;
+  //     }
+  //   })
+  // }
   clearPopupSessions(){
     
     this.resetClientObj();

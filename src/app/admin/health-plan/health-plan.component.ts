@@ -565,8 +565,9 @@ doFilter(filterValue:string){ //added by Venkatesh Enigonda
 
   private addPlan() {
     this.isAddTier=false;
+    debugger;
     if(!this.isAddTier){
-      
+      debugger;
         this.isDisabled=true;
         this.isNoFactAmount=false;
         console.log(this.f.lstTblPlanTier.value[0].isTerminalExtCoverage);
@@ -593,7 +594,7 @@ doFilter(filterValue:string){ //added by Venkatesh Enigonda
             this.f.lstTblPlanTier.value[i].isTerminalExtCoverage=this.f.lstTblPlanTier.value[i].isTerminalExtCoverage==true?'Y':'N';
         }
         //this.planForm.patchValue(this.planForm.value);
-        
+        debugger;
         this.addPlanObj = {
           planID: 0,
           clientId: this.f.clientId.value,

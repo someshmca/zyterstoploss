@@ -217,7 +217,7 @@
                             <td mat-cell *matCellDef="let element"> {{element.memberEndDate | date:'MM/dd/yyyy'}} </td>
                           </ng-container>
                           <ng-container matColumnDef="dateOfBirth">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header >Date of Birth </th>
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header >Birth Date </th>
                             <td mat-cell *matCellDef="let element"> {{element.dateOfBirth | date:'MM/dd/yyyy'}} </td>
                           </ng-container>
                           <ng-container matColumnDef="gender">
@@ -303,7 +303,7 @@
                 </div>            
                 <div class="col-md-4">
                   <div class="form-group">
-                    <label>Contract<small class="starmark">*</small></label>
+                    <label>Contract ID<small class="starmark">*</small></label>
                     <select formControlName="contractId" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.contractId.errors }">
                       <option [value]="uContractId">{{uContractId}}</option>
                     </select>
@@ -311,7 +311,7 @@
                 </div>            
                 <div class="col-md-4">
                   <div class="form-group">
-                    <label>Plan<small class="starmark">*</small></label>
+                    <label>Plan ID<small class="starmark">*</small></label>
                     <select formControlName="planId" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.planId.errors }">
                       <option [value]="uPlanId">{{uPlanId}}</option>
                     </select>
@@ -377,7 +377,7 @@
                   </div>
                 <div class="col-md-4">
                      <div class="form-group">
-                        <label>Date of Birth<small class="starmark">*</small></label> 
+                        <label>Birth Date<small class="starmark">*</small></label> 
                         <input type="date" value="MM/DD/YYYY" formControlName="dateOfBirth" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.dateOfBirth.errors }" max="2999-12-31" />                            
                       </div>
                 </div>  

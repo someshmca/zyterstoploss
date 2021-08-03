@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import {Router} from '@angular/router';
 import { Observable } from 'rxjs';
+import { NavPopupService } from './admin/services/nav-popup.service';
 import {LoginService} from './shared/services/login.service';
 @Component({
   selector: 'app-root',
@@ -11,7 +12,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   user: string;
   role: string;
   isLoggedIn: boolean=false;
-
+  isStopScroll:boolean=false;
 
   constructor(private loginService: LoginService, private route: Router){
 

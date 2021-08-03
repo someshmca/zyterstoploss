@@ -11,6 +11,11 @@
 @import url("./assets/css/chart-styles.css");
 @import url("./assets/css/card-table-styles.css");
 @import url("./assets/css/bs4-custom-styles.css");
+
+
+.stop-loss{
+    overflow-y: hidden;
+}
 /* 
 html, body { height: 100%;}
 body {

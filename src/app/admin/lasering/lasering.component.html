@@ -42,8 +42,9 @@
                         <ng-container matColumnDef="memberId">
                           <th mat-header-cell *matHeaderCellDef mat-sort-header >Member ID </th>
                           <td mat-cell *matCellDef="let element"> 
-                            <a (click)="openCustomModal(true, element)" class="text-primary">
+                            <a (click)="openCustomModal(true, element)" class="text-primary" *ngIf="isAdmin">
                               {{element.memberId}}</a>
+                              <span *ngIf="!isAdmin" class="text-primary">{{element.memberId}}</span>
                           </td>
                         </ng-container>                
                         <ng-container matColumnDef="laserValue">

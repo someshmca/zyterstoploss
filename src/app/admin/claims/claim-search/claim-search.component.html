@@ -54,7 +54,7 @@
                     </div>
                 </div>
                 <div class="form-field">
-                    <label class="form-field-label">Member Birth Date</label>
+                    <label class="form-field-label">Birth Date</label>
                     <div class="form-field-input">
                         <input type="date" class="form-control field-input-text" value="MM/DD/YYYY" formControlName="dateOfBirth" [max]="today"/> <!-- Venkata Reddy -->
                     </div>
@@ -98,14 +98,20 @@
                         <div class="form-field">
                             <label class="form-field-label">Claim Source </label>
                             <div class="form-field-input">
-                                <input type="text" class="form-control field-input-text" formControlName="claimSource" />                        
+                                <input type="text" class="form-control field-input-text" formControlName="claimSource" />  
+                                                 
                             </div>
                             </div>
 
                          <div class="form-field">
                             <label class="form-field-label">Claim Type </label>
                             <div class="form-field-input">
-                            <input class="form-control" formControlName="claimType" type="text">
+                            <!-- <input class="form-control" formControlName="claimType" type="text"> -->
+                            <select class="form-control" formControlName="claimType">
+                              <option value="M">Medical</option>
+                              <option value="P">Pharmacy</option>
+                              <option value="D">Dental</option>
+                            </select> 
                         </div>
                         </div>
                             <div class="form-field">
@@ -138,17 +144,21 @@
                 <div class="claim-results-grid-wrap">
                     <table mat-table matSort #claimResultTable [dataSource]="dataSource" class="table table-bordered table-striped card-table">            
                         <ng-container matColumnDef="claimId">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Claim ID </th>
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Medica Claim ID </th>
                         <td mat-cell *matCellDef="let element"> 
                             {{element.claimId}} </td>
                         </ng-container>
-                        <ng-container matColumnDef="clientId">
+                        <!-- <ng-container matColumnDef="clientId">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header> Account Id </th>
                         <td mat-cell *matCellDef="let element"> 
                             {{element.clientId}} </td>
-                        </ng-container>
+                        </ng-container> -->
+                        <ng-container matColumnDef="sequenceNumber">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header >Sequence Number</th>
+                          <td mat-cell *matCellDef="let element"> {{element.sequenceNumber}} </td>
+                          </ng-container>
                         <ng-container matColumnDef="clientName">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Client Name </th>
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Account Name </th>
                         <td mat-cell *matCellDef="let element"> 
                             {{element.clientName}} </td>
                         </ng-container>
@@ -167,7 +177,7 @@
                         </ng-container>
                         <ng-container matColumnDef="paidAmount">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header >Paid Amount</th>
-                        <td mat-cell *matCellDef="let element" style="text-align: right; padding-right: 15px;"> 
+                        <td mat-cell *matCellDef="let element" style="text-align: left; "> 
                             {{element.paidAmount}} </td>
                         </ng-container>
                         <ng-container matColumnDef="climReceivedOn">
@@ -180,7 +190,7 @@
                             {{element.paidDate | date:'MM/dd/yyyy'}} </td>
                         </ng-container>
                         <ng-container matColumnDef="dateOfBirth">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header >Date of Birth</th>
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header >Birth Date</th>
                         <td mat-cell *matCellDef="let element"> {{element.dateOfBirth | date:'MM/dd/yyyy'}} </td>
                         </ng-container>
                         <ng-container matColumnDef="serviceStartDate">
@@ -190,10 +200,6 @@
                         <ng-container matColumnDef="serviceEndDate">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header >Service End Date</th>
                         <td mat-cell *matCellDef="let element"> {{element.serviceEndDate | date:'MM/dd/yyyy'}} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="sequenceNumber">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header >Sequence Number</th>
-                        <td mat-cell *matCellDef="let element"> {{element.sequenceNumber}} </td>
                         </ng-container>
                         <ng-container matColumnDef="diagnosisCode">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header >Diagnosis Code</th>
@@ -278,26 +284,26 @@
                    <input type="text" formControlName="claimId" class="form-control"/>
                  </div>
                </div>            
-               <div class="col-md-4">                  
+               <!-- <div class="col-md-4">                  
                  <div class="form-group">
-                   <label>Client Id</label>
+                   <label>Account Id</label>
                    <input type="text" formControlName="clientId" class="form-control"/>
                  </div>
-               </div>            
+               </div>             -->
                <div class="col-md-4">                 
                  <div class="form-group">
-                   <label>Client Name</label>
+                   <label>Account Name</label>
                    <input type="text" formControlName="clientName" class="form-control"/>
                  </div>
-               </div>
-             </div>
-             <div class="row">          
+               </div>       
                <div class="col-md-4">              
                  <div class="form-group">
                    <label>Medica Member Id</label>
                    <input type="text" formControlName="memberId" class="form-control"/>
                  </div>
                </div>
+             </div>
+             <div class="row">   
               <div class="col-md-4">              
                  <div class="form-group">
                    <label>First Name</label>
@@ -309,15 +315,15 @@
                    <label>Last Name</label>
                    <input type="text" formControlName="lastName" class="form-control"/>
                  </div>
-                </div>                                  
-           </div>
-             <div class="row">          
+                </div>         
                <div class="col-md-4">              
                  <div class="form-group">
                    <label>Paid Amount</label>
                    <input type="text" formControlName="paidAmount" class="form-control"/>
                  </div>
-               </div>
+               </div>                               
+           </div>
+             <div class="row">    
               <div class="col-md-4">              
                  <div class="form-group">
                    <label>Claim Received On</label>
@@ -330,15 +336,15 @@
                    <label>Paid Date</label>
                    <input type="date" value="MM/dd/yyyy" formControlName="paidDate" class="form-control"  max="2999-12-31"/> 
                  </div>
-                </div>                                  
-           </div>
-             <div class="row">          
+                </div>          
                <div class="col-md-4">              
                  <div class="form-group">
-                   <label>Date of Birth</label>
+                   <label>Birth Date</label>
                    <input type="date" value="MM/dd/yyyy" formControlName="dateOfBirth" class="form-control"  max="2999-12-31"/>
                  </div>
-               </div>
+               </div>                                
+           </div>
+             <div class="row">  
               <div class="col-md-4">              
                  <div class="form-group">
                    <label>Service Start Date</label>
@@ -350,15 +356,15 @@
                    <label>Service End Date</label>
                    <input type="date" value="MM/dd/yyyy" formControlName="serviceEndDate" class="form-control"  max="2999-12-31"/>
                  </div>
-                </div>                                  
-           </div>
-             <div class="row">          
+                </div>          
                <div class="col-md-4">              
                  <div class="form-group">
                    <label>Sequence Number</label>
                    <input type="text" formControlName="sequenceNumber" class="form-control"/>
                  </div>
-               </div>
+               </div>                                
+           </div>
+             <div class="row">  
               <div class="col-md-4">              
                  <div class="form-group">
                    <label>Diagnosis Code</label>
@@ -370,9 +376,7 @@
                    <label>Claim Source</label>
                    <input type="text" formControlName="claimSource" class="form-control"/>
                  </div>
-                </div>                                  
-           </div>
-           <div class="row">          
+                </div>            
                <div class="col-md-4">              
                  <div class="form-group">
                    <label>Claim Type</label>
@@ -386,7 +390,9 @@
                  </mat-form-field>
                </div> -->
                  </div>
-               </div>
+               </div>                              
+           </div>
+           <div class="row">  
               <div class="col-md-4">              
                  <div class="form-group">
                    <label>Alternate Id</label>
@@ -398,16 +404,15 @@
                    <label>Subscriber First Name</label>
                    <input type="text" formControlName="subscriberFirstName" class="form-control"/>
                  </div>
-                </div>                                  
-           </div>
-           <div class="row">
+                </div>  
                <div class="col-md-4">              
                  <div class="form-group">
                    <label>Subscriber Last Name</label>
                    <input type="text" formControlName="subscriberLastName" class="form-control"/>
                  </div>
-                </div>                                  
+                </div>                                      
            </div>
+           
            
          </div>      
        </div>
