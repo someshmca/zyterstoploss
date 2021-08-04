@@ -163,7 +163,10 @@
 
 <div *ngIf="isClaimResult" class="claim-results-area">     
     <div class="card">   
-        <div class="card-header">Claim Search Results</div>
+        <div class="card-header">Claim Search Results
+          
+          <div class="fa fa-download" title="download" (click)="exportAsXLSX()"></div> <!--(VE 4/8/2021 )-->
+        </div>
         <div class="card-body">
         <div class="card-table-area">
             <div class="card-table">        
@@ -272,7 +275,7 @@
                         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
                     </table>
                 </div>
-                <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons> </mat-paginator>
+                <mat-paginator [pageSizeOptions]="[100, 500, 999]" showFirstLastButtons> </mat-paginator>
             </div>
             </div>
             </div>

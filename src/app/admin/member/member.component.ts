@@ -19,6 +19,8 @@ import { ContractService } from '../services/contract.service';
 import { HealthPlanService } from '../services/health-plan.service';
 import {NavPopupService} from '../services/nav-popup.service';
 import { LoaderService } from '../services/loader.service';//added by Venkatesh Enigonda
+import { ExcelUploadService } from '../services/excel-upload.service';
+import {ExcelService} from '../services/excel.service';
 
 @Component({
   selector: 'app-member',
@@ -40,6 +42,7 @@ export class MemberComponent implements OnInit {
   uPlanId:any;
   uTierId:any;
   today: string;
+  excel1; //(VE 4/8/2021 )
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -74,7 +77,7 @@ export class MemberComponent implements OnInit {
   isDisabled: boolean=false;
   isViewModal: boolean=false;
   isAdmin: boolean;
-  constructor(public loaderService: LoaderService, private mb: FormBuilder, private fb: FormBuilder, private memberService:MemberService, private alertService: AlertService, private datePipe: DatePipe, private loginService: LoginService, private clientService: ClientsService, private contractService: ContractService, private planService: HealthPlanService, private navService: NavPopupService) { }
+  constructor(public loaderService: LoaderService, private excelService:ExcelService, private mb: FormBuilder, private fb: FormBuilder, private memberService:MemberService, private alertService: AlertService, private datePipe: DatePipe, private loginService: LoginService, private clientService: ClientsService, private contractService: ContractService, private planService: HealthPlanService, private navService: NavPopupService) { }
 
   ngOnInit() {
     this.show=true;
@@ -304,6 +307,7 @@ export class MemberComponent implements OnInit {
 
    this.memberService.memberSearch(memberId,fname,mname, lname, subscriberId, dob, Gender, memberStartDate,memberEndDate,benefitPlanId,clientId,tier,alternateId).subscribe(    //(VE 30-Jul-2021  )    
     (data:IMemberSearchResponse[])=>{
+      this.excel1=data;//(VE 4/8/2021 )
        console.log(data);
        this.clearErrorMessages();
        console.log(data[0].memberId)
@@ -335,6 +339,14 @@ export class MemberComponent implements OnInit {
      }
    )
   }
+
+ //(VE 4/8/2021 )
+ exportAsXLSX():void {
+  this.excelService.exportAsExcelFile(this.excel1,"MemberList")
+
+  console.log("working");
+}
+//(VE 4/8/2021 )
 
   openViewModal(bool, id:any){
     this.isViewModal = true;

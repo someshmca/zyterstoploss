@@ -16,6 +16,7 @@ import {MatTableDataSource} from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { LoginService } from 'src/app/shared/services/login.service';
 import { ProductService } from '../../services/product.service';
+import {ExcelService} from '../../services/excel.service';
 
 @Component({
   selector: 'app-claim-search',
@@ -63,8 +64,9 @@ export class ClaimSearchComponent implements OnInit {
   isViewModal: boolean=false;
   isAdmin: boolean;
   isDisabled: boolean=false;
+  excel1; //(VE 4/8/2021 )
   constructor(private fb: FormBuilder, 
-    private _claimReportService: ClaimReportService, 
+    private _claimReportService: ClaimReportService,  private excelService:ExcelService,
     private _claimService: ClaimService,
     private _route:Router,
     private alertService: AlertService,
@@ -310,12 +312,14 @@ onSubmit() {
     // this.f.firstName.value==' '?'':this.f.firstName.value;
     // this.f.lastName.value==' '?'':this.f.lastName.value;
     
-    // if(this.f.claimId.value=='' && this.f.memberId.value=='' && this.f.firstName.value=='' && this.f.lastName.value=='' && this.f.dateOfBirth.value==null && this.f.clientId.value=='' && this.f.fromDate.value==null && this.f.toDate.value==null && this.f.sequenceNumber.value=='' && this.f.dollorAmount.value=='' && this.f.diagnosisCode.value=='' && this.f.claimSource.value=='' && this.f.claimType.value=='' && this.f.alternateId.value=='' && this.f.paidDate.value==null){
+    if(this.f.claimId.value=='' && this.f.memberId.value=='' && this.f.firstName.value=='' && this.f.lastName.value=='' && this.f.dateOfBirth.value==null && this.f.clientId.value=='' && this.f.fromDate.value==null && this.f.toDate.value==null && this.f.sequenceNumber.value=='' && this.f.minPaidAmount.value=='' && this.f.maxPaidAmount.value=='' && this.f.diagnosisCode.value=='' && this.f.claimSource.value=='' && this.f.claimType.value=='' && this.f.alternateId.value=='' && this.f.paidFromDate==null && this.f.paidToDate==null){
                     
-    //   this.isClaimSearchErr = true;
+      this.isClaimSearchErr = true;
+      return;
+    }
+    // if(this.claimSearchForm.invalid){
     //   return;
     // }
-    
     // if(this.dateErr.fromDateErr)
     // {      
     //   this.dateErrorMessage='';
@@ -415,6 +419,7 @@ onSubmit() {
     
     this._claimReportService.getClaimReport(claimSearchFormReq).subscribe(
       (data) => {
+        this.excel1=data;//(VE 4/8/2021 )
         
         this.submitted = true;
         this.dateErrorMessage='';
@@ -437,6 +442,15 @@ onSubmit() {
       } 
     )
   }
+  
+ //(VE 4/8/2021 )
+ exportAsXLSX():void {
+  this.excelService.exportAsExcelFile(this.excel1,"MemberList")
+
+  console.log("working");
+}
+//(VE 4/8/2021 )
+
   setClaimId(id: string){
     
     

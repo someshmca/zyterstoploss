@@ -39,6 +39,8 @@
     width: 100%;
     position: relative;
     overflow-x: auto;
+    max-height: 500px;
+    overflow-y: auto;
 }
 .claim-results-grid-wrap table{
     width: 2200px;
@@ -49,4 +51,18 @@
     right: 0; */
     width: 60px;
     box-shadow: 0px 2px 5px rgba(0,0,0,0.4);
+}
+
+.fa-download  
+{
+    /* position: relative;
+ left: 420px; */
+ color: blue;
+ border-radius: 50%;
+ cursor: pointer;
+ 
+}
+.fa-download:hover{
+    color: rgb(3, 194, 3);
+    transform: scale(1.4);
 }
