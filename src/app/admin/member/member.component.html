@@ -156,9 +156,9 @@
                       <div class="member-table-wrap">
                         <table mat-table matSort #memberSearchTable [dataSource]="searchDataSource" class="table table-bordered table-striped card-table">
                       
-                          <ng-container matColumnDef="memberId">
+                          <ng-container matColumnDef="memberHrid">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header  > Medica Member ID </th>
-                            <td mat-cell *matCellDef="let element"> {{element.memberId}} </td>
+                            <td mat-cell *matCellDef="let element"> {{element.memberHrid}} </td>
                           </ng-container>
                           <ng-container matColumnDef="clientName">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header >Account Name </th>

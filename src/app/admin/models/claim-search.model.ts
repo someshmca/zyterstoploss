@@ -8,10 +8,14 @@ export interface IClaimSearch{
         toDate: string;
         clientId: string;
         sequenceNumber?: number;
+        minPaidAmount: number;
+        maxPaidAmount: number;
         dollorAmount?: number;
         diagnosisCode: string;
         claimSource: string;
         claimType: string;
         alternateId: string;
-        paidDate: string
+        paidDate: string;
+        paidFromDate: string;
+        paidToDate: string;
 }

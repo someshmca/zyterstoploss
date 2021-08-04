@@ -24,13 +24,17 @@ export class ClaimService {
     fromDate: '',
     toDate: '',
     sequenceNumber: 0,
+    minPaidAmount: 0,
+    maxPaidAmount: 0,
     clientId: '',
     dollorAmount: 0,
     diagnosisCode: '',
     claimSource: '',
     claimType: '',
     alternateId: '',
-    paidDate: ''
+    paidDate: '',
+    paidFromDate: '',
+    paidToDate: ''
   }
   claimSearchRequest=new BehaviorSubject<IClaimSearch>(this.claimSearchInit);
   setClaimSearchRequest(request:IClaimSearch){

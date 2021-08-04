@@ -47,7 +47,7 @@ export class ClaimSearchComponent implements OnInit {
   coveredClaims: ICoveredClaims[] = [];
   
   claimResults: IClaimReportsModel[] = [];
-  displayedColumns: any[] = ['claimId','sequenceNumber', 'clientName', 'memberId', 'firstName', 'lastName', 'paidAmount', 'climReceivedOn','paidDate','dateOfBirth','serviceStartDate','serviceEndDate','diagnosisCode','claimSource','claimType','subscriberFirstName','subscriberLastName','alternateId'];
+  displayedColumns: any[] = ['claimId','sequenceNumber', 'clientName', 'memberId', 'firstName', 'lastName', 'minPaidAmount', 'climReceivedOn','paidFromDate','dateOfBirth','serviceStartDate','serviceEndDate','diagnosisCode','claimSource','claimType','subscriberFirstName','subscriberLastName','alternateId','paidToDate'];
   dataSource: any;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -81,11 +81,15 @@ export class ClaimSearchComponent implements OnInit {
       toDate: [null],
       clientId: [''],
       sequenceNumber: [''],
+      minPaidAmount: [''],
+      maxPaidAmount: [''],
       dollorAmount: [''],  
       diagnosisCode: [''],
       claimSource: [''],
       claimType: [''],
       alternateId: [''],
+      paidFromDate: [null],
+      paidToDate:[null],
       paidDate: [null]
       //PV 27-jul-2021
       // subscriberFirstName: [''],
@@ -188,7 +192,7 @@ initClaimForm(){
     lastName:  [''],
     paidAmount: [0],
     climReceivedOn:  [''],
-    paidDate: [''],
+    paidDate: [null],
     dateOfBirth: [''],
     serviceStartDate:  [''],
     serviceEndDate:  [''],
@@ -306,45 +310,42 @@ onSubmit() {
     // this.f.firstName.value==' '?'':this.f.firstName.value;
     // this.f.lastName.value==' '?'':this.f.lastName.value;
     
-    if(this.f.claimId.value=='' && this.f.memberId.value=='' && this.f.firstName.value=='' && this.f.lastName.value=='' && this.f.dateOfBirth.value==null && this.f.clientId.value=='' && this.f.fromDate.value==null && this.f.toDate.value==null && this.f.sequenceNumber.value=='' && this.f.dollorAmount.value=='' && this.f.diagnosisCode.value=='' && this.f.claimSource.value=='' && this.f.claimType.value=='' && this.f.alternateId.value=='' && this.f.paidDate.value==null){
+    // if(this.f.claimId.value=='' && this.f.memberId.value=='' && this.f.firstName.value=='' && this.f.lastName.value=='' && this.f.dateOfBirth.value==null && this.f.clientId.value=='' && this.f.fromDate.value==null && this.f.toDate.value==null && this.f.sequenceNumber.value=='' && this.f.dollorAmount.value=='' && this.f.diagnosisCode.value=='' && this.f.claimSource.value=='' && this.f.claimType.value=='' && this.f.alternateId.value=='' && this.f.paidDate.value==null){
                     
-      this.isClaimSearchErr = true;
-      return;
-    }
+    //   this.isClaimSearchErr = true;
+    //   return;
+    // }
     
-    if(this.dateErr.fromDateErr)
-    {      
-      this.dateErrorMessage='';
-      this.dateErrorMessage = "From date should not be greater than To date";
-      this.isClaimSearchErr = false;
-      return;
-    }
-    //new added by masool irfan
-    if(this.dateErr.dateErr)
-    {      
-      this.dateErrorMessage='';
-      this.dateErrorMessage = "From date should not be EQUAL with To date";
-      this.isClaimSearchErr = false;
-      return;
-    }
-    //till here
-    if(this.f.fromDate.value!=null && (this.f.toDate.invalid || this.f.toDate.value==null)){
-      this.dateErrorMessage='';
-      this.dateErrorMessage = "End date is invalid. Enter valid End date";
-      this.dateErr.toDateInvalid=true;
-      this.isClaimSearchErr = false;
-      return;      
-    }
+    // if(this.dateErr.fromDateErr)
+    // {      
+    //   this.dateErrorMessage='';
+    //   this.dateErrorMessage = "From date should not be greater than To date";
+    //   this.isClaimSearchErr = false;
+    //   return;
+    // }
+    // if(this.dateErr.dateErr)
+    // {      
+    //   this.dateErrorMessage='';
+    //   this.dateErrorMessage = "From date should not be EQUAL with To date";
+    //   this.isClaimSearchErr = false;
+    //   return;
+    // }
+    // if(this.f.fromDate.value!=null && (this.f.toDate.invalid || this.f.toDate.value==null)){
+    //   this.dateErrorMessage='';
+    //   this.dateErrorMessage = "End date is invalid. Enter valid End date";
+    //   this.dateErr.toDateInvalid=true;
+    //   this.isClaimSearchErr = false;
+    //   return;      
+    // }
     
-    // if(this.f.fromDate.valueChanges.subscribe((data)=>{
-    // }))
-    if(this.f.toDate.value!=null && (this.f.fromDate.invalid || this.f.fromDate.value==null)){
-      this.dateErrorMessage='';
-      this.dateErrorMessage = "From date is invalid. Enter valid From date";
-      this.dateErr.fromDateInvalid=true;
-      this.isClaimSearchErr = false;
-      return;      
-    }
+    
+    // if(this.f.toDate.value!=null && (this.f.fromDate.invalid || this.f.fromDate.value==null)){
+    //   this.dateErrorMessage='';
+    //   this.dateErrorMessage = "From date is invalid. Enter valid From date";
+    //   this.dateErr.fromDateInvalid=true;
+    //   this.isClaimSearchErr = false;
+    //   return;      
+    // }
     
     let checkMemberId = /^([A-Za-z0-9]+)$/; 
     console.log(checkMemberId.test(this.f.memberId.value));
@@ -392,12 +393,16 @@ onSubmit() {
       toDate:  this.f.toDate.value==''?null: this.datePipe.transform(this.f.toDate.value, 'yyyy-MM-dd'),
       clientId: this.f.clientId.value,
       sequenceNumber : this.f.sequenceNumber.value==''?0:Number(this.f.sequenceNumber.value),
+      minPaidAmount: this.f.minPaidAmount.value==''?0:Number(this.f.minPaidAmount.value),
+      maxPaidAmount: this.f.maxPaidAmount.value==''?0:Number(this.f.maxPaidAmount.value),
       dollorAmount: this.f.dollorAmount.value==''?0:Number(this.f.dollorAmount.value),
       diagnosisCode: this.f.diagnosisCode.value,
       claimSource: this.f.claimSource.value,
       claimType: this.f.claimType.value,
       alternateId: this.f.alternateId.value,
       paidDate:  this.f.paidDate.value==''?null: this.datePipe.transform(this.f.paidDate.value, 'yyyy-MM-dd'),
+      paidFromDate:  this.f.paidFromDate.value==''?null: this.datePipe.transform(this.f.paidFromDate.value, 'yyyy-MM-dd'),
+      paidToDate:  this.f.paidToDate.value==''?null: this.datePipe.transform(this.f.paidToDate.value, 'yyyy-MM-dd'),
     }
    // this._claimService.setClaimSearchRequest(claimRequestObj);
     // this._claimService.claimSearchRequest.subscribe((res)=>{this.claimSearchRequest=res;});

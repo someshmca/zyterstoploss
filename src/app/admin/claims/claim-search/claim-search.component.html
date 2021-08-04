@@ -22,17 +22,67 @@
                   <div *ngIf="memberLnameErr.isValid">{{memberLnameErr.errMsg}}</div> <!--Modified by Venkatesh Enigonda-->                                          
                 </div> 
                 <div class="form-row">
+                  <div class="form-field">
+                      <label class="form-field-label">Account ID </label>
+                      <div class="form-field-input">
+                          <input type="text"  #focusElem class="form-control field-input-text" formControlName="clientId" />                        
+                      </div>
+                   </div>
                     <div class="form-field">
                         <label class="form-field-label">Medica Claim ID</label>
                         <div class="form-field-input">
                             <input type="text" class="form-control field-input-text" formControlName="claimId" [ngClass]="{ 'is-invalid': claimIdErr.isValid }" />                        
                         </div>
                     </div>
+                    <div class="form-field">
+                        <label class="form-field-label">Sequence Number </label>
+                      <div class="form-field-input">
+                            <input type="number" class="form-control field-input-text" formControlName="sequenceNumber" />                        
+                        </div>
+                        </div>
+                        <div class="form-field">
+                            <label class="form-field-label">Min Paid Amount</label>
+                          <div class="form-field-input">
+                                <input type="number" class="form-control field-input-text" formControlName="minPaidAmount" />                        
+                            </div>
+                            </div>
+                            <div class="form-field">
+                                <label class="form-field-label">Max Paid Amount</label>
+                              <div class="form-field-input">
+                                    <input type="number" class="form-control field-input-text" formControlName="maxPaidAmount" />                        
+                                </div>
+                                </div>
+                            <div class="form-field">
+                                <label class="form-field-label">Diagnosis Code</label>
+                              <div class="form-field-input">
+                                    <input type="text" class="form-control field-input-text" formControlName="diagnosisCode" />                        
+                                </div>
+                                </div>
+                                <div class="form-field">
+                                    <label class="form-field-label">Claim Source </label>
+                                    <div class="form-field-input">
+                                        <input type="text" class="form-control field-input-text" formControlName="claimSource" />  
+                                                         
+                                    </div>
+                                    </div>
+                                    <div class="form-field">
+                                      <label class="form-field-label">Claim Type </label>
+                                      <div class="form-field-input">
+                                      <!-- <input class="form-control" formControlName="claimType" type="text"> -->
+                                      <select class="form-control" formControlName="claimType">
+                                        <option value=''>Select</option>
+                                        <option value="M">Medical</option>
+                                        <option value="P">Pharmacy</option>
+                                        <option value="D">Dental</option>
+                                        <option value="O">Others</option>
+                                      </select> 
+                                  </div>
+                                  </div>
                 <div class="form-field">
                     <label class="form-field-label">
                         Medica Member ID</label>
                         <div class="form-field-input">
-                            <input type="text" #focusElem class="form-control field-input-text" formControlName="memberId" [ngClass]="{ 'is-invalid': memberIdErr.isValid }"/><!--Modified by Venkatesh Enigonda-->
+                            <input type="text" class="form-control field-input-text" formControlName="memberId" [ngClass]="{ 'is-invalid': memberIdErr.isValid }"/><!--Modified by Venkatesh Enigonda-->
                         </div>
                 </div>
                 <div class="form-field">
@@ -70,56 +120,33 @@
                         <input type="date" class="form-control field-input-text" value="MM/DD/YYYY" [max]="maxDate" formControlName="toDate"/>
                     </div>
                 </div>  
-                <div class="form-field">
-                    <label class="form-field-label">Account ID </label>
-                    <div class="form-field-input">
-                        <input type="text" class="form-control field-input-text" formControlName="clientId" />                        
-                    </div>
-                 </div>
-                <div class="form-field">
-                    <label class="form-field-label">Sequence Number </label>
-                  <div class="form-field-input">
-                        <input type="number" class="form-control field-input-text" formControlName="sequenceNumber" />                        
-                    </div>
-                    </div>
                 
-                     <div class="form-field">
+                     <!-- <div class="form-field">
                         <label class="form-field-label">Dollar Amount </label>
                         <div class="form-field-input">
                             <input type="number" class="form-control field-input-text" formControlName="dollorAmount" />                        
                         </div>
-                    </div>
-                    <div class="form-field">
-                        <label class="form-field-label">Diagnosis Code</label>
-                      <div class="form-field-input">
-                            <input type="text" class="form-control field-input-text" formControlName="diagnosisCode" />                        
-                        </div>
+                    </div> -->
+
+                         
+                        <div class="form-field">
+                            <label class="form-field-label">Paid Start Date</label>
+                            <div class="form-field-input">
+                                <input type="date" class="form-control field-input-text" value="MM/DD/YYYY" formControlName="paidFromDate" [max]="today"/>
+                            </div>
                         </div>
                         <div class="form-field">
-                            <label class="form-field-label">Claim Source </label>
+                            <label class="form-field-label">Paid End Date</label>
                             <div class="form-field-input">
-                                <input type="text" class="form-control field-input-text" formControlName="claimSource" />  
-                                                 
+                                <input type="date" class="form-control field-input-text" value="MM/DD/YYYY" formControlName="paidToDate" max="12/31/9999"/>
                             </div>
-                            </div>
-
-                         <div class="form-field">
-                            <label class="form-field-label">Claim Type </label>
-                            <div class="form-field-input">
-                            <!-- <input class="form-control" formControlName="claimType" type="text"> -->
-                            <select class="form-control" formControlName="claimType">
-                              <option value="M">Medical</option>
-                              <option value="P">Pharmacy</option>
-                              <option value="D">Dental</option>
-                            </select> 
                         </div>
-                        </div>
-                            <div class="form-field">
+                            <!-- <div class="form-field">
                                 <label class="form-field-label">Paid Date</label>
                                 <div class="form-field-input">
                                     <input type="date" class="form-control field-input-text" value="MM/DD/YYYY" formControlName="paidDate" [max]="today"/>
                                 </div>
-                            </div>
+                            </div> -->
                 
             </div>
             </div>
@@ -175,19 +202,19 @@
                         <th mat-header-cell *matHeaderCellDef mat-sort-header >Last Name</th>
                         <td mat-cell *matCellDef="let element"> {{element.lastName}} </td>
                         </ng-container>
-                        <ng-container matColumnDef="paidAmount">
+                        <ng-container matColumnDef="minPaidAmount">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header >Paid Amount</th>
                         <td mat-cell *matCellDef="let element" style="text-align: left; "> 
-                            {{element.paidAmount}} </td>
+                            {{element.minPaidAmount}} </td>
                         </ng-container>
                         <ng-container matColumnDef="climReceivedOn">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Claim Received On</th>
                         <td mat-cell *matCellDef="let element"> {{element.climReceivedOn | date:'MM/dd/yyyy'}} </td>
                         </ng-container>
-                        <ng-container matColumnDef="paidDate">
+                        <ng-container matColumnDef="paidFromDate">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Paid Date</th>
                         <td mat-cell *matCellDef="let element"> 
-                            {{element.paidDate | date:'MM/dd/yyyy'}} </td>
+                            {{element.paidFromDate | date:'MM/dd/yyyy'}} </td>
                         </ng-container>
                         <ng-container matColumnDef="dateOfBirth">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header >Birth Date</th>
@@ -221,7 +248,11 @@
                         <th mat-header-cell *matHeaderCellDef mat-sort-header >Subscriber Last Name</th>
                         <td mat-cell *matCellDef="let element"> {{element.subscriberLastName}} </td>
                         </ng-container>
-                        <ng-container matColumnDef="alternateId" stickyEnd>
+                        <ng-container matColumnDef="alternateId">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header >Alternate Member Id</th>
+                        <td mat-cell *matCellDef="let element"> {{element.alternateId}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="paidToDate" stickyEnd>
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Action</th>
                             <td mat-cell *matCellDef="let element" class="action-link"> 
                               <span class="view-icon" 
