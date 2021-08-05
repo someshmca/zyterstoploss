@@ -73,6 +73,33 @@ export class ClaimSearchComponent implements OnInit {
     private datePipe: DatePipe, public loginService: LoginService, private productService: ProductService ) {}
 
   ngOnInit() {
+    this.initClaimSearchForm();
+    //this.maxDate = this.datePipe.transform(new Date(Date.now()), 'yyyy-MM-dd');
+    this.maxDate= new Date('2999-12-31');
+    console.log(this.maxDate);
+    
+    setTimeout(()=>{
+      this.focusTag.nativeElement.focus()
+    }, 100)
+    this.today=new Date().toJSON().split('T')[0];
+    this.isClaimResult=false;
+   // this._claimService.isClaimResult.subscribe((value)=>{this.isClaimResult=value;});    
+    // this._claimService.claimSearchRequest.subscribe((res)=>{
+    //   this.claimSearchRequest=res; 
+    //   if(this.isClaimResult){
+    //     this.claimSearchForm.patchValue(this.claimSearchRequest);
+    //     this.getClaimSearchResultsGrid(this.claimSearchRequest);
+    //   }
+    // });
+    this.loginService.getLoggedInRole();
+    this.isAdmin = this.loginService.isAdmin;
+    if(!this.isAdmin){
+      this.isViewModal=true;
+    }
+      this.clearErrorMessages();
+      this.initClaimForm();
+  }
+  initClaimSearchForm(){    
     this.claimSearchForm = this.fb.group({
       claimId: [''],
       memberId:  [''],
@@ -99,32 +126,7 @@ export class ClaimSearchComponent implements OnInit {
       // paidFromDate: [''],
       // paidToDate: ['']
     },{validator: this.dateLessThan('fromDate', 'toDate')});
-    //this.maxDate = this.datePipe.transform(new Date(Date.now()), 'yyyy-MM-dd');
-    this.maxDate= new Date('2999-12-31');
-    console.log(this.maxDate);
-    
-    setTimeout(()=>{
-      this.focusTag.nativeElement.focus()
-    }, 100)
-    this.today=new Date().toJSON().split('T')[0];
-    this.isClaimResult=false;
-   // this._claimService.isClaimResult.subscribe((value)=>{this.isClaimResult=value;});    
-    // this._claimService.claimSearchRequest.subscribe((res)=>{
-    //   this.claimSearchRequest=res; 
-    //   if(this.isClaimResult){
-    //     this.claimSearchForm.patchValue(this.claimSearchRequest);
-    //     this.getClaimSearchResultsGrid(this.claimSearchRequest);
-    //   }
-    // });
-    this.loginService.getLoggedInRole();
-    this.isAdmin = this.loginService.isAdmin;
-    if(!this.isAdmin){
-      this.isViewModal=true;
-    }
-      this.clearErrorMessages();
-      this.initClaimForm();
   }
-
   clearErrorMessages(){  
     this.claimIdErr.isValid=false;
     this.claimIdErr.errMsg='';
@@ -171,11 +173,14 @@ dateLessThan(from: string, to: string) {
   //  }
   // conven`ience getter for easy access to form fields
   resetClaimSearch(){
-    this.claimSearchForm.reset();
+    this.initClaimSearchForm();
     this.claimSearchNotFound = false;
+    debugger;
+    console.log(this.claimSearchForm.value);
+    debugger;
     //this._claimService.setIsClaimResult(false);
     this.isClaimResult=false;
-    this._claimService.resetClaimSearch();
+   // this._claimService.resetClaimSearch();
     this.clearErrorMessages();   
   }
   get f() { return this.claimSearchForm.controls; }
@@ -317,12 +322,12 @@ onSubmit() {
     // this.f.firstName.value==' '?'':this.f.firstName.value;
     // this.f.lastName.value==' '?'':this.f.lastName.value;
     
-    if(this.f.claimId.value=='' && this.f.memberId.value=='' && this.f.firstName.value=='' && this.f.lastName.value=='' && this.f.dateOfBirth.value==null && this.f.clientId.value=='' && this.f.fromDate.value==null && this.f.toDate.value==null && this.f.sequenceNumber.value=='' && this.f.minPaidAmount.value=='' && this.f.maxPaidAmount.value=='' && this.f.diagnosisCode.value=='' && this.f.claimSource.value=='' && this.f.claimType.value=='' && this.f.alternateId.value=='' && this.f.paidFromDate==null && this.f.paidToDate==null){
+    if(this.f.claimId.value=='' && this.f.memberId.value=='' && this.f.firstName.value=='' && this.f.lastName.value=='' && this.f.dateOfBirth.value==null && this.f.clientId.value=='' && this.f.fromDate.value==null && this.f.toDate.value==null && this.f.sequenceNumber.value=='' && this.f.minPaidAmount.value=='' && (this.f.maxPaidAmount.value=='' || this.f.maxPaidAmount.value==null) && this.f.diagnosisCode.value=='' && this.f.claimSource.value=='' && this.f.claimType.value=='' && this.f.alternateId.value=='' && this.f.paidFromDate.value==null && this.f.paidToDate.value==null){
                     
       this.isClaimSearchErr = true;
       return;
     }
-
+    
     // if(this.claimSearchForm.invalid){
     //   return;
     // }

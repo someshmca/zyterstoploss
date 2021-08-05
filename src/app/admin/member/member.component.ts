@@ -361,15 +361,18 @@ export class MemberComponent implements OnInit {
     this.submitted = false;
     if(open && id==null){
       this.isAddMode = true;
+      document.body.classList.add("cdk-global-scrollblock");  
     }
     if (!open && id==null) {
       this.memberForm.reset();
       this.isAddMode = false;
       this.isViewModal=false;
+      document.body.classList.remove("cdk-global-scrollblock"); 
     }
     console.log("id inside modal: "+id);
 
     if(id!=null && open){
+      document.body.classList.add("cdk-global-scrollblock");  
       this.isAddMode = false;      
       if(id!=null){
         console.log(id);

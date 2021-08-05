@@ -371,6 +371,7 @@ doFilter(filterValue:string){ //added by Venkatesh Enigonda
       
       
       this.updatePlanID = elem.planID;
+      debugger;
       //this.fetchTiers();
       console.log(elem.lstTblPlanTier.length);
       // this.t.setValue(elem.lstTblPlanTier);
@@ -392,7 +393,7 @@ doFilter(filterValue:string){ //added by Venkatesh Enigonda
           }));
       }
       this.t.patchValue(this.t.value);
-      
+      debugger;
         
       }
       this.getContractsByClientID(elem.clientId);
@@ -658,7 +659,10 @@ doFilter(filterValue:string){ //added by Venkatesh Enigonda
         
       }
       else{
+        this.t.value[i].planId=this.updatePlanID;
         this.t.value[i].tierId=Number(this.t.value[i].tierId);
+        this.t.value[i].tierAmount=Number(this.t.value[i].tierAmount);
+        this.t.value[i].expectedClaimsRate=Number(this.t.value[i].expectedClaimsRate);
         this.t.value[i].isTerminalExtCoverage=this.t.value[i].isTerminalExtCoverage==true?'Y':'N'
       }
     }
