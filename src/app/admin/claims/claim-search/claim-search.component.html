@@ -20,6 +20,8 @@
                   <div *ngIf="claimIdErr.isValid">{{claimIdErr.errMsg}}</div>
                   <div *ngIf="memberIdErr.isValid">{{memberIdErr.errMsg}}</div> 
                   <div *ngIf="isAlternateIDInvalid">Invalid Alternate Member ID</div>    
+                  <div *ngIf="isMinPaidAmountInvalid">Invalid Min Paid Amount Negative values are not allowed</div>
+                  <div *ngIf="isMaxPaidAmountInvalid">Invalid Max Paid Amount. Negative values are not allowed</div>
                   <div *ngIf="isMinAmountInvalid">Negative values not allowed for Min Paid amount </div>
                   <div *ngIf="memberFnameErr.isValid">{{memberFnameErr.errMsg}}</div><!--Modified by Venkatesh Enigonda-->
                   <div *ngIf="memberLnameErr.isValid">{{memberLnameErr.errMsg}}</div> <!--Modified by Venkatesh Enigonda-->                                          
@@ -46,13 +48,13 @@
                         <div class="form-field">
                             <label class="form-field-label">Min Paid Amount</label>
                           <div class="form-field-input">
-                                <input type="number" class="form-control field-input-text" formControlName="minPaidAmount" />                        
+                                <input type="number" class="form-control field-input-text" formControlName="minPaidAmount" [ngClass]="{'is-invalid':isMinPaidAmountInvalid}" />                        
                             </div>
                             </div>
                             <div class="form-field">
                                 <label class="form-field-label">Max Paid Amount</label>
                               <div class="form-field-input">
-                                    <input type="number" class="form-control field-input-text" formControlName="maxPaidAmount" />                        
+                                    <input type="number" class="form-control field-input-text" formControlName="maxPaidAmount" [ngClass]="{'is-invalid':isMaxPaidAmountInvalid}" />                        
                                 </div>
                                 </div>
                             <div class="form-field">
@@ -109,7 +111,7 @@
                 <div class="form-field">
                     <label class="form-field-label">Birth Date</label>
                     <div class="form-field-input">
-                        <input type="date" class="form-control field-input-text" value="MM/DD/YYYY" formControlName="dateOfBirth" [max]="today"/> <!-- Venkata Reddy -->
+                        <input type="date" class="form-control field-input-text" value="MM/DD/YYYY" formControlName="dateOfBirth" [max]="today" > <!-- Venkata Reddy -->
                     </div>
                 </div>
                 <div class="form-field">

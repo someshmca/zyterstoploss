@@ -121,6 +121,7 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
 
     initTier(){
           return this.t.push(this.formBuilder.group({
+            planId: 0,
             tierId: [''],
             tierAmount: [''],
             expectedClaimsRate: [''],
@@ -139,12 +140,24 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
                   this.tiersLimitExceeded.value='Maximum Eight Rows are allowed';
                 }
                 else{
-                  this.t.push(this.formBuilder.group({
-                    tierId: [''],
-                    tierAmount: [''],
-                    expectedClaimsRate: [''],
-                    isTerminalExtCoverage: ['']
-                }));
+                  if(this.isAddMode){
+                    this.t.push(this.formBuilder.group({
+                      planId:0,
+                      tierId: [''],
+                      tierAmount: [''],
+                      expectedClaimsRate: [''],
+                      isTerminalExtCoverage: [false]
+                    }));
+                  }
+                  if(!this.isAddMode){
+                    this.t.push(this.formBuilder.group({
+                      planId:this.updatePlanID,
+                      tierId: [''],
+                      tierAmount: [''],
+                      expectedClaimsRate: [''],
+                      isTerminalExtCoverage: [false]
+                    }));
+                  }
                   this.t.patchValue(this.t.value);
                   this.tiersLimitExceeded.flag=false;
                   this.tiersLimitExceeded.value='';
@@ -372,7 +385,7 @@ doFilter(filterValue:string){ //added by Venkatesh Enigonda
       
       
       this.updatePlanID = elem.planID;
-      debugger;
+      ;
       //this.fetchTiers();
       console.log(elem.lstTblPlanTier.length);
       // this.t.setValue(elem.lstTblPlanTier);
@@ -393,8 +406,11 @@ doFilter(filterValue:string){ //added by Venkatesh Enigonda
               isTerminalExtCoverage: elem.lstTblPlanTier[i].isTerminalExtCoverage=='Y'?true:false
           }));
       }
-      this.t.patchValue(this.t.value);
-      debugger;
+      
+      this.planForm.patchValue({
+        lstTblPlanTier:this.t.value
+      })
+      
         
       }
       this.getContractsByClientID(elem.clientId);
@@ -592,8 +608,8 @@ doFilter(filterValue:string){ //added by Venkatesh Enigonda
           else{
             this.t.value[i].planId=0;
             this.t.value[i].tierId=Number(this.t.value[i].tierId);
-            this.t.value[i].tierAmount=Number(this.t.value[i].tierAmount);
-            this.t.value[i].expectedClaimsRate=Number(this.t.value[i].expectedClaimsRate);
+            this.t.value[i].tierAmount=this.t.value[i].tierAmount==''?0:Number(this.t.value[i].tierAmount);
+            this.t.value[i].expectedClaimsRate=this.t.value[i].expectedClaimsRate==''?0:Number(this.t.value[i].expectedClaimsRate);
             this.t.value[i].isTerminalExtCoverage=this.t.value[i].isTerminalExtCoverage==true?'Y':'N';
           }
         }
@@ -625,9 +641,11 @@ doFilter(filterValue:string){ //added by Venkatesh Enigonda
                       //this.getAllPlans();
                       console.log(this.planForm.value);
                       
-                     
+                     this.t.patchValue(this.t.value);
                       this.getActiveClients();
-                      for(let i=0;i<this.t.length;i++){                        
+                      
+                      for(let i=0;i<this.t.length;i++){       
+                                         
                           this.t.value[i].isTerminalExtCoverage=this.t.value[i].isTerminalExtCoverage=='Y'?true:false;
                       }
                       this.t.patchValue(this.t.value);
@@ -651,7 +669,7 @@ doFilter(filterValue:string){ //added by Venkatesh Enigonda
     //this.planForm.patchValue(this.planForm.value);
     this.t.patchValue(this.t.value);
     for (let i = 0; i < this.t.length; i++) {
-      debugger;
+      ;
       if(this.t.value[i].tierId=='' && this.t.value[i].tierAmount=='' && this.t.value[i].expectedClaimsRate=='' && this.t.value[i].isTerminalExtCoverage==''){
       //  this.t.value.splice(i,1);
        
@@ -664,11 +682,12 @@ doFilter(filterValue:string){ //added by Venkatesh Enigonda
       else{
         this.t.value[i].planId=this.updatePlanID;
         this.t.value[i].tierId=Number(this.t.value[i].tierId);
-        this.t.value[i].tierAmount=Number(this.t.value[i].tierAmount);
-        this.t.value[i].expectedClaimsRate=Number(this.t.value[i].expectedClaimsRate);
+        this.t.value[i].tierAmount=this.t.value[i].tierAmount==''?0:Number(this.t.value[i].tierAmount);
+        this.t.value[i].expectedClaimsRate=this.t.value[i].expectedClaimsRate==''?0:Number(this.t.value[i].expectedClaimsRate);
         this.t.value[i].isTerminalExtCoverage=this.t.value[i].isTerminalExtCoverage==true?'Y':'N'
       }
     }
+    this.t.patchValue(this.t.value); 
     
     this.updatePlanObj = {
       planID: this.updatePlanID,
@@ -686,7 +705,6 @@ doFilter(filterValue:string){ //added by Venkatesh Enigonda
     
 
       console.log(this.updatePlanObj);
-
       this.planService.updatePlan(this.updatePlanObj)
           .pipe(first())
           .subscribe({
@@ -695,13 +713,17 @@ doFilter(filterValue:string){ //added by Venkatesh Enigonda
                    // this.planForm.patchValue(this.planForm.value);
                     console.log(this.updatePlanObj);
                     console.log(this.t.value);
+                    //this.t.patchValue(this.t.value);
                     
                       for (let i = 0; i < this.t.length; i++) {
-                        
+                     //   
                         this.t.value[i].isTerminalExtCoverage=this.t.value[i].isTerminalExtCoverage=='Y'?true:false
                       }
-                    this.t.patchValue(this.t.value);
-                    
+                    //
+                   // this.t.patchValue(this.t.value);
+                    this.planForm.patchValue({
+                      lstTblPlanTier:this.t.value
+                    })
                   this.alertService.success('Plan & Tier updated', {
                     keepAfterRouteChange: true });
                    // this.uPlanName=''; //(V.E 27-Jul-2021 )

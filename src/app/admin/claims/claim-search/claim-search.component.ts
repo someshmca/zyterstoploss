@@ -37,6 +37,8 @@ export class ClaimSearchComponent implements OnInit {
   memberFnameErr = { isValid: false, errMsg: '' }; //  by Venkatesh Enigonda
   memberLnameErr = { isValid: false, errMsg: '' }; //  by Venkatesh Enigonda
   isAlternateIDInvalid: boolean=false;
+  isMinPaidAmountInvalid: boolean=false;
+  isMaxPaidAmountInvalid: boolean=false;
   dateErr = {
     fromDateErr: false,
     fromDateInvalid: false,
@@ -86,6 +88,7 @@ export class ClaimSearchComponent implements OnInit {
       this.focusTag.nativeElement.focus()
     }, 100)
     this.today=new Date().toJSON().split('T')[0];
+    
     this.isClaimResult=false;
    // this._claimService.isClaimResult.subscribe((value)=>{this.isClaimResult=value;});    
     // this._claimService.claimSearchRequest.subscribe((res)=>{
@@ -114,7 +117,7 @@ export class ClaimSearchComponent implements OnInit {
       toDate: [null],
       clientId: [''],
       sequenceNumber: [''],
-      minPaidAmount: [null],
+      minPaidAmount: [''],
       maxPaidAmount: [''],
       dollorAmount: [''],  
       diagnosisCode: [''],
@@ -152,6 +155,8 @@ export class ClaimSearchComponent implements OnInit {
     this.isAccountIDInvalid=false;
     this.isAlternateIDInvalid=false;
     this.isClaimSearchFormInvalid=false;
+    this.isMinPaidAmountInvalid=false;
+    this.isMaxPaidAmountInvalid=false;
   }
 dateLessThan(from: string, to: string) {  
   return (group: FormGroup): {[key: string]: any} => {
@@ -303,16 +308,51 @@ onSubmit() {
 }
 // claim form modal end
 
-  validateDate(labelName, controlName){
+  validateDate(labelName, fieldValue){
 
   }
-  validateInputIDs(labelName, controlName){
+  validateNumber(labelName, fieldValue){
+   
+    if(labelName=="Min Paid Amount"){ 
+      if(fieldValue==null){
+        this.claimSearchForm.patchValue({
+          minPaidAmount:''
+        });
+      }
+      else if(fieldValue!=''){
+        
+        let numberPattern = /^([0-9]+)$/; 
+        let testNum=numberPattern.test(fieldValue);
+        if(!testNum){
+          this.isMinPaidAmountInvalid=true;
+          this.isClaimSearchFormInvalid=true;
+        }
+      }
+    }
+    else if(labelName=="Max Paid Amount"){ 
+      if(fieldValue==null){
+        this.claimSearchForm.patchValue({
+          maxPaidAmount:''
+        });
+      }
+      else if(fieldValue!=''){
+        
+        let numberPattern = /^([0-9]+)$/; 
+        let testNum=numberPattern.test(fieldValue);
+        if(!testNum){
+          this.isMaxPaidAmountInvalid=true;
+          this.isClaimSearchFormInvalid=true;
+        }
+      }
+    }
+  }
+  validateInputIDs(labelName, fieldValue){
     
     let alphaNum = /^([A-Za-z0-9]+)$/;     
     
     let isValidInputID: boolean=true;
-    if(controlName.length>0){
-      let checkInputString = alphaNum.test(controlName);
+    if(fieldValue.length>0){
+      let checkInputString = alphaNum.test(fieldValue);
       if(!checkInputString){      
         if(labelName=='Account ID'){
           this.isAccountIDInvalid=true;
@@ -345,12 +385,12 @@ onSubmit() {
     //   this.isClaimSearchFormInvalid=false;
       
   }
-  validateInputNames(labelName, controlName){
+  validateInputNames(labelName, fieldValue){
     let alphaNum = /^([A-Za-z0-9 ]+)$/;     
     
     let isValidInputName: boolean=true;
-    if(controlName.length>0){
-      let checkInputString = alphaNum.test(controlName);
+    if(fieldValue.length>0){
+      let checkInputString = alphaNum.test(fieldValue);
       if(!checkInputString){      
         if(labelName=='First Name'){
           this.memberFnameErr.isValid = true;
@@ -373,30 +413,19 @@ onSubmit() {
       
   }
   searchClaim(form: FormGroup) {
+    console.log(this.f.minPaidAmount.value);
+    
     this.isClaimResult=false;
     console.log(this.dateErr.fromDateErr); 
     this.clearErrorMessages();
     this.isClaimSearchFormInvalid=false;
     
-   // this.claimSearchForm.patchValue(this.claimSearchForm.value);
-    //   console.log(this.claimSearchForm.value);
-    // this.claimSearchForm.patchValue({
-    //   claimId: this.f.claimId.value,
-    //   memberId: this.f.memberId.value,
-    //   firstName: this.f.firstName.value,
-    //   lastName: this.f.lastName.value,
-    //   dateOfBirth: this.f.dateOfBirth.value==''?null:this.f.dateOfBirth.value,
-    //   fromDate:  this.f.fromDate.value==''?null:  this.f.fromDate.value,
-    //   toDate:  this.f.toDate.value==''?null: this.f.toDate.value   
-    // });
-    // this.f.claimId.value==' '?'':this.f.claimId.value;
-    // this.f.memberId.value==' '?'':this.f.memberId.value;
-    // this.f.firstName.value==' '?'':this.f.firstName.value;
-    // this.f.lastName.value==' '?'':this.f.lastName.value;
+    console.log(this.f.dateOfBirth.value.length);
     
+    this.validateNumber("Min Paid Amount",this.f.minPaidAmount.value);
+    this.validateNumber("Max Paid Amount",this.f.maxPaidAmount.value);
 
-    if(this.f.claimId.value=='' && this.f.memberId.value=='' && this.f.firstName.value=='' && this.f.lastName.value=='' && this.f.dateOfBirth.value==null && this.f.clientId.value=='' && this.f.fromDate.value==null && this.f.toDate.value==null && this.f.sequenceNumber.value=='' && this.f.minPaidAmount.value==null && (this.f.maxPaidAmount.value=='' || this.f.maxPaidAmount.value==null) && this.f.diagnosisCode.value=='' && this.f.claimSource.value=='' && this.f.claimType.value=='' && this.f.alternateId.value=='' && this.f.paidFromDate.value==null && this.f.paidToDate.value==null){
-                    
+    if(this.f.claimId.value=='' && this.f.memberId.value=='' && this.f.firstName.value=='' && this.f.lastName.value=='' && this.f.dateOfBirth.value==null && this.f.clientId.value=='' && this.f.fromDate.value==null && this.f.toDate.value==null && this.f.sequenceNumber.value=='' && this.f.minPaidAmount.value=='' && this.f.maxPaidAmount.value==''  && this.f.diagnosisCode.value=='' && this.f.claimSource.value=='' && this.f.claimType.value=='' && this.f.alternateId.value=='' && this.f.paidFromDate.value==null && this.f.paidToDate.value==null){          
       this.isClaimSearchErr = true;
       return;
     }
@@ -411,9 +440,9 @@ onSubmit() {
     this.validateInputIDs("Medica Claim ID", this.f.claimId.value.trim());
     this.validateInputIDs("Medica Member ID", this.f.memberId.value.trim());
     this.validateInputIDs("Alternate Member ID", this.f.alternateId.value.trim());
-
     this.validateInputNames("First Name", this.f.firstName.value.trim());
     this.validateInputNames("Last Name", this.f.lastName.value.trim());
+
     if(this.isClaimSearchFormInvalid){
       return;
     }
@@ -428,7 +457,7 @@ onSubmit() {
         toDate:  this.f.toDate.value==''?null: this.datePipe.transform(this.f.toDate.value, 'yyyy-MM-dd'),
         clientId: this.f.clientId.value,
         sequenceNumber : this.f.sequenceNumber.value==''?0:Number(this.f.sequenceNumber.value),
-        minPaidAmount: this.f.minPaidAmount.value==''?0:Number(this.f.minPaidAmount.value),
+        minPaidAmount: Number(this.f.minPaidAmount.value),
         maxPaidAmount: this.f.maxPaidAmount.value==''?0:Number(this.f.maxPaidAmount.value),
         dollorAmount: this.f.dollorAmount.value==''?0:Number(this.f.dollorAmount.value),
         diagnosisCode: this.f.diagnosisCode.value,
