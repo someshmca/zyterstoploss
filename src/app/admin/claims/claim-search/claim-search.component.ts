@@ -245,7 +245,7 @@ openCustomModal(open: boolean, id:any) {
             memberId: id.memberId,
             firstName: id.firstName,
             lastName:  id.lastName,
-            paidAmount:id.paidAmount,
+            paidAmount:id.minPaidAmount,
             climReceivedOn:  this.datePipe.transform(id.climReceivedOn, 'yyyy-MM-dd'),
             paidDate:  this.datePipe.transform(id.paidDate, 'yyyy-MM-dd'),
             dateOfBirth: this.datePipe.transform(id.dateOfBirth, 'yyyy-MM-dd'),
