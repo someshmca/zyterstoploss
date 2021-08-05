@@ -290,7 +290,12 @@ onSubmit() {
 }
 // claim form modal end
 
+  validateDate(labelName, controlName){
 
+  }
+  validateTextBox(labelName, controlName){
+    
+  }
   searchClaim(form: FormGroup) {
     this.isClaimResult=false;
     console.log(this.dateErr.fromDateErr); 
@@ -317,6 +322,7 @@ onSubmit() {
       this.isClaimSearchErr = true;
       return;
     }
+
     // if(this.claimSearchForm.invalid){
     //   return;
     // }

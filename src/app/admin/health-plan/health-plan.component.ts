@@ -377,9 +377,25 @@ doFilter(filterValue:string){ //added by Venkatesh Enigonda
       // console.log(this.t)
       
 
+      if(elem.lstTblPlanTier.length>0){
+        //this.t.setValue(elem.lstTblPlanTier);
+     //  console.log(this.t.value);
+       
+        for (let i = 0; i < elem.lstTblPlanTier.length; i++) {
+          
+          this.t.push(this.formBuilder.group({
+              planId:elem.lstTblPlanTier[i].planId,
+              tierId: elem.lstTblPlanTier[i].tierId,
+              tierAmount: elem.lstTblPlanTier[i].tierAmount,
+              expectedClaimsRate: elem.lstTblPlanTier[i].expectedClaimsRate,
+              isTerminalExtCoverage: elem.lstTblPlanTier[i].isTerminalExtCoverage=='Y'?true:false
+          }));
+      }
+      this.t.patchValue(this.t.value);
       
+        
+      }
       this.getContractsByClientID(elem.clientId);
-      debugger;
       this.planForm.patchValue({
         planID: elem.planID,
         clientId: elem.clientId,
@@ -390,24 +406,9 @@ doFilter(filterValue:string){ //added by Venkatesh Enigonda
         contractYear: elem.contractYear,
         clientName: elem.clientName,
         status: elem.status,
-        //lstTblPlanTier: elem.lstTblPlanTier
+        lstTblPlanTier: this.t.value
       });
-
       console.log(this.planForm.value);
-      debugger;
-      for (let i = 0; i < elem.lstTblPlanTier.length; i++) {  
-        this.t.push(this.formBuilder.group({
-          planId:elem.lstTblPlanTier[i].planId,
-          tierId:Number(elem.lstTblPlanTier[i].tierId),
-          tierAmount:Number(elem.lstTblPlanTier[i].tierAmount),
-          expectedClaimsRate:Number(elem.lstTblPlanTier[i].expectedClaimsRate),
-          isTerminalExtCoverage:elem.lstTblPlanTier[i].isTerminalExtCoverage=='Y'?true:false
-        }))               
-      }
-
-      this.planForm.patchValue(this.planForm.value);
-      console.log(this.planForm.value);
-      debugger;
       console.log(this.t);
       
       if(this.isViewModal==true){
@@ -566,38 +567,35 @@ doFilter(filterValue:string){ //added by Venkatesh Enigonda
 
   private addPlan() {
     this.isAddTier=false;
-    debugger;
+    
     if(!this.isAddTier){
+      
         this.isDisabled=true;
         this.isNoFactAmount=false;
-        console.log(this.f.lstTblPlanTier.value[0].isTerminalExtCoverage);
+        console.log(this.t.value[0].isTerminalExtCoverage);
         
-        console.log(this.planForm.value);
-        debugger;
-        //let tiersArr=this.f.lstTblPlanTier.value;
-        for (let i = 0; i < this.f.lstTblPlanTier.value.length; i++) {
-          if(this.f.lstTblPlanTier.value[i].tierId=='' && this.f.lstTblPlanTier.value[i].tierAmount=='' && this.f.lstTblPlanTier.value[i].expectedClaimsRate=='' && this.f.lstTblPlanTier.value[i].isTerminalExtCoverage==''){
-          //  this.f.lstTblPlanTier.value.splice(i,1);
+        
+        //let tiersArr=this.t.value;
+        for (let i = 0; i < this.t.length; i++) {
+          if(this.t.value[i].tierId=='' && this.t.value[i].tierAmount=='' && this.t.value[i].expectedClaimsRate=='' && this.t.value[i].isTerminalExtCoverage==''){
+          //  this.t.value.splice(i,1);
            
             this.t.removeAt(i);
-            this.f.lstTblPlanTier.value.splice(i,1);
-            this.planForm.patchValue(
-              {
-                lstTblPlanTier: this.f.lstTblPlanTier.value
-              }
-            );
-            this.planForm.patchValue(this.planForm.value)
+            this.t.value.splice(i,1);
+            this.t.patchValue(this.t.value);  
+            //this.planForm.patchValue(this.t.value);
             
           }
           else{
-            this.f.lstTblPlanTier.value[i].planId=0;
-            this.f.lstTblPlanTier.value[i].tierId=Number(this.f.lstTblPlanTier.value[i].tierId);
-            this.f.lstTblPlanTier.value[i].tierAmount=Number(this.f.lstTblPlanTier.value[i].tierAmount);
-            this.f.lstTblPlanTier.value[i].isTerminalExtCoverage=this.f.lstTblPlanTier.value[i].isTerminalExtCoverage==true?'Y':'N';
+            this.t.value[i].planId=0;
+            this.t.value[i].tierId=Number(this.t.value[i].tierId);
+            this.t.value[i].tierAmount=Number(this.t.value[i].tierAmount);
+            this.t.value[i].expectedClaimsRate=Number(this.t.value[i].expectedClaimsRate);
+            this.t.value[i].isTerminalExtCoverage=this.t.value[i].isTerminalExtCoverage==true?'Y':'N';
           }
         }
         //this.planForm.patchValue(this.planForm.value);
-        debugger;
+        
         this.addPlanObj = {
           planID: 0,
           clientId: this.f.clientId.value,
@@ -608,12 +606,12 @@ doFilter(filterValue:string){ //added by Venkatesh Enigonda
           contractYear: this.f.contractYear.value,
           //clientName: this.locClientName,
           status: this.f.status.value==true?1:0,
-          lstTblPlanTier: this.f.lstTblPlanTier.value
+          lstTblPlanTier: this.t.value
         }
         let date=new Date();
           console.log(this.addPlanObj);
           console.log(JSON.stringify(this.addPlanObj));
-          debugger;
+          
         
           this.planService.addPlan(this.addPlanObj)
               .pipe(first())
@@ -624,10 +622,14 @@ doFilter(filterValue:string){ //added by Venkatesh Enigonda
                       //this.getAllPlans();
                       console.log(this.planForm.value);
                       
-                      this.getTires();
-                      this.getAllPlans();
+                     
                       this.getActiveClients();
+                      for(let i=0;i<this.t.length;i++){                        
+                          this.t.value[i].isTerminalExtCoverage=this.t.value[i].isTerminalExtCoverage=='Y'?true:false;
+                      }
+                      this.t.patchValue(this.t.value);
                       this.isAdded=true;
+                      
                       this.alertService.success('New Plan & Tier added', { keepAfterRouteChange: true });
                   },
                   error: error => {
@@ -642,10 +644,26 @@ doFilter(filterValue:string){ //added by Venkatesh Enigonda
   private updatePlan() {
     this.isDisabled=true;
     this.isNoFactAmount=false;
-    console.log(this.updatePlanID);
-    this.planForm.patchValue(this.planForm.value);
+    //console.log(this.updatePlanID);
+    //this.planForm.patchValue(this.planForm.value);
     
-    console.log(this.f.lstTblPlanTier.value[0].isTerminalExtCoverage);
+    for (let i = 0; i < this.t.length; i++) {
+      if(this.t.value[i].tierId=='' && this.t.value[i].tierAmount=='' && this.t.value[i].expectedClaimsRate=='' && this.t.value[i].isTerminalExtCoverage==''){
+      //  this.t.value.splice(i,1);
+       
+        this.t.removeAt(i);
+        this.t.value.splice(i,1);
+        this.t.patchValue(this.t.value);  
+        //this.planForm.patchValue(this.t.value);
+        
+      }
+      else{
+        this.t.value[i].tierId=Number(this.t.value[i].tierId);
+        this.t.value[i].isTerminalExtCoverage=this.t.value[i].isTerminalExtCoverage==true?'Y':'N'
+      }
+    }
+    this.t.patchValue(this.t.value);
+    
     this.updatePlanObj = {
       planID: this.updatePlanID,
       clientId: this.f.clientId.value,
@@ -656,34 +674,30 @@ doFilter(filterValue:string){ //added by Venkatesh Enigonda
       contractYear: this.f.contractYear.value,
      // clientName: this.locClientName,
       status: this.f.status.value==true?1:0,
-      lstTblPlanTier: this.f.lstTblPlanTier.value
-    }
-    for (let i = 0; i < this.f.lstTblPlanTier.value.length; i++) {
-        this.updatePlanObj.lstTblPlanTier[i].tierId=Number(this.f.lstTblPlanTier.value[i].tierId);
-        this.updatePlanObj.lstTblPlanTier[i].expectedClaimsRate=Number(this.f.lstTblPlanTier.value[i].expectedClaimsRate),
-        this.updatePlanObj.lstTblPlanTier[i].isTerminalExtCoverage=this.f.lstTblPlanTier.value[i].isTerminalExtCoverage==true?'Y':'N'
+      lstTblPlanTier: this.t.value
     }
     
-    this.planForm.patchValue(this.planForm.value)
     
 
       console.log(this.updatePlanObj);
-    debugger;
+
       this.planService.updatePlan(this.updatePlanObj)
           .pipe(first())
           .subscribe({
               next: () => {
+                   // this.getAllPlans();
+                   // this.planForm.patchValue(this.planForm.value);
+                    console.log(this.updatePlanObj);
+                    console.log(this.t.value);
+                    
+                      for (let i = 0; i < this.t.length; i++) {
+                        
+                        this.t.value[i].isTerminalExtCoverage=this.t.value[i].isTerminalExtCoverage=='Y'?true:false
+                      }
+                    this.t.patchValue(this.t.value);
+                    
                   this.alertService.success('Plan & Tier updated', {
                     keepAfterRouteChange: true });
-                    this.getAllPlans();
-                    console.log(this.updatePlanObj);
-                    console.log(this.planForm.value);
-                    
-  //   for (let i = 0; i < this.updatePlanObj.lstTblPlanTier.length; i++) {
-  //     this.f.lstTblPlanTier.value[i].isTerminalExtCoverage=this.updatePlanObj.lstTblPlanTier[i].isTerminalExtCoverage=='Y'?true:false
-  // }
-                    debugger;
- // this.planForm.patchValue(this.planForm.value);
                    // this.uPlanName=''; //(V.E 27-Jul-2021 )
                    // this.uplanId=''//(V.E 27-Jul-2021 )
                     //this.openCustomModal(false,null);

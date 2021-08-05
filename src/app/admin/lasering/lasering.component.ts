@@ -418,7 +418,7 @@ goBackCurrentScreen(){
               next: () => {
                   //this.openCustomModal(false,null); 
                   //this.memberForm.reset();
-                  
+                    this.memberForm.patchValue(updateMemberObj);
                   this.alertService.success('Member updated', { 
                     keepAfterRouteChange: true });
                  // this.router.navigate(['../../'], { relativeTo: this.route });                    

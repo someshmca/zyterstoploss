@@ -531,6 +531,7 @@ private addMember() {
                   this.searchMember(this.memberSearchForm);
                   this.memberForm.reset();
                   
+                  this.memberForm.patchValue(updateMemberObj);
                   this.alertService.success('Member updated', { 
                     keepAfterRouteChange: true });
                  // this.router.navigate(['../../'], { relativeTo: this.route });                    
