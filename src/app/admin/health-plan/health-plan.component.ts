@@ -145,6 +145,7 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
                     expectedClaimsRate: [''],
                     isTerminalExtCoverage: ['']
                 }));
+                  this.t.patchValue(this.t.value);
                   this.tiersLimitExceeded.flag=false;
                   this.tiersLimitExceeded.value='';
                 }
@@ -575,6 +576,7 @@ doFilter(filterValue:string){ //added by Venkatesh Enigonda
         this.isNoFactAmount=false;
         console.log(this.t.value[0].isTerminalExtCoverage);
         
+        this.t.patchValue(this.t.value);
         
         //let tiersArr=this.t.value;
         for (let i = 0; i < this.t.length; i++) {
@@ -647,8 +649,9 @@ doFilter(filterValue:string){ //added by Venkatesh Enigonda
     this.isNoFactAmount=false;
     //console.log(this.updatePlanID);
     //this.planForm.patchValue(this.planForm.value);
-    
+    this.t.patchValue(this.t.value);
     for (let i = 0; i < this.t.length; i++) {
+      debugger;
       if(this.t.value[i].tierId=='' && this.t.value[i].tierAmount=='' && this.t.value[i].expectedClaimsRate=='' && this.t.value[i].isTerminalExtCoverage==''){
       //  this.t.value.splice(i,1);
        
@@ -666,7 +669,6 @@ doFilter(filterValue:string){ //added by Venkatesh Enigonda
         this.t.value[i].isTerminalExtCoverage=this.t.value[i].isTerminalExtCoverage==true?'Y':'N'
       }
     }
-    this.t.patchValue(this.t.value);
     
     this.updatePlanObj = {
       planID: this.updatePlanID,

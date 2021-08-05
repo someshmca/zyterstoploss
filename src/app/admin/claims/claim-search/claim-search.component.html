@@ -15,9 +15,12 @@
                   <span *ngIf="dateErr.dateErr">{{dateErrorMessage}}</span>
                   <!-- till here -->
                   <span *ngIf="dateErr.fromDateInvalid">{{dateErrorMessage}}</span>
+                  <span *ngIf="isAccountIDInvalid">Account ID is Invalid</span>
                   <span *ngIf="dateErr.toDateInvalid">{{dateErrorMessage}}</span>
                   <div *ngIf="claimIdErr.isValid">{{claimIdErr.errMsg}}</div>
-                  <div *ngIf="memberIdErr.isValid">{{memberIdErr.errMsg}}</div>     
+                  <div *ngIf="memberIdErr.isValid">{{memberIdErr.errMsg}}</div> 
+                  <div *ngIf="isAlternateIDInvalid">Invalid Alternate Member ID</div>    
+                  <div *ngIf="isMinAmountInvalid">Negative values not allowed for Min Paid amount </div>
                   <div *ngIf="memberFnameErr.isValid">{{memberFnameErr.errMsg}}</div><!--Modified by Venkatesh Enigonda-->
                   <div *ngIf="memberLnameErr.isValid">{{memberLnameErr.errMsg}}</div> <!--Modified by Venkatesh Enigonda-->                                          
                 </div> 
@@ -88,7 +91,7 @@
                 <div class="form-field">
                     <label class="form-field-label">Alternate Member ID</label>
                   <div class="form-field-input">
-                        <input type="text" class="form-control field-input-text" formControlName="alternateId" />                        
+                        <input type="text" class="form-control field-input-text" formControlName="alternateId" [ngClass]="{'is-invalid':isAlternateIDInvalid}"/>                        
                     </div>
                     </div>
                 <div class="form-field">

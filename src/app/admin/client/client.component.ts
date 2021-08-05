@@ -462,6 +462,7 @@ openViewModal(bool, id:any){
        });
     }
     gotoAddContract(){
+      
       if(this.isAdded){
         this.clientService.getClient(this.f.clientId.value).subscribe((data)=>{
           this.navService.setContractObj(data[0].clientId, data[0].clientName, true,false);
@@ -509,8 +510,9 @@ openViewModal(bool, id:any){
       console.log(checkAccountId.test(this.f.clientId.value));
       let accountIdTest=checkAccountId.test(this.f.clientId.value);
 
-      console.log(checkAccountId.test(this.f.clientName.value));
-      let AccountNameCheck=checkAccountId.test(this.f.clientName.value); // end by Venkatesh Enigonda
+      let checkAccountName=/^([a-zA-Z0-9 ]+)$/;
+      console.log(checkAccountName.test(this.f.clientName.value));
+      let AccountNameCheck=checkAccountName.test(this.f.clientName.value); // end by Venkatesh Enigonda
       
 
       //let subid = this.f.subAccountid.value;
@@ -520,14 +522,14 @@ openViewModal(bool, id:any){
       let startDateValue = this.f.startDate.value;
       let endDateValue = this.f.endDate.value;
 
-      if(!accountIdTest && this.f.clientId.value!=''){ // Start by Venkatesh Enigonda
+      if(!accountIdTest && this.f.clientId.value!=''){ 
         this.accountIdErr.isValid=true;
-        this.accountIdErr.errMsg='Account Id is not valid.Special Characters not Allowed';
+        this.accountIdErr.errMsg='Invalid Account ID. Special Characters not Allowed';
         return;
       }
       if(!AccountNameCheck && this.f.clientName.value!=''){
         this.accountNameErr.isValid=true;
-        this.accountNameErr.errMsg='Account Name is not valid.Special Characters not Allowed';
+        this.accountNameErr.errMsg='Invalid Account Name. Special Characters not Allowed';
         return;
       } // End by Venkatesh Enigonda
 
