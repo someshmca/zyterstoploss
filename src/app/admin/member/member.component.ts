@@ -21,6 +21,7 @@ import {NavPopupService} from '../services/nav-popup.service';
 import { LoaderService } from '../services/loader.service';//added by Venkatesh Enigonda
 import { ExcelUploadService } from '../services/excel-upload.service';
 import {ExcelService} from '../services/excel.service';
+import {DecimalPipe} from '@angular/common'; //PV 08-05-2021
 
 @Component({
   selector: 'app-member',
@@ -43,6 +44,7 @@ export class MemberComponent implements OnInit {
   uTierId:any;
   today: string;
   excel1; //(VE 4/8/2021 )
+  format = '2.2-2'; //PV 08-05-2021
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -77,7 +79,7 @@ export class MemberComponent implements OnInit {
   isDisabled: boolean=false;
   isViewModal: boolean=false;
   isAdmin: boolean;
-  constructor(public loaderService: LoaderService, private excelService:ExcelService, private mb: FormBuilder, private fb: FormBuilder, private memberService:MemberService, private alertService: AlertService, private datePipe: DatePipe, private loginService: LoginService, private clientService: ClientsService, private contractService: ContractService, private planService: HealthPlanService, private navService: NavPopupService) { }
+  constructor(public loaderService: LoaderService, private excelService:ExcelService, private mb: FormBuilder, private fb: FormBuilder, private memberService:MemberService, private alertService: AlertService, private datePipe: DatePipe, private loginService: LoginService, private clientService: ClientsService, private contractService: ContractService, private planService: HealthPlanService, private navService: NavPopupService, private decimalPipe: DecimalPipe ) { }
 
   ngOnInit() {
     this.show=true;
@@ -401,7 +403,7 @@ export class MemberComponent implements OnInit {
               subscriberLname: id.subscriberLname,
               gender: id.gender,
               status: id.status,
-              laserValue: id.laserValue,
+              laserValue: this.decimalValueString(id.laserValue), //PV 08-05-2021
               isUnlimited: (id.isUnlimited==null || id.isUnlimited=='N')?false:true,
               memberStartDate: this.datePipe.transform(id.memberStartDate, 'yyyy-MM-dd'),
               memberEndDate: this.datePipe.transform(id.memberEndDate, 'yyyy-MM-dd'),
@@ -473,6 +475,31 @@ get f(){return this.memberForm.controls}
         
     }
 }
+
+//PV 08-05-2021 Starts
+decimalValueString(inputValue){
+  let a;
+  if(inputValue==0 || inputValue==''){
+    a=0;
+  }
+  else{
+    a= this.decimalPipe.transform(inputValue,this.format);        
+  }
+  console.log(a);      
+  
+  return a;
+}
+decimalValue(inputValue:number){
+  if(inputValue==0){
+    inputValue=0;
+  }
+  else{
+    inputValue= Number(this.decimalPipe.transform(inputValue,this.format));        
+  }
+  console.log(inputValue);      
+  return inputValue;
+}     
+//PV 08-05-2021 Ends
 private addMember() {
   this.isDisabled=true;
     let addMembObj = {
@@ -483,7 +510,7 @@ private addMember() {
       mname: this.f.mname.value==''?'E':this.f.mname.value,
       gender: this.f.gender.value,
       status: 1,      
-      laserValue: this.f.laserValue.value,
+      laserValue: this.decimalValue(this.f.laserValue.value), //PV 08-05-2021
       isUnlimited: this.f.isUnlimited.value==true?'Y':'N',
       subscriptionID: this.f.subscriberId.value,
       userId: this.loginService.currentUserValue.name,
@@ -517,7 +544,7 @@ private addMember() {
       let updateMemberObj = {
       laserType:"Member",
       laserTypeId: String(this.uMemberId),
-      laserValue: Number(this.f.laserValue.value),
+      laserValue: this.decimalValue((this.f.laserValue.value)), //PV 08-05-2021
       isUnlimited: this.f.isUnlimited.value==true?'Y':'N',
       status: 1,
       createdBy: this.loginService.currentUserValue.name,

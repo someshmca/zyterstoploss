@@ -65,6 +65,7 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = ['clientName', 'planCode', 'planName','planID'];
   dataSource: any;
   isAddTier: boolean;
+  isContractYearInvalid: boolean=false;
   tiersLimitExceeded={
     flag: false,
     value: ''
@@ -175,20 +176,6 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
   }
   
   ngAfterViewInit(){
-  }
-  isValidYear: boolean=true;
-  isYear(){
-    let num1 = /^([0-9]+)$/; 
-    let a1=num1.test(this.f.contractYear.value);
-    if(!a1 && this.f.contractYear.value.length>0){
-      this.isValidYear=false;
-    }
-    if(this.f.contractYear.value<1900 && this.f.contractYear.value>2999){
-      this.isValidYear=false;
-    }
-    else{
-      this.isValidYear=true;
-    } 
   }
   getPlanStatus(){
     this.navService.planObj.subscribe((data)=>{
@@ -315,6 +302,7 @@ clearErrorMessages(){
   this.planIdErr.errMsg='';
   this.planNameErr.isDuplicate=false;
   this.planNameErr.errMsg='';
+  this.isContractYearInvalid=false;
 }
 //(V.E 27-Jul-2021 Ends)
 doFilter(filterValue:string){ //added by Venkatesh Enigonda
@@ -491,16 +479,33 @@ doFilter(filterValue:string){ //added by Venkatesh Enigonda
     this.filterSearchInput.nativeElement.focus();
     this.getAllPlans();
   }
+  validateYear(){
+    if(this.f.contractYear.value.length>0){
+      let num = /^([0-9]+)$/; 
+      let a1=num.test(this.f.contractYear.value);
+      if(!a1){
+        this.isContractYearInvalid=true;
+      }
+      else if(a1 && this.f.contractYear.value.length>0 && this.f.contractYear.value.length<4){
+        this.isContractYearInvalid=true;
+      }
+    }
+  }
   onSubmit() {
     this.clearErrorMessages();//(V.E 27-Jul-2021 )
       this.submitted = true;
       // reset alerts on submit
+      this.validateYear();
       this.alertService.clear();
-
+      if(this.f.contractYear.value.length>0 && this.f.contractYear.value.length<4){
+        this.isContractYearInvalid=true;
+        return;
+      }
       // stop here if form is invalid
       if (this.planForm.invalid) {
           return;
       }
+
       
        //(V.E 27-Jul-2021 starts )
       if(this.planForm.valid){

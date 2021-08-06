@@ -20,6 +20,7 @@ import { HealthPlanService } from '../services/health-plan.service';
 import {NavPopupService} from '../services/nav-popup.service';
 import { Router } from '@angular/router';
 import { IClientObj } from '../models/nav-popups.model';
+import {DecimalPipe} from '@angular/common'; //PV 08-05-2021
 
 @Component({
   selector: 'app-lasering',
@@ -72,6 +73,7 @@ export class LaseringComponent implements OnInit {
   isFilterOn: boolean = false;
   isViewModal: boolean;
   isAdmin: boolean;
+  format = '2.2-2'; //PV 08-05-2021
   constructor(private mb: FormBuilder, 
     private fb: FormBuilder, 
     private laseringService:LaseringService, 
@@ -82,7 +84,8 @@ export class LaseringComponent implements OnInit {
     private contractService: ContractService, 
     private planService: HealthPlanService, 
     private navService: NavPopupService,
-    private router: Router) { }
+    private router: Router,
+    private decimalPipe: DecimalPipe ) { }
 
   ngOnInit() {
     this.show=true;
@@ -261,7 +264,7 @@ export class LaseringComponent implements OnInit {
               subscriberLname: id.subscriberLname,
               gender: id.gender,
               status: id.status,
-              laserValue: id.laserValue,
+              laserValue:this.decimalValueString(id.laserValue), //PV 08-05-2021
               isUnlimited: (id.isUnlimited==null || id.isUnlimited=='N')?false:true,
               memberStartDate: this.datePipe.transform(id.memberStartDate, 'yyyy-MM-dd'),
               memberEndDate: this.datePipe.transform(id.memberEndDate, 'yyyy-MM-dd'),
@@ -359,6 +362,30 @@ goBackCurrentScreen(){
   }
 }
 
+//PV 08-05-2021 Starts
+decimalValueString(inputValue){
+  let a;
+  if(inputValue==0 || inputValue==''){
+    a=0;
+  }
+  else{
+    a= this.decimalPipe.transform(inputValue,this.format);        
+  }
+  console.log(a);      
+  
+  return a;
+}
+decimalValue(inputValue:number){
+  if(inputValue==0){
+    inputValue=0;
+  }
+  else{
+    inputValue= Number(this.decimalPipe.transform(inputValue,this.format));        
+  }
+  console.log(inputValue);      
+  return inputValue;
+}     
+//PV 08-05-2021 Ends
  private addMember() {
   this.isDisabled=true;
     let addMembObj = {
@@ -369,7 +396,7 @@ goBackCurrentScreen(){
       mname: this.f.mname.value==''?'E':this.f.mname.value,
       gender: this.f.gender.value,
       status: 1,      
-      laserValue: this.f.laserValue.value,
+      laserValue:  this.decimalValue((this.f.laserValue.value)), //PV 08-05-2021
       isUnlimited: this.f.isUnlimited.value==true?'Y':'N',
       subscriptionID: this.f.subscriberId.value,
       userId: this.loginService.currentUserValue.name,
@@ -403,7 +430,7 @@ goBackCurrentScreen(){
       let updateMemberObj = {
       laserType:"Member",
       laserTypeId: String(this.uMemberId),
-      laserValue: Number(this.f.laserValue.value),
+      laserValue: this.decimalValue(this.f.laserValue.value), //PV 08-05-2021
       isUnlimited: this.f.isUnlimited.value==true?'Y':'N',
       status: 1,
       createdBy: this.loginService.currentUserValue.name,

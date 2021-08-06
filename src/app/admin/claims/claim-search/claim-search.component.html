@@ -11,20 +11,21 @@
                   <!-- <span *ngIf="submitted && !claimSearchForm.valid"></span> -->
                   <span *ngIf="isClaimSearchErr">Please enter atleast one field</span>
                   <span *ngIf="dateErr.fromDateErr">{{dateErrorMessage}}</span>
-                  <!-- added by masool irfan -->
                   <span *ngIf="dateErr.dateErr">{{dateErrorMessage}}</span>
-                  <!-- till here -->
                   <span *ngIf="dateErr.fromDateInvalid">{{dateErrorMessage}}</span>
                   <span *ngIf="isAccountIDInvalid">Account ID is Invalid</span>
                   <span *ngIf="dateErr.toDateInvalid">{{dateErrorMessage}}</span>
                   <div *ngIf="claimIdErr.isValid">{{claimIdErr.errMsg}}</div>
                   <div *ngIf="memberIdErr.isValid">{{memberIdErr.errMsg}}</div> 
                   <div *ngIf="isAlternateIDInvalid">Invalid Alternate Member ID</div>    
-                  <div *ngIf="isMinPaidAmountInvalid">Invalid Min Paid Amount Negative values are not allowed</div>
-                  <div *ngIf="isMaxPaidAmountInvalid">Invalid Max Paid Amount. Negative values are not allowed</div>
+                  <div *ngIf="isMinPaidAmountInvalid">Invalid Min Paid Amount Negative values not allowed</div>
+                  <div *ngIf="isMaxPaidAmountInvalid">Invalid Max Paid Amount. Negative values not allowed</div>
                   <div *ngIf="isMinAmountInvalid">Negative values not allowed for Min Paid amount </div>
-                  <div *ngIf="memberFnameErr.isValid">{{memberFnameErr.errMsg}}</div><!--Modified by Venkatesh Enigonda-->
-                  <div *ngIf="memberLnameErr.isValid">{{memberLnameErr.errMsg}}</div> <!--Modified by Venkatesh Enigonda-->                                          
+                  <div *ngIf="isSequenceNumInvalid">Invalid Sequence Number. Value should be greater than Zero</div>
+                  <div *ngIf="isDiagnosisCodeInvalid">Invalid Diagnosis Code </div>
+                  <div *ngIf="isClaimSourceInvalid">Invalid Claim Source </div>
+                  <div *ngIf="memberFnameErr.isValid">{{memberFnameErr.errMsg}}</div>
+                  <div *ngIf="memberLnameErr.isValid">{{memberLnameErr.errMsg}}</div> 
                 </div> 
                 <div class="form-row">
                   <div class="form-field">
@@ -42,7 +43,7 @@
                     <div class="form-field">
                         <label class="form-field-label">Sequence Number </label>
                       <div class="form-field-input">
-                            <input type="number" class="form-control field-input-text" formControlName="sequenceNumber" />                        
+                            <input type="number" class="form-control field-input-text" placeholder="Starts from 1" formControlName="sequenceNumber" />                        
                         </div>
                         </div>
                         <div class="form-field">
@@ -60,13 +61,13 @@
                             <div class="form-field">
                                 <label class="form-field-label">Diagnosis Code</label>
                               <div class="form-field-input">
-                                    <input type="text" class="form-control field-input-text" formControlName="diagnosisCode" />                        
+                                    <input type="text" class="form-control field-input-text" formControlName="diagnosisCode" [ngClass]="{'is-invalid':isDiagnosisCodeInvalid}"  />                        
                                 </div>
                                 </div>
                                 <div class="form-field">
                                     <label class="form-field-label">Claim Source </label>
                                     <div class="form-field-input">
-                                        <input type="text" class="form-control field-input-text" formControlName="claimSource" />  
+                                        <input type="text" class="form-control field-input-text" formControlName="claimSource"  [ngClass]="{'is-invalid':isClaimSourceInvalid}" />  
                                                          
                                     </div>
                                     </div>

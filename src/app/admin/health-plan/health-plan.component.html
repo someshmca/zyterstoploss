@@ -101,6 +101,7 @@
              <div class="mandate-fields">
                <span *ngIf="submitted && !planForm.valid">Fields marked with * are mandatory</span>
                <span *ngIf="submitted && isNoFactAmount">Enter any Factor Amount. Atleast One Factor amount is required</span>
+               <div *ngIf="isContractYearInvalid">Invalid Contract Year. It should be 4 digits</div>
              </div>  
              <div class="row">
                  <div class="col-md-4">
@@ -140,7 +141,7 @@
                     <div class="col-md-4">
                       <div class="form-group">
                         <label>Contract Year</label>
-                        <input type="text" class="form-control" formControlName="contractYear" maxlength="4" [ngClass]="{ 'is-invalid': !isValidYear}" [placeholder]="isValidYear?'YYYY':'Invalid Year'" (keyup)="isYear()" />
+                        <input type="text" class="form-control" formControlName="contractYear" maxlength="4" [ngClass]="{ 'is-invalid': isContractYearInvalid}" placeholder="YYYY"/>
                       </div>
                     </div>
                     <!-- <div class="col-md-4">
