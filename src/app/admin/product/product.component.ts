@@ -130,7 +130,29 @@ export class ProductComponent implements OnInit {
    
 
   ngOnInit() {  
+    this.initProductForm();
+    this.isAdded=false;
+    this.toSwitchOtherScreen=false;
+    this.claimBasis = CLAIM_BASIS_CONSTANT.values;
+    
+    this.getAllProducts();
+    this.getActiveClients();     
+    this.getCoveredClaims();
+    //this.getAllContracts();
+    //this.isClientSelected = false;
+    this.checkMaxLiability(); 
+    this.navService.planObj.subscribe((data)=>{this.planObj=data;})
+    this.navService.contractID.subscribe((data)=>{this.sharedContractID=Number(data.id);  })
+    this.getProductStatus();
+    // this.getContractAddStatus();
+    // this.getContractUpdateStatus();
 
+    //this.getProductUpdateStatus();    
+    this.loginService.getLoggedInRole();
+    this.isAdmin = this.loginService.isAdmin;
+  }
+  initProductForm(){
+    
     this.productForm = this.formBuilder.group({
       productId: 0,
       clientId: ['', Validators.required],
@@ -159,7 +181,7 @@ export class ProductComponent implements OnInit {
       //below from aslDeductible to aslExpecteddClaimLiability are number fields
       aslDeductible:'',
       aslMinDeductible:['', Validators.required],
-      aslExpectedClaimLiability:0,
+      aslExpectedClaimLiability:'',
 
       aslIncurrredStartDate: ['', Validators.required],
       aslIncurredEndDate: ['', Validators.required],
@@ -191,25 +213,6 @@ export class ProductComponent implements OnInit {
       userId: this.loginService.currentUserValue.name,
       lstContractClaims: []
     });
-    this.isAdded=false;
-    this.toSwitchOtherScreen=false;
-    this.claimBasis = CLAIM_BASIS_CONSTANT.values;
-    
-    this.getAllProducts();
-    this.getActiveClients();     
-    this.getCoveredClaims();
-    //this.getAllContracts();
-    //this.isClientSelected = false;
-    this.checkMaxLiability(); 
-    this.navService.planObj.subscribe((data)=>{this.planObj=data;})
-    this.navService.contractID.subscribe((data)=>{this.sharedContractID=Number(data.id);  })
-    this.getProductStatus();
-    // this.getContractAddStatus();
-    // this.getContractUpdateStatus();
-
-    //this.getProductUpdateStatus();    
-    this.loginService.getLoggedInRole();
-    this.isAdmin = this.loginService.isAdmin;
   }
   getProductStatus(){
     this.navService.productObj.subscribe((data)=>{
@@ -559,13 +562,13 @@ openViewModal(bool, id:any){
     this.loading = false;
     this.isDisabled=false;
     if(open && id==null){
+      this.initProductForm();
       this.isAddMode = true;    
       this.isEditSelected = false;
       this.isFilterOn=false;
       // this.f.clientId.enable();
       // this.f.contractId.enable();
       this.isViewModal=false;
-      this.productForm.enable();
     }
     
    
@@ -799,7 +802,7 @@ patchProductForm(){
     sslIncurredEndDate: this.dateValue(this.f.sslIncurredEndDate.value),
     sslPaidStartDate: this.dateValue(this.f.sslPaidStartDate.value),
     sslPaidEndDate: this.dateValue(this.f.sslPaidEndDate.value),
-    sslRunInLimit: this.decimalValue(this.f.sslRunInLimit.value),
+    sslRunInLimit: Number(this.decimalValue(this.f.sslRunInLimit.value)),
     sslDeductible: this.decimalValue(this.f.sslDeductible.value),
     sslAggDeductible: this.decimalValue(this.f.sslAggDeductible.value),
     sslAnnualLimit: this.decimalValue(this.f.sslAnnualLimit.value),
@@ -820,11 +823,11 @@ patchProductForm(){
     aslPaidStartDate: this.dateValue(this.f.aslPaidStartDate.value),
     aslPaidEndDate: this.dateValue(this.f.aslPaidEndDate.value),
     aslRunInLimit: this.decimalValue(this.f.aslRunInLimit.value),
-    aslAnnualLimit: this.decimalValue(this.f.aslAnnualLimit.value),
+    aslAnnualLimit: Number(this.decimalValue(this.f.aslAnnualLimit.value)),
     aslLifeTimeLimit: this.decimalValue(this.f.aslLifeTimeLimit.value),
     //aslIsMonthlyAccomidation: boolean;
     aslTermCoverageExtEndDate: this.dateValue(this.f.aslTermCoverageExtEndDate.value),
-	  aslCorridor: this.decimalValue(this.f.aslCorridor.value),
+	  aslCorridor:this.f.aslCorridor.value==null?0: Number(this.decimalValue(this.f.aslCorridor.value)),
    // isMaxLiability: boolean;
     ibnrPercentage:this.decimalValue(this.f.ibnrPercentage.value),
     defferedFeePercentage: this.decimalValue(this.f.defferedFeePercentage.value),
@@ -910,7 +913,7 @@ private addProduct() {
   //this.productForm.patchValue(this.productForm.value);
   console.log(this.f.ibnrPercentage.errors);
   console.log(this.f.defferedFeePercentage.errors);
-  
+  debugger;
   this.listContractClaims=[];
   
   for(let i=0; i<this.f.sslCoveredClaims.value.length; i++){
@@ -933,7 +936,7 @@ private addProduct() {
   lstContractClaims: this.listContractClaims
  })
  console.log(this.productForm.value);
- 
+ debugger;
     if(!this.toSwitchOtherScreen){
       this.productService.updateProduct(this.productForm.value)
           .pipe(first())
