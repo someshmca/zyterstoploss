@@ -4,7 +4,7 @@
     padding: 0;
     margin: 5px 0;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     align-items: center;
 }
 .member-search-btns-area .col_1 a{
@@ -72,4 +72,27 @@
     color: rgb(3, 194, 3);
     transform: scale(1.4);
 }
-
+.member-search-btns-area .col_2{
+    width: 180px;
+}
+.member-search-btns-area .col_1{
+    display: flex;
+    justify-content: flex-end;
+}
+.range-area{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+.range-area .form-control{
+    width: 80px;
+    margin: 0 2px;
+    padding: 2px;
+    font-size: 11px;
+}
+.range-area div:nth-child(1){
+    margin-right: 10px;
+}
+.range-area div:nth-child(2){
+    margin-left: 10px;
+}

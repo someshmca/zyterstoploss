@@ -374,7 +374,7 @@ onSubmit() {
       }
     }
     else if(labelName=="Sequence Number"){
-      debugger;
+      
       if(fieldValue==null){
         this.claimSearchForm.patchValue({sequenceNumber:''});
       }

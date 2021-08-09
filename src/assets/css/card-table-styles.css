@@ -190,4 +190,25 @@
     font-size: 1rem;
     font-weight: bold;
 }
-
+/* new styles added for page count box requirement on August 6th, 2021 */
+.member-search-btns-area .col_2{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+.member-search-btns-area .col_2 .btn {
+    margin-left: 5px;
+    height: 30px;
+}
+/* .page-count-area .mat-paginator{
+    min-width: auto;
+}
+.page-count-area .mat-paginator-page-size-label{
+    display: none;
+}
+.page-count-area .mat-icon-button, .page-count-area .mat-paginator-icon{
+    display: none;
+}
+.page-count-area .mat-paginator-range-label{
+    margin: 0 3px;
+} */

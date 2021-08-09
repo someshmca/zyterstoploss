@@ -18,6 +18,7 @@ import { LoginService } from 'src/app/shared/services/login.service';
 import {NavPopupService} from '../services/nav-popup.service';
 import { IClientObj } from '../models/nav-popups.model';
 import { ContractService } from '../services/contract.service';
+import {DecimalPipe} from '@angular/common';
 
 @Component({
   selector: 'app-health-plan',
@@ -65,11 +66,23 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = ['clientName', 'planCode', 'planName','planID'];
   dataSource: any;
   isAddTier: boolean;
-  isContractYearInvalid: boolean=false;
+  format = '2.2-2';
+
+  isContractYearInvalid={
+    flag:false,
+    message:''
+  };
   tiersLimitExceeded={
     flag: false,
     value: ''
   } 
+  isPlanFormInvalid:boolean;
+  isTierAmountInvalid:boolean;
+  isExpectedClaimsRateInvalid: boolean;
+  tierIdExists={
+    flag:false,
+    message:''
+  };
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
@@ -81,7 +94,8 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
     private alertService: AlertService,
     private datePipe: DatePipe,
     private navService:NavPopupService,
-    private router:Router
+    private router:Router,
+    private decimalPipe: DecimalPipe
   ) { }
 
   ngOnInit() {
@@ -101,6 +115,7 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
       lstTblPlanTier: new FormArray([])
       
     });
+    this.clearErrorMessages();
     this.isAdded=false;
     //this.initLocalTires();
     this.getAllPlans();
@@ -302,7 +317,17 @@ clearErrorMessages(){
   this.planIdErr.errMsg='';
   this.planNameErr.isDuplicate=false;
   this.planNameErr.errMsg='';
-  this.isContractYearInvalid=false;
+  this.isContractYearInvalid={
+    flag:false,
+    message:''
+  };
+  this.isPlanFormInvalid=false;
+  this.isTierAmountInvalid=false;
+  this.isExpectedClaimsRateInvalid=false;
+  this.tierIdExists={
+    flag:false,
+    message:''
+  };
 }
 //(V.E 27-Jul-2021 Ends)
 doFilter(filterValue:string){ //added by Venkatesh Enigonda
@@ -385,12 +410,11 @@ doFilter(filterValue:string){ //added by Venkatesh Enigonda
      //  console.log(this.t.value);
        
         for (let i = 0; i < elem.lstTblPlanTier.length; i++) {
-          
           this.t.push(this.formBuilder.group({
               planId:elem.lstTblPlanTier[i].planId,
               tierId: elem.lstTblPlanTier[i].tierId,
-              tierAmount: elem.lstTblPlanTier[i].tierAmount,
-              expectedClaimsRate: elem.lstTblPlanTier[i].expectedClaimsRate,
+              tierAmount: elem.lstTblPlanTier[i].tierAmount==0?'':Number(this.decimalPipe.transform(elem.lstTblPlanTier[i].tierAmount,this.format)),
+              expectedClaimsRate: elem.lstTblPlanTier[i].expectedClaimsRate==0?'':Number(this.decimalPipe.transform(elem.lstTblPlanTier[i].expectedClaimsRate,this.format)),
               isTerminalExtCoverage: elem.lstTblPlanTier[i].isTerminalExtCoverage=='Y'?true:false
           }));
       }
@@ -480,32 +504,109 @@ doFilter(filterValue:string){ //added by Venkatesh Enigonda
     this.getAllPlans();
   }
   validateYear(){
+    
     if(this.f.contractYear.value.length>0){
       let num = /^([0-9]+)$/; 
       let a1=num.test(this.f.contractYear.value);
-      if(!a1){
-        this.isContractYearInvalid=true;
+      if(!a1 || (a1 && this.f.contractYear.value.length>0 && this.f.contractYear.value.length<4)){
+        this.isContractYearInvalid.flag=true;
+        this.isContractYearInvalid.message="Invalid Contract Year. Enter 4 digit Year";
       }
-      else if(a1 && this.f.contractYear.value.length>0 && this.f.contractYear.value.length<4){
-        this.isContractYearInvalid=true;
+      else if(a1 && Number(this.f.contractYear.value)<1900 || Number(this.f.contractYear.value)>3000){
+        this.isContractYearInvalid.flag=true;
+        this.isContractYearInvalid.message="Year should be greater than 1900 and less than 3000";
       }
     }
   }
+
+  validateNumber(labelName, fieldValue, index){
+    
+    if(labelName=="Tier Amount"){
+      if(fieldValue==null){
+        this.t.value[index]({tierAmount:''});
+      }
+      else if(fieldValue==0){
+        this.t.value[index]({tierAmount:''});
+      }
+      else if(fieldValue!=''){
+        let numberPattern =/\-?\d*\.?\d{1,2}/;
+        let testNum=numberPattern.test(fieldValue);
+        if(!testNum){
+          this.isTierAmountInvalid=true;
+          this.isPlanFormInvalid=true;
+        }
+      }
+    }
+    else if(labelName=="Expected Claims Rate"){
+      if(fieldValue==null){
+        this.t.value[index]({tierAmount:''});
+      }
+      else if(fieldValue==0){
+        this.t.value[index]({tierAmount:''});
+      }
+      else if(fieldValue!=''){
+        let numberPattern = /\-?\d*\.?\d{1,2}/;
+        let testNum=numberPattern.test(fieldValue);
+        if(!testNum){
+          this.isExpectedClaimsRateInvalid=true;
+          this.isPlanFormInvalid=true;
+        }
+      }
+    }
+}
+validateTierIDs(){
+  
+    if(this.t.length>1){
+      let s=0, d=0, f=0, o=0;
+      for(let i=0; i<this.t.length;i++){    
+        if(this.t.value[i].tierId=='1'){
+            s++;
+            if(s>1){
+              this.tierIdExists.message="'Single' Tier not allowed to choose morethan one time";
+              this.tierIdExists.flag=true;
+            }
+          }
+          else if(this.t.value[i].tierId=='2'){
+            d++;
+            if(d>1){
+              this.tierIdExists.flag=true;
+              this.tierIdExists.message="'Dual' Tier not allowed to choose morethan one time";
+            }
+          }
+          else if(this.t.value[i].tierId=='3'){
+            f++;
+            if(f>1){
+              this.tierIdExists.flag=true;
+              this.tierIdExists.message="'Family' Tier not allowed to choose morethan one time";          
+            }
+          }
+          else if(this.t.value[i].tierId=='4'){
+            o++;
+            if(o>1){
+              this.tierIdExists.flag=true;
+              this.tierIdExists.message="'Others' Tier not allowed to choose morethan one time";
+            }
+          }
+        }
+    }
+  }
+
+
   onSubmit() {
-    this.clearErrorMessages();//(V.E 27-Jul-2021 )
+    this.clearErrorMessages();
       this.submitted = true;
       // reset alerts on submit
       this.validateYear();
       this.alertService.clear();
-      if(this.f.contractYear.value.length>0 && this.f.contractYear.value.length<4){
-        this.isContractYearInvalid=true;
-        return;
-      }
+      this.validateTierIDs();
       // stop here if form is invalid
       if (this.planForm.invalid) {
           return;
       }
-
+      if(this.isContractYearInvalid.flag)
+        return;
+      if(this.tierIdExists.flag)
+        return;
       
        //(V.E 27-Jul-2021 starts )
       if(this.planForm.valid){
@@ -536,7 +637,17 @@ doFilter(filterValue:string){ //added by Venkatesh Enigonda
               
               this.addPlan();
 
-            });
+            });            
+        }
+        if(this.t.length>0){
+          for(let i=0;i<this.t.length; i++){
+            
+            this.validateNumber("Tier Amount", this.t.value[i].tierAmount, i);
+            this.validateNumber("Expected Claims Rate", this.t.value[i].expectedClaimsRate, i);
+            if(this.isPlanFormInvalid)
+              return;
+          }
+
         }
 
       }
@@ -613,8 +724,8 @@ doFilter(filterValue:string){ //added by Venkatesh Enigonda
           else{
             this.t.value[i].planId=0;
             this.t.value[i].tierId=Number(this.t.value[i].tierId);
-            this.t.value[i].tierAmount=this.t.value[i].tierAmount==''?0:Number(this.t.value[i].tierAmount);
-            this.t.value[i].expectedClaimsRate=this.t.value[i].expectedClaimsRate==''?0:Number(this.t.value[i].expectedClaimsRate);
+            this.t.value[i].tierAmount=this.t.value[i].tierAmount==''?0:Number(this.decimalPipe.transform(this.t.value[i].tierAmount,this.format)),
+            this.t.value[i].expectedClaimsRate=this.t.value[i].expectedClaimsRate==''?0:Number(this.decimalPipe.transform(this.t.value[i].expectedClaimsRate,this.format)),
             this.t.value[i].isTerminalExtCoverage=this.t.value[i].isTerminalExtCoverage==true?'Y':'N';
           }
         }
@@ -687,8 +798,8 @@ doFilter(filterValue:string){ //added by Venkatesh Enigonda
       else{
         this.t.value[i].planId=this.updatePlanID;
         this.t.value[i].tierId=Number(this.t.value[i].tierId);
-        this.t.value[i].tierAmount=this.t.value[i].tierAmount==''?0:Number(this.t.value[i].tierAmount);
-        this.t.value[i].expectedClaimsRate=this.t.value[i].expectedClaimsRate==''?0:Number(this.t.value[i].expectedClaimsRate);
+        this.t.value[i].tierAmount=this.t.value[i].tierAmount==''?0:Number(this.decimalPipe.transform(this.t.value[i].tierAmount,this.format));
+        this.t.value[i].expectedClaimsRate=this.t.value[i].expectedClaimsRate==''?0:Number(this.decimalPipe.transform(this.t.value[i].expectedClaimsRate,this.format));
         this.t.value[i].isTerminalExtCoverage=this.t.value[i].isTerminalExtCoverage==true?'Y':'N'
       }
     }

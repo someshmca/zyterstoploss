@@ -20,6 +20,7 @@
                 <div *ngIf="memLnameErr.isValid">{{memLnameErr.errMsg}}</div><!--Modified by Venkatesh Enigonda-->
                 <div *ngIf="memStartDateErr.isValid">{{memStartDateErr.errMsg}}</div>
                 <div *ngIf="memEndDateErr.isValid">{{memEndDateErr.errMsg}}</div>
+                <div *ngIf="memMaxMinErr.isValid">{{memMaxMinErr.errMsg}}</div><!--(VE 9-8-2021)-->
               </div>  
                 <div class="form-row">
                   <!--(VE 30-Jul-2021  starts)-->
@@ -129,8 +130,18 @@
             </div>
             <div class="card-footer">
               <div class="member-search-btns-area">  
-                  <div class="col_1">                    
-                  </div>
+                <div class="col_1"> 
+                  <!--(VE 9/8/2021 starts)--> 
+                  <div *ngIf="isSearchDataThere" >
+                    <div class="range-area">
+                        <div>Enter the Range</div>
+                      <input type ="number" class="form-control" formControlName="minPage" placeholder="Start value">     
+                      <input type ="number" class="form-control" formControlName="maxPage" placeholder="End Value" >
+                      <div>Total Records {{countMaxMin}}</div>
+                    </div>
+                </div>  
+                </div>
+                  <!--(VE 9/8/2021 ends)--> 
                   <div class="col_2">
                     <button class="btn btn-outline-primary" type="button" (click)="resetMemberSearch()">Reset</button>    
                     <button class="btn btn-primary">Search</button>  
@@ -141,8 +152,8 @@
         </div>
         
      
-        <div *ngIf="isSearchDataThere" class="member-search-results-area">      
-          <div class="card">    
+        <div *ngIf="isSearchDataThere && pageCount!=0" class="member-search-results-area">      
+          <div class="card" *ngIf="pageCount>4">    
           <div class="card-header">
             Member Search Results
             <div class="fa fa-download" title="download" (click)="exportAsXLSX()"></div> <!--(VE 4/8/2021 )-->
@@ -250,7 +261,8 @@
                           <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
                         </table>
                       </div>
-                      <mat-paginator [pageSizeOptions]="[100, 500, 999]" showFirstLastButtons></mat-paginator>
+                      <mat-paginator [pageSizeOptions]="[100, 500, 999]" showFirstLastButtons></mat-paginator> 
+                      
                   </div>
               </div>
           </div>

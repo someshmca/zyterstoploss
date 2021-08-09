@@ -88,7 +88,6 @@
 //   productUpdate:"https://medicaslapiorc.azurewebsites.net/api/Product/UpdateProduct",
 //   productCovertClaims:"https://medicaslapiorc.azurewebsites.net/api/Product//GetCoveredClaims",
 
-//   ExcelUploadPath: "https://medicaslapiorc.azurewebsites.net/api/ExcelUpload/UploadExcel",
 //   ExcelUploadPath: "https://medicaslapiorc.azurewebsites.net/api/ExcelUpload/UploadExcel?userId=",
 
 //   sslReportURL: "https://medicaanalytics-axw4of8ufwa4-hy.analytics.ocp.oraclecloud.com/ui/dv/ui/project.jsp?pageid=visualAnalyzer&reportmode=full&reportpath=%2F%40Catalog%2Fshared%2FMedica%20SL%2FSpecific%20Report",

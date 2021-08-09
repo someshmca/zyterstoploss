@@ -99,7 +99,7 @@ export class LaseringComponent implements OnInit {
       gender: ['', Validators.required],
       status: true, // status is number field 0 is false and 1 is true
       memberHrid: ['',Validators.required],
-      laserValue: 0,
+      laserValue: '',
       isUnlimited: false,
       userId: '',
       memberStartDate: ['', Validators.required],
@@ -264,7 +264,7 @@ export class LaseringComponent implements OnInit {
               subscriberLname: id.subscriberLname,
               gender: id.gender,
               status: id.status,
-              laserValue:this.decimalValueString(id.laserValue), //PV 08-05-2021
+              laserValue: this.decimalValueString(id.laserValue)==0?'':this.decimalValueString(id.laserValue),
               isUnlimited: (id.isUnlimited==null || id.isUnlimited=='N')?false:true,
               memberStartDate: this.datePipe.transform(id.memberStartDate, 'yyyy-MM-dd'),
               memberEndDate: this.datePipe.transform(id.memberEndDate, 'yyyy-MM-dd'),

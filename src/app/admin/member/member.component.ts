@@ -43,6 +43,11 @@ export class MemberComponent implements OnInit {
   uPlanId:any;
   uTierId:any;
   today: string;
+  //(VE 9/8/2021 starts)
+  names=[];
+  countMaxMin=0;
+  pageCount;
+  //(VE 9/8/2021 ends)
   excel1; //(VE 4/8/2021 )
   format = '2.2-2'; //PV 08-05-2021
 
@@ -72,6 +77,7 @@ export class MemberComponent implements OnInit {
   memLnameErr= {isValid: false, errMsg: ''}; // End by Venkatesh Enigonda 
   memStartDateErr = {isValid: false, errMsg: ''};
   memEndDateErr = {isValid: false, errMsg: ''};
+  memMaxMinErr={isValid: false, errMsg: ''};//(VE 9/8/2021)
   
   isSearchDataThere: boolean = false;
   noSearchResultsFound: boolean = false;
@@ -79,6 +85,8 @@ export class MemberComponent implements OnInit {
   isDisabled: boolean=false;
   isViewModal: boolean=false;
   isAdmin: boolean;
+  isMemCount: boolean;
+
   constructor(public loaderService: LoaderService, private excelService:ExcelService, private mb: FormBuilder, private fb: FormBuilder, private memberService:MemberService, private alertService: AlertService, private datePipe: DatePipe, private loginService: LoginService, private clientService: ClientsService, private contractService: ContractService, private planService: HealthPlanService, private navService: NavPopupService, private decimalPipe: DecimalPipe ) { }
 
   ngOnInit() {
@@ -93,7 +101,7 @@ export class MemberComponent implements OnInit {
       gender: ['', Validators.required],
       status: true, // status is number field 0 is false and 1 is true
       memberHrid: ['',Validators.required],
-      laserValue: 0,
+      laserValue: '',
       isUnlimited: false,
       userId: '',
       memberStartDate: ['', Validators.required],
@@ -140,7 +148,9 @@ export class MemberComponent implements OnInit {
     this.memStartDateErr.errMsg='';
     this.memEndDateErr.isValid=false;
     this.memEndDateErr.errMsg='';
-    this.noSearchFieldEntered=false; //Modified by Venkatesh Enigonda
+    this.noSearchFieldEntered=false; 
+    this.memMaxMinErr.isValid=false;
+    this.memMaxMinErr.errMsg=''
   }
   initMemberSearchForm(){    
     this.memberSearchForm = this.mb.group({
@@ -153,12 +163,12 @@ export class MemberComponent implements OnInit {
       Mname: '',
       DateOfBirth:[''],
       Gender: [''],
-      //(VE 30-Jul-2021 starts)
       clientId:[''],
       benefitPlanId:[''],
       tier:[''],
       alternateId:[''],
-      //(VE 30-Jul-2021 ends)
+       minPage:[''],
+       maxPage:['']
     });
   }
 
@@ -194,15 +204,20 @@ export class MemberComponent implements OnInit {
     )
   }
   resetMemberSearch(){
+    this.pageCount=0;
+    this.countMaxMin=0; //(VE 9/8/2021)
     this.initMemberSearchForm();
     this.isSearchDataThere= false;
     this.memSearchError=false;
     this.noSearchFieldEntered=false; 
+    this.isMemCount=false;
     this.clearErrorMessages();   
   }
   searchMember(formData: FormGroup){
+    this.names.length=0;  //(VE 9/8/2021 )
     this.memSearchSubmitted = true;
     this.memSearchError=false;
+    this.isMemCount=true;
    // console.log(formData.get());
    this.clearErrorMessages();
    let memberId = this.memberSearchForm.get('MemberId').value.trim();
@@ -214,6 +229,10 @@ export class MemberComponent implements OnInit {
    let dob=this.memberSearchForm.get("DateOfBirth").value;
    let memberStartDate=this.memberSearchForm.get("MemberStartDate").value;
    let memberEndDate=this.memberSearchForm.get("MemberEndDate").value;
+   //(VE 9/8/2021 starts)
+   let minPage=this.memberSearchForm.get("minPage").value;
+   let maxPage=this.memberSearchForm.get("maxPage").value;
+  //(VE 9/8/2021 ends)
    //(VE 30-Jul-2021  starts)
    let benefitPlanId=this.memberSearchForm.get("benefitPlanId").value;
    let clientId =this.memberSearchForm.get("clientId").value;
@@ -310,6 +329,51 @@ export class MemberComponent implements OnInit {
    this.memberService.memberSearch(memberId,fname,mname, lname, subscriberId, dob, Gender, memberStartDate,memberEndDate,benefitPlanId,clientId,tier,alternateId).subscribe(    //(VE 30-Jul-2021  )    
     (data:IMemberSearchResponse[])=>{
       this.excel1=data;//(VE 4/8/2021 )
+      //(VE 9/8/2021 starts)
+      let max=num1.test(minPage);
+      let min=num1.test(maxPage);
+     this.countMaxMin=data.length;
+       console.log(data[minPage]);
+       console.log(maxPage)
+       console.log(minPage);
+     
+       if((data[minPage]==undefined) && (data[maxPage]==undefined))
+       {
+         this.pageCount=0;
+       }
+      
+       if((!min && minPage!='') ||(!max && maxPage!=''))
+       {
+         this.memMaxMinErr.isValid=true;
+         this.memMaxMinErr.errMsg="special characters and blank values not allowed";
+         console.log("yes");
+         return; 
+       }
+       if(( minPage!='' && minPage) >( maxPage!='' && maxPage))
+       {
+         this.memMaxMinErr.isValid=true;
+         this.memMaxMinErr.errMsg="Range from should not be greater than "+maxPage+".";
+         return;
+       }
+      
+       else if(minPage<=this.countMaxMin && maxPage<=this.countMaxMin)
+       {
+       for(let i=minPage; i <= maxPage-1;i++)
+       {
+         this.names.push(data[i]);
+         this.pageCount=this.names.length;   
+       }
+      }
+      else if((minPage > this.countMaxMin && maxPage >this.countMaxMin) || (minPage > this.countMaxMin || maxPage >this.countMaxMin))
+      {
+        this.memMaxMinErr.isValid=true;
+        this.memMaxMinErr.errMsg="Range should not be greater than "+this.countMaxMin+"."; 
+        return; 
+      }
+     
+      
+       console.log(this.names);
+       //(VE 9/8/2021 ends)  
        console.log(data);
        this.clearErrorMessages();
        console.log(data[0].memberId)
@@ -322,7 +386,7 @@ export class MemberComponent implements OnInit {
          
        }
        setTimeout(()=>{
-          this.searchDataSource = new MatTableDataSource(data);
+          this.searchDataSource = new MatTableDataSource(this.names);// (VE 9/8/2021)
           this.isSearchDataThere = true;
           this.noSearchFieldEntered = false;
           this.memSearchError = false;
@@ -349,7 +413,13 @@ export class MemberComponent implements OnInit {
   console.log("working");
 }
 //(VE 4/8/2021 )
-
+onpageChanges(event)
+ {
+   console.log(event.pageSize);
+   
+   this.pageCount=event.pageSize;
+   
+ }
   openViewModal(bool, id:any){
     this.isViewModal = true;
     this.openCustomModal(bool, id);
@@ -403,7 +473,7 @@ export class MemberComponent implements OnInit {
               subscriberLname: id.subscriberLname,
               gender: id.gender,
               status: id.status,
-              laserValue: this.decimalValueString(id.laserValue), //PV 08-05-2021
+              laserValue: this.decimalValueString(id.laserValue)==0?'':this.decimalValueString(id.laserValue),
               isUnlimited: (id.isUnlimited==null || id.isUnlimited=='N')?false:true,
               memberStartDate: this.datePipe.transform(id.memberStartDate, 'yyyy-MM-dd'),
               memberEndDate: this.datePipe.transform(id.memberEndDate, 'yyyy-MM-dd'),

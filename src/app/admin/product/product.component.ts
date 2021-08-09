@@ -144,12 +144,12 @@ export class ProductComponent implements OnInit {
       sslPaidStartDate: ['', Validators.required],
       sslPaidEndDate: ['', Validators.required],
       //below from sslRunInLimit to sslLifetimeLimit are number fields
-      sslRunInLimit:0,
+      sslRunInLimit:'',
       sslDeductible: ['', Validators.required],
-      sslAggDeductible:0,
-      sslAnnualLimit:0,
-      sslLifetimeLimit:0,
-      sslPartcipantLimit:0,//(VE 1-08-2021 starts)
+      sslAggDeductible:'',
+      sslAnnualLimit:'',
+      sslLifetimeLimit:'',
+      sslPartcipantLimit:'',//(VE 1-08-2021 starts)
 
       sslIsImmediateReimbursement:false,
       sslTermCoverageExtEndDate:'',
@@ -157,7 +157,7 @@ export class ProductComponent implements OnInit {
       sslLasering: false,
 
       //below from aslDeductible to aslExpecteddClaimLiability are number fields
-      aslDeductible:0,
+      aslDeductible:'',
       aslMinDeductible:['', Validators.required],
       aslExpectedClaimLiability:0,
 
@@ -171,11 +171,11 @@ export class ProductComponent implements OnInit {
       aslPaidStartDate:['', Validators.required],
       aslPaidEndDate:['', Validators.required],
       // below aslRunInLimit is a number field
-      aslRunInLimit:0,
+      aslRunInLimit:'',
       aslClaimBasis:['', Validators.required],
 
-      aslAnnualLimit:0,  // this is a number field
-      aslLifeTimeLimit:0, // this is a number field
+      aslAnnualLimit:'',  // this is a number field
+      aslLifeTimeLimit:'', // this is a number field
 
       aslIsMonthlyAccomidation:false,
       aslTermCoverageExtEndDate:'',
@@ -331,6 +331,9 @@ export class ProductComponent implements OnInit {
     this.sslSPecificErr.dateErrMsg='';
     this.aslAggregateErr.isDateErr=false;
     this.aslAggregateErr.dateErrMsg='';//Ends Here
+    this.productForm.patchValue({
+      isMaxLiability:false
+    })
   }
  
   onSubmit() {
@@ -548,7 +551,7 @@ openViewModal(bool, id:any){
   this.openCustomModal(bool, id);
 }
   openCustomModal(open: boolean, id:any) {    
-    
+    this.checkMaxLiability();
     setTimeout(()=>{
       this.focusTag.nativeElement.focus()
     }, 100);
@@ -616,18 +619,18 @@ openViewModal(bool, id:any){
               sslContractEndDate:x[0].sslContractEndDate==null?"":this.datePipe.transform(new Date(x[0].sslContractEndDate), 'yyyy-MM-dd'),
               sslPaidStartDate:this.datePipe.transform(new Date(x[0].sslPaidStartDate), 'yyyy-MM-dd'),
               sslPaidEndDate:this.datePipe.transform(new Date(x[0].sslPaidEndDate), 'yyyy-MM-dd'),
-              sslRunInLimit:x[0].sslRunInLimit,
+              sslRunInLimit:x[0].sslRunInLimit==0?'':x[0].sslRunInLimit, 
               sslClaimBasis:x[0].sslClaimBasis,
-              sslDeductible:this.decimalValueString(x[0].sslDeductible),
-              sslAggDeductible:x[0].sslAggDeductible,
-              sslAnnualLimit:x[0].sslAnnualLimit,
-              sslLifetimeLimit:x[0].sslLifetimeLimit,
+              sslDeductible:x[0].sslDeductible==0?'':x[0].sslDeductible,  
+              sslAggDeductible:x[0].sslAggDeductible==0?'':x[0].sslAggDeductible,
+              sslAnnualLimit:x[0].sslAnnualLimit==0?'':x[0].sslAnnualLimit,
+              sslLifetimeLimit:x[0].sslLifetimeLimit==0?'':x[0].sslLifetimeLimit,
               sslPartcipantLimit:x[0].sslPartcipantLimit,//(VE 1-08-2021 starts)
               sslIsImmediateReimbursement:x[0].sslIsImmediateReimbursement,
               sslTermCoverageExtEndDate:x[0].sslTermCoverageExtEndDate==null?"":this.datePipe.transform(new Date(x[0].sslTermCoverageExtEndDate), 'yyyy-MM-dd'),
               sslLasering: x[0].sslLasering,
-              aslDeductible:0,
-              aslMinDeductible:x[0].aslMinDeductible,
+              aslDeductible:x[0].aslDeductible==0?'':x[0].aslDeductible,
+              aslMinDeductible:x[0].aslMinDeductible==0?'':x[0].aslMinDeductible,
               aslExpectedClaimLiability:x[0].aslExpectedClaimLiability,
               aslIncurrredStartDate:this.datePipe.transform(new Date(x[0].aslIncurrredStartDate), 'yyyy-MM-dd'),
               aslIncurredEndDate:this.datePipe.transform(new Date(x[0].aslIncurredEndDate), 'yyyy-MM-dd'),
@@ -636,10 +639,10 @@ openViewModal(bool, id:any){
               aslCorridor: x[0].aslCorridor,
               aslPaidStartDate:this.datePipe.transform(new Date(x[0].aslPaidStartDate), 'yyyy-MM-dd'),
               aslPaidEndDate:this.datePipe.transform(new Date(x[0].aslPaidEndDate), 'yyyy-MM-dd'),
-              aslRunInLimit:x[0].aslRunInLimit,
+              aslRunInLimit:x[0].aslRunInLimit==0?'':x[0].aslRunInLimit, 
               aslClaimBasis:x[0].aslClaimBasis,
-              aslAnnualLimit:x[0].aslAnnualLimit,
-              aslLifeTimeLimit:x[0].aslLifeTimeLimit,
+              aslAnnualLimit:x[0].aslAnnualLimit==0?'':x[0].aslAnnualLimit, 
+              aslLifeTimeLimit:x[0].aslLifeTimeLimit==0?'':x[0].aslLifeTimeLimit, 
               aslIsMonthlyAccomidation:x[0].aslIsMonthlyAccomidation,
               aslTermCoverageExtEndDate:x[0].aslTermCoverageExtEndDate==null?"":this.datePipe.transform(new Date(x[0].aslTermCoverageExtEndDate), 'yyyy-MM-dd'),
               isMaxLiability:x[0].isMaxLiability,
