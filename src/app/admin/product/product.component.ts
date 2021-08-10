@@ -247,7 +247,7 @@ export class ProductComponent implements OnInit {
   get f() { return this.productForm.controls; }
 
   checkMaxLiability(){    
-    debugger;
+    
     console.log(this.f.isMaxLiability.value);
     if(this.f.isMaxLiability.value){
       this.f.ibnrPercentage.setValidators([Validators.required]);
@@ -565,9 +565,12 @@ openViewModal(bool, id:any){
     this.submitted = false;
     this.loading = false;
     this.isDisabled=false;
+    this.f.clientId.enable();
+    this.f.contractId.enable();
     if(open && id==null){
       this.initProductForm();
       this.isAddMode = true;    
+      
       this.isEditSelected = false;
       this.isFilterOn=false;
       this.isViewModal=false;
@@ -656,6 +659,8 @@ openViewModal(bool, id:any){
               status:x[0].status, 
               userId: this.loginService.currentUserValue.name     
             });
+            console.log(this.productForm.value);
+            
             let aslCc=[];
             let sslCc=[];
             console.log(x[0].lstContractClaims.length)
@@ -681,7 +686,10 @@ openViewModal(bool, id:any){
           if(this.isViewModal){
             this.productForm.disable();
           }
-          else{
+          if(this.isAddMode){
+            this.productForm.enable();
+          }
+          if(!this.isAddMode){
             this.productForm.enable();
             this.f.clientId.disable();
             this.f.contractId.disable();
@@ -784,18 +792,20 @@ openViewModal(bool, id:any){
       return a;
     }
     decimalValue(inputValue:number){
+      
       if(inputValue==0){
         inputValue=0;
       }
       else{
-        inputValue= Number(this.decimalPipe.transform(inputValue,this.format));        
+        inputValue= Number(this.decimalPipe.transform(inputValue,this.format).toString().replace(',', ""));  
+              
       }
       console.log(inputValue);      
       return inputValue;
     }     
 numberValue(numValue){
   
-  if(numValue==null || numValue=='' || numValue==0 || numValue<0 ){
+  if(numValue==null || numValue==''){
     numValue=0;    
   }
   else{
@@ -908,6 +918,7 @@ private addProduct() {
   private updateProduct() { 
   
 
+    this.patchProductForm();
     this.f.clientId.enable();
     this.f.contractId.enable();
     this.productForm.patchValue({  
@@ -944,11 +955,14 @@ private addProduct() {
  this.productForm.patchValue({
   lstContractClaims: this.listContractClaims
  })
- this.patchProductForm();
  console.log(this.productForm.value);
  
     if(!this.toSwitchOtherScreen){
       
+    this.productForm.patchValue({
+      productId: this.uProductId
+    })
+    
       this.productService.updateProduct(this.productForm.value)
           .pipe(first())
           .subscribe({
