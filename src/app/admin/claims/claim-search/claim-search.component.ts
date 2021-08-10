@@ -567,7 +567,7 @@ onSubmit() {
 
  //(VE 4/8/2021 )
  exportAsXLSX():void {
-  this.excelService.exportAsExcelFile(this.excel1,"Claim_Search_Report")
+  this.excelService.exportAsExcelFileClaim(this.excel1,"Claim_Search_Report")
 
   console.log("working");
 }

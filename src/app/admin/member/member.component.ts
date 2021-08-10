@@ -341,35 +341,34 @@ export class MemberComponent implements OnInit {
        {
          this.pageCount=0;
        }
-      
-       if((!min && minPage!='') ||(!max && maxPage!=''))
+        if((!min && minPage!='') ||(!max && maxPage!=''))
+        {
+          this.memMaxMinErr.isValid=true;
+          this.memMaxMinErr.errMsg="special characters and blank values not allowed";
+          console.log("yes");
+          return; 
+        }
+        if(( minPage!='' && minPage) >( maxPage!='' && maxPage))
+        {
+          this.memMaxMinErr.isValid=true;
+          this.memMaxMinErr.errMsg="Range from should not be greater than "+maxPage+".";
+          return;
+        }
+       
+        else if(minPage<=this.countMaxMin && maxPage<=this.countMaxMin)
+        {
+        for(let i=minPage; i <= maxPage-1;i++)
+        {
+          this.names.push(data[i]);
+          this.pageCount=this.names.length;   
+        }
+       }
+       else if((minPage > this.countMaxMin && maxPage >this.countMaxMin) || (minPage > this.countMaxMin || maxPage >this.countMaxMin))
        {
          this.memMaxMinErr.isValid=true;
-         this.memMaxMinErr.errMsg="special characters and blank values not allowed";
-         console.log("yes");
+         this.memMaxMinErr.errMsg="Range should not be greater than "+this.countMaxMin+"."; 
          return; 
        }
-       if(( minPage!='' && minPage) >( maxPage!='' && maxPage))
-       {
-         this.memMaxMinErr.isValid=true;
-         this.memMaxMinErr.errMsg="Range from should not be greater than "+maxPage+".";
-         return;
-       }
-      
-       else if(minPage<=this.countMaxMin && maxPage<=this.countMaxMin)
-       {
-       for(let i=minPage; i <= maxPage-1;i++)
-       {
-         this.names.push(data[i]);
-         this.pageCount=this.names.length;   
-       }
-      }
-      else if((minPage > this.countMaxMin && maxPage >this.countMaxMin) || (minPage > this.countMaxMin || maxPage >this.countMaxMin))
-      {
-        this.memMaxMinErr.isValid=true;
-        this.memMaxMinErr.errMsg="Range should not be greater than "+this.countMaxMin+"."; 
-        return; 
-      }
      
       
        console.log(this.names);
@@ -386,7 +385,17 @@ export class MemberComponent implements OnInit {
          
        }
        setTimeout(()=>{
-          this.searchDataSource = new MatTableDataSource(this.names);// (VE 9/8/2021)
+        //(VE 10/8/2021 starts) 
+      if((data[minPage]==undefined) && (data[maxPage]==undefined))
+        {
+         this.searchDataSource = new MatTableDataSource(data)
+        }
+     
+         else if(minPage >= 0 && maxPage >= 0)
+         {
+         this.searchDataSource = new MatTableDataSource(this.names);
+         }
+         //(VE 10/8/2021 ends) 
           this.isSearchDataThere = true;
           this.noSearchFieldEntered = false;
           this.memSearchError = false;

@@ -5,6 +5,13 @@
     "outDir": "./out-tsc/app",
     "types": ["node"]
   },
+  //(VE 10/08/2021 starts)
+  "paths": {
+    "exceljs": [
+      "node_modules/exceljs/dist/exceljs.min"
+    ]
+  },
+  //(VE 10/08/2021 ends)
   "files": [
     "src/main.ts",
     "src/polyfills.ts"

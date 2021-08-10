@@ -132,11 +132,11 @@
               <div class="member-search-btns-area">  
                 <div class="col_1"> 
                   <!--(VE 9/8/2021 starts)--> 
-                  <div *ngIf="isSearchDataThere" >
+                  <div>
                     <div class="range-area">
                         <div>Enter the Range</div>
-                      <input type ="number" class="form-control" formControlName="minPage" placeholder="Start value">     
-                      <input type ="number" class="form-control" formControlName="maxPage" placeholder="End Value" >
+                      <input type ="number" class="form-control" formControlName="minPage" placeholder="Start value" [ngClass]="{ 'is-invalid':memMaxMinErr.isValid }">     
+                      <input type ="number" class="form-control" formControlName="maxPage" placeholder="End Value" [ngClass]="{ 'is-invalid':memMaxMinErr.isValid}">
                       <div>Total Records {{countMaxMin}}</div>
                     </div>
                 </div>  
@@ -152,8 +152,8 @@
         </div>
         
      
-        <div *ngIf="isSearchDataThere && pageCount!=0" class="member-search-results-area">      
-          <div class="card" *ngIf="pageCount>4">    
+        <div *ngIf="isSearchDataThere" class="member-search-results-area">      
+          <div class="card">    
           <div class="card-header">
             Member Search Results
             <div class="fa fa-download" title="download" (click)="exportAsXLSX()"></div> <!--(VE 4/8/2021 )-->

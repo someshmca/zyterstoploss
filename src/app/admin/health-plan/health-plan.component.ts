@@ -292,6 +292,7 @@ initLocalTires(){
 
 //(V.E 27-Jul-2021 starts)
 checkDuplicatePlanName(PName){
+  debugger;
   return this.planService.checkDuplicatePlanName(PName).toPromise();
 }
 
@@ -305,8 +306,7 @@ async checkDuplicatePlanId(PId){
         this.planIdErr.isDuplicate=true;
         this.planIdErr.errMsg='The Plan Id '+this.f.planCode.value+' already exists. Please enter different Plan Id';
         return;
-      }
-    
+      }    
 
   }).catch((error)=>{
     console.log("Promise rejected with " + JSON.stringify(error));

@@ -103,18 +103,20 @@
                <span *ngIf="submitted && isNoFactAmount">Enter any Factor Amount. Atleast One Factor amount is required</span>
                <div *ngIf="isContractYearInvalid.flag">{{isContractYearInvalid.message}}</div>
                <div *ngIf="tierIdExists.flag">{{tierIdExists.message}}</div>
+               <div *ngIf="planIdErr.isDuplicate">{{planIdErr.errMsg}}</div>
+               <div *ngIf="planNameErr.isDuplicate">{{planNameErr.errMsg}}</div>
              </div>  
              <div class="row">
                  <div class="col-md-4">
                   <div class="form-group">
                     <label>Medica Plan ID<small class="starmark">*</small></label>
-                    <input #focusElem type="text" class="form-control" formControlName="planCode" [ngClass]="{ 'is-invalid': submitted && f.planCode.errors }" />
+                    <input #focusElem type="text" class="form-control" formControlName="planCode" [ngClass]="{ 'is-invalid': planIdErr.isDuplicate }" />
                   </div>
                  </div>
                  <div class="col-md-4">
                   <div class="form-group">
                     <label>Medica Plan Name<small class="starmark">*</small></label>
-                    <input type="text" formControlName="planName" maxlength="50" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.planName.errors }" />                
+                    <input type="text" formControlName="planName" maxlength="50" class="form-control" [ngClass]="{ 'is-invalid': planNameErr.isDuplicate }" />                
                         </div>   
                  </div>
                  <div class="col-md-4">  

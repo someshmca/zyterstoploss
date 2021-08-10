@@ -247,7 +247,7 @@ export class ProductComponent implements OnInit {
   get f() { return this.productForm.controls; }
 
   checkMaxLiability(){    
-    
+    debugger;
     console.log(this.f.isMaxLiability.value);
     if(this.f.isMaxLiability.value){
       this.f.ibnrPercentage.setValidators([Validators.required]);
@@ -258,7 +258,7 @@ export class ProductComponent implements OnInit {
     else{
       this.f.ibnrPercentage.clearValidators();
       this.f.ibnrPercentage.updateValueAndValidity(); 
-      this.f.defferedFeePercentage.clearValidators()
+      this.f.defferedFeePercentage.clearValidators();
       this.f.defferedFeePercentage.updateValueAndValidity(); 
     }
   }
@@ -652,7 +652,7 @@ openViewModal(bool, id:any){
               aslTermCoverageExtEndDate:x[0].aslTermCoverageExtEndDate==null?"":this.datePipe.transform(new Date(x[0].aslTermCoverageExtEndDate), 'yyyy-MM-dd'),
               isMaxLiability:x[0].isMaxLiability,
               ibnrPercentage:x[0].ibnrPercentage==0?'':x[0].ibnrPercentage,
-              defferedFeePercentage:x[0].defferedFeePercentage,
+              defferedFeePercentage:x[0].defferedFeePercentage==0?'':x[0].defferedFeePercentage,
               status:x[0].status, 
               userId: this.loginService.currentUserValue.name     
             });
