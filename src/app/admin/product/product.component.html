@@ -114,7 +114,7 @@
               <div class="col-md-4">
                 <div class="form-group">
                   <label>Account<small class="starmark">*</small> </label>
-                  <select #focusElem formControlName="clientId" class="form-control" (change)="getContractIDs($event.target.value)" (focus)="getContractIDs($event.target.value)" [ngClass]="{ 'is-invalid': submitted && f.clientId.errors }">
+                  <select #focusElem formControlName="clientId" class="form-control" (change)="getContractIDs($event.target.value)" [ngClass]="{ 'is-invalid': submitted && f.clientId.errors }">
                     <option *ngFor="let client of activeClients" [value]="client.clientId">
                       {{client.clientName}}
                     </option>
@@ -448,23 +448,21 @@
     <div class="row">
       <div class="col-md-4">
         <div class="custom-control custom-checkbox">
-          <input type="checkbox" class="custom-control-input"  formControlName="isMaxLiability" id="isMaxLia" (change)="checkMaxLiability()">
-          <label class="custom-control-label" for="isMaxLia">Max Liability</label>
+          <input type="checkbox" class="custom-control-input" id="max" formControlName="isMaxLiability" (change)="checkMaxLiability()">
+          <label class="custom-control-label" for="max">Max Liability</label>
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-group">
           <label>IBNR Reserve Percentage</label>
-          <input type="number" formControlName="ibnrPercentage"   class="form-control" [ngClass]="{ 'is-invalid': submitted && f.ibnrPercentage.errors }"/>
+          <input type="number" formControlName="ibnrPercentage" [readonly]="!f.isMaxLiability.value" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.ibnrPercentage.errors }"/>
         </div>
-          <input type="hidden" formControlName="ibnrPercentage" class="form-control"/>
       </div>
       <div class="col-md-4">
         <div class="form-group">
           <label>Deferred Service Fee Percentage</label>
-          <input type="number" formControlName="defferedFeePercentage" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.defferedFeePercentage.errors }"/>
+          <input type="number" formControlName="defferedFeePercentage" [readonly]="!f.isMaxLiability.value" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.defferedFeePercentage.errors }"/>
         </div>
-         <input type="hidden" formControlName="defferedFeePercentage" class="form-control"/>
       </div>
     </div>
 </div>   

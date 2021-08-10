@@ -362,6 +362,7 @@ doFilter(filterValue:string){ //added by Venkatesh Enigonda
     }
     this.isCustomModalOpen = open;
     if (!open && elem==null) {
+      this.clearErrorMessages();
       this.planForm.enable();
       this.planForm.reset();
       this.getAllPlans();
@@ -413,8 +414,8 @@ doFilter(filterValue:string){ //added by Venkatesh Enigonda
           this.t.push(this.formBuilder.group({
               planId:elem.lstTblPlanTier[i].planId,
               tierId: elem.lstTblPlanTier[i].tierId,
-              tierAmount: elem.lstTblPlanTier[i].tierAmount==0?'':Number(this.decimalPipe.transform(elem.lstTblPlanTier[i].tierAmount,this.format)),
-              expectedClaimsRate: elem.lstTblPlanTier[i].expectedClaimsRate==0?'':Number(this.decimalPipe.transform(elem.lstTblPlanTier[i].expectedClaimsRate,this.format)),
+              tierAmount: elem.lstTblPlanTier[i].tierAmount==0?'':this.decimalPipe.transform(elem.lstTblPlanTier[i].tierAmount,this.format),
+              expectedClaimsRate: elem.lstTblPlanTier[i].expectedClaimsRate==0?'':this.decimalPipe.transform(elem.lstTblPlanTier[i].expectedClaimsRate,this.format),
               isTerminalExtCoverage: elem.lstTblPlanTier[i].isTerminalExtCoverage=='Y'?true:false
           }));
       }

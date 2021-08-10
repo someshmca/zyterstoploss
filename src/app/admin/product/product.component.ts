@@ -179,7 +179,7 @@ export class ProductComponent implements OnInit {
       sslLasering: false,
 
       //below from aslDeductible to aslExpecteddClaimLiability are number fields
-      aslDeductible:'',
+      //aslDeductible:'',
       aslMinDeductible:['', Validators.required],
       aslExpectedClaimLiability:'',
 
@@ -206,8 +206,8 @@ export class ProductComponent implements OnInit {
 
 
       isMaxLiability:false,
-      ibnrPercentage:['', Validators.required], // this is a number field
-      defferedFeePercentage:['', Validators.required], // this is a number field
+      ibnrPercentage:[''], // this is a number field
+      defferedFeePercentage:[''], // this is a number field
 
       status:false,
       userId: this.loginService.currentUserValue.name,
@@ -247,14 +247,19 @@ export class ProductComponent implements OnInit {
   get f() { return this.productForm.controls; }
 
   checkMaxLiability(){    
+    
     console.log(this.f.isMaxLiability.value);
-    if(this.f.isMaxLiability.value==true){
-      this.f.ibnrPercentage.enable();
-      this.f.defferedFeePercentage.enable();
+    if(this.f.isMaxLiability.value){
+      this.f.ibnrPercentage.setValidators([Validators.required]);
+      this.f.ibnrPercentage.updateValueAndValidity(); 
+      this.f.defferedFeePercentage.setValidators([Validators.required]);
+      this.f.defferedFeePercentage.updateValueAndValidity(); 
     }
     else{
-      this.f.ibnrPercentage.disable();
-      this.f.defferedFeePercentage.disable();
+      this.f.ibnrPercentage.clearValidators();
+      this.f.ibnrPercentage.updateValueAndValidity(); 
+      this.f.defferedFeePercentage.clearValidators()
+      this.f.defferedFeePercentage.updateValueAndValidity(); 
     }
   }
   getActiveClients(){    
@@ -334,9 +339,8 @@ export class ProductComponent implements OnInit {
     this.sslSPecificErr.dateErrMsg='';
     this.aslAggregateErr.isDateErr=false;
     this.aslAggregateErr.dateErrMsg='';//Ends Here
-    this.productForm.patchValue({
-      isMaxLiability:false
-    })
+    if(this.isAddMode)
+        this.productForm.patchValue({isMaxLiability:false})
   }
  
   onSubmit() {
@@ -566,8 +570,6 @@ openViewModal(bool, id:any){
       this.isAddMode = true;    
       this.isEditSelected = false;
       this.isFilterOn=false;
-      // this.f.clientId.enable();
-      // this.f.contractId.enable();
       this.isViewModal=false;
     }
     
@@ -632,7 +634,7 @@ openViewModal(bool, id:any){
               sslIsImmediateReimbursement:x[0].sslIsImmediateReimbursement,
               sslTermCoverageExtEndDate:x[0].sslTermCoverageExtEndDate==null?"":this.datePipe.transform(new Date(x[0].sslTermCoverageExtEndDate), 'yyyy-MM-dd'),
               sslLasering: x[0].sslLasering,
-              aslDeductible:x[0].aslDeductible==0?'':x[0].aslDeductible,
+             // aslDeductible:x[0].aslDeductible==0?'':x[0].aslDeductible,
               aslMinDeductible:x[0].aslMinDeductible==0?'':x[0].aslMinDeductible,
               aslExpectedClaimLiability:x[0].aslExpectedClaimLiability,
               aslIncurrredStartDate:this.datePipe.transform(new Date(x[0].aslIncurrredStartDate), 'yyyy-MM-dd'),
@@ -649,7 +651,7 @@ openViewModal(bool, id:any){
               aslIsMonthlyAccomidation:x[0].aslIsMonthlyAccomidation,
               aslTermCoverageExtEndDate:x[0].aslTermCoverageExtEndDate==null?"":this.datePipe.transform(new Date(x[0].aslTermCoverageExtEndDate), 'yyyy-MM-dd'),
               isMaxLiability:x[0].isMaxLiability,
-              ibnrPercentage:x[0].ibnrPercentage,
+              ibnrPercentage:x[0].ibnrPercentage==0?'':x[0].ibnrPercentage,
               defferedFeePercentage:x[0].defferedFeePercentage,
               status:x[0].status, 
               userId: this.loginService.currentUserValue.name     
@@ -791,6 +793,16 @@ openViewModal(bool, id:any){
       console.log(inputValue);      
       return inputValue;
     }     
+numberValue(numValue){
+  
+  if(numValue==null || numValue=='' || numValue==0 || numValue<0 ){
+    numValue=0;    
+  }
+  else{
+    numValue=this.decimalValue(numValue);
+  }
+  return numValue;
+}
 patchProductForm(){
   this.productForm.patchValue({
     productId: 0,
@@ -802,35 +814,35 @@ patchProductForm(){
     sslIncurredEndDate: this.dateValue(this.f.sslIncurredEndDate.value),
     sslPaidStartDate: this.dateValue(this.f.sslPaidStartDate.value),
     sslPaidEndDate: this.dateValue(this.f.sslPaidEndDate.value),
-    sslRunInLimit: Number(this.decimalValue(this.f.sslRunInLimit.value)),
-    sslDeductible: this.decimalValue(this.f.sslDeductible.value),
-    sslAggDeductible: this.decimalValue(this.f.sslAggDeductible.value),
-    sslAnnualLimit: this.decimalValue(this.f.sslAnnualLimit.value),
-    sslLifetimeLimit: this.decimalValue(this.f.sslLifetimeLimit.value),
-    sslPartcipantLimit:this.decimalValue(this.f.sslPartcipantLimit.value),//(VE 1-08-2021 starts)
+    sslRunInLimit: this.numberValue(this.f.sslRunInLimit.value),
+    sslDeductible: this.numberValue(this.f.sslDeductible.value),
+    sslAggDeductible: this.numberValue(this.f.sslAggDeductible.value),
+    sslAnnualLimit: this.numberValue(this.f.sslAnnualLimit.value),
+    sslLifetimeLimit: this.numberValue(this.f.sslLifetimeLimit.value),
+    sslPartcipantLimit:this.numberValue(this.f.sslPartcipantLimit.value),//(VE 1-08-2021 starts)
     sslTermCoverageExtEndDate: this.dateValue(this.f.sslTermCoverageExtEndDate.value),
     //sslIsImmediateReimbursement: boolean;
-    sslLasering: this.f.sslLasering.value,
+    sslLasering: this.f.sslLasering.value==false?false:true,
 
     //aslClaimBasis: string;
-   // aslDeductible:0, // not using currently
-    aslMinDeductible: this.decimalValue(this.f.aslMinDeductible.value),
-    aslExpectedClaimLiability: this.decimalValue(this.f.aslExpectedClaimLiability.value),
+    //aslDeductible:0, // not using currently
+    aslMinDeductible: this.numberValue(this.f.aslMinDeductible.value),
+    aslExpectedClaimLiability:this.numberValue(this.f.aslExpectedClaimLiability.value),
     aslIncurrredStartDate: this.dateValue(this.f.aslIncurrredStartDate.value),
     aslIncurredEndDate: this.dateValue(this.f.aslIncurredEndDate.value),
 	  aslContractStartDate:this.dateValue(this.f.aslContractStartDate.value),
     aslContractEndDate: this.dateValue(this.f.aslContractEndDate.value),
     aslPaidStartDate: this.dateValue(this.f.aslPaidStartDate.value),
     aslPaidEndDate: this.dateValue(this.f.aslPaidEndDate.value),
-    aslRunInLimit: this.decimalValue(this.f.aslRunInLimit.value),
-    aslAnnualLimit: Number(this.decimalValue(this.f.aslAnnualLimit.value)),
-    aslLifeTimeLimit: this.decimalValue(this.f.aslLifeTimeLimit.value),
+    aslRunInLimit: this.numberValue(this.f.aslRunInLimit.value),
+    aslAnnualLimit: this.numberValue(this.f.aslAnnualLimit.value),
+    aslLifeTimeLimit: this.numberValue(this.f.aslLifeTimeLimit.value),
     //aslIsMonthlyAccomidation: boolean;
     aslTermCoverageExtEndDate: this.dateValue(this.f.aslTermCoverageExtEndDate.value),
-	  aslCorridor:this.f.aslCorridor.value==null?0: Number(this.decimalValue(this.f.aslCorridor.value)),
+	  aslCorridor:this.numberValue(this.f.aslCorridor.value),
    // isMaxLiability: boolean;
-    ibnrPercentage:this.decimalValue(this.f.ibnrPercentage.value),
-    defferedFeePercentage: this.decimalValue(this.f.defferedFeePercentage.value),
+    ibnrPercentage:this.numberValue(this.f.ibnrPercentage.value),
+    defferedFeePercentage: this.numberValue(this.f.defferedFeePercentage.value),
     sslContractStartDate:this.dateValue(this.f.sslContractStartDate.value),
     sslContractEndDate: this.dateValue(this.f.sslContractEndDate.value),
     userId: this.loginService.currentUserValue.name,
@@ -838,6 +850,7 @@ patchProductForm(){
     aslCoveredClaims: this.f.aslCoveredClaims.value
   });
   console.log(this.productForm.value);
+  
   
 }
 private addProduct() {   
@@ -870,7 +883,6 @@ private addProduct() {
   contractId: this.sharedContractID>0?this.sharedContractID:this.f.contractId.value,  
   lstContractClaims: this.listContractClaims
  })
- 
  
   this.productService.addProduct(this.productForm.value)
       .pipe(first())
@@ -911,9 +923,7 @@ private addProduct() {
     
   });
   //this.productForm.patchValue(this.productForm.value);
-  console.log(this.f.ibnrPercentage.errors);
-  console.log(this.f.defferedFeePercentage.errors);
-  debugger;
+  
   this.listContractClaims=[];
   
   for(let i=0; i<this.f.sslCoveredClaims.value.length; i++){
@@ -932,22 +942,25 @@ private addProduct() {
   }
  console.log(this.listContractClaims);
  this.productForm.patchValue({
-  sslDeductible: this.decimalValue(this.f.sslDeductible.value),
   lstContractClaims: this.listContractClaims
  })
+ this.patchProductForm();
  console.log(this.productForm.value);
- debugger;
+ 
     if(!this.toSwitchOtherScreen){
+      
       this.productService.updateProduct(this.productForm.value)
           .pipe(first())
           .subscribe({
               next: () => {
                 
                   this.getAllProducts();
+                  this.productForm.setValue(this.productForm.value);
+                  
                  // this.openCustomModal(false,null);                     
                    // this.productForm.reset();   
                     
-                    this.clearErrorMessages();
+                  
                     
                   this.alertService.success('Product updated', { 
                     keepAfterRouteChange: true });

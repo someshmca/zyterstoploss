@@ -9,6 +9,7 @@ export class AuthenticateUserService {
 
   constructor(private http: HttpClient) { }
   getAuthenticatedUser(){
+    debugger;
     return this.http.get(Paths.authenticateUser+"QDI_Sateesh.Chandra%20Bhadravathiveeranna");
   }
 }
