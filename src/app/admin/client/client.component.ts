@@ -614,19 +614,19 @@ openViewModal(bool, id:any){
             ([id,name]) => {
               console.log('client Id : '+id);
               console.log('client Namem : '+name);
-              if(id>0 && name>0){
-                this.accNameErr.isDuplicate=true;
-                this.accNameErr.errMsg="Accound Name and Account ID already exists";
-                return;
-              }
               if(id>0){
                 this.accIdErr.isDuplicate=true;
                 this.accIdErr.errMsg="Account ID already exists";
                 return;
               }
-              if(name>0){
+              else if(name>0){
                 this.accNameErr.isDuplicate=true;
                 this.accNameErr.errMsg="Accound Name already exists";
+                return;
+              }
+              else if(id>0 && name>0){
+                this.accNameErr.isDuplicate=true;
+                this.accNameErr.errMsg="Accound Name and Account ID already exists";
                 return;
               }
               if(startDateValue!=null && endDateValue!=null && startDateValue!='' && endDateValue!=''){
@@ -691,6 +691,7 @@ openViewModal(bool, id:any){
         .pipe(first())
         .subscribe({
             next: (data) => {
+              this.clearErrorMessages();
               if(data.id==null){
                 //this.alertService.success(data.message, { keepAfterRouteChange: true });
                 this.isHRIdInvalid.flag=true;

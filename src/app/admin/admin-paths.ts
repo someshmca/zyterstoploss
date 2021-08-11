@@ -73,7 +73,7 @@
 //   planAdd: "https://medicaslapiorc.azurewebsites.net/api/Plan/AddPlan",
 //   planUpdate: "https://medicaslapiorc.azurewebsites.net/api/Plan/UpdatePlan",
 //   duplicatePlanId:"https://medicaslapiorc.azurewebsites.net/api/Plan/DuplicatePlanCode?planCode=", 
-//   duplicatePlanName:"https://medicaslapiorc.azurewebsites.net/api/Plan/DuplicatePlanName?planName=",
+//   duplicatePlanName:"https://medicaslapiorc.azurewebsites.net/api/Plan/DuplicatePlanName?planName=", //(V.E 27-Jul-2021 )
 
 //   memberSearch: "https://medicaslapiorc.azurewebsites.net/api/Member/GetMemberdetail?",
 //   memberAdd: "https://medicaslapiorc.azurewebsites.net/api/Member/AddMember",
