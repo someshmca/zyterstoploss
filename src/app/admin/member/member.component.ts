@@ -166,8 +166,8 @@ export class MemberComponent implements OnInit {
       benefitPlanId:[''],
       tier:[''],
       alternateId:[''],
-       minPage:[''],
-       maxPage:['']
+       minPage:null,
+       maxPage:null
     });
   }
 
@@ -343,24 +343,35 @@ export class MemberComponent implements OnInit {
        console.log(minPage!=null)
        console.log(maxPage!=null)
 
-      if((minPage!='' &&  minPage!=null)  && (maxPage!=''&& minPage!=null))
-      {     
-    if((!min && minPage!=''))
-       {
-         this.memMaxMinErr.isValid=true;
-         this.memMaxMinErr.errMsg="special characters and blank values not allowed";
-         console.log("yes");
-         return; 
-       }   
-      if((!max && maxPage!='' ))
-       {
-         this.memMaxMinErr.isValid=true;
-         this.memMaxMinErr.errMsg="special characters and blank values not allowed";
-         console.log("yes");
-         return; 
-       } 
-      }  
-
+    //   if((minPage!='' &&  minPage!=null)  && (maxPage!=''&& minPage!=null))
+    //   {     
+    // if((!min && minPage!=''))
+    //    {
+    //      this.memMaxMinErr.isValid=true;
+    //      this.memMaxMinErr.errMsg="special characters and blank values not allowed";
+    //      console.log("yes");
+    //      return; 
+    //    }   
+    //   if((!max && maxPage!='' ))
+    //    {
+    //      this.memMaxMinErr.isValid=true;
+    //      this.memMaxMinErr.errMsg="special characters and blank values not allowed";
+    //      console.log("yes");
+    //      return; 
+    //    } 
+    //   }  
+    if(minPage===null && maxPage!==null)
+    {
+    this.memMaxMinErr.isValid=true;
+    this.memMaxMinErr.errMsg="*Range Start Value required "
+    return;
+    }
+    if(maxPage===null && minPage!==null)
+    {
+    this.memMaxMinErr.isValid=true;
+    this.memMaxMinErr.errMsg="*Range End Value required"
+    return;
+    }
        
        
       

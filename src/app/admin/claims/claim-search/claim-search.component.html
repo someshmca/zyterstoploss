@@ -26,6 +26,7 @@
                   <div *ngIf="isClaimSourceInvalid">Invalid Claim Source </div>
                   <div *ngIf="memberFnameErr.isValid">{{memberFnameErr.errMsg}}</div>
                   <div *ngIf="memberLnameErr.isValid">{{memberLnameErr.errMsg}}</div> 
+                  <div *ngIf="memMaxMinErr.isValid">{{memMaxMinErr.errMsg}}</div>
                 </div> 
                 <div class="form-row">
                   <div class="form-field">
@@ -144,7 +145,7 @@
                         <div class="form-field">
                             <label class="form-field-label">Paid End Date</label>
                             <div class="form-field-input">
-                                <input type="date" class="form-control field-input-text" value="MM/DD/YYYY" formControlName="paidToDate" max="12/31/9999"/>
+                                <input type="date" class="form-control field-input-text" value="MM/DD/YYYY" formControlName="paidToDate" max="2999-12-31"/>
                             </div>
                         </div>
                             <!-- <div class="form-field">
@@ -158,6 +159,14 @@
             </div>
             <div class="card-footer">        
                 <div class="claim-search-btns-area">
+                  <!--(VE 11/8/2021  starts ) -->
+                  <div class="range-area">
+                    <div>Enter the Range</div>
+                  <input type ="number" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))"class="form-control" formControlName="minPage" placeholder="Start value" [ngClass]="{ 'is-invalid':memMaxMinErr.isValid }">     
+                  <input type ="number" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))"class="form-control" formControlName="maxPage" placeholder="End Value" [ngClass]="{ 'is-invalid':memMaxMinErr.isValid}"> 
+                  <div>Total Records {{countMaxMin}}</div>
+                </div>
+                <!--(VE 11/8/2021  ends) -->
                     <button class="btn btn-outline-primary" type="button" (click)="resetClaimSearch()">Reset</button>
                     <button class="btn btn-primary">Search</button>                  
                 </div>

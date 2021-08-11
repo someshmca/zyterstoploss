@@ -827,6 +827,7 @@ validateTierIDs(){
        
         this.t.removeAt(i);
         this.t.value.splice(i,1);
+        debugger;
         //this.planForm.patchValue(this.t.value);
         
       }

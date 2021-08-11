@@ -66,3 +66,22 @@
     color: rgb(3, 194, 3);
     transform: scale(1.4);
 }
+
+.range-area{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+.range-area .form-control{
+    width: 80px;
+    margin: 0 2px;
+    padding: 2px;
+    font-size: 11px;
+}
+.range-area div:nth-child(1){
+    margin-right: 10px;
+}
+.range-area div:nth-child(2){
+    margin-left: 10px;
+}
+
