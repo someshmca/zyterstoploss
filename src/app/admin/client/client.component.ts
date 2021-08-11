@@ -464,8 +464,11 @@ openViewModal(bool, id:any){
     gotoAddContract(){
       
       if(this.isAdded){
-        this.clientService.getClient(this.f.clientId.value).subscribe((data)=>{
-          this.navService.setContractObj(data[0].clientId, data[0].clientName, true,false);
+        debugger;
+        this.clientService.getClient(this.f.clientId.value).subscribe(
+          (data:IClient[])=>{
+          if(data.length>0)
+            this.navService.setContractObj(data[0].clientId, data[0].clientName, true,false);
           this.route.navigate(['/contracts']); 
         });
       } 

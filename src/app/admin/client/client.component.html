@@ -141,8 +141,8 @@
                 </div>
                 <div class="col-md-6">
                  <div class="form-group">
-                   <label>Medica Account Name<small class="starmark">*</small></label>
-             <input type="text" formControlName="clientName" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.clientName.errors || accountNameErr.isValid}" /><!--Modified by Venkatesh Enigonda-->
+                   <label>Medica Account Name<small *ngIf="isAddMode" class="starmark">*</small></label>
+             <input type="text" formControlName="clientName" class="form-control" [readonly]="!isAddMode" [ngClass]="{ 'is-invalid': submitted && f.clientName.errors || accountNameErr.isValid}" /><!--Modified by Venkatesh Enigonda-->
                  </div>
                 </div>
               </div>

@@ -797,7 +797,12 @@ openViewModal(bool, id:any){
         inputValue=0;
       }
       else{
-        inputValue= Number(this.decimalPipe.transform(inputValue,this.format).toString().replace(',', ""));  
+         let kk=this.decimalPipe.transform(inputValue,this.format);
+        
+        inputValue= Number(this.decimalPipe.transform(inputValue,this.format).replace(/,/g, ""));
+        
+        //inputValue= Number(this.decimalPipe.transform(inputValue,this.format).replace(',', "")); 
+        //inputValue= Number(this.decimalPipe.transform(inputValue, this.format).replace(/\D,/g, "")); 
               
       }
       console.log(inputValue);      

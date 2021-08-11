@@ -17,6 +17,7 @@ import { MatSort } from '@angular/material/sort';
 import { LoginService } from 'src/app/shared/services/login.service';
 import { ProductService } from '../../services/product.service';
 import {ExcelService} from '../../services/excel.service';
+import {DecimalPipe} from '@angular/common'; //PV 08-05-2021
 
 @Component({
   selector: 'app-claim-search',
@@ -74,12 +75,14 @@ export class ClaimSearchComponent implements OnInit {
   isDiagnosisCodeInvalid: boolean=false;
   isClaimSourceInvalid: boolean=false;
   excel1; //(VE 4/8/2021 )
+  format = '2.2-2'; //PV 08-05-2021
   constructor(private fb: FormBuilder,
     private _claimReportService: ClaimReportService,  private excelService:ExcelService,
     private _claimService: ClaimService,
     private _route:Router,
     private alertService: AlertService,
-    private datePipe: DatePipe, public loginService: LoginService, private productService: ProductService ) {}
+    private datePipe: DatePipe, public loginService: LoginService, private productService: ProductService,
+    private decimalPipe: DecimalPipe ) {}
 
   ngOnInit() {
     this.initClaimSearchForm();
@@ -264,7 +267,7 @@ openCustomModal(open: boolean, id:any) {
             memberId: id.memberId,
             firstName: id.firstName,
             lastName:  id.lastName,
-            paidAmount:id.minPaidAmount,
+            paidAmount:   this.decimalPipe.transform(id.minPaidAmount,this.format),
             climReceivedOn:  this.datePipe.transform(id.climReceivedOn, 'yyyy-MM-dd'),
             paidDate:  this.datePipe.transform(id.paidDate, 'yyyy-MM-dd'),
             dateOfBirth: this.datePipe.transform(id.dateOfBirth, 'yyyy-MM-dd'),

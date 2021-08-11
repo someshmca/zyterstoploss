@@ -264,7 +264,7 @@ export class LaseringComponent implements OnInit {
               subscriberLname: id.subscriberLname,
               gender: id.gender,
               status: id.status,
-              laserValue: this.decimalValueString(id.laserValue)==0?'':this.decimalValueString(id.laserValue),
+              laserValue: this.decimalValue(id.laserValue)==0?'':this.decimalValue(id.laserValue),
               isUnlimited: (id.isUnlimited==null || id.isUnlimited=='N')?false:true,
               memberStartDate: this.datePipe.transform(id.memberStartDate, 'yyyy-MM-dd'),
               memberEndDate: this.datePipe.transform(id.memberEndDate, 'yyyy-MM-dd'),
@@ -380,7 +380,7 @@ decimalValue(inputValue:number){
     inputValue=0;
   }
   else{
-    inputValue= Number(this.decimalPipe.transform(inputValue,this.format));        
+    inputValue= Number(this.decimalPipe.transform(inputValue,this.format).replace(/,/g, ""));        
   }
   console.log(inputValue);      
   return inputValue;

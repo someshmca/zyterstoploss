@@ -67,7 +67,8 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
   dataSource: any;
   isAddTier: boolean;
   format = '2.2-2';
-
+  isPatchInputValue: boolean;
+  patchInputValue: string;
   isContractYearInvalid={
     flag:false,
     message:''
@@ -174,7 +175,8 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
                       isTerminalExtCoverage: [false]
                     }));
                   }
-                  this.t.patchValue(this.t.value);
+                  
+                 // this.t.patchValue(this.t.value);
                   this.tiersLimitExceeded.flag=false;
                   this.tiersLimitExceeded.value='';
                 }
@@ -292,7 +294,7 @@ initLocalTires(){
 
 //(V.E 27-Jul-2021 starts)
 checkDuplicatePlanName(PName){
-  debugger;
+  
   return this.planService.checkDuplicatePlanName(PName).toPromise();
 }
 
@@ -359,6 +361,7 @@ doFilter(filterValue:string){ //added by Venkatesh Enigonda
       this.initTier();
       this.isFilterOn=false;
       this.addPlanObj=null;
+      this.isPatchInputValue=true;
     }
     this.isCustomModalOpen = open;
     if (!open && elem==null) {
@@ -378,6 +381,7 @@ doFilter(filterValue:string){ //added by Venkatesh Enigonda
       }
     }
     if(open && elem!=null){
+      this.isPatchInputValue=true;
       this.isFilterOn=false;      
       this.isAddMode = false;
       // let plansAll = this.plans;
@@ -414,8 +418,8 @@ doFilter(filterValue:string){ //added by Venkatesh Enigonda
           this.t.push(this.formBuilder.group({
               planId:elem.lstTblPlanTier[i].planId,
               tierId: elem.lstTblPlanTier[i].tierId,
-              tierAmount: elem.lstTblPlanTier[i].tierAmount==0?'':this.decimalPipe.transform(elem.lstTblPlanTier[i].tierAmount,this.format),
-              expectedClaimsRate: elem.lstTblPlanTier[i].expectedClaimsRate==0?'':this.decimalPipe.transform(elem.lstTblPlanTier[i].expectedClaimsRate,this.format),
+              tierAmount: elem.lstTblPlanTier[i].tierAmount==0?'':this.decimalValue(elem.lstTblPlanTier[i].tierAmount),
+              expectedClaimsRate: elem.lstTblPlanTier[i].expectedClaimsRate==0?'':this.decimalValue(elem.lstTblPlanTier[i].expectedClaimsRate),
               isTerminalExtCoverage: elem.lstTblPlanTier[i].isTerminalExtCoverage=='Y'?true:false
           }));
       }
@@ -522,8 +526,9 @@ doFilter(filterValue:string){ //added by Venkatesh Enigonda
 
   validateNumber(labelName, fieldValue, index){
     
+    if(fieldValue!=''){
     if(labelName=="Tier Amount"){
-      if(fieldValue==null){
+      if(fieldValue=='' || fieldValue==null){
         this.t.value[index]({tierAmount:''});
       }
       else if(fieldValue==0){
@@ -539,11 +544,11 @@ doFilter(filterValue:string){ //added by Venkatesh Enigonda
       }
     }
     else if(labelName=="Expected Claims Rate"){
-      if(fieldValue==null){
-        this.t.value[index]({tierAmount:''});
+      if(fieldValue=='' || fieldValue==null){
+        this.t.value[index]({expectedClaimsRate:''});
       }
       else if(fieldValue==0){
-        this.t.value[index]({tierAmount:''});
+        this.t.value[index]({expectedClaimsRate:''});
       }
       else if(fieldValue!=''){
         let numberPattern = /\-?\d*\.?\d{1,2}/;
@@ -554,6 +559,7 @@ doFilter(filterValue:string){ //added by Venkatesh Enigonda
         }
       }
     }
+  }
 }
 validateTierIDs(){
   
@@ -592,6 +598,28 @@ validateTierIDs(){
     }
   }
 
+  decimalValue(inputValue:number){
+      
+    if(inputValue==0){
+      inputValue=0;
+    }
+    else{
+       let kk=this.decimalPipe.transform(inputValue,this.format);
+      
+      inputValue= Number(this.decimalPipe.transform(inputValue,this.format).replace(/,/g, ""));
+      
+      if(this.isPatchInputValue)
+        this.patchInputValue=inputValue.toFixed(2);
+      //inputValue= Number(this.decimalPipe.transform(inputValue,this.format).replace(',', "")); 
+      //inputValue= Number(this.decimalPipe.transform(inputValue, this.format).replace(/\D,/g, "")); 
+            
+    }
+    console.log(inputValue); 
+    if(!this.isPatchInputValue)     
+    return inputValue;
+    if(this.isPatchInputValue)
+    return this.patchInputValue;
+  }     
 
   onSubmit() {
     this.clearErrorMessages();
@@ -689,9 +717,10 @@ validateTierIDs(){
             }
           }
             
-            this.updatePlan();
 
           });
+          
+          this.updatePlan();
         }
           
 
@@ -702,6 +731,7 @@ validateTierIDs(){
 
   private addPlan() {
     this.isAddTier=false;
+    this.isPatchInputValue=false;
     
     if(!this.isAddTier){
       
@@ -725,8 +755,8 @@ validateTierIDs(){
           else{
             this.t.value[i].planId=0;
             this.t.value[i].tierId=Number(this.t.value[i].tierId);
-            this.t.value[i].tierAmount=this.t.value[i].tierAmount==''?0:Number(this.decimalPipe.transform(this.t.value[i].tierAmount,this.format)),
-            this.t.value[i].expectedClaimsRate=this.t.value[i].expectedClaimsRate==''?0:Number(this.decimalPipe.transform(this.t.value[i].expectedClaimsRate,this.format)),
+            this.t.value[i].tierAmount=this.t.value[i].tierAmount==''?0:this.decimalValue(this.t.value[i].tierAmount),
+            this.t.value[i].expectedClaimsRate=this.t.value[i].expectedClaimsRate==''?0:this.decimalValue(this.t.value[i].expectedClaimsRate),
             this.t.value[i].isTerminalExtCoverage=this.t.value[i].isTerminalExtCoverage==true?'Y':'N';
           }
         }
@@ -767,6 +797,7 @@ validateTierIDs(){
                       }
                       this.t.patchValue(this.t.value);
                       this.isAdded=true;
+                      this.isPatchInputValue=true;
                       
                       this.alertService.success('New Plan & Tier added', { keepAfterRouteChange: true });
                   },
@@ -780,27 +811,30 @@ validateTierIDs(){
   }
 
   private updatePlan() {
+    
+  this.isPatchInputValue=false;
+  
+  //this.patchInputValue='';
     this.isDisabled=true;
     this.isNoFactAmount=false;
     //console.log(this.updatePlanID);
     //this.planForm.patchValue(this.planForm.value);
     this.t.patchValue(this.t.value);
     for (let i = 0; i < this.t.length; i++) {
-      ;
-      if(this.t.value[i].tierId=='' && this.t.value[i].tierAmount=='' && this.t.value[i].expectedClaimsRate=='' && this.t.value[i].isTerminalExtCoverage==''){
+      
+      if(this.t.value[i].tierId=='' && this.t.value[i].tierAmount=='' && this.t.value[i].expectedClaimsRate=='' && this.t.value[i].isTerminalExtCoverage==false){
       //  this.t.value.splice(i,1);
        
         this.t.removeAt(i);
         this.t.value.splice(i,1);
-        this.t.patchValue(this.t.value);  
         //this.planForm.patchValue(this.t.value);
         
       }
       else{
         this.t.value[i].planId=this.updatePlanID;
         this.t.value[i].tierId=Number(this.t.value[i].tierId);
-        this.t.value[i].tierAmount=this.t.value[i].tierAmount==''?0:Number(this.decimalPipe.transform(this.t.value[i].tierAmount,this.format));
-        this.t.value[i].expectedClaimsRate=this.t.value[i].expectedClaimsRate==''?0:Number(this.decimalPipe.transform(this.t.value[i].expectedClaimsRate,this.format));
+        this.t.value[i].tierAmount=this.t.value[i].tierAmount==''?0:this.decimalValue(this.t.value[i].tierAmount);
+        this.t.value[i].expectedClaimsRate=this.t.value[i].expectedClaimsRate==''?0:this.decimalValue(this.t.value[i].expectedClaimsRate);
         this.t.value[i].isTerminalExtCoverage=this.t.value[i].isTerminalExtCoverage==true?'Y':'N'
       }
     }
@@ -832,8 +866,11 @@ validateTierIDs(){
                     console.log(this.t.value);
                     //this.t.patchValue(this.t.value);
                     
+                  this.isPatchInputValue=true;
                       for (let i = 0; i < this.t.length; i++) {
                      //   
+                        this.t.value[i].tierAmount=this.decimalValue(this.t.value[i].tierAmount);
+                        this.t.value[i].expectedClaimsRate=this.decimalValue(this.t.value[i].expectedClaimsRate);
                         this.t.value[i].isTerminalExtCoverage=this.t.value[i].isTerminalExtCoverage=='Y'?true:false
                       }
                     //
@@ -841,6 +878,7 @@ validateTierIDs(){
                     this.planForm.patchValue({
                       lstTblPlanTier:this.t.value
                     })
+                    
                   this.alertService.success('Plan & Tier updated', {
                     keepAfterRouteChange: true });
                    // this.uPlanName=''; //(V.E 27-Jul-2021 )

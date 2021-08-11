@@ -34,7 +34,7 @@ export class MemberComponent implements OnInit {
   searchResult: any;
   memberForm: FormGroup;
   searchErrorMessage: string;
-  displayedColumns: string[] = ['memberHrid', 'clientName', 'contractId', 'planId', 'tierId', 'fname', 'lname', 'mname', 'gender','memberStartDate', 'memberEndDate','dateOfBirth', 'subscriberId','alternateId', 'laserValue', 'isUnlimited','tier','benefitPlanId','userId'];    
+  displayedColumns: string[] = ['memberHrid', 'clientName', 'contractId', 'planId', 'tierId', 'fname', 'lname', 'mname', 'gender','memberStartDate', 'memberEndDate','dateOfBirth', 'subscriberId','alternateId', 'laserValue', 'isUnlimited','tier','benefitPlanId','userId'];    //(VE 30-Jul-2021)
   searchDataSource: any;
 
   
@@ -43,12 +43,13 @@ export class MemberComponent implements OnInit {
   uPlanId:any;
   uTierId:any;
   today: string;
+  //(VE 9/8/2021 starts)
   names=[];
   countMaxMin=0;
   pageCount;
-  
-  excel1; 
-  format = '2.2-2'; 
+  //(VE 9/8/2021 ends)
+  excel1; //(VE 4/8/2021 )
+  format = '2.2-2'; //PV 08-05-2021
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -76,7 +77,7 @@ export class MemberComponent implements OnInit {
   memLnameErr= {isValid: false, errMsg: ''}; // End by Venkatesh Enigonda 
   memStartDateErr = {isValid: false, errMsg: ''};
   memEndDateErr = {isValid: false, errMsg: ''};
-  memMaxMinErr={isValid: false, errMsg: ''};
+  memMaxMinErr={isValid: false, errMsg: ''};//(VE 9/8/2021)
   
   isSearchDataThere: boolean = false;
   noSearchResultsFound: boolean = false;
@@ -114,8 +115,8 @@ export class MemberComponent implements OnInit {
       planId: ['', Validators.required],
       tierId: ['', Validators.required],
       dateOfBirth: ['', Validators.required],
-      tier:[''],
-      benefitPlanId:['']
+      tier:[''],//(VE 30-07-2021)
+      benefitPlanId:['']//(VE 30-07-2021)
     });
     //this.today=this.datePipe.transform(new Date(Date.now()), "MM/dd/yyyy");    
     this.today=new Date().toJSON().split('T')[0];
@@ -204,7 +205,7 @@ export class MemberComponent implements OnInit {
   }
   resetMemberSearch(){
     this.pageCount=0;
-    this.countMaxMin=0; 
+    this.countMaxMin=0; //(VE 9/8/2021)
     this.initMemberSearchForm();
     this.isSearchDataThere= false;
     this.memSearchError=false;
@@ -213,7 +214,7 @@ export class MemberComponent implements OnInit {
     this.clearErrorMessages();   
   }
   searchMember(formData: FormGroup){
-    this.names.length=0;  
+    this.names.length=0;  //(VE 9/8/2021 )
     this.memSearchSubmitted = true;
     this.memSearchError=false;
     this.isMemCount=true;
@@ -228,15 +229,16 @@ export class MemberComponent implements OnInit {
    let dob=this.memberSearchForm.get("DateOfBirth").value;
    let memberStartDate=this.memberSearchForm.get("MemberStartDate").value;
    let memberEndDate=this.memberSearchForm.get("MemberEndDate").value;
- 
+   //(VE 9/8/2021 starts)
    let minPage=this.memberSearchForm.get("minPage").value;
    let maxPage=this.memberSearchForm.get("maxPage").value;
- 
+  //(VE 9/8/2021 ends)
+   //(VE 30-Jul-2021  starts)
    let benefitPlanId=this.memberSearchForm.get("benefitPlanId").value;
    let clientId =this.memberSearchForm.get("clientId").value;
    let tier =this.memberSearchForm.get("tier").value;
    let alternateId=this.memberSearchForm.get("alternateId").value;
-
+   //(VE 30-Jul-2021  ends)
     console.log(this.memberSearchForm.value);
     //let alphaNum = /^([a-zA-Z0-9 ]+)$/; 
     let alphaNum = /^([a-zA-Z0-9]+)$/; //Modified by venkatesh Enigonda
@@ -316,21 +318,20 @@ export class MemberComponent implements OnInit {
      this.memSearchError=true;
        return;
    }
-   if(memberId=='' && fname=='' && mname=='' && lname=='' && subscriberId=='' && dob=='' && Gender=='' && memberStartDate=='' && memberEndDate=='' && clientId=='' && tier=='' && alternateId=='' && benefitPlanId =='')  {  
+   if(memberId=='' && fname=='' && mname=='' && lname=='' && subscriberId=='' && dob=='' && Gender=='' && memberStartDate=='' && memberEndDate=='' && clientId=='' && tier=='' && alternateId=='' && benefitPlanId =='')  {  //(VE 28-Jul-2021 )
     this.noSearchFieldEntered = true;
      return;
    }
    console.log(JSON.stringify(formData.value));
-   
-   this.memberService.memberSearch(memberId,fname,mname, lname, subscriberId, dob, Gender, memberStartDate,memberEndDate,benefitPlanId,clientId,tier,alternateId).subscribe(       
+   console.log(this.m.Gender.value);
+   console.log(memberId);
+
+   this.memberService.memberSearch(memberId,fname,mname, lname, subscriberId, dob, Gender, memberStartDate,memberEndDate,benefitPlanId,clientId,tier,alternateId).subscribe(    //(VE 30-Jul-2021  )    
     (data:IMemberSearchResponse[])=>{
-      this.excel1=data;
-     
+      this.excel1=data;//(VE 4/8/2021 )
+      //(VE 9/8/2021 starts)
       let max=num1.test(minPage);
-      console.log(num1.test(minPage));
-      
       let min=num1.test(maxPage);
-      console.log(num1.test(minPage));
      this.countMaxMin=data.length;
        console.log(data[minPage]);
        console.log(maxPage)
@@ -340,31 +341,22 @@ export class MemberComponent implements OnInit {
        {
          this.pageCount=0;
        }
-       console.log(minPage!=null)
-       console.log(maxPage!=null)
-
-      if((minPage!='' &&  minPage!=null)  && (maxPage!=''&& minPage!=null))
-      {     
-    if((!min && minPage!=''))
-       {
-         this.memMaxMinErr.isValid=true;
-         this.memMaxMinErr.errMsg="special characters and blank values not allowed";
-         console.log("yes");
-         return; 
-       }   
-      if((!max && maxPage!='' ))
-       {
-         this.memMaxMinErr.isValid=true;
-         this.memMaxMinErr.errMsg="special characters and blank values not allowed";
-         console.log("yes");
-         return; 
-       } 
-      }  
-
-       
-       
       
-       if(minPage<=this.countMaxMin && maxPage<=this.countMaxMin)
+       if((!min && minPage!='') ||(!max && maxPage!=''))
+       {
+         this.memMaxMinErr.isValid=true;
+         this.memMaxMinErr.errMsg="special characters and blank values not allowed";
+         console.log("yes");
+         return; 
+       }
+       if(( minPage!='' && minPage) >( maxPage!='' && maxPage))
+       {
+         this.memMaxMinErr.isValid=true;
+         this.memMaxMinErr.errMsg="Range from should not be greater than "+maxPage+".";
+         return;
+       }
+      
+       else if(minPage<=this.countMaxMin && maxPage<=this.countMaxMin)
        {
        for(let i=minPage; i <= maxPage-1;i++)
        {
@@ -378,15 +370,10 @@ export class MemberComponent implements OnInit {
         this.memMaxMinErr.errMsg="Range should not be greater than "+this.countMaxMin+"."; 
         return; 
       }
-      if(( minPage!='' && minPage) >( maxPage!='' && maxPage))
-       {
-         this.memMaxMinErr.isValid=true;
-         this.memMaxMinErr.errMsg="Range from should not be greater than "+maxPage+".";
-         return;
-       }
      
       
-       console.log(this.names); 
+       console.log(this.names);
+       //(VE 9/8/2021 ends)  
        console.log(data);
        this.clearErrorMessages();
        console.log(data[0].memberId)
@@ -399,17 +386,17 @@ export class MemberComponent implements OnInit {
          
        }
        setTimeout(()=>{
-         //(VE 10/8/2021 starts) 
-       if((data[minPage]==undefined) && (data[maxPage]==undefined))
+        //(VE 10/8/2021 starts) 
+      if((data[minPage]==undefined) && (data[maxPage]==undefined))
+        {
+         this.searchDataSource = new MatTableDataSource(data)
+        }
+     
+         else if(minPage >= 0 && maxPage >= 0)
          {
-          this.searchDataSource = new MatTableDataSource(data)
+         this.searchDataSource = new MatTableDataSource(this.names);
          }
-      
-          else if(minPage >= 0 && maxPage >= 0)
-          {
-          this.searchDataSource = new MatTableDataSource(this.names);
-          }
-          //(VE 10/8/2021 ends) 
+         //(VE 10/8/2021 ends) 
           this.isSearchDataThere = true;
           this.noSearchFieldEntered = false;
           this.memSearchError = false;
@@ -429,13 +416,13 @@ export class MemberComponent implements OnInit {
    )
   }
 
- 
+ //(VE 4/8/2021 )
  exportAsXLSX():void {
   this.excelService.exportAsExcelFile(this.excel1,"MemberList")
 
   console.log("working");
 }
-
+//(VE 4/8/2021 )
 onpageChanges(event)
  {
    console.log(event.pageSize);
@@ -485,8 +472,8 @@ onpageChanges(event)
               contractId: id.contractId,
               planId: id.planId,
               tier:id.tier,
-              benefitPlanId:id.benefitPlanId, 
-              tierId: id.tierId,
+              benefitPlanId:id.benefitPlanId, //(VE 30-07-2021)
+              tierId: id.tierId,//(VE 30-07-2021)
               alternateId:id.alternateId,
               fname: id.fname,
               lname: id.lname,
@@ -496,7 +483,7 @@ onpageChanges(event)
               subscriberLname: id.subscriberLname,
               gender: id.gender,
               status: id.status,
-              laserValue: this.decimalValue(id.laserValue)==0?'':this.decimalValue(id.laserValue),
+              laserValue: this.decimalValueString(id.laserValue)==0?'':this.decimalValueString(id.laserValue),
               isUnlimited: (id.isUnlimited==null || id.isUnlimited=='N')?false:true,
               memberStartDate: this.datePipe.transform(id.memberStartDate, 'yyyy-MM-dd'),
               memberEndDate: this.datePipe.transform(id.memberEndDate, 'yyyy-MM-dd'),
@@ -583,16 +570,16 @@ decimalValueString(inputValue){
   return a;
 }
 decimalValue(inputValue:number){
-  if(inputValue==0 || inputValue==null){
+  if(inputValue==0){
     inputValue=0;
   }
   else{
-    inputValue= Number(this.decimalPipe.transform(inputValue,this.format).replace(/,/g, ""));        
+    inputValue= Number(this.decimalPipe.transform(inputValue,this.format));        
   }
   console.log(inputValue);      
   return inputValue;
 }     
-
+//PV 08-05-2021 Ends
 private addMember() {
   this.isDisabled=true;
     let addMembObj = {
@@ -603,7 +590,7 @@ private addMember() {
       mname: this.f.mname.value==''?'E':this.f.mname.value,
       gender: this.f.gender.value,
       status: 1,      
-      laserValue: this.decimalValue(this.f.laserValue.value), 
+      laserValue: this.decimalValue(this.f.laserValue.value), //PV 08-05-2021
       isUnlimited: this.f.isUnlimited.value==true?'Y':'N',
       subscriptionID: this.f.subscriberId.value,
       userId: this.loginService.currentUserValue.name,
