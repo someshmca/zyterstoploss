@@ -50,13 +50,13 @@
                         <div class="form-field">
                             <label class="form-field-label">Min Paid Amount</label>
                           <div class="form-field-input">
-                                <input type="number" class="form-control field-input-text" formControlName="minPaidAmount" [ngClass]="{'is-invalid':isMinPaidAmountInvalid}" />                        
+                                <input type="number" class="form-control field-input-text" formControlName="minPaidAmount" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))" [ngClass]="{'is-invalid':isMinPaidAmountInvalid}" />                        
                             </div>
                             </div>
                             <div class="form-field">
                                 <label class="form-field-label">Max Paid Amount</label>
                               <div class="form-field-input">
-                                    <input type="number" class="form-control field-input-text" formControlName="maxPaidAmount" [ngClass]="{'is-invalid':isMaxPaidAmountInvalid}" />                        
+                                    <input type="number" class="form-control field-input-text" formControlName="maxPaidAmount" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))" [ngClass]="{'is-invalid':isMaxPaidAmountInvalid}" />                        
                                 </div>
                                 </div>
                             <div class="form-field">
@@ -162,9 +162,9 @@
                   <!--(VE 11/8/2021  starts ) -->
                   <div class="range-area">
                     <div>Enter the Range</div>
-                  <input type ="number" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))"class="form-control" formControlName="minPage" placeholder="Start value" [ngClass]="{ 'is-invalid':memMaxMinErr.isValid }">     
+                  <input type ="number" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))" class="form-control" formControlName="minPage" placeholder="Start value" [ngClass]="{ 'is-invalid':memMaxMinErr.isValid }">     
                   <input type ="number" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))"class="form-control" formControlName="maxPage" placeholder="End Value" [ngClass]="{ 'is-invalid':memMaxMinErr.isValid}"> 
-                  <div>Total Records {{countMaxMin}}</div>
+                  <div>Total Records: <strong>{{countMaxMin}}</strong></div>
                 </div>
                 <!--(VE 11/8/2021  ends) -->
                     <button class="btn btn-outline-primary" type="button" (click)="resetClaimSearch()">Reset</button>

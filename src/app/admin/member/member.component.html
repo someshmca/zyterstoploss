@@ -135,9 +135,9 @@
                   <div>
                     <div class="range-area">
                         <div>Enter the Range</div>
-                      <input type ="number" class="form-control" formControlName="minPage" placeholder="Start value" [ngClass]="{ 'is-invalid':memMaxMinErr.isValid }">     
-                      <input type ="number" class="form-control" formControlName="maxPage" placeholder="End Value" [ngClass]="{ 'is-invalid':memMaxMinErr.isValid}">
-                      <div>Total Records {{countMaxMin}}</div>
+                      <input type ="number" class="form-control" formControlName="minPage" placeholder="Start value" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))" [ngClass]="{ 'is-invalid':memMaxMinErr.isValid }">     
+                      <input type ="number" class="form-control" formControlName="maxPage" placeholder="End Value" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))" [ngClass]="{ 'is-invalid':memMaxMinErr.isValid}">
+                      <div>Total Records: <strong>{{countMaxMin}}</strong></div>
                     </div>
                 </div>  
                 </div>

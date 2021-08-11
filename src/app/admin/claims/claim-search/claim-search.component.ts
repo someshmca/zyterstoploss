@@ -204,6 +204,7 @@ dateLessThan(from: string, to: string) {
   //  }
   // conven`ience getter for easy access to form fields
   resetClaimSearch(){
+    this.countMaxMin=0;
     this.initClaimSearchForm();
     this.claimSearchNotFound = false;
 
