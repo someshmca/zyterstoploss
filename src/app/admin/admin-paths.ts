@@ -287,7 +287,7 @@ export const Paths = {
   product: "http://10.45.30.100:92/api/Product/GetProducts?productId=",
   productAdd: "http://10.45.30.100:92//api/Product/AddProducts",
   productUpdate:"http://10.45.30.100:92/api/Product/UpdateProduct",
-  productCovertClaims:"http://10.45.30.100:92/api/Product//GetCoveredClaims",
+  productCovertClaims:"http://10.45.30.100:92/api/Product/GetCoveredClaims",
 
   ExcelUploadPath: "http://10.45.30.100:92/api/ExcelUpload/UploadExcel?userId=",
 
