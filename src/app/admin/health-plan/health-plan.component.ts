@@ -820,22 +820,30 @@ validateTierIDs(){
     //console.log(this.updatePlanID);
     //this.planForm.patchValue(this.planForm.value);
     this.t.patchValue(this.t.value);
-    for (let i = 0; i < this.t.length; i++) {
+    let flag=false;
+    for (let i = 0; i < this.t.length;) {
       
       if(this.t.value[i].tierId=='' && this.t.value[i].tierAmount=='' && this.t.value[i].expectedClaimsRate=='' && this.t.value[i].isTerminalExtCoverage==false){
       //  this.t.value.splice(i,1);
-       
+      flag=true;
         this.t.removeAt(i);
-        this.t.value.splice(i,1);
+       // this.t.value.splice(i,1);
+       if(flag) i--;
         //this.planForm.patchValue(this.t.value);
+        console.log(this.t.value);
+        debugger;
         
       }
       else{
+        flag=false;
         this.t.value[i].planId=this.updatePlanID;
         this.t.value[i].tierId=Number(this.t.value[i].tierId);
         this.t.value[i].tierAmount=this.t.value[i].tierAmount==''?0:this.decimalValue(this.t.value[i].tierAmount);
         this.t.value[i].expectedClaimsRate=this.t.value[i].expectedClaimsRate==''?0:this.decimalValue(this.t.value[i].expectedClaimsRate);
-        this.t.value[i].isTerminalExtCoverage=this.t.value[i].isTerminalExtCoverage==true?'Y':'N'
+        this.t.value[i].isTerminalExtCoverage=this.t.value[i].isTerminalExtCoverage==true?'Y':'N';
+        i++;
+        console.log(this.t.value);
+        debugger;
       }
     }
     this.t.patchValue(this.t.value); 

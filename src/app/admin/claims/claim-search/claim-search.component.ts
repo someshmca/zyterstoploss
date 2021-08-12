@@ -77,8 +77,8 @@ export class ClaimSearchComponent implements OnInit {
   isClaimSourceInvalid: boolean=false;
   excel1; //(VE 4/8/2021 )
   //(VE 11/8/2021  starts ) 
-  names=[];
-  countMaxMin=0;
+ // names=[];
+  //countMaxMin=0;
    //(VE 11/8/2021 ends)
   format = '2.2-2'; //PV 08-05-2021
   constructor(private fb: FormBuilder,
@@ -137,9 +137,9 @@ export class ClaimSearchComponent implements OnInit {
       alternateId: [''],
       paidFromDate: [null],
       paidToDate:[null],
-      paidDate: [null],
-      minPage:null,
-       maxPage:null
+      paidDate: [null]
+      //minPage:null,
+      // maxPage:null
       //PV 27-jul-2021
       // subscriberFirstName: [''],
       // subscriberLastName: [''],
@@ -173,8 +173,8 @@ export class ClaimSearchComponent implements OnInit {
     this.isSequenceNumInvalid=false;
     this.isDiagnosisCodeInvalid=false;
     this.isClaimSourceInvalid=false;
-    this.memMaxMinErr.isValid=false;
-    this.memMaxMinErr.errMsg='';
+  //  this.memMaxMinErr.isValid=false;
+   // this.memMaxMinErr.errMsg='';
   }
 dateLessThan(from: string, to: string) {
   return (group: FormGroup): {[key: string]: any} => {
@@ -204,7 +204,7 @@ dateLessThan(from: string, to: string) {
   //  }
   // conven`ience getter for easy access to form fields
   resetClaimSearch(){
-    this.countMaxMin=0;
+    //this.countMaxMin=0;
     this.initClaimSearchForm();
     this.claimSearchNotFound = false;
 
@@ -481,8 +481,8 @@ onSubmit() {
 
   }
   searchClaim(form: FormGroup) {
-    this.names.length=0;  //(VE 11/8/2021 ) 
-    console.log(this.f.minPaidAmount.value);
+   // this.names.length=0;  //(VE 11/8/2021 ) 
+    //console.log(this.f.minPaidAmount.value);
     this.isClaimResult=false;
     console.log(this.dateErr.fromDateErr);
     this.clearErrorMessages();
@@ -557,49 +557,49 @@ onSubmit() {
       (data) => {
         this.excel1=data;//(VE 4/8/2021 )
         //(VE 11/8/2021  starts ) 
-        this.countMaxMin=data.length;
+       // this.countMaxMin=data.length;
 
-        let minPage=this.claimSearchForm.get("minPage").value;
-        let maxPage=this.claimSearchForm.get("maxPage").value;
+      //   let minPage=this.claimSearchForm.get("minPage").value;
+      //   let maxPage=this.claimSearchForm.get("maxPage").value;
         
-        if(minPage===null && maxPage!==null)
-        {
-        this.memMaxMinErr.isValid=true;
-        this.memMaxMinErr.errMsg="*Range Start Value required "
-        return;
-        }
-        if(maxPage===null && minPage!==null)
-        {
-        this.memMaxMinErr.isValid=true;
-        this.memMaxMinErr.errMsg="*Range End Value required"
-        return;
-        }
+      //   if(minPage===null && maxPage!==null)
+      //   {
+      //   this.memMaxMinErr.isValid=true;
+      //   this.memMaxMinErr.errMsg="*Range Start Value required "
+      //   return;
+      //   }
+      //   if(maxPage===null && minPage!==null)
+      //   {
+      //   this.memMaxMinErr.isValid=true;
+      //   this.memMaxMinErr.errMsg="*Range End Value required"
+      //   return;
+      //   }
     
-       if(minPage<=this.countMaxMin && maxPage<=this.countMaxMin)
-       {
-       for(let i=minPage; i <= maxPage-1;i++)
-       {
-         this.names.push(data[i]);
+      //  if(minPage<=this.countMaxMin && maxPage<=this.countMaxMin)
+      //  {
+      //  for(let i=minPage; i <= maxPage-1;i++)
+      //  {
+      //    this.names.push(data[i]);
            
-       }
-      }
-      else if((minPage > this.countMaxMin && maxPage >this.countMaxMin) || (minPage > this.countMaxMin || maxPage >this.countMaxMin))
-      {
-        this.memMaxMinErr.isValid=true;
-        this.memMaxMinErr.errMsg="Range should not be greater than "+this.countMaxMin+"."; 
-        return; 
-      }
-      if(( minPage!='' && minPage) >( maxPage!='' && maxPage))
-       {
-         this.memMaxMinErr.isValid=true;
-         this.memMaxMinErr.errMsg="Range from should not be greater than "+maxPage+".";
-         return;
-       }
+      //  }
+      // }
+      // else if((minPage > this.countMaxMin && maxPage >this.countMaxMin) || (minPage > this.countMaxMin || maxPage >this.countMaxMin))
+      // {
+      //   this.memMaxMinErr.isValid=true;
+      //   this.memMaxMinErr.errMsg="Range should not be greater than "+this.countMaxMin+"."; 
+      //   return; 
+      // }
+      // if(( minPage!='' && minPage) >( maxPage!='' && maxPage))
+      //  {
+      //    this.memMaxMinErr.isValid=true;
+      //    this.memMaxMinErr.errMsg="Range from should not be greater than "+maxPage+".";
+      //    return;
+      //  }
      
       
-       console.log(this.names); 
-       console.log(data);
-       //(VE 11/8/2021  Ends) 
+      //  console.log(this.names); 
+      //  console.log(data);
+      //  //(VE 11/8/2021  Ends) 
 
         this.submitted = true;
         this.dateErrorMessage='';
@@ -609,14 +609,15 @@ onSubmit() {
         this.claimSearchNotFound = false;
         this.claimResults = data;
         //(VE 11/8/2021  starts ) 
-        if((data[minPage]==undefined) && (data[maxPage]==undefined))
-         {
-        this.dataSource = new MatTableDataSource(data);
-         }
-         else if(minPage >= 0 && maxPage >= 0){
-          this.dataSource = new MatTableDataSource(this.names);
-         }
+        // if((data[minPage]==undefined) && (data[maxPage]==undefined))
+        //  {
+        // this.dataSource = new MatTableDataSource(data);
+        //  }
+        //  else if(minPage >= 0 && maxPage >= 0){
+        //   this.dataSource = new MatTableDataSource(this.names);
+        //  }
          //(VE 11/8/2021 ends ) 
+         this.dataSource = new MatTableDataSource(data);
         setTimeout(()=>{
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;

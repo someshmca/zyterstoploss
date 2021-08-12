@@ -683,9 +683,6 @@ openViewModal(bool, id:any){
             console.log(this.productForm.value);
             
           });
-          if(this.isViewModal){
-            this.productForm.disable();
-          }
           if(this.isAddMode){
             this.productForm.enable();
           }
@@ -693,6 +690,9 @@ openViewModal(bool, id:any){
             this.productForm.enable();
             this.f.clientId.disable();
             this.f.contractId.disable();
+          }
+          if(this.isViewModal){
+            this.productForm.disable();
           }
          }
       }
