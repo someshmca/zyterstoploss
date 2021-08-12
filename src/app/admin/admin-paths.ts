@@ -84,9 +84,9 @@
 
 //   productAll: "https://medicaslapiorc.azurewebsites.net/api/Product/GetAllProducts",
 //   product: "https://medicaslapiorc.azurewebsites.net/api/Product/GetProducts?productId=",
-//   productAdd: "https://medicaslapiorc.azurewebsites.net//api/Product/AddProducts",
+//   productAdd: "https://medicaslapiorc.azurewebsites.net/api/Product/AddProducts",
 //   productUpdate:"https://medicaslapiorc.azurewebsites.net/api/Product/UpdateProduct",
-//   productCovertClaims:"https://medicaslapiorc.azurewebsites.net/api/Product//GetCoveredClaims",
+//   productCovertClaims:"https://medicaslapiorc.azurewebsites.net/api/Product/GetCoveredClaims",
 
 //   ExcelUploadPath: "https://medicaslapiorc.azurewebsites.net/api/ExcelUpload/UploadExcel?userId=",
 
@@ -285,7 +285,7 @@ export const Paths = {
 
   productAll: "http://10.45.30.100:92/api/Product/GetAllProducts",
   product: "http://10.45.30.100:92/api/Product/GetProducts?productId=",
-  productAdd: "http://10.45.30.100:92//api/Product/AddProducts",
+  productAdd: "http://10.45.30.100:92/api/Product/AddProducts",
   productUpdate:"http://10.45.30.100:92/api/Product/UpdateProduct",
   productCovertClaims:"http://10.45.30.100:92/api/Product/GetCoveredClaims",
 
