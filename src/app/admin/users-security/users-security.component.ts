@@ -272,8 +272,8 @@ openViewModal(bool, id:any){
        }
        if((effectiveFrom!==null || effectiveFrom!=='') && (effectiveTo!=null && effectiveTo!='')){
          if(effectiveTo < maxDate ){
-         this.effectiveFrom.isValid=true;
-         this.effectiveFrom.errors='Effective To date must be greater than '+maxDate+' date';
+         this.effectiveTo.isValid=true;
+         this.effectiveTo.errors='Effective To date must be greater than '+maxDate+' date';
          return;
          }
        }

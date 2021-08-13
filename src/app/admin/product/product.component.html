@@ -213,7 +213,7 @@
             <div class="col-md-4">
               <div class="form-group">
                 <label>Specific Deductible<small class="starmark">*</small></label>
-                <input type="number" formControlName="sslDeductible" class="form-control" [ngClass]="{ 'is-invalid': submitted && sslDeductibleErr.isValid }"/>
+                <input type="number" formControlName="sslDeductible" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.sslDeductible.errors }"/>
               </div>
             </div>
           </div>
@@ -454,13 +454,13 @@
       </div>
       <div class="col-md-4">
         <div class="form-group">
-          <label>IBNR Reserve Percentage</label>
+          <label>IBNR Reserve Percentage <span *ngIf="f.isMaxLiability.value" class="starmark">*</span> </label>
           <input type="number" formControlName="ibnrPercentage" [readonly]="!f.isMaxLiability.value" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.ibnrPercentage.errors }"/>
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-group">
-          <label>Deferred Service Fee Percentage</label>
+          <label>Deferred Service Fee Percentage <span *ngIf="f.isMaxLiability.value" class="starmark">*</span> </label>
           <input type="number" formControlName="defferedFeePercentage" [readonly]="!f.isMaxLiability.value" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.defferedFeePercentage.errors }"/>
         </div>
       </div>

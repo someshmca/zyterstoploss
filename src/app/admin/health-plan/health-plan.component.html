@@ -110,13 +110,13 @@
                  <div class="col-md-4">
                   <div class="form-group">
                     <label>Medica Plan ID<small class="starmark">*</small></label>
-                    <input #focusElem type="text" class="form-control" formControlName="planCode" [ngClass]="{ 'is-invalid': planIdErr.isDuplicate }" />
+                    <input #focusElem type="text" class="form-control" formControlName="planCode" [ngClass]="{ 'is-invalid': submitted && f.planCode.errors || planIdErr.isDuplicate }" />
                   </div>
                  </div>
                  <div class="col-md-4">
                   <div class="form-group">
                     <label>Medica Plan Name<small class="starmark">*</small></label>
-                    <input type="text" formControlName="planName" maxlength="50" class="form-control" [ngClass]="{ 'is-invalid': planNameErr.isDuplicate }" />                
+                    <input type="text" formControlName="planName" maxlength="50" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.planName.errors || planNameErr.isDuplicate }" />                
                         </div>   
                  </div>
                  <div class="col-md-4">  

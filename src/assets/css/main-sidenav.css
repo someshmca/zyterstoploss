@@ -8,20 +8,28 @@ a{
       color: #ffffff;
     }
     .nav-side-menu .brand {
-      display: block;
       height: 70px;
       align-items: center;
-      display: flex;
-      padding-left: 20px;
       background: rgb(231 240 255);
-      border-radius: 50%;    
-      position: relative;  
-      top: 5px;
+      border-radius: 50%;
+      position: relative;
+      top: 6px;
+      left: 10px;
+      width: 170px;
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      padding: 0;
+      filter: drop-shadow(1px 1px 3px rgb(231, 240, 255));
+    }
+    .nav-side-menu .brand a{
+      display: inline-block;
     }
     .nav-side-menu .brand img{
-        max-width: 150px;
+        max-width: 121px;
         position: relative;
-        left: 6px;
+        left: 0;
+        filter: drop-shadow(2px 2px 3px rgba(0, 44, 119, 0.3));
     }
     .nav-side-menu .toggle-btn {
       display: none;

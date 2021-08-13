@@ -34,7 +34,30 @@
 .members-table-area table.table{
     width: 100%;
 }
-
+.member-search-results-area .card-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.member-search-results-area .card-header label{
+    margin-bottom: 0;
+}
+.member-search-results-area .card-header .col2{
+    display: flex;
+    justify-content: flex-end;
+    width: 50%;
+}
+.member-search-results-area .card-header .col2 .fa-download  
+{
+    color: rgb(4, 4, 196);
+    cursor: pointer;
+    font-size: 1.2rem;
+    margin-right: 10px;
+}
+.member-search-results-area .card-header .col2 .fa-download:hover{
+    color: rgb(12, 151, 12);
+    transform: scale(1.4);
+}
 .member-search-results-area .card-body{
     padding-left: 0;
     padding-right: 0;
@@ -59,19 +82,7 @@
     box-shadow: 0px 2px 5px rgba(0,0,0,0.4);
 }
 
-.fa-download  
-{
-    position: relative;
- left: 420px;
- color: blue;
- border-radius: 50%;
- cursor: pointer;
- 
-}
-.fa-download:hover{
-    color: rgb(3, 194, 3);
-    transform: scale(1.4);
-}
+
 .member-search-btns-area .col_2{
     width: 180px;
 }

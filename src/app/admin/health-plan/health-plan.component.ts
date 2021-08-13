@@ -831,7 +831,7 @@ validateTierIDs(){
        if(flag) i--;
         //this.planForm.patchValue(this.t.value);
         console.log(this.t.value);
-        debugger;
+        
         
       }
       else{
@@ -842,8 +842,7 @@ validateTierIDs(){
         this.t.value[i].expectedClaimsRate=this.t.value[i].expectedClaimsRate==''?0:this.decimalValue(this.t.value[i].expectedClaimsRate);
         this.t.value[i].isTerminalExtCoverage=this.t.value[i].isTerminalExtCoverage==true?'Y':'N';
         i++;
-        console.log(this.t.value);
-        debugger;
+        console.log(this.t.value);        
       }
     }
     this.t.patchValue(this.t.value); 

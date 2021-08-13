@@ -2,8 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Medica</title>
+  <title>Medica StopLoss</title>
   <base href="/">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />  
+  <meta http-equiv="Pragma" content="no-cache" />  
+  <meta http-equiv="Expires" content="0" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <!-- <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500&display=swap" rel="stylesheet">
@@ -18,4 +21,22 @@
 <body>
   <app-root></app-root>
 </body>
+<script>
+  (function () {
+    var cookies = document.cookie.split("; ");
+    for (var c = 0; c < cookies.length; c++) {
+        var d = window.location.hostname.split(".");
+        while (d.length > 0) {
+            var cookieBase = encodeURIComponent(cookies[c].split(";")[0].split("=")[0]) + '=; expires=Thu, 01-Jan-1970 00:00:01 GMT; domain=' + d.join('.') + ' ;path=';
+            var p = location.pathname.split('/');
+            document.cookie = cookieBase + '/';
+            while (p.length > 0) {
+                document.cookie = cookieBase + p.join('/');
+                p.pop();
+            };
+            d.shift();
+        }
+    }
+})();
+</script>
 </html>
