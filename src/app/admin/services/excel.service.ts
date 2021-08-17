@@ -19,10 +19,10 @@ export class ExcelService {
   constructor() { }
 
   public exportAsExcelFile(json: any[], excelFileName: string): void {
-   const  headersArray = ['memberHrid','alternateId',	'clientId','contractId','planId',	'tierId','fname','lname','mname','dateOfBirth',	'gender',	'memberStartDate','memberEndDate','subscriberId',	'subscriberFname','subscriberLname','laserValue','userId','clientName','subscriberStartDate','subscriberEndDate','tier','benefitPlanId'];
+   const  headersArray = ['memberHrid','alternateId',	'clientId','contractId','planId','fname','lname','mname','dateOfBirth',	'gender',	'memberStartDate','memberEndDate','subscriberId',	'subscriberFname','subscriberLname','laserValue','userId','clientName','subscriberStartDate','subscriberEndDate','tier','benefitPlanId'];
     const data = json;
 
-    const header1=['Medica Member ID','Alternate Member ID','Account ID','Contract ID','Plan ID','Tier ID','Member First Name','Member Last Name','Member Middle Name','Birth Date','Gender',
+    const header1=['Medica Member ID','Alternate Member ID','Account ID','Contract ID','Plan ID','Member First Name','Member Last Name','Member Middle Name','Birth Date','Gender',
      'Member Start Date','Member Start Date','Medica Subscriber ID','Subscriber First Name','Subscriber First Name',
      'Laser Value','User Id','Account Name','Subscriber Start Date','Subscriber End Date','Coverage Tier','Medica Benefit Plan ID']
 
@@ -61,22 +61,22 @@ export class ExcelService {
     worksheet.getColumn(2).width = 20;
     worksheet.getColumn(3).width = 10;
     worksheet.getColumn(4).width = 10;
+    worksheet.getColumn(6).width = 20;
     worksheet.getColumn(7).width = 20;
-    worksheet.getColumn(8).width = 20;
-    worksheet.getColumn(9).width = 25;
-    worksheet.getColumn(10).width = 20;
+    worksheet.getColumn(8).width = 25;
+    worksheet.getColumn(9).width = 20;
+    worksheet.getColumn(11).width = 20;
     worksheet.getColumn(12).width = 20;
     worksheet.getColumn(13).width = 20;
     worksheet.getColumn(14).width = 20;
     worksheet.getColumn(15).width = 20;
-    worksheet.getColumn(16).width = 20;
+    worksheet.getColumn(16).width = 15;
     worksheet.getColumn(17).width = 15;
     worksheet.getColumn(18).width = 15;
-    worksheet.getColumn(19).width = 15;
+    worksheet.getColumn(19).width = 20;
     worksheet.getColumn(20).width = 20;
-    worksheet.getColumn(21).width = 20;
-    worksheet.getColumn(22).width = 15;
-    worksheet.getColumn(23).width = 30; 
+    worksheet.getColumn(21).width = 15;
+    worksheet.getColumn(22).width = 30;
 
     worksheet.addRow([]);
     workbook.xlsx.writeBuffer().then((data) => {

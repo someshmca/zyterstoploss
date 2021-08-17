@@ -6,6 +6,9 @@
             <div class="card-header">
                 Claim Search
             </div>
+            <div *ngIf="loaderService.isLoading | async">
+              <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+             </div>
             <div class="card-body">
                 <div class="mandate-fields">
                   <!-- <span *ngIf="submitted && !claimSearchForm.valid"></span> -->
@@ -159,14 +162,11 @@
             </div>
             <div class="card-footer">        
                 <div class="claim-search-btns-area">
-                  <!--(VE 11/8/2021  starts ) -->
-                  <!-- <div class="range-area">
-                    <div>Enter the Range</div>
-                  <input type ="number" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))" class="form-control" formControlName="minPage" placeholder="Start value" [ngClass]="{ 'is-invalid':memMaxMinErr.isValid }">     
-                  <input type ="number" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))"class="form-control" formControlName="maxPage" placeholder="End Value" [ngClass]="{ 'is-invalid':memMaxMinErr.isValid}"> 
-                  <div>Total Records: <strong>{{countMaxMin}}</strong></div>
-                </div> -->
-                <!--(VE 11/8/2021  ends) -->
+
+                  <div class="range-area">
+                    <span>Limit &nbsp;</span>
+                    <input type ="number" class="form-control" formControlName="maxPage" (keyup)="limit($event.target.value)" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))">
+                </div>
                     <button class="btn btn-outline-primary" type="button" (click)="resetClaimSearch()">Reset</button>
                     <button class="btn btn-primary">Search</button>                  
                 </div>

@@ -43,16 +43,16 @@ export class MemberComponent implements OnInit {
   uPlanId:any;
   uTierId:any;
   today: string;
-  //names=[];
- // countMaxMin=0;
- // pageCount;
+  names=[];
+ countMaxMin=0;
+ pageCount;
   
   excel1; 
   format = '2.2-2'; 
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  @ViewChild("focusElem") focusTag: ElementRef;
+  //@ViewChild("focusElem") focusTag: ElementRef;
   @ViewChild("focusMemSearch") focusMSTag: ElementRef;
   
   isAddMode: boolean = false;
@@ -77,7 +77,7 @@ export class MemberComponent implements OnInit {
   memLnameErr= {isValid: false, errMsg: ''}; 
   memStartDateErr = {isValid: false, errMsg: ''};
   memEndDateErr = {isValid: false, errMsg: ''};
-  //memMaxMinErr={isValid: false, errMsg: ''};
+  memMaxMinErr={isValid: false, errMsg: ''};
 
   //(VE 13-08-2021 starts)
   coverageTierErr = { isValid: false, errMsg: '' };
@@ -97,7 +97,6 @@ export class MemberComponent implements OnInit {
 
   ngOnInit() {
     this.show=true;
-
     this.initMemberSearchForm();
     this.memberForm = this.fb.group({
       memberId: [''],
@@ -164,8 +163,8 @@ export class MemberComponent implements OnInit {
     this.accountIdErr.isValid = false;
     this.accountIdErr.errMsg = '';
      //(VE 13-08-2021 ends)
-    // this.memMaxMinErr.isValid=false;
-    // this.memMaxMinErr.errMsg=''
+    this.memMaxMinErr.isValid=false;
+    this.memMaxMinErr.errMsg=''
   }
   initMemberSearchForm(){    
     this.memberSearchForm = this.mb.group({
@@ -183,7 +182,7 @@ export class MemberComponent implements OnInit {
       tier:[''],
       alternateId:[''],
       //  minPage:null,
-      //  maxPage:null
+        maxPage:null
     });
   }
 
@@ -219,8 +218,8 @@ export class MemberComponent implements OnInit {
     )
   }
   resetMemberSearch() {
-    // this.pageCount = 0;
-    // this.countMaxMin = 0;
+    this.pageCount = 0;
+    this.countMaxMin = 0;
     this.initMemberSearchForm();
     this.isSearchDataThere = false;
     this.memSearchError = false;
@@ -291,157 +290,273 @@ export class MemberComponent implements OnInit {
     }
   }
   //(VE 13-08-2021 starts)
-
-  searchMember(formData: FormGroup) {
-    // this.names.length = 0;
-    this.memSearchSubmitted = true;
-    this.memSearchError = false;
-    this.isMemCount = true;
-
-    // console.log(formData.get());
-
-    let memberId = this.memberSearchForm.get('MemberId').value.trim();
-    let fname = this.memberSearchForm.get("Fname").value.trim();
-    let mname = this.memberSearchForm.get("Mname").value.trim();
-    let lname = this.memberSearchForm.get("Lname").value.trim();
-    let subscriberId = this.memberSearchForm.get("SubscriberId").value.trim();
-    let Gender = this.memberSearchForm.get("Gender").value;
-    let dob = this.memberSearchForm.get("DateOfBirth").value;
-    let memberStartDate = this.memberSearchForm.get("MemberStartDate").value;
-    let memberEndDate = this.memberSearchForm.get("MemberEndDate").value;
-    // let minPage = this.memberSearchForm.get("minPage").value;
-    // let maxPage = this.memberSearchForm.get("maxPage").value;
-    let benefitPlanId = this.memberSearchForm.get("benefitPlanId").value;
-    let clientId = this.memberSearchForm.get("clientId").value;
-    let tier = this.memberSearchForm.get("tier").value;
-    let alternateId = this.memberSearchForm.get("alternateId").value;
-    console.log(this.memberSearchForm.value);
-    if (this.isMemSearchFormInvalid) {
+  limit(page)
+  {
+    this.names.length=0;
+    this.pageCount=page;
+    this.clearErrorMessages();
+    console.log(this.pageCount);
+   if (page <= this.countMaxMin) {
+     console.log("yes");
+     for (let i = 0; i <= page - 1; i++) {
+      this.names.push(this.excel1[i]);
+      console.log("1");
+      //this.pageCount = this.names.length;
+     }
+   }
+   
+    if(this.pageCount==''){
+    this.searchDataSource = new MatTableDataSource(this.excel1);
+    this.searchDataSource.paginator = this.paginator;
+    this.searchDataSource.sort = this.sort;
+   }
+   else if( this.pageCount >= 0) {
+     
+    console.log("display");
+      this.searchDataSource = new MatTableDataSource(this.names);
+       this.searchDataSource.paginator = this.paginator;
+      this.searchDataSource.sort = this.sort;
+    }
+    console.log(this.pageCount);
+    console.log(this.countMaxMin);
+     if(this.pageCount > this.countMaxMin && this.countMaxMin!=0)
+    {
+     this.memMaxMinErr.isValid = true;
+       this.memMaxMinErr.errMsg = "Limit  should not be greater than " +this.countMaxMin + ".";
       return;
+ 
     }
-    if (this.memberSearchForm.invalid || this.memberSearchForm.value == '') {
-      this.memSearchError = true;
-      return;
-    }
-    if (memberId == '' && fname == '' && mname == '' && lname == '' && subscriberId == '' && dob == '' && Gender == '' && memberStartDate == '' && memberEndDate == '' && clientId == '' && tier == '' && alternateId == '' && benefitPlanId == '') {
-      this.noSearchFieldEntered = true;
-      return;
-    }
-    console.log(JSON.stringify(formData.value));
-    if (!this.isMemSearchFormInvalid) {
-      this.memberService.memberSearch(memberId, fname, mname, lname, subscriberId, dob, Gender, memberStartDate, memberEndDate, benefitPlanId, clientId, tier, alternateId).subscribe(
-        (data: IMemberSearchResponse[]) => {
-          this.excel1 = data;
-          
-          //(VE 13-08-2021)
-          // let max = num1.test(minPage);
-          // console.log(num1.test(minPage));
-
-          // let min = num1.test(maxPage);
-          // console.log(num1.test(minPage));
-          // this.countMaxMin = data.length;
-          // console.log(data[minPage]);
-          // console.log(maxPage)
-          // console.log(minPage);
-
-          // if ((data[minPage] == undefined) && (data[maxPage] == undefined)) {
-          //   this.pageCount = 0;
-          // }
-          // console.log(minPage != null)
-          // console.log(maxPage != null)
-
-          //   if((minPage!='' &&  minPage!=null)  && (maxPage!=''&& minPage!=null))
-          //   {     
-          // if((!min && minPage!=''))
-          //    {
-          //      this.memMaxMinErr.isValid=true;
-          //      this.memMaxMinErr.errMsg="special characters and blank values not allowed";
-          //      console.log("yes");
-          //      return; 
-          //    }   
-          //   if((!max && maxPage!='' ))
-          //    {
-          //      this.memMaxMinErr.isValid=true;
-          //      this.memMaxMinErr.errMsg="special characters and blank values not allowed";
-          //      console.log("yes");
-          //      return; 
-          //    } 
-          //   }  
-
-          
-          // if (minPage === null && maxPage !== null) {
-          //   this.memMaxMinErr.isValid = true;
-          //   this.memMaxMinErr.errMsg = "*Range Start Value required "
-          //   return;
-          // }
-          // if (maxPage === null && minPage !== null) {
-          //   this.memMaxMinErr.isValid = true;
-          //   this.memMaxMinErr.errMsg = "*Range End Value required"
-          //   return;
-          // }
-
-
-
-          // if (minPage <= this.countMaxMin && maxPage <= this.countMaxMin) {
-          //   for (let i = minPage; i <= maxPage - 1; i++) {
-          //     this.names.push(data[i]);
-          //     this.pageCount = this.names.length;
-          //   }
-          // }
-          // else if ((minPage > this.countMaxMin && maxPage > this.countMaxMin) || (minPage > this.countMaxMin || maxPage > this.countMaxMin)) {
-          //   this.memMaxMinErr.isValid = true;
-          //   this.memMaxMinErr.errMsg = "Range should not be greater than " + this.countMaxMin + ".";
-          //   return;
-          // }
-          // if ((minPage != '' && minPage) > (maxPage != '' && maxPage)) {
-          //   this.memMaxMinErr.isValid = true;
-          //   this.memMaxMinErr.errMsg = "Range from should not be greater than " + maxPage + ".";
-          //   return;
-          // }
-          // console.log(this.names);
-          //(VE 13-08-2021)
-          console.log(data);
-          this.clearErrorMessages();
-          console.log(data[0].memberId)
-          if (data == null || data.length == 0) {
-            console.log("Records are Empty");
-
-          }
-          else {
-            console.log("another issue");
-
-          }
-          setTimeout(() => {
-            this.searchDataSource = new MatTableDataSource(data)//(VE 13-08-2021)
-            
-            
-            // if ((data[minPage] == undefined) && (data[maxPage] == undefined)) {
-            //   this.searchDataSource = new MatTableDataSource(data)
-            // }
-
-            // else if (minPage >= 0 && maxPage >= 0) {
-            //   this.searchDataSource = new MatTableDataSource(this.names);
-            // }
-          
-            this.isSearchDataThere = true;
-            this.noSearchFieldEntered = false;
-            this.memSearchError = false;
-          }, 400);
-          setTimeout(() => {
-            this.searchDataSource.paginator = this.paginator;
-            this.searchDataSource.sort = this.sort;
-          }, 700)
-        }, (error) => {
-          console.log("no record found");
-          this.isSearchDataThere = false;
-          this.memSearchError = true;
-          this.noSearchFieldEntered = false;
-          this.searchErrorMessage = error.message;
-          this.clearErrorMessages();
-        }
-      )
-    }
+    
+    
   }
+  searchMember(formData: FormGroup) {
+    this.names.length = 0;
+   this.memSearchSubmitted = true;
+   this.memSearchError = false;
+   this.isMemCount = true;
+
+   // console.log(formData.get());
+
+   let memberId = this.memberSearchForm.get('MemberId').value.trim();
+   let fname = this.memberSearchForm.get("Fname").value.trim();
+   let mname = this.memberSearchForm.get("Mname").value.trim();
+   let lname = this.memberSearchForm.get("Lname").value.trim();
+   let subscriberId = this.memberSearchForm.get("SubscriberId").value.trim();
+   let Gender = this.memberSearchForm.get("Gender").value;
+   let dob = this.memberSearchForm.get("DateOfBirth").value;
+   let memberStartDate = this.memberSearchForm.get("MemberStartDate").value;
+   let memberEndDate = this.memberSearchForm.get("MemberEndDate").value;
+   // let minPage = this.memberSearchForm.get("minPage").value;
+    let maxPage = this.memberSearchForm.get("maxPage").value;
+   let benefitPlanId = this.memberSearchForm.get("benefitPlanId").value;
+   let clientId = this.memberSearchForm.get("clientId").value;
+   let tier = this.memberSearchForm.get("tier").value;
+   let alternateId = this.memberSearchForm.get("alternateId").value;
+   console.log(this.memberSearchForm.value);
+   //(VE 13-08-2021 starts)
+   //let alphaNum = /^([a-zA-Z0-9 ]+)$/; 
+   // let alphaNum = /^([a-zA-Z0-9]+)$/; 
+   // let num1 = /^([0-9]+)$/;
+   // let nam1 = /^([a-zA-Z]+)$/; 
+   // console.log(num1.test(memberId));
+   // let a1 = num1.test(memberId);
+   // console.log(nam1.test(fname)); 
+   // let a2 = nam1.test(fname);
+   // console.log(nam1.test(mname));
+   // let a3 = nam1.test(mname);
+   // console.log(nam1.test(lname));
+   // let a4 = nam1.test(lname);
+   // console.log(alphaNum.test(subscriberId));
+   // let a5 = alphaNum.test(subscriberId);
+       //(VE 13-08-2021 ends)
+
+   // if(memberStartDate!=null && memberStartDate!='' && memberEndDate!=null && memberEndDate!=''){
+   //   if(memberStartDate>memberEndDate){
+   //   this.memStartDateErr.isValid=true;
+   //   this.memSearchError=false;
+   //   this.memStartDateErr.errMsg='Member Start Date should not be greater than Member End Date';
+   //   return;
+   //   }
+   //   if(memberStartDate==memberEndDate){
+   //   this.memStartDateErr.isValid=true;
+   //   this.memSearchError=false;
+   //   this.memStartDateErr.errMsg='Member Start Date should not be EQUAL to Member End Date';
+   //   return;
+   //   }
+   // }
+   // till here
+   // if((memberStartDate==null || memberStartDate=='') && (memberEndDate!=null && memberEndDate!='')){
+   //   this.memStartDateErr.isValid=true;
+   //   this.memSearchError=false;
+   //   this.memStartDateErr.errMsg='Member Start Date should not be empty or Invalid';
+   //   return;
+   // }
+   // if((memberEndDate==null || memberEndDate=='') && (memberStartDate!=null && memberStartDate!='')){
+   //   this.memEndDateErr.isValid=true;
+   //   this.memSearchError=false;
+   //   this.memEndDateErr.errMsg='Member End Date should not be empty or Invalid';
+   //   return;
+   // }
+
+//(VE 13-08-2021 starts)
+   // if(!a2 && fname!=''){    // Start by Venkatesh Enigonda
+   //   this.memFnameErr.isValid=true;
+   //   this.memFnameErr.errMsg='First Name is not valid. It should be a Alphabet';
+   //   return;
+   // }
+   // if(!a3 && mname!=''){
+   //   this.memMnameErr.isValid=true;
+   //   this.memMnameErr.errMsg='Middle Name is not valid. It should be a Alphabet';
+   //   return;
+   // }
+   // if(!a4 && lname!=''){
+   //   this.memLnameErr.isValid=true;
+   //   this.memLnameErr.errMsg='Last Name is not valid. It should be a Alphabet';
+   //   return;
+   // }
+   // if(!a5 && subscriberId!=''){
+   //   this.memSubIdErr.isValid=true;
+   //   this.memSubIdErr.errMsg='Invalid Subscriber Id. Special Chracters not allowed';
+   //   return;
+   // }  
+   //(VE 13-08-2021 starts)
+
+   // stop here if form is invalid
+   if (this.isMemSearchFormInvalid) {
+     return;
+   }
+   if (this.memberSearchForm.invalid || this.memberSearchForm.value == '') {
+     this.memSearchError = true;
+     return;
+   }
+   if (memberId == '' && fname == '' && mname == '' && lname == '' && subscriberId == '' && dob == '' && Gender == '' && memberStartDate == '' && memberEndDate == '' && clientId == '' && tier == '' && alternateId == '' && benefitPlanId == '') {
+     this.noSearchFieldEntered = true;
+     return;
+   }
+   console.log(JSON.stringify(formData.value));
+   if (!this.isMemSearchFormInvalid) {
+     this.memberService.memberSearch(memberId, fname, mname, lname, subscriberId, dob, Gender, memberStartDate, memberEndDate, benefitPlanId, clientId, tier, alternateId).subscribe(
+       (data: IMemberSearchResponse[]) => {
+         this.excel1 = data;
+         
+         //(VE 13-08-2021)
+         // let max = num1.test(minPage);
+         // console.log(num1.test(minPage));
+
+         // let min = num1.test(maxPage);
+          //console.log(num1.test(maxPage));
+          this.countMaxMin = data.length;
+          console.log(data[maxPage]);
+         // console.log(maxPage)
+         // console.log(minPage);
+
+         // if ((data[minPage] == undefined) && (data[maxPage] == undefined)) {
+         //   this.pageCount = 0;
+         // }
+         // console.log(minPage != null)
+         // console.log(maxPage != null)
+
+         //   if((minPage!='' &&  minPage!=null)  && (maxPage!=''&& minPage!=null))
+         //   {     
+         // if((!min && minPage!=''))
+         //    {
+         //      this.memMaxMinErr.isValid=true;
+         //      this.memMaxMinErr.errMsg="special characters and blank values not allowed";
+         //      console.log("yes");
+         //      return; 
+         //    }   
+         //   if((!max && maxPage!='' ))
+         //    {
+         //      this.memMaxMinErr.isValid=true;
+         //      this.memMaxMinErr.errMsg="special characters and blank values not allowed";
+         //      console.log("yes");
+         //      return; 
+         //    } 
+         //   }  
+
+         
+         // if (minPage === null && maxPage !== null) {
+         //   this.memMaxMinErr.isValid = true;
+         //   this.memMaxMinErr.errMsg = "*Range Start Value required "
+         //   return;
+         // }
+         // if (maxPage === null && minPage !== null) {
+         //   this.memMaxMinErr.isValid = true;
+         //   this.memMaxMinErr.errMsg = "*Range End Value required"
+         //   return;
+         // }
+         for (let i = 0; i <= maxPage - 1; i++) {
+           this.names.push(data[i]);
+        
+           //this.pageCount = this.names.length;
+          }
+          if(maxPage  >this.countMaxMin)
+          {
+           this.memMaxMinErr.isValid = true;
+             this.memMaxMinErr.errMsg = "Limit should not be greater than " + this.countMaxMin + ".";
+             return;
+          }
+          
+
+        
+         
+
+        
+         // else if ((minPage > this.countMaxMin && maxPage > this.countMaxMin) || (minPage > this.countMaxMin || maxPage > this.countMaxMin)) {
+         //   this.memMaxMinErr.isValid = true;
+         //   this.memMaxMinErr.errMsg = "Range should not be greater than " + this.countMaxMin + ".";
+         //   return;
+         // }
+         // if ((minPage != '' && minPage) > (maxPage != '' && maxPage)) {
+         //   this.memMaxMinErr.isValid = true;
+         //   this.memMaxMinErr.errMsg = "Range from should not be greater than " + maxPage + ".";
+         //   return;
+         // }
+         // console.log(this.names);
+         //(VE 13-08-2021)
+         console.log(data);
+         this.clearErrorMessages();
+         console.log(data[0].memberId)
+         if (data == null || data.length == 0) {
+           console.log("Records are Empty");
+
+         }
+         else {
+           console.log("another issue");
+
+         }
+         setTimeout(() => {
+          // this.searchDataSource = new MatTableDataSource(data)//(VE 13-08-2021)
+           
+           
+           if (data[maxPage] == undefined) {
+             this.searchDataSource = new MatTableDataSource(data)
+           }
+           else if(maxPage>=0)
+           {
+             this.searchDataSource = new MatTableDataSource(this.names);
+
+           }
+         
+           this.isSearchDataThere = true;
+           this.noSearchFieldEntered = false;
+           this.memSearchError = false;
+         }, 400);
+         setTimeout(() => {
+           this.searchDataSource.paginator = this.paginator;
+           this.searchDataSource.sort = this.sort;
+         }, 700)
+       }, (error) => {
+         console.log("no record found");
+         this.isSearchDataThere = false;
+         this.memSearchError = true;
+         this.noSearchFieldEntered = false;
+         this.searchErrorMessage = error.message;
+         this.clearErrorMessages();
+       }
+     )
+   }
+ }
   // keyPressNumbers(event,text)
   // {
   //  var inp=String.fromCharCode(event.keyCode)
@@ -494,9 +609,9 @@ export class MemberComponent implements OnInit {
   }
   openCustomModal(open: boolean, id: any) {
     this.isDisabled = false;
-    setTimeout(() => {
-      this.focusTag.nativeElement.focus()
-    }, 100);
+    // setTimeout(() => {
+    //   this.focusTag.nativeElement.focus()
+    // }, 100);
     this.isCustomModalOpen = open;
     this.submitted = false;
     if (open && id == null) {
@@ -516,7 +631,6 @@ export class MemberComponent implements OnInit {
       this.isAddMode = false;
       if (id != null) {
         console.log(id);
-
         this.uMemberId = id.memberHrid;
         setTimeout(() => {
           this.uClientId = id.clientId;
@@ -542,7 +656,7 @@ export class MemberComponent implements OnInit {
             gender: id.gender,
             status: id.status,
 
-            laserValue: this.decimalValue(id.laserValue) == 0 ? '' : this.decimalValue(id.laserValue),
+            laserValue: this.decimalValueString(id.laserValue) == 0 ? '' : this.decimalValueString(id.laserValue),
 
             isUnlimited: (id.isUnlimited == null || id.isUnlimited == 'N') ? false : true,
             memberStartDate: this.datePipe.transform(id.memberStartDate, 'yyyy-MM-dd'),
@@ -625,7 +739,7 @@ export class MemberComponent implements OnInit {
       a = 0;
     }
     else {
-      a = this.decimalPipe.transform(inputValue, this.format);
+      a = this.decimalPipe.transform(inputValue, this.format).replace(/,/g, "");
     }
     console.log(a);
 

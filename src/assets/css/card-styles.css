@@ -239,3 +239,18 @@ input[type='date'].form-control{
     .product-form-wrap .mat-form-field-underline  {
         background-color: transparent;
     }
+
+    ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+        color: rgba(90, 88, 88, 0.5);
+        font-size: 12px;
+      }
+      
+      :-ms-input-placeholder { /* Internet Explorer 10-11 */
+        color: rgba(90, 88, 88, 0.5);
+        font-size: 12px;
+      }
+      
+      ::-ms-input-placeholder { /* Microsoft Edge */
+        color: rgba(90, 88, 88, 0.5);
+        font-size: 12px;
+      }

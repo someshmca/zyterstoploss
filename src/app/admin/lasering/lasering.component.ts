@@ -111,7 +111,8 @@ export class LaseringComponent implements OnInit {
       clientId: ['', Validators.required],
       contractId: ['', Validators.required],
       planId: ['', Validators.required],
-      tierId: ['', Validators.required],
+      tierId: [''],      
+      tier: '',
       dateOfBirth: ['', Validators.required]
     });
     this.today=this.datePipe.transform(new Date(Date.now()), "MM/dd/yyyy");    
@@ -256,6 +257,7 @@ export class LaseringComponent implements OnInit {
               contractId: id.contractId,
               planId: id.planId,
               tierId: id.tierId,
+              tier: id.tier,
               fname: id.fname,
               lname: id.lname,
               mname: id.mname,
@@ -264,7 +266,7 @@ export class LaseringComponent implements OnInit {
               subscriberLname: id.subscriberLname,
               gender: id.gender,
               status: id.status,
-              laserValue: this.decimalValue(id.laserValue)==0?'':this.decimalValue(id.laserValue),
+              laserValue: this.decimalValueString(id.laserValue)==0?'':this.decimalValueString(id.laserValue),
               isUnlimited: (id.isUnlimited==null || id.isUnlimited=='N')?false:true,
               memberStartDate: this.datePipe.transform(id.memberStartDate, 'yyyy-MM-dd'),
               memberEndDate: this.datePipe.transform(id.memberEndDate, 'yyyy-MM-dd'),
@@ -369,7 +371,7 @@ decimalValueString(inputValue){
     a=0;
   }
   else{
-    a= this.decimalPipe.transform(inputValue,this.format);        
+    a= this.decimalPipe.transform(inputValue,this.format).replace(/,/g, "");        
   }
   console.log(a);      
   

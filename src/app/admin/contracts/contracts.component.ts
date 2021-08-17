@@ -542,7 +542,7 @@ openViewModal(bool, id:any){
                   }//Ends here
                 if(terminationDateValue !='' && terminationDateValue!=null){
                     if(terminationDateValue < startDateValue || terminationDateValue > endDateValue){   
-                      debugger;     
+                           
                       this.terminationDateErr.isDateErr=true;
                       this.terminationDateErr.dateErrMsg = 'Termination date should be between Contract Start and End Dates'; 
                       flag=false;          
@@ -699,7 +699,10 @@ openViewModal(bool, id:any){
     gotoProductAdd(){     
       if(this.isAdded){
         console.log(this.tempContractObj);
+        
         this.clientService.getClient(this.f.clientId.value).subscribe((data)=>{
+          console.log("contracts data : "+data);
+          
           this.navService.setProductObj(data[0].clientId, data[0].clientName, true,false);
           
           this.router.navigate(['/product']); 

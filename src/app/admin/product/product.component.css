@@ -44,4 +44,17 @@
     .product-cell-area a:hover{
         color: rgb(1, 87, 128);
     }
-    
+    .claimbasis.form-control[readonly] {
+        background-color: initial;
+        cursor: initial;
+    }
+    .claim-basis{
+        position: relative;
+    }
+    .claim-basis-err{
+        position: absolute;
+        top: 5px;
+        right: 2px;
+        color: red;
+        font-size: 11px;
+    }
