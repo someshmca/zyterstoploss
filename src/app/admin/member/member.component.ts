@@ -1,27 +1,29 @@
 import { Component, OnInit, ViewChild, AfterViewInit, ElementRef } from '@angular/core';
-import {IMemberSearch, IMemberSearchResponse, IMemberAdd} from '../models/member-model';
+import { IMemberSearch, IMemberSearchResponse, IMemberAdd } from '../models/member-model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IActiveClient } from '../models/clients-model';
-import {IContract} from '../models/contracts-model';
-import {IPlanAll, ITire} from '../models/health-plan.model';
-import {MemberService} from '../services/member.service';
-import {Paths} from '../admin-paths';
-import {MatPaginator} from '@angular/material/paginator';
-import {MatTableDataSource} from '@angular/material/table';
-import { first } from 'rxjs/operators';
+import { IContract } from '../models/contracts-model';
+import { IPlanAll, ITire } from '../models/health-plan.model';
+import { MemberService } from '../services/member.service';
+import { Paths } from '../admin-paths';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
+import { first, max, retryWhen } from 'rxjs/operators';
 import { MatSort } from '@angular/material/sort';
-import {DatePipe} from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { AlertService } from '../services/alert.service';
 import { LoginService } from 'src/app/shared/services/login.service';
 import { from } from 'rxjs';
 import { ClientsService } from '../services/clients.service';
 import { ContractService } from '../services/contract.service';
 import { HealthPlanService } from '../services/health-plan.service';
-import {NavPopupService} from '../services/nav-popup.service';
+import { NavPopupService } from '../services/nav-popup.service';
 import { LoaderService } from '../services/loader.service';//added by Venkatesh Enigonda
 import { ExcelUploadService } from '../services/excel-upload.service';
-import {ExcelService} from '../services/excel.service';
-import {DecimalPipe} from '@angular/common'; //PV 08-05-2021
+import { ExcelService } from '../services/excel.service';
+import { DecimalPipe } from '@angular/common'; //PV 08-05-2021
+import { exit } from 'process';
+import { LiteralPrimitive } from '@angular/compiler';
 
 @Component({
   selector: 'app-member',
@@ -34,27 +36,28 @@ export class MemberComponent implements OnInit {
   searchResult: any;
   memberForm: FormGroup;
   searchErrorMessage: string;
-  displayedColumns: string[] = ['memberHrid', 'clientName', 'contractId', 'planId', 'tierId', 'fname', 'lname', 'mname', 'gender','memberStartDate', 'memberEndDate','dateOfBirth', 'subscriberId','alternateId', 'laserValue', 'isUnlimited','tier','benefitPlanId','userId'];    
+  displayedColumns: string[] = ['memberHrid', 'clientName', 'contractId', 'planId', 'tierId', 'fname', 'lname', 'mname', 'gender', 'memberStartDate', 'memberEndDate', 'dateOfBirth', 'subscriberId', 'alternateId', 'laserValue', 'isUnlimited', 'tier', 'benefitPlanId', 'userId'];
   searchDataSource: any;
 
-  
-  uClientId:any;
-  uContractId:any;
-  uPlanId:any;
-  uTierId:any;
+
+  uClientId: any;
+  uContractId: any;
+  uPlanId: any;
+  uTierId: any;
   today: string;
-  names=[];
- countMaxMin=0;
- pageCount;
-  
-  excel1; 
-  format = '2.2-2'; 
+   names = [];
+   countMaxMin = 0;
+   pageCount;
+  isMemSearchFormInvalid: boolean = false;
+
+  excel1;
+  format = '2.2-2';
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  //@ViewChild("focusElem") focusTag: ElementRef;
+  @ViewChild("focusElem") focusTag: ElementRef;
   @ViewChild("focusMemSearch") focusMSTag: ElementRef;
-  
+
   isAddMode: boolean = false;
   loading = false;
   memSearchSubmitted = false;
@@ -62,41 +65,41 @@ export class MemberComponent implements OnInit {
   isCustomModalOpen: boolean = false;
   memSearchError: boolean = false;
   noSearchFieldEntered: boolean = false;
-  isMemSearchFormInvalid: boolean;
-  
+
   activeClients: IActiveClient[] = [];
-  activeContracts: IContract[]=[];
-  plans: IPlanAll[]=[];
+  activeContracts: IContract[] = [];
+  plans: IPlanAll[] = [];
   tires: ITire[] = [];
   show: boolean = true;
   memberSearchErr: any;
-  memIdErr = {isValid: false, errMsg: ''};
-  memSubIdErr={isValid: false, errMsg: ''}; 
-  memFnameErr = {isValid: false, errMsg: ''};
-  memMnameErr= {isValid: false, errMsg: ''};
-  memLnameErr= {isValid: false, errMsg: ''}; 
-  memStartDateErr = {isValid: false, errMsg: ''};
-  memEndDateErr = {isValid: false, errMsg: ''};
-  memMaxMinErr={isValid: false, errMsg: ''};
+  memIdErr = { isValid: false, errMsg: '' };
+  memSubIdErr = { isValid: false, errMsg: '' }; 
+  memFnameErr = { isValid: false, errMsg: '' };
+  memMnameErr = { isValid: false, errMsg: '' };
+  memLnameErr = { isValid: false, errMsg: '' }; 
+  memStartDateErr = { isValid: false, errMsg: '' };
+  memEndDateErr = { isValid: false, errMsg: '' };
+   memMaxMinErr = { isValid: false, errMsg: '' };
 
   //(VE 13-08-2021 starts)
   coverageTierErr = { isValid: false, errMsg: '' };
   altIdErr = { isValid: false, errMsg: '' };
   accountIdErr = { isValid: false, errMsg: '' };
   //(VE 13-08-2021 ends)
-  
+
   isSearchDataThere: boolean = false;
   noSearchResultsFound: boolean = false;
   uMemberId: any;
-  isDisabled: boolean=false;
-  isViewModal: boolean=false;
+  isDisabled: boolean = false;
+  isViewModal: boolean = false;
   isAdmin: boolean;
   isMemCount: boolean;
 
-  constructor(public loaderService: LoaderService, private excelService:ExcelService, private mb: FormBuilder, private fb: FormBuilder, private memberService:MemberService, private alertService: AlertService, private datePipe: DatePipe, private loginService: LoginService, private clientService: ClientsService, private contractService: ContractService, private planService: HealthPlanService, private navService: NavPopupService, private decimalPipe: DecimalPipe ) { }
+  constructor(public loaderService: LoaderService, private excelService: ExcelService, private mb: FormBuilder, private fb: FormBuilder, private memberService: MemberService, private alertService: AlertService, private datePipe: DatePipe, private loginService: LoginService, private clientService: ClientsService, private contractService: ContractService, private planService: HealthPlanService, private navService: NavPopupService, private decimalPipe: DecimalPipe) { }
 
   ngOnInit() {
-    this.show=true;
+    this.show = true;
+
     this.initMemberSearchForm();
     this.memberForm = this.fb.group({
       memberId: [''],
@@ -105,7 +108,7 @@ export class MemberComponent implements OnInit {
       mname: '',
       gender: ['', Validators.required],
       status: true, // status is number field 0 is false and 1 is true
-      memberHrid: ['',Validators.required],
+      memberHrid: ['', Validators.required],
       laserValue: '',
       isUnlimited: false,
       userId: '',
@@ -120,40 +123,42 @@ export class MemberComponent implements OnInit {
       planId: ['', Validators.required],
       tierId: ['', Validators.required],
       dateOfBirth: ['', Validators.required],
-      tier:[''],
-      benefitPlanId:['']
+      tier: [''],
+      benefitPlanId: ['']
     });
     //this.today=this.datePipe.transform(new Date(Date.now()), "MM/dd/yyyy");    
-    this.today=new Date().toJSON().split('T')[0];
-    setTimeout(()=>{
+    this.today = new Date().toJSON().split('T')[0];
+    setTimeout(() => {
       this.focusMSTag.nativeElement.focus();
       //this.focusTag.nativeElement.focus();
     }, 200);
     this.getActiveClients();
-    this.clearErrorMessages();    
+    this.clearErrorMessages();
     this.loginService.getLoggedInRole();
     this.isAdmin = this.loginService.isAdmin;
-    if(!this.isAdmin){
-      this.isViewModal=true;
+    if (!this.isAdmin) {
+      this.isViewModal = true;
     }
   }  // end of ngOnInit 
 
-  clearErrorMessages(){  
-    this.memIdErr.isValid=false;
-    this.memIdErr.errMsg='';
-    this.memSubIdErr.isValid=false; // From Line 116 to 123 Modified by Venkatesh Enigonda
-    this.memSubIdErr.errMsg='';
-    this.memFnameErr.isValid=false;
-    this.memFnameErr.errMsg='';
-    this.memMnameErr.isValid=false;
-    this.memMnameErr.errMsg='';
-    this.memLnameErr.isValid=false;
-    this.memLnameErr.errMsg='';
-    this.memStartDateErr.isValid=false;
-    this.memStartDateErr.errMsg='';
-    this.memEndDateErr.isValid=false;
-    this.memEndDateErr.errMsg='';
-    this.noSearchFieldEntered=false; 
+  clearErrorMessages() {
+    this.memIdErr.isValid = false;
+    this.memIdErr.errMsg = '';
+    this.memSubIdErr.isValid = false; // From Line 116 to 123 Modified by Venkatesh Enigonda
+    this.memSubIdErr.errMsg = '';
+    this.memFnameErr.isValid = false;
+    this.memFnameErr.errMsg = '';
+    this.memMnameErr.isValid = false;
+    this.memMnameErr.errMsg = '';
+    this.memLnameErr.isValid = false;
+    this.memLnameErr.errMsg = '';
+    this.memStartDateErr.isValid = false;
+    this.memStartDateErr.errMsg = '';
+    this.memEndDateErr.isValid = false;
+    this.memEndDateErr.errMsg = '';
+    this.noSearchFieldEntered = false;
+     this.memMaxMinErr.isValid = false;
+     this.memMaxMinErr.errMsg = ''
     //(VE 13-08-2021 starts)
     this.isMemSearchFormInvalid = false;
     this.coverageTierErr.isValid = false;
@@ -163,63 +168,61 @@ export class MemberComponent implements OnInit {
     this.accountIdErr.isValid = false;
     this.accountIdErr.errMsg = '';
      //(VE 13-08-2021 ends)
-    this.memMaxMinErr.isValid=false;
-    this.memMaxMinErr.errMsg=''
   }
-  initMemberSearchForm(){    
+  initMemberSearchForm() {
     this.memberSearchForm = this.mb.group({
       MemberId: [''],
-      SubscriberId:[''],
+      SubscriberId: [''],
       MemberStartDate: [''],
       MemberEndDate: [''],
-      Fname:[''],
+      Fname: [''],
       Lname: [''],
       Mname: '',
-      DateOfBirth:[''],
+      DateOfBirth: [''],
       Gender: [''],
-      clientId:[''],
-      benefitPlanId:[''],
-      tier:[''],
-      alternateId:[''],
-      //  minPage:null,
-        maxPage:null
+      clientId: [''],
+      benefitPlanId: [''],
+      tier: [''],
+      alternateId: [''],
+      // minPage: null,
+       maxPage: null
     });
   }
 
-  getActiveClients(){
+  getActiveClients() {
     this.clientService.getActiveClients().subscribe(
-      (data)=>{
+      (data) => {
         this.activeClients = data;
-        
+
       }
     )
   }
 
-  getContractsByClientId(clientId){
+  getContractsByClientId(clientId) {
     this.contractService.getContractsByClientID(clientId).subscribe(
-      (data)=>{
+      (data) => {
         this.activeContracts = data;
       }
     )
   }
-  getPlans(){
+  getPlans() {
     this.planService.getAllPlans().subscribe(
-      (data)=>{
+      (data) => {
         this.plans = data;
       }
     )
   }
-  getTires(){
+  getTires() {
     this.planService.getTires().subscribe(
-      (data)=>{
-        this.tires=data;
+      (data) => {
+        this.tires = data;
 
       }
     )
   }
   resetMemberSearch() {
-    this.pageCount = 0;
-    this.countMaxMin = 0;
+    // this.pageCount = 0;
+     this.countMaxMin = 0;
     this.initMemberSearchForm();
     this.isSearchDataThere = false;
     this.memSearchError = false;
@@ -238,25 +241,25 @@ export class MemberComponent implements OnInit {
       this.memIdErr.isValid = true;
       this.memIdErr.errMsg = 'Member Id is not valid. It should be a number';
       this.isMemSearchFormInvalid = true;
-      return;
+ 
     }
     if (!a1 && text != '' && name == 'SubscriberId') {
       this.memSubIdErr.isValid = true;
       this.memSubIdErr.errMsg = 'Subscriber Id is not valid. It should be a number';
       this.isMemSearchFormInvalid = true;
-      return;
+
     }
     if (!a1 && text != '' && name == 'alternateId') {
       this.altIdErr.isValid = true;
       this.altIdErr.errMsg = 'ALternate Id is not valid. It should be a number';
       this.isMemSearchFormInvalid = true;
-      return;
+
     }
     if (!a2 && text != '' && name == 'clientId') {
       this.accountIdErr.isValid = true;
       this.accountIdErr.errMsg = 'Account Id is not valid.Special Characters not allowed';
       this.isMemSearchFormInvalid = true;
-      return;
+     
     }
 
   }
@@ -268,25 +271,25 @@ export class MemberComponent implements OnInit {
       this.memFnameErr.isValid = true;
       this.memFnameErr.errMsg = 'Member First Name is not valid. It should be a Alphabet';
       this.isMemSearchFormInvalid = true;
-      return;
+     
     }
-    if (!a1 && text != '' && name == 'Mname') {
+    if (!a1 && text != '' && name == 'Mname' ) {
       this.memMnameErr.isValid = true;
       this.memMnameErr.errMsg = 'Member Middle Name is not valid. It should be a Alphabet';
       this.isMemSearchFormInvalid = true;
-      return;
+   
     }
-    if (!a1 && text != '' && name == 'Lname') {
+    if (!a1 && text != '' && name == 'Lname')  {
       this.memLnameErr.isValid = true;
       this.memLnameErr.errMsg = 'Member Last Name is not valid. It should be a Alphabet';
       this.isMemSearchFormInvalid = true;
-      return;
+   
     }
     if (!a1 && text != '' && name == 'tier') {
       this.coverageTierErr.isValid = true;
       this.coverageTierErr.errMsg = 'Coverage Tier is not valid. It should be a Alphabet';
       this.isMemSearchFormInvalid = true;
-      return;
+     
     }
   }
   //(VE 13-08-2021 starts)
@@ -329,234 +332,235 @@ export class MemberComponent implements OnInit {
     
     
   }
+
   searchMember(formData: FormGroup) {
-    this.names.length = 0;
-   this.memSearchSubmitted = true;
-   this.memSearchError = false;
-   this.isMemCount = true;
+     this.names.length = 0;
+    this.memSearchSubmitted = true;
+    this.memSearchError = false;
+    this.isMemCount = true;
 
-   // console.log(formData.get());
+    // console.log(formData.get());
 
-   let memberId = this.memberSearchForm.get('MemberId').value.trim();
-   let fname = this.memberSearchForm.get("Fname").value.trim();
-   let mname = this.memberSearchForm.get("Mname").value.trim();
-   let lname = this.memberSearchForm.get("Lname").value.trim();
-   let subscriberId = this.memberSearchForm.get("SubscriberId").value.trim();
-   let Gender = this.memberSearchForm.get("Gender").value;
-   let dob = this.memberSearchForm.get("DateOfBirth").value;
-   let memberStartDate = this.memberSearchForm.get("MemberStartDate").value;
-   let memberEndDate = this.memberSearchForm.get("MemberEndDate").value;
-   // let minPage = this.memberSearchForm.get("minPage").value;
-    let maxPage = this.memberSearchForm.get("maxPage").value;
-   let benefitPlanId = this.memberSearchForm.get("benefitPlanId").value;
-   let clientId = this.memberSearchForm.get("clientId").value;
-   let tier = this.memberSearchForm.get("tier").value;
-   let alternateId = this.memberSearchForm.get("alternateId").value;
-   console.log(this.memberSearchForm.value);
-   //(VE 13-08-2021 starts)
-   //let alphaNum = /^([a-zA-Z0-9 ]+)$/; 
-   // let alphaNum = /^([a-zA-Z0-9]+)$/; 
-   // let num1 = /^([0-9]+)$/;
-   // let nam1 = /^([a-zA-Z]+)$/; 
-   // console.log(num1.test(memberId));
-   // let a1 = num1.test(memberId);
-   // console.log(nam1.test(fname)); 
-   // let a2 = nam1.test(fname);
-   // console.log(nam1.test(mname));
-   // let a3 = nam1.test(mname);
-   // console.log(nam1.test(lname));
-   // let a4 = nam1.test(lname);
-   // console.log(alphaNum.test(subscriberId));
-   // let a5 = alphaNum.test(subscriberId);
-       //(VE 13-08-2021 ends)
+    let memberId = this.memberSearchForm.get('MemberId').value.trim();
+    let fname = this.memberSearchForm.get("Fname").value.trim();
+    let mname = this.memberSearchForm.get("Mname").value.trim();
+    let lname = this.memberSearchForm.get("Lname").value.trim();
+    let subscriberId = this.memberSearchForm.get("SubscriberId").value.trim();
+    let Gender = this.memberSearchForm.get("Gender").value;
+    let dob = this.memberSearchForm.get("DateOfBirth").value;
+    let memberStartDate = this.memberSearchForm.get("MemberStartDate").value;
+    let memberEndDate = this.memberSearchForm.get("MemberEndDate").value;
+    // let minPage = this.memberSearchForm.get("minPage").value;
+     let maxPage = this.memberSearchForm.get("maxPage").value;
+    let benefitPlanId = this.memberSearchForm.get("benefitPlanId").value;
+    let clientId = this.memberSearchForm.get("clientId").value;
+    let tier = this.memberSearchForm.get("tier").value;
+    let alternateId = this.memberSearchForm.get("alternateId").value;
+    console.log(this.memberSearchForm.value);
+    //(VE 13-08-2021 starts)
+    //let alphaNum = /^([a-zA-Z0-9 ]+)$/; 
+    // let alphaNum = /^([a-zA-Z0-9]+)$/; 
+    // let num1 = /^([0-9]+)$/;
+    // let nam1 = /^([a-zA-Z]+)$/; 
+    // console.log(num1.test(memberId));
+    // let a1 = num1.test(memberId);
+    // console.log(nam1.test(fname)); 
+    // let a2 = nam1.test(fname);
+    // console.log(nam1.test(mname));
+    // let a3 = nam1.test(mname);
+    // console.log(nam1.test(lname));
+    // let a4 = nam1.test(lname);
+    // console.log(alphaNum.test(subscriberId));
+    // let a5 = alphaNum.test(subscriberId);
+        //(VE 13-08-2021 ends)
 
-   // if(memberStartDate!=null && memberStartDate!='' && memberEndDate!=null && memberEndDate!=''){
-   //   if(memberStartDate>memberEndDate){
-   //   this.memStartDateErr.isValid=true;
-   //   this.memSearchError=false;
-   //   this.memStartDateErr.errMsg='Member Start Date should not be greater than Member End Date';
-   //   return;
-   //   }
-   //   if(memberStartDate==memberEndDate){
-   //   this.memStartDateErr.isValid=true;
-   //   this.memSearchError=false;
-   //   this.memStartDateErr.errMsg='Member Start Date should not be EQUAL to Member End Date';
-   //   return;
-   //   }
-   // }
-   // till here
-   // if((memberStartDate==null || memberStartDate=='') && (memberEndDate!=null && memberEndDate!='')){
-   //   this.memStartDateErr.isValid=true;
-   //   this.memSearchError=false;
-   //   this.memStartDateErr.errMsg='Member Start Date should not be empty or Invalid';
-   //   return;
-   // }
-   // if((memberEndDate==null || memberEndDate=='') && (memberStartDate!=null && memberStartDate!='')){
-   //   this.memEndDateErr.isValid=true;
-   //   this.memSearchError=false;
-   //   this.memEndDateErr.errMsg='Member End Date should not be empty or Invalid';
-   //   return;
-   // }
+    // if(memberStartDate!=null && memberStartDate!='' && memberEndDate!=null && memberEndDate!=''){
+    //   if(memberStartDate>memberEndDate){
+    //   this.memStartDateErr.isValid=true;
+    //   this.memSearchError=false;
+    //   this.memStartDateErr.errMsg='Member Start Date should not be greater than Member End Date';
+    //   return;
+    //   }
+    //   if(memberStartDate==memberEndDate){
+    //   this.memStartDateErr.isValid=true;
+    //   this.memSearchError=false;
+    //   this.memStartDateErr.errMsg='Member Start Date should not be EQUAL to Member End Date';
+    //   return;
+    //   }
+    // }
+    // till here
+    // if((memberStartDate==null || memberStartDate=='') && (memberEndDate!=null && memberEndDate!='')){
+    //   this.memStartDateErr.isValid=true;
+    //   this.memSearchError=false;
+    //   this.memStartDateErr.errMsg='Member Start Date should not be empty or Invalid';
+    //   return;
+    // }
+    // if((memberEndDate==null || memberEndDate=='') && (memberStartDate!=null && memberStartDate!='')){
+    //   this.memEndDateErr.isValid=true;
+    //   this.memSearchError=false;
+    //   this.memEndDateErr.errMsg='Member End Date should not be empty or Invalid';
+    //   return;
+    // }
 
 //(VE 13-08-2021 starts)
-   // if(!a2 && fname!=''){    // Start by Venkatesh Enigonda
-   //   this.memFnameErr.isValid=true;
-   //   this.memFnameErr.errMsg='First Name is not valid. It should be a Alphabet';
-   //   return;
-   // }
-   // if(!a3 && mname!=''){
-   //   this.memMnameErr.isValid=true;
-   //   this.memMnameErr.errMsg='Middle Name is not valid. It should be a Alphabet';
-   //   return;
-   // }
-   // if(!a4 && lname!=''){
-   //   this.memLnameErr.isValid=true;
-   //   this.memLnameErr.errMsg='Last Name is not valid. It should be a Alphabet';
-   //   return;
-   // }
-   // if(!a5 && subscriberId!=''){
-   //   this.memSubIdErr.isValid=true;
-   //   this.memSubIdErr.errMsg='Invalid Subscriber Id. Special Chracters not allowed';
-   //   return;
-   // }  
-   //(VE 13-08-2021 starts)
+    // if(!a2 && fname!=''){    // Start by Venkatesh Enigonda
+    //   this.memFnameErr.isValid=true;
+    //   this.memFnameErr.errMsg='First Name is not valid. It should be a Alphabet';
+    //   return;
+    // }
+    // if(!a3 && mname!=''){
+    //   this.memMnameErr.isValid=true;
+    //   this.memMnameErr.errMsg='Middle Name is not valid. It should be a Alphabet';
+    //   return;
+    // }
+    // if(!a4 && lname!=''){
+    //   this.memLnameErr.isValid=true;
+    //   this.memLnameErr.errMsg='Last Name is not valid. It should be a Alphabet';
+    //   return;
+    // }
+    // if(!a5 && subscriberId!=''){
+    //   this.memSubIdErr.isValid=true;
+    //   this.memSubIdErr.errMsg='Invalid Subscriber Id. Special Chracters not allowed';
+    //   return;
+    // }  
+    //(VE 13-08-2021 starts)
 
-   // stop here if form is invalid
-   if (this.isMemSearchFormInvalid) {
-     return;
-   }
-   if (this.memberSearchForm.invalid || this.memberSearchForm.value == '') {
-     this.memSearchError = true;
-     return;
-   }
-   if (memberId == '' && fname == '' && mname == '' && lname == '' && subscriberId == '' && dob == '' && Gender == '' && memberStartDate == '' && memberEndDate == '' && clientId == '' && tier == '' && alternateId == '' && benefitPlanId == '') {
-     this.noSearchFieldEntered = true;
-     return;
-   }
-   console.log(JSON.stringify(formData.value));
-   if (!this.isMemSearchFormInvalid) {
-     this.memberService.memberSearch(memberId, fname, mname, lname, subscriberId, dob, Gender, memberStartDate, memberEndDate, benefitPlanId, clientId, tier, alternateId).subscribe(
-       (data: IMemberSearchResponse[]) => {
-         this.excel1 = data;
+    // stop here if form is invalid
+    if (this.isMemSearchFormInvalid) {
+      return;
+    }
+    if (this.memberSearchForm.invalid || this.memberSearchForm.value == '') {
+      this.memSearchError = true;
+      return;
+    }
+    if (memberId == '' && fname == '' && mname == '' && lname == '' && subscriberId == '' && dob == '' && Gender == '' && memberStartDate == '' && memberEndDate == '' && clientId == '' && tier == '' && alternateId == '' && benefitPlanId == '') {
+      this.noSearchFieldEntered = true;
+      return;
+    }
+    console.log(JSON.stringify(formData.value));
+    if (!this.isMemSearchFormInvalid) {
+      this.memberService.memberSearch(memberId, fname, mname, lname, subscriberId, dob, Gender, memberStartDate, memberEndDate, benefitPlanId, clientId, tier, alternateId).subscribe(
+        (data: IMemberSearchResponse[]) => {
+          this.excel1 = data;
+          
+          //(VE 13-08-2021)
+          // let max = num1.test(minPage);
+          // console.log(num1.test(minPage));
+
+          // let min = num1.test(maxPage);
+           //console.log(num1.test(maxPage));
+           this.countMaxMin = data.length;
+           console.log(data[maxPage]);
+          // console.log(maxPage)
+          // console.log(minPage);
+
+          // if ((data[minPage] == undefined) && (data[maxPage] == undefined)) {
+          //   this.pageCount = 0;
+          // }
+          // console.log(minPage != null)
+          // console.log(maxPage != null)
+
+          //   if((minPage!='' &&  minPage!=null)  && (maxPage!=''&& minPage!=null))
+          //   {     
+          // if((!min && minPage!=''))
+          //    {
+          //      this.memMaxMinErr.isValid=true;
+          //      this.memMaxMinErr.errMsg="special characters and blank values not allowed";
+          //      console.log("yes");
+          //      return; 
+          //    }   
+          //   if((!max && maxPage!='' ))
+          //    {
+          //      this.memMaxMinErr.isValid=true;
+          //      this.memMaxMinErr.errMsg="special characters and blank values not allowed";
+          //      console.log("yes");
+          //      return; 
+          //    } 
+          //   }  
+
+          
+          // if (minPage === null && maxPage !== null) {
+          //   this.memMaxMinErr.isValid = true;
+          //   this.memMaxMinErr.errMsg = "*Range Start Value required "
+          //   return;
+          // }
+          // if (maxPage === null && minPage !== null) {
+          //   this.memMaxMinErr.isValid = true;
+          //   this.memMaxMinErr.errMsg = "*Range End Value required"
+          //   return;
+          // }
+          for (let i = 0; i <= maxPage - 1; i++) {
+            this.names.push(data[i]);
          
-         //(VE 13-08-2021)
-         // let max = num1.test(minPage);
-         // console.log(num1.test(minPage));
-
-         // let min = num1.test(maxPage);
-          //console.log(num1.test(maxPage));
-          this.countMaxMin = data.length;
-          console.log(data[maxPage]);
-         // console.log(maxPage)
-         // console.log(minPage);
-
-         // if ((data[minPage] == undefined) && (data[maxPage] == undefined)) {
-         //   this.pageCount = 0;
-         // }
-         // console.log(minPage != null)
-         // console.log(maxPage != null)
-
-         //   if((minPage!='' &&  minPage!=null)  && (maxPage!=''&& minPage!=null))
-         //   {     
-         // if((!min && minPage!=''))
-         //    {
-         //      this.memMaxMinErr.isValid=true;
-         //      this.memMaxMinErr.errMsg="special characters and blank values not allowed";
-         //      console.log("yes");
-         //      return; 
-         //    }   
-         //   if((!max && maxPage!='' ))
-         //    {
-         //      this.memMaxMinErr.isValid=true;
-         //      this.memMaxMinErr.errMsg="special characters and blank values not allowed";
-         //      console.log("yes");
-         //      return; 
-         //    } 
-         //   }  
+            //this.pageCount = this.names.length;
+           }
+           if(maxPage  >this.countMaxMin)
+           {
+            this.memMaxMinErr.isValid = true;
+              this.memMaxMinErr.errMsg = "Limit should not be greater than " + this.countMaxMin + ".";
+              return;
+           }
+           
 
          
-         // if (minPage === null && maxPage !== null) {
-         //   this.memMaxMinErr.isValid = true;
-         //   this.memMaxMinErr.errMsg = "*Range Start Value required "
-         //   return;
-         // }
-         // if (maxPage === null && minPage !== null) {
-         //   this.memMaxMinErr.isValid = true;
-         //   this.memMaxMinErr.errMsg = "*Range End Value required"
-         //   return;
-         // }
-         for (let i = 0; i <= maxPage - 1; i++) {
-           this.names.push(data[i]);
-        
-           //this.pageCount = this.names.length;
-          }
-          if(maxPage  >this.countMaxMin)
-          {
-           this.memMaxMinErr.isValid = true;
-             this.memMaxMinErr.errMsg = "Limit should not be greater than " + this.countMaxMin + ".";
-             return;
-          }
           
 
-        
          
+          // else if ((minPage > this.countMaxMin && maxPage > this.countMaxMin) || (minPage > this.countMaxMin || maxPage > this.countMaxMin)) {
+          //   this.memMaxMinErr.isValid = true;
+          //   this.memMaxMinErr.errMsg = "Range should not be greater than " + this.countMaxMin + ".";
+          //   return;
+          // }
+          // if ((minPage != '' && minPage) > (maxPage != '' && maxPage)) {
+          //   this.memMaxMinErr.isValid = true;
+          //   this.memMaxMinErr.errMsg = "Range from should not be greater than " + maxPage + ".";
+          //   return;
+          // }
+          // console.log(this.names);
+          //(VE 13-08-2021)
+          console.log(data);
+          this.clearErrorMessages();
+          console.log(data[0].memberId)
+          if (data == null || data.length == 0) {
+            console.log("Records are Empty");
 
-        
-         // else if ((minPage > this.countMaxMin && maxPage > this.countMaxMin) || (minPage > this.countMaxMin || maxPage > this.countMaxMin)) {
-         //   this.memMaxMinErr.isValid = true;
-         //   this.memMaxMinErr.errMsg = "Range should not be greater than " + this.countMaxMin + ".";
-         //   return;
-         // }
-         // if ((minPage != '' && minPage) > (maxPage != '' && maxPage)) {
-         //   this.memMaxMinErr.isValid = true;
-         //   this.memMaxMinErr.errMsg = "Range from should not be greater than " + maxPage + ".";
-         //   return;
-         // }
-         // console.log(this.names);
-         //(VE 13-08-2021)
-         console.log(data);
-         this.clearErrorMessages();
-         console.log(data[0].memberId)
-         if (data == null || data.length == 0) {
-           console.log("Records are Empty");
+          }
+          else {
+            console.log("another issue");
 
-         }
-         else {
-           console.log("another issue");
+          }
+          setTimeout(() => {
+           // this.searchDataSource = new MatTableDataSource(data)//(VE 13-08-2021)
+            
+            
+            if (data[maxPage] == undefined) {
+              this.searchDataSource = new MatTableDataSource(data)
+            }
+            else if(maxPage>=0)
+            {
+              this.searchDataSource = new MatTableDataSource(this.names);
 
-         }
-         setTimeout(() => {
-          // this.searchDataSource = new MatTableDataSource(data)//(VE 13-08-2021)
-           
-           
-           if (data[maxPage] == undefined) {
-             this.searchDataSource = new MatTableDataSource(data)
-           }
-           else if(maxPage>=0)
-           {
-             this.searchDataSource = new MatTableDataSource(this.names);
-
-           }
-         
-           this.isSearchDataThere = true;
-           this.noSearchFieldEntered = false;
-           this.memSearchError = false;
-         }, 400);
-         setTimeout(() => {
-           this.searchDataSource.paginator = this.paginator;
-           this.searchDataSource.sort = this.sort;
-         }, 700)
-       }, (error) => {
-         console.log("no record found");
-         this.isSearchDataThere = false;
-         this.memSearchError = true;
-         this.noSearchFieldEntered = false;
-         this.searchErrorMessage = error.message;
-         this.clearErrorMessages();
-       }
-     )
-   }
- }
+            }
+          
+            this.isSearchDataThere = true;
+            this.noSearchFieldEntered = false;
+            this.memSearchError = false;
+          }, 400);
+          setTimeout(() => {
+            this.searchDataSource.paginator = this.paginator;
+            this.searchDataSource.sort = this.sort;
+          }, 700)
+        }, (error) => {
+          console.log("no record found");
+          this.isSearchDataThere = false;
+          this.memSearchError = true;
+          this.noSearchFieldEntered = false;
+          this.searchErrorMessage = error.message;
+          this.clearErrorMessages();
+        }
+      )
+    }
+  }
   // keyPressNumbers(event,text)
   // {
   //  var inp=String.fromCharCode(event.keyCode)
@@ -609,9 +613,9 @@ export class MemberComponent implements OnInit {
   }
   openCustomModal(open: boolean, id: any) {
     this.isDisabled = false;
-    // setTimeout(() => {
-    //   this.focusTag.nativeElement.focus()
-    // }, 100);
+    setTimeout(() => {
+      this.focusTag.nativeElement.focus()
+    }, 100);
     this.isCustomModalOpen = open;
     this.submitted = false;
     if (open && id == null) {
@@ -631,6 +635,7 @@ export class MemberComponent implements OnInit {
       this.isAddMode = false;
       if (id != null) {
         console.log(id);
+
         this.uMemberId = id.memberHrid;
         setTimeout(() => {
           this.uClientId = id.clientId;
@@ -656,7 +661,7 @@ export class MemberComponent implements OnInit {
             gender: id.gender,
             status: id.status,
 
-            laserValue: this.decimalValueString(id.laserValue) == 0 ? '' : this.decimalValueString(id.laserValue),
+            laserValue: this.decimalValue(id.laserValue) == 0 ? '' : this.decimalValue(id.laserValue),
 
             isUnlimited: (id.isUnlimited == null || id.isUnlimited == 'N') ? false : true,
             memberStartDate: this.datePipe.transform(id.memberStartDate, 'yyyy-MM-dd'),
@@ -739,7 +744,7 @@ export class MemberComponent implements OnInit {
       a = 0;
     }
     else {
-      a = this.decimalPipe.transform(inputValue, this.format).replace(/,/g, "");
+      a = this.decimalPipe.transform(inputValue, this.format);
     }
     console.log(a);
 

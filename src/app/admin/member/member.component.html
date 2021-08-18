@@ -281,204 +281,204 @@
  </div> <!-- end of page-content-->
 
 
-
 <!-- The Add/Update Member Modal -->
 <div class="modal fade custom-modal" role="dialog" [ngClass]="{'view-modal':isViewModal}" [ngStyle]="{'display': isCustomModalOpen ? 'block' : 'none', 'opacity': 1}">
   
-     <div class="modal-dialog modal-dialog-centered" style="max-width: 690px; top: 7vh;">
-       <div class="modal-content">        
-         <!-- Modal Header -->
-         <div class="modal-header">
-             <h4 class="modal-title" *ngIf="!isViewModal">
-                 <span *ngIf="isAddMode">Add Member</span>
-                 <span *ngIf="!isAddMode">Update Member</span>
-             </h4>
-             <h4 class="modal-title" *ngIf="isViewModal">
-                 <span>Member</span>
-             </h4>
-             <a class="fa fa-2x fa-times-circle" (click)="openCustomModal(false, null)">
-             </a>
-         </div> 
-         <!-- Modal body -->
-     <form [formGroup]="memberForm" (ngSubmit)="onSubmit()">
-         <div class="modal-body"> 
-          <div class="member-search-area">
-              <div class="mandate-fields">
-                <span *ngIf="submitted && !memberForm.valid">Fields marked with * are mandatory</span>
-              </div>
-          <div class="member-form-wrap">
-              <div class="row">                
-                <div class="col-md-4">
-                  <div class="form-group">
-                    <label>Account ID</label>
-                    <input type="text"  formControlName="clientId" class="form-control" [value]="uClientId" />
-                  </div>
-                </div>            
-                <div class="col-md-4">
-                  <div class="form-group">
-                    <label>Contract ID</label>
-                    <input type="text" formControlName="contractId" class="form-control" [value]="uContractId"/>
-                  </div>
-                </div>            
-                <div class="col-md-4">
-                  <div class="form-group">
-                    <label>Plan ID</label>
-                    <input type="text" formControlName="planId" class="form-control" [value]="uPlanId">
-                  </div>
-                </div>
-              </div>
-              <div class="row">          
-                <!-- <div class="col-md-4">
-                  <div class="form-group">
-                    <label>Tier ID<small class="starmark">*</small></label>                    
-                    <select formControlName="tierId" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.tierId.errors }">
-                      <option [value]="uTierId">{{uTierId}}</option>
-                    </select>
-                  </div>
-                </div> -->
-                <div class="col-md-4">
-                  <div class="form-group">
-                    <label>Medica Member ID</label>
-                    <input type="text" formControlName="memberId" maxlength="20"  class="form-control"/>
-                  </div>
-                </div>
-                <div class="col-md-4">
-                   <div class="form-group">
-                     <label>Alternate Member ID</label>
-                     <input type="text" formControlName="alternateId" maxlength="20" class="form-control" />
-                   </div>
-                 </div>   
-              <div class="col-md-4">
+  <div class="modal-dialog modal-dialog-centered" style="max-width: 690px; top: 7vh;">
+    <div class="modal-content">        
+      <!-- Modal Header -->
+      <div class="modal-header">
+          <h4 class="modal-title" *ngIf="!isViewModal">
+              <span *ngIf="isAddMode">Add Member</span>
+              <span *ngIf="!isAddMode">Update Member</span>
+          </h4>
+          <h4 class="modal-title" *ngIf="isViewModal">
+              <span>Member</span>
+          </h4>
+          <a class="fa fa-2x fa-times-circle" (click)="openCustomModal(false, null)">
+          </a>
+      </div> 
+      <!-- Modal body -->
+  <form [formGroup]="memberForm" (ngSubmit)="onSubmit()">
+      <div class="modal-body"> 
+       <div class="member-search-area">
+           <div class="mandate-fields">
+             <span *ngIf="submitted && !memberForm.valid">Fields marked with * are mandatory</span>
+           </div>
+       <div class="member-form-wrap">
+           <div class="row">                
+             <div class="col-md-4">
                <div class="form-group">
-                 <label>Medica Benefit Plan ID</label> 
-                 <input type="text" formControlName="benefitPlanId" maxlength="20" class="form-control" />
+                 <label>Account ID<small class="starmark">*</small></label>
+                 <select #focusElem formControlName="clientId" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.clientId.errors }">
+                   <option [value]="uClientId">
+                     {{uClientId}}
+                   </option>
+                </select>  
                </div>
-             </div>                              
+             </div>            
+             <div class="col-md-4">
+               <div class="form-group">
+                 <label>Contract ID<small class="starmark">*</small></label>
+                 <select formControlName="contractId" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.contractId.errors }">
+                   <option [value]="uContractId">{{uContractId}}</option>
+                 </select>
+               </div>
+             </div>            
+             <div class="col-md-4">
+               <div class="form-group">
+                 <label>Plan ID<small class="starmark">*</small></label>
+                 <select formControlName="planId" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.planId.errors }">
+                   <option [value]="uPlanId">{{uPlanId}}</option>
+                 </select>
+               </div>
+             </div>
+           </div>
+           <div class="row">    
+             <div class="col-md-4">
+               <div class="form-group">
+                 <label>Medica Member ID<small class="starmark">*</small></label>
+                 <input type="text" formControlName="memberId" maxlength="20"  class="form-control" [ngClass]="{ 'is-invalid':memIdErr.isValid }"/>
+               </div>
+             </div>
+             <div class="col-md-4">
+                <div class="form-group">
+                  <label>Alternate Member ID</label>
+                  <input type="text" formControlName="alternateId" maxlength="20" class="form-control" />
+                </div>
+              </div>  
+           <div class="col-md-4">
+            <div class="form-group">
+              <label>Medica Benefit Plan ID</label> 
+              <input type="text" formControlName="benefitPlanId" maxlength="20" class="form-control" />
+            </div>
+          </div>                                
+         </div>
+         <div class="row">
+           <!--(VE 30-07-2021 starts)-->
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Coverage Tier</label>
+              <input type="text" formControlName="tier" maxlength="20" class="form-control" />
+            </div>
+          </div>  
+          <!--(VE 30-07-2021 ends)--> 
+           <div class="col-md-4">
+               <div class="form-group">
+                 <label>First Name<small class="starmark">*</small></label>
+           <input type="text" formControlName="fname" maxlength="50" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.fname.errors }" />
+               </div> 
+           </div>  
+             <div class="col-md-4">
+               <div class="form-group">
+                 <label>Last Name<small class="starmark">*</small></label>
+           <input type="text" formControlName="lname" maxlength="50" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.lname.errors }" />
+               </div>   
+             </div>  
+         </div>
+            <div class="row"> 
+               <div class="col-md-4">
+                 <div class="form-group">
+                   <label>Middle Name</label>
+             <input type="text" formControlName="mname" maxlength="50" class="form-control" />
+                 </div> 
+               </div>
+             <div class="col-md-4">
+                  <div class="form-group">
+                     <label>Birth Date<small class="starmark">*</small></label> 
+                     <input type="date" value="MM/DD/YYYY" formControlName="dateOfBirth" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.dateOfBirth.errors }" max="2999-12-31" />                            
+                   </div>
+             </div>  
+             <div class="col-md-4">
+                  <div class="form-group">
+                     <label>Member Start Date<small class="starmark">*</small></label> 
+                     <input type="date" value="MM/DD/YYYY" formControlName="memberStartDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.memberStartDate.errors }" max="2999-12-31"/>
+                     
+                   </div>
+             </div>
             </div>
             <div class="row">
-              <!--(VE 30-07-2021 starts)--> 
              <div class="col-md-4">
-               <div class="form-group">
-                 <label>Coverage Tier</label>
-                 <input type="text" formControlName="tier" maxlength="20" class="form-control" />
-               </div>
-             </div>  
-             <!--(VE 30-07-2021 ends)--> 
-              <div class="col-md-4">
                   <div class="form-group">
-                    <label>First Name</label>
-              <input type="text" formControlName="fname" maxlength="50" class="form-control"  />
-                  </div> 
-              </div>  
-                <div class="col-md-4">
-                  <div class="form-group">
-                    <label>Last Name</label>
-              <input type="text" formControlName="lname" maxlength="50" class="form-control"/>
-                  </div>   
-                </div>   
-            </div>
-               <div class="row">
-                  <div class="col-md-4">
-                    <div class="form-group">
-                      <label>Middle Name</label>
-                <input type="text" formControlName="mname" maxlength="50" class="form-control" />
-                    </div> 
-                  </div>
-                <div class="col-md-4">
-                     <div class="form-group">
-                        <label>Birth Date</label> 
-                        <input type="date" value="MM/DD/YYYY" formControlName="dateOfBirth" class="form-control"/>                            
-                      </div>
-                </div>  
-                <div class="col-md-4">
-                     <div class="form-group">
-                        <label>Member Start Date</label> 
-                        <input type="date" value="MM/DD/YYYY" formControlName="memberStartDate" class="form-control"/>
-                        
-                      </div>
-                </div>
-               </div>
-               <div class="row">
-                <div class="col-md-4">
-                     <div class="form-group">
-                        <label>Member End Date</label> 
-                        <input type="date" value="MM/DD/YYYY" formControlName="memberEndDate" class="form-control"/>
-                        
-                      </div>
-                </div>
-                <div class="col-md-4">
-                     <div class="form-group">
-                        <label>Medica Subscriber ID</label> 
-                        <input type="text" formControlName="subscriberId" maxlength="20" class="form-control"/>                        
-                      </div>
-                </div>
-                <div class="col-md-4">
-                  <div class="form-group">
-                     <label>Subscriber First Name</label> 
-                     <input type="text" formControlName="subscriberFname" maxlength="50" class="form-control"/>                        
+                     <label>Member End Date<small class="starmark">*</small></label> 
+                     <input type="date" value="MM/DD/YYYY" formControlName="memberEndDate" class="form-control" max="2999-12-31"/>
+                     
                    </div>
              </div>
-              </div>
-              <div class="row">
-                <!-- <div class="col-md-4">
-                   <div class="form-group switch-group">
-                    Is Unlimited
-                      <label class="switch">
-                        <input type="checkbox" class="success" formControlName="isUnlimited" (change)="isUnlimitedChecked()">
-                        <span class="slider round"></span>
-                      </label>                  
-                </div>
-                </div>     -->
+             <div class="col-md-4">
+                  <div class="form-group">
+                     <label>Medica Subscriber ID</label> 
+                     <input type="text" formControlName="subscriberId" maxlength="20" class="form-control"/>                        
+                   </div>
+             </div>
              <div class="col-md-4">
                <div class="form-group">
-                  <label>Subscriber Last Name</label> 
-                  <input type="text" formControlName="subscriberLname" maxlength="50" class="form-control"/>                        
+                  <label>Subscriber First Name</label> 
+                  <input type="text" formControlName="subscriberFname" maxlength="50" class="form-control"/>                        
                 </div>
-             </div>
-                <div class="col-md-4">
-                     <div class="form-group">
-                        <label>Gender</label>  
-                        <select class="form-control" formControlName="gender">
-                          <option value=''>Select Gender</option>
-                          <option value="M">Male</option>
-                          <option value="F">Female</option>
-                        </select>
-                      </div>
-                </div>  
-                <div class="col-md-4">
-                  <div class="form-group">
-                     <label>Laser Value</label> 
-                     <input type="number" formControlName="laserValue" maxlength="20" class="form-control"/>   <!--PV 08-05-2021  -->                          
-                   </div>
-                </div>    
-               </div>
-               <div class="row">  
-                <!-- <div class="col-md-4" *ngIf="!isAddMode">
-                    <div class="form-group switch-group">
-                        Active
-                          <label class="switch">
-                            <input type="checkbox" class="success" formControlName="status">
-                            <span class="slider round"></span>
-                          </label>                  
-                    </div>
-                </div>                     -->
-               </div>
-          </div>      
-        </div>
-      </div> 
-      <div class="modal-footer">
-           <div class="modal-footer-btns">
-            <div class="col_1"> </div>
-            <div class="col_2">
-             <button type="button" class="btn btn-outline-primary" (click)="openCustomModal(false, null)">Cancel</button>
-             <button type="submit" class="btn btn-primary" *ngIf="!isAddMode && !isViewModal">Update</button>
-             <button type="submit" class="btn btn-primary" *ngIf="isAddMode">Add</button>
-            </div>
+          </div>
            </div>
-        </div>
-      </form>
-         </div>           
+           <div class="row">
+             <!-- <div class="col-md-4">
+                <div class="form-group switch-group">
+                 Is Unlimited
+                   <label class="switch">
+                     <input type="checkbox" class="success" formControlName="isUnlimited" (change)="isUnlimitedChecked()">
+                     <span class="slider round"></span>
+                   </label>                  
+             </div>
+             </div>     -->
+          <div class="col-md-4">
+            <div class="form-group">
+               <label>Subscriber Last Name</label> 
+               <input type="text" formControlName="subscriberLname" maxlength="50" class="form-control"/>                        
+             </div>
+          </div>
+             <div class="col-md-4">
+                  <div class="form-group">
+                     <label>Gender<small class="starmark">*</small></label>  
+                     <select class="form-control" formControlName="gender" [ngClass]="{ 'is-invalid': submitted && f.gender.errors }">
+                       <option value=''>Select Gender</option>
+                       <option value="M">Male</option>
+                       <option value="F">Female</option>
+                     </select>
+                   </div>
+             </div>   
+             <div class="col-md-4">
+               <div class="form-group">
+                  <label>Laser Value</label> 
+                  <input type="number" formControlName="laserValue" maxlength="20" class="form-control"/>   <!--PV 08-05-2021  -->                          
+                </div>
+             </div>   
+            </div>
+            <div class="row">  
+             <!-- <div class="col-md-4" *ngIf="!isAddMode">
+                 <div class="form-group switch-group">
+                     Active
+                       <label class="switch">
+                         <input type="checkbox" class="success" formControlName="status">
+                         <span class="slider round"></span>
+                       </label>                  
+                 </div>
+             </div>                     -->
+            </div>
+       </div>      
+     </div>
+   </div> 
+   <div class="modal-footer">
+        <div class="modal-footer-btns">
+         <div class="col_1"> </div>
+         <div class="col_2">
+          <button type="button" class="btn btn-outline-primary" (click)="openCustomModal(false, null)">Cancel</button>
+          <button type="submit" class="btn btn-primary" *ngIf="!isAddMode && !isViewModal">Update</button>
+          <button type="submit" class="btn btn-primary" *ngIf="isAddMode">Add</button>
          </div>
-       </div>
-   
+        </div>
+     </div>
+   </form>
+      </div>           
+      </div>
+    </div>
+
+
  
