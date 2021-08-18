@@ -6,7 +6,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ChartsModule } from 'ng2-charts';
 import { MDBBootstrapModule } from 'angular-bootstrap-md';
 import { RouterModule } from '@angular/router';
-import { CookieService } from 'ngx-cookie-service';
 
 import { AppRoutingModule } from './app-routing.module';
 import {AdminModule} from './admin/admin.module';
@@ -54,7 +53,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar'; //added b
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
-  LoginService, CookieService],
+  LoginService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

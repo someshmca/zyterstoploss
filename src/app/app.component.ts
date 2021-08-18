@@ -3,7 +3,6 @@ import {Router} from '@angular/router';
 import { Observable } from 'rxjs';
 import { NavPopupService } from './admin/services/nav-popup.service';
 import {LoginService} from './shared/services/login.service';
-import { CookieService } from 'ngx-cookie-service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -15,7 +14,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   isLoggedIn: boolean=false;
   isStopScroll:boolean=false;
 
-  constructor(private loginService: LoginService, private route: Router, private cookieService: CookieService){
+  constructor(private loginService: LoginService, private route: Router){
 
   }
 

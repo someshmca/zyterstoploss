@@ -8,8 +8,6 @@ import { stringify } from '@angular/compiler/src/util';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
-import { CookieService } from 'ngx-cookie-service';
-
 
 import { AuthService } from '../services/auth.service';
 import {LoaderService} from '../../admin/services/loader.service';
@@ -20,7 +18,7 @@ import {LoaderService} from '../../admin/services/loader.service';
 })
 export class LoginComponent implements OnInit {
 
-  constructor(private loginService: LoginService, public loaderService: LoaderService, private router: Router, private cookieService:CookieService) { }
+  constructor(private loginService: LoginService, public loaderService: LoaderService, private router: Router) { }
 
   @ViewChild('loginForm') loginForm: NgForm;
   loginData: any;
@@ -38,10 +36,6 @@ export class LoginComponent implements OnInit {
   @ViewChild("focusElem") focusTag: ElementRef;
 
   ngOnInit(): void {
-    this.cookieService.deleteAll('/', 'https://zyterhealthslui.azurewebsites.net');  
-    this.cookieService.deleteAll();
-    console.log("username : "+this.userName);
-    console.log("password : "+this.password);
     localStorage.setItem('loginStatus',"false");
     this.loginStatus = false;
     console.log(this.loginStatus);
@@ -68,7 +62,9 @@ export class LoginComponent implements OnInit {
 
     this.userName = this.loginForm.value.emailId;
     this.password = this.loginForm.value.password;
-    //this.cookieService.getAll();
+
+    console.log("username : "+this.userName);
+    console.log("password : "+this.password);
     console.log("Login path : "+Paths.loginPath);
    // if(this.userName =="admin@infinite.com" || this.userName =="ashwani.kumar@infinite.com")
   //  if(this.userName){
