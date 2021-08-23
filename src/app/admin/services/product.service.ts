@@ -32,32 +32,30 @@ export class ProductService {
       ).pipe(catchError(this.handleError.bind(this)));
   }
 
-  getProduct(productId): Observable<IProduct[]> {
-    
+  getProduct(productId): Observable<IProduct[]> {    
     return this.http.get<IProduct[]>(Paths.product+productId).pipe(catchError(this.handleError.bind(this)));
  }
+
  addProduct(formData:IProductAdd ): Observable<IProductAdd>{
- const body = JSON.stringify(formData);
- console.log(body);
- 
- const headerOptions = new HttpHeaders({ 'Content-Type': 'application/json'});
-  return this.http.post<IProductAdd
-  >(Paths.productAdd, body,{headers: headerOptions} ).pipe(catchError(this.handleError.bind(this)));
- 
+    const body = JSON.stringify(formData);
+    console.log(body); 
+    const headerOptions = new HttpHeaders({ 'Content-Type': 'application/json'});
+    return this.http.post<IProductAdd
+      >(Paths.productAdd, body,{headers: headerOptions} ).pipe(catchError(this.handleError.bind(this))); 
  }
 
- updateProduct(formData:IProductUpdate ): Observable<IProductAdd>{
- 
- const body = JSON.stringify(formData);
- 
- const headerOptions = new HttpHeaders({ 'Content-Type': 'application/json' });
-  return this.http.put<IProductUpdate>(Paths.productUpdate, body,{headers: headerOptions} ).pipe(catchError(this.handleError.bind(this)));
- 
+ checkDuplicateContract(contractId:number){
+   return this.http.get(Paths.duplicateContract+contractId).pipe(catchError(this.handleError.bind(this)));
  }
+ updateProduct(formData:IProductUpdate ): Observable<IProductAdd>{ 
+    const body = JSON.stringify(formData); 
+    const headerOptions = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.put<IProductUpdate>(Paths.productUpdate, body,{headers: headerOptions} ).pipe(catchError(this.handleError.bind(this))); 
+ }
+
  getCoveredClaims(){
-  return this.http.get<ICoveredClaims[]>(Paths.productCovertClaims
-    ).pipe(catchError(this.handleError.bind(this)));
-}
+    return this.http.get<ICoveredClaims[]>(Paths.productCovertClaims).pipe(catchError(this.handleError.bind(this)));
+ }
   handleError(errorResponse: HttpErrorResponse) {
     if (errorResponse.error instanceof ErrorEvent) {
       console.error('Client Side Error :', errorResponse.error.message);

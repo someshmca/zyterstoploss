@@ -87,6 +87,7 @@ export const Paths = {
   productAdd: "https://medicaslapiorc.azurewebsites.net/api/Product/AddProducts",
   productUpdate:"https://medicaslapiorc.azurewebsites.net/api/Product/UpdateProduct",
   productCovertClaims:"https://medicaslapiorc.azurewebsites.net/api/Product/GetCoveredClaims",
+  duplicateContract: "https://medicaslapiorc.azurewebsites.net/api/Product/DuplicateContract?contractId=",
 
   ExcelUploadPath: "https://medicaslapiorc.azurewebsites.net/api/ExcelUpload/UploadExcel?userId=",
 

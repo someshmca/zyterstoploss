@@ -115,7 +115,8 @@
               <span *ngIf="sslExInStartEndDateErr.isDateErr">{{sslExInStartEndDateErr.dateErrMsg}}</span>
               <span *ngIf="sslExInStartDateErr.isDateErr">{{sslExInStartDateErr.dateErrMsg}}</span>
               <span *ngIf="sslExPaidStartEndDateErr.isDateErr">{{sslExPaidStartEndDateErr.dateErrMsg}}</span>
-              <span *ngIf="sslExPaidStartDateErr.isDateErr">{{sslExPaidStartDateErr.dateErrMsg}}</span>         
+              <span *ngIf="sslExPaidStartDateErr.isDateErr">{{sslExPaidStartDateErr.dateErrMsg}}</span>  
+              <div *ngIf="duplicateContractErr.flag">{{duplicateContractErr.message}}</div>       
              </div>  
             <div class="row">
               <div class="col-md-4">
@@ -131,8 +132,8 @@
               <div class="col-md-4">
                 <div class="form-group">
                   <label>Contract<small class="starmark">*</small></label>
-                  <select class="form-control" formControlName="contractId"  [ngClass]="{ 'is-invalid': submitted && f.contractId.errors }">
-                     <!-- <option value='' *ngIf="isAddMode"></option> -->
+                  <select class="form-control" formControlName="contractId" (change)="checkDuplicateContract($event.target.value)" [ngClass]="{ 'is-invalid': duplicateContractErr.flag}">
+                    <option value='' *ngIf="isAddMode"></option>
                     <option *ngFor="let obj of contractsByClientId" [value]="obj.contractId">
                       {{obj.contractId}} 
                       <!-- <span *ngIf="obj.description.length>0">({{obj.description}})</span> -->
@@ -513,13 +514,13 @@
       </div>
       <div class="col-md-4">
         <div class="form-group">
-          <label>IBNR Reserve Percentage</label>
+          <label>IBNR Reserve Percentage <small class="starmark" *ngIf="f.isMaxLiability.value">*</small> </label>
           <input type="number" formControlName="ibnrPercentage" [readonly]="!f.isMaxLiability.value" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.ibnrPercentage.errors }"/>
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-group">
-          <label>Deferred Service Fee Percentage</label>
+          <label>Deferred Service Fee Percentage<small class="starmark" *ngIf="f.isMaxLiability.value">*</small></label>
           <input type="number" formControlName="defferedFeePercentage" [readonly]="!f.isMaxLiability.value" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.defferedFeePercentage.errors }"/>
         </div>
       </div>
