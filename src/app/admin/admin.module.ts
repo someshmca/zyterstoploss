@@ -42,13 +42,15 @@ import { ExcelUploadComponent } from '../admin/excel-upload/excel-uplaod.compone
 import { Nl2brPipe } from '../nl2br.pipe';
 import { LaseringComponent } from './lasering/lasering.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';//added by Venkatesh Enigonda
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import{InterceptorService} from'./services/interceptor.service';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { PlanFactorComponent } from './health-plan/plan-factor/plan-factor.component';
+import { LaseringSearchComponent } from './lasering-search/lasering-search.component';
 
 
 @NgModule({
-  declarations: [BatchSettingsComponent, ClaimSearchComponent, ClaimResultComponent, ClaimComponent, BenefitsComponent, ProgramsComponent, ContractsComponent, RoleComponent, RulesComponent, ClientComponent, AttributesComponent, UsersSecurityComponent, MemberComponent, AlertComponent, HealthPlanComponent, ProductComponent, ExcelUploadComponent, Nl2brPipe, LaseringComponent, PlanFactorComponent],
+  declarations: [BatchSettingsComponent, ClaimSearchComponent, ClaimResultComponent, ClaimComponent, BenefitsComponent, ProgramsComponent, ContractsComponent, RoleComponent, RulesComponent, ClientComponent, AttributesComponent, UsersSecurityComponent, MemberComponent, AlertComponent, HealthPlanComponent, ProductComponent, ExcelUploadComponent, Nl2brPipe, LaseringComponent, PlanFactorComponent, LaseringSearchComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -67,7 +69,8 @@ import { PlanFactorComponent } from './health-plan/plan-factor/plan-factor.compo
     MatStepperModule,
     MatIconModule,
     AdminRoutingModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    MatProgressSpinnerModule
   ],
   providers: [
     ClaimReportService,

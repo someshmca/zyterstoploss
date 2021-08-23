@@ -21,6 +21,7 @@ import { ASLReportComponent } from '../reports/asl-report/asl-report.component';
 import { MAXLiabilityReportComponent } from '../reports/max-liability-report/max-liability-report.component';
 import { ExcelUploadComponent } from '../admin/excel-upload/excel-uplaod.component';
 import { LaseringComponent } from './lasering/lasering.component';
+import { LaseringSearchComponent } from './lasering-search/lasering-search.component';
 const routes: Routes = [
   {path: 'claim-search', component: ClaimSearchComponent, canActivate: [AuthGuard] },
   {path: 'claim-result', component: ClaimResultComponent, canActivate: [AuthGuard] },
@@ -35,6 +36,7 @@ const routes: Routes = [
   {path: 'roles', component: RoleComponent, canActivate: [AuthGuard] },
   {path: 'rules', component: RulesComponent, canActivate: [AuthGuard] },
   {path: 'member', component: MemberComponent, canActivate: [AuthGuard]},
+  {path: 'lasering-search',component:LaseringSearchComponent},
   {path: 'lasering', component: LaseringComponent},
   {path: 'health-plan', component: HealthPlanComponent, canActivate: [AuthGuard]},
   {path: 'product', component: ProductComponent, canActivate: [AuthGuard]},

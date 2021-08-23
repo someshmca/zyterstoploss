@@ -21,6 +21,7 @@ import {CLAIM_BASIS_CONSTANT} from '../claim-basis.constant';
 import { HealthPlanService } from '../services/health-plan.service';
 import {NavPopupService} from '../services/nav-popup.service';
 import { IClientObj } from '../models/nav-popups.model';
+import { LoaderService } from '../services/loader.service';
 @Component({
   selector: 'app-product',
   templateUrl: './product.component.html',
@@ -98,6 +99,30 @@ export class ProductComponent implements OnInit {
     isValid: false,
     errMsg : ''
   }
+  sslExInStartEndDateErr=
+  {
+    isDateErr: false,
+    dateErrMsg:''
+ 
+  }
+  sslExInStartDateErr=
+  {
+    isDateErr: false,
+    dateErrMsg:''
+ 
+  }
+  sslExPaidStartEndDateErr=
+  {
+    isDateErr: false,
+    dateErrMsg:''
+ 
+  }
+  sslExPaidStartDateErr=
+  {
+    isDateErr: false,
+    dateErrMsg:''
+ 
+  }
   isDisabled:boolean=false;
   isEditSelected: boolean = false;
   searchInputValue: string='';
@@ -124,6 +149,7 @@ export class ProductComponent implements OnInit {
     private datePipe: DatePipe,
     private loginService: LoginService,
     private navService: NavPopupService,
+    public loaderService: LoaderService,
     private decimalPipe: DecimalPipe)
     {
    }
@@ -177,6 +203,11 @@ export class ProductComponent implements OnInit {
       sslTermCoverageExtEndDate:'',
       sslCoveredClaims: ['', Validators.required],
       sslLasering: false,
+
+      sslExclusionIncurredStartDate:[''],
+      sslExclusionIncurredEndDate:[''],
+      sslExclusionPaidStartDate:[''],
+      sslExclusionPaidEndDate:[''],
 
       //below from aslDeductible to aslExpecteddClaimLiability are number fields
       //aslDeductible:'',
@@ -339,6 +370,14 @@ export class ProductComponent implements OnInit {
     this.sslSPecificErr.dateErrMsg='';
     this.aslAggregateErr.isDateErr=false;
     this.aslAggregateErr.dateErrMsg='';//Ends Here
+    this.sslExInStartEndDateErr.isDateErr=false;
+    this.sslExInStartEndDateErr.dateErrMsg='';
+    this.sslExInStartDateErr.isDateErr=false;
+    this.sslExInStartDateErr.dateErrMsg='';
+    this.sslExPaidStartEndDateErr.isDateErr=false;
+    this.sslExPaidStartEndDateErr.dateErrMsg='';
+    this.sslExPaidStartDateErr.isDateErr=false;
+    this.sslExPaidStartDateErr.dateErrMsg='';
     if(this.isAddMode)
         this.productForm.patchValue({isMaxLiability:false})
   }
@@ -541,6 +580,38 @@ if(aslTermVal!='' && this.productForm.valid){
     return;
   }
 }
+// venkatesh exclusion code start 
+if(this.f.sslExclusionIncurredStartDate.value !=null && this.f.sslExclusionIncurredStartDate.value !='' && this.f.sslExclusionIncurredEndDate.value!=null && this.f.sslExclusionIncurredEndDate.value!=''){ 
+  if(this.f.sslExclusionIncurredStartDate.value == this.f.sslExclusionIncurredEndDate.value)
+  {
+    this.sslExInStartEndDateErr.isDateErr=true;
+    this.sslExInStartEndDateErr.dateErrMsg="SSL Exclusion Incurred start date should not be equal to SSL Exclusion Incurred End date"
+    return;
+  }
+  if(this.f.sslExclusionIncurredStartDate.value > this.f.sslExclusionIncurredEndDate.value)
+  {
+    this.sslExInStartDateErr.isDateErr=true;
+    this.sslExInStartDateErr.dateErrMsg="SSL Exclusion Incurred start date should not be greaterthan SSL Exclusion Incurred End date"
+    return;
+  }
+   
+  }
+  if(this.f.sslExclusionPaidStartDate.value !=null && this.f.sslExclusionPaidStartDate.value !='' && this.f.sslExclusionPaidEndDate.value!=null && this.f.sslExclusionPaidEndDate.value!=''){ 
+    if(this.f.sslExclusionPaidStartDate.value == this.f.sslExclusionPaidEndDate.value)
+    {
+      this.sslExPaidStartEndDateErr.isDateErr=true;
+      this.sslExPaidStartEndDateErr.dateErrMsg="SSL Exclusion Paid start date should not be equal to SSL Exclusion paid End date"
+      return;
+    }
+    if(this.f.sslExclusionPaidStartDate.value > this.f.sslExclusionPaidEndDate.value)
+    {
+      this.sslExPaidStartDateErr.isDateErr=true;
+      this.sslExPaidStartDateErr.dateErrMsg="SSL Exclusion Paid start date should not be greaterthan SSL Exclusion paid End date"
+      return;  
+    }
+    
+    }
+  // exclusion code ends
 
    this.loading = true;
    
@@ -637,6 +708,10 @@ openViewModal(bool, id:any){
               sslIsImmediateReimbursement:x[0].sslIsImmediateReimbursement,
               sslTermCoverageExtEndDate:x[0].sslTermCoverageExtEndDate==null?"":this.datePipe.transform(new Date(x[0].sslTermCoverageExtEndDate), 'yyyy-MM-dd'),
               sslLasering: x[0].sslLasering,
+              sslExclusionIncurredStartDate:x[0].sslExclusionIncurredStartDate==null?"":this.datePipe.transform(new Date(x[0].sslExclusionIncurredStartDate), 'yyyy-MM-dd'),
+                sslExclusionIncurredEndDate:x[0].sslExclusionIncurredEndDate==null?"":this.datePipe.transform(new Date(x[0].sslExclusionIncurredEndDate), 'yyyy-MM-dd'),
+                sslExclusionPaidStartDate:x[0].sslExclusionPaidStartDate==null?"":this.datePipe.transform(new Date(x[0].sslExclusionPaidStartDate), 'yyyy-MM-dd'),
+                sslExclusionPaidEndDate:x[0].sslExclusionPaidEndDate==null?"":this.datePipe.transform(new Date(x[0].sslExclusionPaidEndDate), 'yyyy-MM-dd'),
              // aslDeductible:x[0].aslDeductible==0?'':x[0].aslDeductible,
               aslMinDeductible:x[0].aslMinDeductible==0?'':x[0].aslMinDeductible,
               aslExpectedClaimLiability:x[0].aslExpectedClaimLiability,
@@ -838,7 +913,10 @@ patchProductForm(){
     sslTermCoverageExtEndDate: this.dateValue(this.f.sslTermCoverageExtEndDate.value),
     //sslIsImmediateReimbursement: boolean;
     sslLasering: this.f.sslLasering.value==false?false:true,
-
+    sslExclusionIncurredStartDate: (this.f.sslExclusionIncurredStartDate.value),
+    sslExclusionIncurredEndDate: (this.f.sslExclusionIncurredEndDate.value),
+    sslExclusionPaidStartDate:(this.f.sslExclusionPaidStartDate.value),
+    sslExclusionPaidEndDate:(this.f.sslExclusionPaidEndDate.value),
     //aslClaimBasis: string;
     //aslDeductible:0, // not using currently
     aslMinDeductible: this.numberValue(this.f.aslMinDeductible.value),
@@ -935,7 +1013,11 @@ private addProduct() {
     sslContractStartDate:this.productForm.get('sslContractStartDate').value==""?null:this.datePipe.transform(this.f.sslContractStartDate.value,'yyyy-MM-dd'),
     sslContractEndDate:this.productForm.get('sslContractEndDate').value==""?null:this.datePipe.transform(this.f.sslContractEndDate.value,'yyyy-MM-dd'),
     aslContractStartDate:this.productForm.get('aslContractStartDate').value==""?null:this.datePipe.transform(this.f.aslContractStartDate.value,'yyyy-MM-dd'),
-    aslContractEndDate:this.productForm.get('aslContractEndDate').value==""?null:this.datePipe.transform(this.f.aslContractEndDate.value,'yyyy-MM-dd')
+    aslContractEndDate:this.productForm.get('aslContractEndDate').value==""?null:this.datePipe.transform(this.f.aslContractEndDate.value,'yyyy-MM-dd'),
+    sslExclusionIncurredStartDate:this.productForm.get('sslExclusionIncurredStartDate').value==""?null:this.datePipe.transform(this.f.sslExclusionIncurredStartDate.value,'yyyy-MM-dd'),
+    sslExclusionIncurredEndDate:this.productForm.get('sslExclusionIncurredEndDate').value==""?null:this.datePipe.transform(this.f.sslExclusionIncurredEndDate.value,'yyyy-MM-dd'),
+    sslExclusionPaidStartDate:this.productForm.get('sslExclusionPaidStartDate').value==""?null:this.datePipe.transform(this.f.sslExclusionPaidStartDate.value,'yyyy-MM-dd'),
+    sslExclusionPaidEndDate:this.productForm.get('sslExclusionPaidEndDate').value==""?null:this.datePipe.transform(this.f.sslExclusionPaidEndDate.value,'yyyy-MM-dd')
     
   });
   //this.productForm.patchValue(this.productForm.value);

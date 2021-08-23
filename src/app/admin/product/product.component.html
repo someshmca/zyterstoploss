@@ -92,6 +92,9 @@
 
       </div>
         <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+          <div *ngIf="loaderService.isLoading | async" class="loader-container"><!--added by venkatesh Enigonda-->
+            <mat-spinner  [diameter]="75" style="top:37%;left:43%"></mat-spinner>
+            </div>
       <!-- Modal body -->
       <div class="modal-body">
           <div class="product-form-wrap">
@@ -108,7 +111,11 @@
               <span *ngIf="sslClaimBasisErr.isValid">{{sslClaimBasisErr.errMsg}}</span>
               <span *ngIf="aslClaimBasisErr.isValid">{{aslClaimBasisErr.errMsg}}</span>
               <span *ngIf="sslSPecificErr.isDateErr">{{sslSPecificErr.dateErrMsg}}</span> <!--Modified by Venkatesh Enigonda-->
-              <span *ngIf="aslAggregateErr.isDateErr">{{aslAggregateErr.dateErrMsg}}</span> <!--Modified by Venkatesh Enigonda-->             
+              <span *ngIf="aslAggregateErr.isDateErr">{{aslAggregateErr.dateErrMsg}}</span>    
+              <span *ngIf="sslExInStartEndDateErr.isDateErr">{{sslExInStartEndDateErr.dateErrMsg}}</span>
+              <span *ngIf="sslExInStartDateErr.isDateErr">{{sslExInStartDateErr.dateErrMsg}}</span>
+              <span *ngIf="sslExPaidStartEndDateErr.isDateErr">{{sslExPaidStartEndDateErr.dateErrMsg}}</span>
+              <span *ngIf="sslExPaidStartDateErr.isDateErr">{{sslExPaidStartDateErr.dateErrMsg}}</span>         
              </div>  
             <div class="row">
               <div class="col-md-4">
@@ -143,7 +150,12 @@
                 </div>  -->
               </div>
             </div>
-            <h1 class="text-primary">Specific Stop Loss</h1>
+            <h1 class="text-primary">Specific Stop Loss
+              <select name="years" id="year">
+                <option value="year1">Year 1</option>
+                <option value="year2">Year 2</option>
+              </select>
+            </h1>
           <div class="row">
             <div class="col-md-4">
               <div class="form-group">
@@ -238,14 +250,26 @@
             </div>
           </div>
           <div class="row"> 
-            <!--(VE 1-08-2021 starts)-->
             <div class="col-md-4">
               <div class="form-group">
                 <label>Limit of Liability - Participant</label>
                 <input type="number" formControlName="sslPartcipantLimit" class="form-control"/>
               </div>
             </div>
-            <!--(VE 1-08-2021 ends)-->
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Limit of Liability - Pharmacy Claims Contract</label>
+                <input type="number"  class="form-control"/>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Limit of Liability - Pharmacy Claims Participant</label>
+                <input type="number" class="form-control"/>
+              </div>
+            </div>
+          </div>
+          <div class="row">
             <div class="col-md-4">
               <div class="form-group">
                 <label>Terminal Extension Coverage End Date</label>
@@ -271,6 +295,34 @@
               </div>
             </div>
           </div>	
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Exclusion Incurred Period Start Date</label>
+                <input type="date"  value="MM/DD/yyyy" formControlName="sslExclusionIncurredStartDate"class="form-control" max="2999-12-31" [ngClass]="{ 'is-invalid': sslExInStartEndDateErr.isDateErr || sslExInStartDateErr.isDateErr}"/>
+              </div>              
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Exclusion Incurred Period End Date</label>
+                <input type="date"  value="MM/DD/yyyy" formControlName="sslExclusionIncurredEndDate"class="form-control" max="2999-12-31" [ngClass]="{ 'is-invalid': sslExInStartEndDateErr.isDateErr}"/>
+              </div>              
+            </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Exclusion Paid Start Date</label>
+              <input type="date"  value="MM/DD/yyyy" formControlName="sslExclusionPaidStartDate"class="form-control" max="2999-12-31" [ngClass]="{ 'is-invalid': sslExPaidStartEndDateErr.isDateErr || sslExPaidStartDateErr.isDateErr}"/>
+            </div>              
+          </div>
+          </div>
+          <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>Exclusion Paid  End Date</label>
+              <input type="date"  value="MM/DD/yyyy" formControlName="sslExclusionPaidEndDate"class="form-control" max="2999-12-31" [ngClass]="{ 'is-invalid': sslExPaidStartEndDateErr.isDateErr}"/>
+            </div>              
+          </div>
+        </div>
           <div class="row"> 
             <div class="col-md-4">
               <div class="form-group">
@@ -404,6 +456,13 @@
           <input type="number" formControlName="aslLifeTimeLimit" class="form-control"/>
         </div>
       </div>
+
+      <div class="col-md-4">
+        <div class="form-group">
+          <label>Limit of Liability - Pharmacy Claims</label>
+          <input type="number" class="form-control"/>
+        </div>
+      </div>
       <div class="col-md-4">
         <div class="form-group">
           <label></label>
@@ -413,14 +472,14 @@
           </div>
         </div>
       </div>
+    </div>
+    <div class="row">
       <div class="col-md-4">
         <div class="form-group">
           <label>Terminal Extension Coverage End Date</label>
           <input type="date" formControlName="aslTermCoverageExtEndDate" class="form-control" [ngClass]="{ 'is-invalid': aslTermCovrErr.isDateErr }" max="2999-12-31" />
         </div>
       </div> 
-    </div>
-    <div class="row">
       <div class="col-md-4">
         <div class="form-group">
           <label>Covered Benefits<small class="starmark">*</small></label>

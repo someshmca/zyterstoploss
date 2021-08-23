@@ -39,7 +39,10 @@ export interface IProductAll{
     sslContractStartDate: Date;
     sslContractEndDate: Date;
     aslCorridor: number;
-
+    sslExclusionIncurredStartDate:Date;
+    sslExclusionIncurredEndDate:Date;
+    sslExclusionPaidStartDate:Date;
+    sslExclusionPaidEndDate:Date;
 }
 export interface IProductAdd{
     productId: number;
@@ -83,6 +86,10 @@ export interface IProductAdd{
     sslContractStartDate: Date;
     sslContractEndDate: Date;
     aslCorridor: number;
+    sslExclusionIncurredStartDate:Date;
+    sslExclusionIncurredEndDate:Date;
+    sslExclusionPaidStartDate:Date;
+    sslExclusionPaidEndDate:Date;
 }
 export interface IProductUpdate{
   productId: number;
@@ -125,6 +132,10 @@ export interface IProductUpdate{
   sslContractStartDate: Date;
   sslContractEndDate: Date;
   aslCorridor: number;
+  sslExclusionIncurredStartDate:Date;
+    sslExclusionIncurredEndDate:Date;
+    sslExclusionPaidStartDate:Date;
+    sslExclusionPaidEndDate:Date;
 }
 export interface IActiveClient{
     clientId: string;
@@ -181,6 +192,10 @@ export interface IProduct{
     sslContractStartDate: Date;
     sslContractEndDate: Date;
     aslCorridor: number;
+    sslExclusionIncurredStartDate:Date;
+    sslExclusionIncurredEndDate:Date;
+    sslExclusionPaidStartDate:Date;
+    sslExclusionPaidEndDate:Date;
 }
 
 export interface ICoveredClaims{

@@ -98,9 +98,13 @@
       </div>
       <!-- Modal body -->
   <form [formGroup]="contractForm" (ngSubmit)="onSubmit()">
+    <div *ngIf="loaderService.isLoading | async" class="loader-container"><!--added by venkatesh Enigonda-->
+      <mat-spinner  [diameter]="75" style="top:35%;left:42%"></mat-spinner>
+     </div><!--Ends Here-->
       <div class="modal-body"> 
         
   <div class="contract-form-area">
+    <div class="contract-form-wrap">
            <div class="mandate-fields">
             <div *ngIf="submitted && (!contractForm.valid && !contractForm.errors?.dates)">Fields marked with * are mandatory</div>
             <div *ngIf="contractForm.errors">{{ contractForm.errors?.dates | json }}</div>
@@ -113,6 +117,10 @@
             <div *ngIf="terminationDateErr.isDateErr">{{terminationDateErr.dateErrMsg}}</div>
             <div *ngIf="checkPolicyYearErr.isValid">{{checkPolicyYearErr.errMsg}}</div><!--Modified by venkatesh Enigonda-->
             <div *ngIf="isContractStartDateInvalid">{{contractStartDateErrMsg}}</div>
+            <div *ngIf="exIncStartEndErr.isDateErr">{{exIncStartEndErr.dateErrMsg}}</div>
+            <div *ngIf="exIncStartErr.isDateErr">{{exIncStartErr.dateErrMsg}}</div>
+            <div *ngIf="exPaidStartEndErr.isDateErr">{{exPaidStartEndErr.dateErrMsg}}</div>
+            <div *ngIf="exPaidStartErr.isDateErr">{{exPaidStartErr.dateErrMsg}}</div>
             <!-- <div *ngIf="startDateRangeErr.isDateErr">{{startDateRangeErr.dateErrMsg}}</div> -->
            </div>  
            <div class="row">
@@ -214,6 +222,40 @@
                 </div> 
               </div> -->
             </div>
+              <h1>Claims Exclusions</h1>
+  
+            
+            
+               <div class="row">
+               <div class="col-md-4">
+                <div class="form-group">
+                  <label>Incurred Period Start Date</label>
+                  <input type="date" value="MM/dd/yyyy" formControlName="exclusionIncurredStartDate" class="form-control"  max="2999-12-31" [ngClass]="{ 'is-invalid': exIncStartEndErr.isDateErr|| exIncStartErr.isDateErr }" /> 
+                  </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label>Incurred Period End Date</label>
+                      <input type="date"class="form-control" formControlName="exclusionIncurredEndDate" value="MM/dd/yyyy"  max="2999-12-31" [ngClass]="{ 'is-invalid': exIncStartEndErr.isDateErr}" /> 
+                      </div>
+                      </div>
+                      <div class="col-md-4">
+                        <div class="form-group">
+                          <label>Paid Start Date</label>
+                          <input type="date" class="form-control" formControlName="exclusionPaidStartDate" value="MM/dd/yyyy"  max="2999-12-31" [ngClass]="{ 'is-invalid': exPaidStartEndErr.isDateErr|| exPaidStartErr.isDateErr }"/> 
+                          </div>
+                          </div>
+                          </div>
+                          <div class="row">
+                          <div class="col-md-4">
+                            <div class="form-group">
+                              <label>Paid End Date</label>
+                              <input type="date"class="form-control" formControlName="exclusionPaidEndDate"  value="MM/dd/yyyy" max="2999-12-31" [ngClass]="{ 'is-invalid': exPaidStartEndErr.isDateErr}" /> 
+                              </div>
+                              </div>
+                  
+                            </div>
+                </div>
            </div>
         </div> 
         <div class="modal-footer">

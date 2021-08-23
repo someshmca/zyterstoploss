@@ -7,3 +7,30 @@
     height:20px;
 }
 
+
+.contract-form-wrap{
+    max-height: 55vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+.contract-form-wrap h1{
+    font-size: 1.3rem;
+    color: #0d377d !important;
+    background: #f0f0f0;
+    padding: 10px 3px;
+    font-weight: 600;        
+}
+.contract-form-wrap .row{
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+.loader-container
+{
+    position:absolute;
+    height:90%;
+    width: 100%;
+    background: rgba(255,255,255.0.5);
+    backdrop-filter: blur(1px) saturate(100%) contrast(45%) brightness(130%);
+    -moz-bacdrop-filter: blur(1px) saturate(100%) contrast(45%) brightness(130%);
+    z-index: 9999;
+}

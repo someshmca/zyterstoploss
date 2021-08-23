@@ -661,7 +661,7 @@ export class MemberComponent implements OnInit {
             gender: id.gender,
             status: id.status,
 
-            laserValue: this.decimalValue(id.laserValue) == 0 ? '' : this.decimalValue(id.laserValue),
+            laserValue: this.decimalValueString(id.laserValue) == 0 ? '' : this.decimalValueString(id.laserValue),
 
             isUnlimited: (id.isUnlimited == null || id.isUnlimited == 'N') ? false : true,
             memberStartDate: this.datePipe.transform(id.memberStartDate, 'yyyy-MM-dd'),
@@ -740,11 +740,11 @@ export class MemberComponent implements OnInit {
   //PV 08-05-2021 Starts
   decimalValueString(inputValue) {
     let a;
-    if (inputValue == 0 || inputValue == '') {
+    if (inputValue == 0 || inputValue == '' || inputValue==null) {
       a = 0;
     }
     else {
-      a = this.decimalPipe.transform(inputValue, this.format);
+      a = this.decimalPipe.transform(inputValue, this.format).replace(/,/g, "");
     }
     console.log(a);
 
@@ -813,11 +813,12 @@ export class MemberComponent implements OnInit {
       createdOn: null,
       updatedOn: null
     }
-
+    debugger;
     this.memberService.updateMember(updateMemberObj)
       .pipe(first())
       .subscribe({
         next: () => {
+          debugger;
           this.openCustomModal(false, null);
           this.searchMember(this.memberSearchForm);
           this.memberForm.reset();

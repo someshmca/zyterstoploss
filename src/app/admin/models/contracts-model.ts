@@ -17,6 +17,10 @@ export interface IContract{
     ftnName: string;
     policyYear: number;
     description: string;
+    exclusionIncurredStartDate:string;
+    exclusionIncurredEndDate:string;
+    exclusionPaidStartDate:string;
+    exclusionPaidEndDate:string;
 }
 
 export interface IContractIDRequest{
@@ -43,6 +47,10 @@ export interface IContractsByClient{
     ftnName: string;
     policyYear: number;
     description: string;
+    exclusionIncurredStartDate:string;
+    exclusionIncurredEndDate:string;
+    exclusionPaidStartDate:string;
+    exclusionPaidEndDate:string;
 }
 
 export interface IContractAdd{
@@ -63,6 +71,10 @@ export interface IContractAdd{
     ftnName: string;
     policyYear: number;
     description: string;
+    exclusionIncurredStartDate:string;
+    exclusionIncurredEndDate:string;
+    exclusionPaidStartDate:string;
+    exclusionPaidEndDate:string;
 }
 
 export interface IAddContractSuccess{
@@ -88,6 +100,10 @@ export interface IContractUpdate{
     ftnName: string;
     policyYear: string;
     description: string;
+    exclusionIncurredStartDate:string;
+    exclusionIncurredEndDate:string;
+    exclusionPaidStartDate:string;
+    exclusionPaidEndDate:string;
 }
 export interface IActiveClient{
     clientId: string;

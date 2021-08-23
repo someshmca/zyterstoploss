@@ -17,6 +17,7 @@ import { LoginService } from 'src/app/shared/services/login.service';
 import { ProductService } from '../services/product.service';
 import { NavPopupService } from '../services/nav-popup.service';
 import { IClientObj } from '../models/nav-popups.model';
+import { LoaderService } from '../services/loader.service';
 @Component({
   selector: 'app-contracts',
   templateUrl: './contracts.component.html',
@@ -57,6 +58,10 @@ export class ContractsComponent implements OnInit {
     checkPolicyYearErr= {isValid: false, errMsg: ''};//Modified by Venkatesh Enigonda
     runOutEndErr = {isDateErr: false, dateErrMsg: ''};
     terminationDateErr = {isDateErr: false, dateErrMsg: ''};
+    exIncStartEndErr= {isDateErr: false, dateErrMsg: ''};
+    exIncStartErr={isDateErr: false, dateErrMsg: ''};
+    exPaidStartEndErr={isDateErr: false, dateErrMsg: ''};
+    exPaidStartErr={isDateErr: false, dateErrMsg: ''};
   tempClientObj:IClientObj;
   tempContractObj:IClientObj;
   isDisabled: boolean;
@@ -89,7 +94,8 @@ export class ContractsComponent implements OnInit {
     private alertService: AlertService,
     private datePipe: DatePipe,
     private loginService: LoginService,
-    private navService: NavPopupService
+    private navService: NavPopupService,
+    public loaderService: LoaderService
   ) { }
   ngOnInit(){
     
@@ -123,7 +129,11 @@ export class ContractsComponent implements OnInit {
       ftn: '',
       ftnName: '',
       policyYear: '',
-      description: ''
+      description: '',
+      exclusionIncurredStartDate:[''],
+      exclusionIncurredEndDate:[''],
+      exclusionPaidStartDate:[''],
+      exclusionPaidEndDate:['']
     });
     this.navService.productObj.subscribe((data)=>{this.productObj = data;});
     this.getContractStatus();
@@ -250,7 +260,11 @@ export class ContractsComponent implements OnInit {
         terminationDate:this.datePipe.transform(this.updateObj[0].terminationDate, 'yyyy-MM-dd'),
         status:this.updateObj[0].status,
         policyYear: this.updateObj[0].policyYear,
-        description: this.updateObj[0].description
+        description: this.updateObj[0].description,
+        exclusionIncurredStartDate:this.datePipe.transform(this.updateObj[0].exclusionIncurredStartDate,'yyyy-MM-dd'),
+        exclusionIncurredEndDate:this.datePipe.transform(this.updateObj[0].exclusionIncurredEndDate,'yyyy-MM-dd'),
+        exclusionPaidStartDate:this.datePipe.transform(this.updateObj[0].exclusionPaidStartDate,'yyyy-MM-dd'),
+        exclusionPaidEndDate:this.datePipe.transform(this.updateObj[0].exclusionPaidEndDate,'yyyy-MM-dd')
       });
       
     })
@@ -294,6 +308,14 @@ clearErrorMessages(){
   this.terminationDateErr.isDateErr=false;
   this.contractStartDateErrMsg = '';
   this.isContractStartDateInvalid=false;
+  this.exIncStartEndErr.isDateErr=false;
+  this.exIncStartEndErr.dateErrMsg='';
+  this.exIncStartErr.isDateErr=false;
+  this.exIncStartErr.dateErrMsg='';
+  this.exPaidStartEndErr.isDateErr=false;
+  this.exPaidStartEndErr.dateErrMsg='';
+  this.exPaidStartErr.isDateErr=false;
+  this.exPaidStartErr.dateErrMsg='';
 }
 openViewModal(bool, id:any){
   this.isViewModal = true;
@@ -372,6 +394,10 @@ openViewModal(bool, id:any){
       let runOutStartValue= this.f.runOutStartDate.value;
       let runOutEndValue=this.f.runOutEndDate.value;
       let terminationDateValue=this.f.terminationDate.value;
+      let exclusionIncurredStartDate= this.f.exclusionIncurredStartDate.value;
+      let exclusionIncurredEndDate= this.f.exclusionIncurredEndDate.value;
+      let exclusionPaidStartDate= this.f.exclusionPaidStartDate.value;
+      let exclusionPaidEndDate= this.f.exclusionPaidEndDate.value;
       // 
       // a = startDateValue;
       // let d=new Date(startDateValue);
@@ -550,7 +576,39 @@ openViewModal(bool, id:any){
                     }
                   }
                 }
-
+                if(exclusionIncurredStartDate!=null && exclusionIncurredEndDate!=null && exclusionIncurredStartDate!='' && exclusionIncurredEndDate!=''){
+                  if(exclusionIncurredStartDate == exclusionIncurredEndDate)
+                  {
+                    this.exIncStartEndErr.isDateErr=true;
+                    this.exIncStartEndErr.dateErrMsg = 'Incurred Start Date should not be equal to Incurred End Date';
+                    return;
+ 
+                  }
+                  if(exclusionIncurredStartDate > exclusionIncurredEndDate)
+                  {
+                    console.log("inside");
+                    this.exIncStartErr.isDateErr=true;
+                    this.exIncStartErr.dateErrMsg = 'Incurred Start Date should not be greaterthan Incurred End Date';
+                    return;
+ 
+                  }
+                }
+                if(exclusionPaidStartDate!=null && exclusionPaidEndDate!=null && exclusionPaidStartDate!='' && exclusionPaidEndDate!=''){
+                  if(exclusionPaidStartDate == exclusionPaidEndDate)
+                  {
+                    this.exPaidStartEndErr.isDateErr=true;
+                    this.exPaidStartEndErr.dateErrMsg = 'Paid Start Date should not be equal to  Paid End Date'
+                    return;
+ 
+                  }
+                  if(exclusionPaidStartDate > exclusionPaidEndDate)
+                  {
+                    this.exPaidStartErr.isDateErr=true;
+                    this.exPaidStartErr.dateErrMsg = 'Paid Start Date should not be greaterthan Paid End Date';
+                    return;
+ 
+                  }
+                }
       if (this.isAddMode) {
         
         this.addContract();
@@ -601,7 +659,11 @@ openViewModal(bool, id:any){
       ftn: '',
       ftnName: '',
       policyYear: this.f.policyYear.value,
-      description: this.f.description.value
+      description: this.f.description.value,
+      exclusionIncurredStartDate:this.datePipe.transform(this.f.exclusionIncurredStartDate.value,'yyyy-MM-dd'),
+      exclusionIncurredEndDate:this.datePipe.transform(this.f.exclusionIncurredEndDate.value,'yyyy-MM-dd'),
+      exclusionPaidStartDate:this.datePipe.transform(this.f.exclusionPaidStartDate.value,'yyyy-MM-dd'),
+      exclusionPaidEndDate:this.datePipe.transform(this.f.exclusionPaidEndDate.value,'yyyy-MM-dd')
     }
     if(addObj.runInStartDate=='')
       addObj.runInStartDate = null;
@@ -654,6 +716,10 @@ openViewModal(bool, id:any){
           runOutStartDate: this.datePipe.transform(this.f.runOutStartDate.value, 'yyyy-MM-dd'),
           runOutEndDate: this.datePipe.transform(this.f.runOutEndDate.value, 'yyyy-MM-dd'),
           terminationDate:this.datePipe.transform(this.f.terminationDate.value,  'yyyy-MM-dd'),
+          exclusionIncurredStartDate:this.datePipe.transform(this.f.exclusionIncurredStartDate.value,'yyyy-MM-dd'),
+          exclusionIncurredEndDate:this.datePipe.transform(this.f.exclusionIncurredEndDate.value,'yyyy-MM-dd'),
+          exclusionPaidStartDate:this.datePipe.transform(this.f.exclusionPaidStartDate.value,'yyyy-MM-dd'),
+          exclusionPaidEndDate:this.datePipe.transform(this.f.exclusionPaidEndDate.value,'yyyy-MM-dd'),
           status:this.contractForm.get('status').value==true?1:0,
           userId: this.loginService.currentUserValue.name,
           ftn: '',
