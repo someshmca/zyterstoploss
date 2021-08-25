@@ -102,7 +102,10 @@
                <span *ngIf="submitted && !planForm.valid">Fields marked with * are mandatory</span>
                <span *ngIf="submitted && isNoFactAmount">Enter any Factor Amount. Atleast One Factor amount is required</span>
                <div *ngIf="isContractYearInvalid.flag">{{isContractYearInvalid.message}}</div>
-               <div *ngIf="tierIdExists.flag">{{tierIdExists.message}}</div>
+               <div *ngIf="tierIdExists.singleFlag">{{tierIdExists.singleMsg}}</div>
+               <div *ngIf="tierIdExists.dualFlag">{{tierIdExists.dualMsg}}</div>
+               <div *ngIf="tierIdExists.familyFlag">{{tierIdExists.familyMsg}}</div>
+               <div *ngIf="tierIdExists.othersFlag">{{tierIdExists.othersMsg}}</div>
                <div *ngIf="planIdErr.isDuplicate">{{planIdErr.errMsg}}</div>
                <div *ngIf="planNameErr.isDuplicate">{{planNameErr.errMsg}}</div>
                <div *ngIf="duplicatePlanTierErr.flag">{{duplicatePlanTierErr.message}}</div>

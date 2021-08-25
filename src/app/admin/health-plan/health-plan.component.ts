@@ -82,8 +82,14 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
   isTierAmountInvalid:boolean;
   isExpectedClaimsRateInvalid: boolean;
   tierIdExists={
-    flag:false,
-    message:''
+    singleFlag:false,
+    singleMsg:'',
+    dualFlag:false,
+    dualMsg:'',
+    familyFlag:false,
+    familyMsg:'',
+    othersFlag:false,
+    othersMsg:''
   };
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -328,8 +334,14 @@ clearErrorMessages(){
   this.isTierAmountInvalid=false;
   this.isExpectedClaimsRateInvalid=false;
   this.tierIdExists={
-    flag:false,
-    message:''
+    singleFlag:false,
+    singleMsg:'',
+    dualFlag:false,
+    dualMsg:'',
+    familyFlag:false,
+    familyMsg:'',
+    othersFlag:false,
+    othersMsg:''
   };
   this.duplicatePlanTierErr.flag=false;
   this.duplicatePlanTierErr.message='';
@@ -571,26 +583,28 @@ validateTierIDs(){
   
     if(this.t.length>1){
       let s=0, d=0, f=0, o=0;
-      let prevSingle, prevDual, prevFamily, prevOthers;
-      let curSingle, curDual, curFamily, curOthers;
+      let prevSingle=0, prevDual=0, prevFamily=0, prevOthers=0;
+      let curSingle=0, curDual=0, curFamily=0, curOthers=0;
+      
       for(let i=0; i<this.t.length;i++){    
         this.t.value[i].tierId=Number(this.t.value[i].tierId);
         if(this.t.value[i].tierId==1){
            if(s==0) prevSingle=i;
             if(s>0 && s<2){
+              
               curSingle=i;
               if(this.t.value[prevSingle].isTerminalExtCoverage == this.t.value[curSingle].isTerminalExtCoverage){
-                this.tierIdExists.message="Terminal Extension Coverage should be Unique per Tier";
-                this.tierIdExists.flag=true;
+                this.tierIdExists.singleMsg="Terminal Extension Coverage should be Unique for Single Tier";
+                this.tierIdExists.singleFlag=true;
               }
               else{
-                this.tierIdExists.message='';
-                this.tierIdExists.flag=false;
+                this.tierIdExists.singleMsg='';
+                this.tierIdExists.singleFlag=false;
               }   
             }
             if(s>1){
-              this.tierIdExists.message="One Tier cannot be repeated morethan two times";
-              this.tierIdExists.flag=true;
+              this.tierIdExists.singleMsg="Single Tier cannot be repeated morethan two times";
+              this.tierIdExists.singleFlag=true;
             }
             s++;           
           }
@@ -600,17 +614,17 @@ validateTierIDs(){
              if(d>0 && d<2){
                curDual=i
                if(this.t.value[prevDual].isTerminalExtCoverage == this.t.value[curDual].isTerminalExtCoverage){
-                 this.tierIdExists.message="Terminal Extension Coverage should be Unique per Tier";
-                 this.tierIdExists.flag=true;
+                 this.tierIdExists.dualMsg="Terminal Extension Coverage should be Unique for Dual Tier";
+                 this.tierIdExists.dualFlag=true;
                }
                else{
-                 this.tierIdExists.message='';
-                 this.tierIdExists.flag=false;
+                 this.tierIdExists.dualMsg='';
+                 this.tierIdExists.dualFlag=false;
                }   
              }
              if(d>1){
-               this.tierIdExists.message="One Tier cannot be repeated morethan two times";
-               this.tierIdExists.flag=true;
+               this.tierIdExists.dualMsg="Dual Tier cannot be repeated morethan two times";
+               this.tierIdExists.dualFlag=true;
              }
              d++;    
           }
@@ -619,17 +633,17 @@ validateTierIDs(){
              if(f>0 && f<2){
                curFamily=i;
                if(this.t.value[prevFamily].isTerminalExtCoverage == this.t.value[curFamily].isTerminalExtCoverage){
-                 this.tierIdExists.message="Terminal Extension Coverage should be Unique per Tier";
-                 this.tierIdExists.flag=true;
+                 this.tierIdExists.familyMsg="Terminal Extension Coverage should be Unique for Family Tier";
+                 this.tierIdExists.familyFlag=true;
                }
                else{
-                 this.tierIdExists.message='';
-                 this.tierIdExists.flag=false;
+                 this.tierIdExists.familyMsg='';
+                 this.tierIdExists.familyFlag=false;
                }   
              }
              if(f>1){
-               this.tierIdExists.message="One Tier cannot be repeated morethan two times";
-               this.tierIdExists.flag=true;
+               this.tierIdExists.familyMsg="Family Tier cannot be repeated morethan two times";
+               this.tierIdExists.familyFlag=true;
              }
              f++;    
           }
@@ -638,17 +652,17 @@ validateTierIDs(){
              if(o>0 && o<2){
                curOthers=i;
                if(this.t.value[prevOthers].isTerminalExtCoverage == this.t.value[curOthers].isTerminalExtCoverage){
-                 this.tierIdExists.message="Terminal Extension Coverage should be Unique per Tier";
-                 this.tierIdExists.flag=true;
+                 this.tierIdExists.othersMsg="Terminal Extension Coverage should be Unique for Others Tier";
+                 this.tierIdExists.othersFlag=true;
                }
                else{
-                 this.tierIdExists.message='';
-                 this.tierIdExists.flag=false;
+                 this.tierIdExists.othersMsg='';
+                 this.tierIdExists.othersFlag=false;
                }   
              }
              if(o>1){
-               this.tierIdExists.message="One Tier cannot be repeated morethan two times";
-               this.tierIdExists.flag=true;
+               this.tierIdExists.othersMsg="Others Tier cannot be repeated morethan two times";
+               this.tierIdExists.othersFlag=true;
              }
              o++;    
           }
@@ -692,8 +706,11 @@ validateTierIDs(){
       }
       if(this.isContractYearInvalid.flag)
         return;
-      if(this.tierIdExists.flag)
+      if(this.tierIdExists.singleFlag)
         return;
+      if(this.tierIdExists.dualFlag) return;
+      if(this.tierIdExists.familyFlag) return;
+      if(this.tierIdExists.othersFlag) return;
        //(V.E 27-Jul-2021 starts )
       if(this.planForm.valid){
         if(this.isAddMode){
