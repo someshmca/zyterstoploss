@@ -77,6 +77,7 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
     flag: false,
     value: ''
   } 
+  duplicatePlanTierErr={flag:false, message:''};
   isPlanFormInvalid:boolean;
   isTierAmountInvalid:boolean;
   isExpectedClaimsRateInvalid: boolean;
@@ -330,6 +331,8 @@ clearErrorMessages(){
     flag:false,
     message:''
   };
+  this.duplicatePlanTierErr.flag=false;
+  this.duplicatePlanTierErr.message='';
 }
 //(V.E 27-Jul-2021 Ends)
 doFilter(filterValue:string){ //added by Venkatesh Enigonda
@@ -372,6 +375,9 @@ doFilter(filterValue:string){ //added by Venkatesh Enigonda
       this.isAddMode = false;
       this.isAdded=false;
       this.isViewModal=false;
+      this.contractsByClientId=[];
+      console.log(this.contractsByClientId.length);
+      
       this.t.clear();
       this.tiersLimitExceeded.flag=false;
       this.tiersLimitExceeded.value='';
@@ -403,7 +409,6 @@ doFilter(filterValue:string){ //added by Venkatesh Enigonda
       
       
       this.updatePlanID = elem.planID;
-      ;
       //this.fetchTiers();
       console.log(elem.lstTblPlanTier.length);
       // this.t.setValue(elem.lstTblPlanTier);
@@ -509,6 +514,7 @@ doFilter(filterValue:string){ //added by Venkatesh Enigonda
     this.getAllPlans();
   }
   validateYear(){
+    console.log(this.f.contractYear.value);
     
     if(this.f.contractYear.value.length>0){
       let num = /^([0-9]+)$/; 
@@ -565,34 +571,86 @@ validateTierIDs(){
   
     if(this.t.length>1){
       let s=0, d=0, f=0, o=0;
+      let prevSingle, prevDual, prevFamily, prevOthers;
+      let curSingle, curDual, curFamily, curOthers;
       for(let i=0; i<this.t.length;i++){    
-        if(this.t.value[i].tierId=='1'){
-            s++;
+        this.t.value[i].tierId=Number(this.t.value[i].tierId);
+        if(this.t.value[i].tierId==1){
+           if(s==0) prevSingle=i;
+            if(s>0 && s<2){
+              curSingle=i;
+              if(this.t.value[prevSingle].isTerminalExtCoverage == this.t.value[curSingle].isTerminalExtCoverage){
+                this.tierIdExists.message="Terminal Extension Coverage should be Unique per Tier";
+                this.tierIdExists.flag=true;
+              }
+              else{
+                this.tierIdExists.message='';
+                this.tierIdExists.flag=false;
+              }   
+            }
             if(s>1){
-              this.tierIdExists.message="'Single' Tier not allowed to choose morethan one time";
+              this.tierIdExists.message="One Tier cannot be repeated morethan two times";
               this.tierIdExists.flag=true;
             }
+            s++;           
           }
-          else if(this.t.value[i].tierId=='2'){
-            d++;
-            if(d>1){
-              this.tierIdExists.flag=true;
-              this.tierIdExists.message="'Dual' Tier not allowed to choose morethan one time";
-            }
+          else if(this.t.value[i].tierId==2){
+            
+            if(d==0) prevDual=i;
+             if(d>0 && d<2){
+               curDual=i
+               if(this.t.value[prevDual].isTerminalExtCoverage == this.t.value[curDual].isTerminalExtCoverage){
+                 this.tierIdExists.message="Terminal Extension Coverage should be Unique per Tier";
+                 this.tierIdExists.flag=true;
+               }
+               else{
+                 this.tierIdExists.message='';
+                 this.tierIdExists.flag=false;
+               }   
+             }
+             if(d>1){
+               this.tierIdExists.message="One Tier cannot be repeated morethan two times";
+               this.tierIdExists.flag=true;
+             }
+             d++;    
           }
-          else if(this.t.value[i].tierId=='3'){
-            f++;
-            if(f>1){
-              this.tierIdExists.flag=true;
-              this.tierIdExists.message="'Family' Tier not allowed to choose morethan one time";          
-            }
+          else if(this.t.value[i].tierId==3){
+            if(f==0) prevFamily=i;
+             if(f>0 && f<2){
+               curFamily=i;
+               if(this.t.value[prevFamily].isTerminalExtCoverage == this.t.value[curFamily].isTerminalExtCoverage){
+                 this.tierIdExists.message="Terminal Extension Coverage should be Unique per Tier";
+                 this.tierIdExists.flag=true;
+               }
+               else{
+                 this.tierIdExists.message='';
+                 this.tierIdExists.flag=false;
+               }   
+             }
+             if(f>1){
+               this.tierIdExists.message="One Tier cannot be repeated morethan two times";
+               this.tierIdExists.flag=true;
+             }
+             f++;    
           }
-          else if(this.t.value[i].tierId=='4'){
-            o++;
-            if(o>1){
-              this.tierIdExists.flag=true;
-              this.tierIdExists.message="'Others' Tier not allowed to choose morethan one time";
-            }
+          else if(this.t.value[i].tierId==4){
+            if(o==0) prevOthers=i;
+             if(o>0 && o<2){
+               curOthers=i;
+               if(this.t.value[prevOthers].isTerminalExtCoverage == this.t.value[curOthers].isTerminalExtCoverage){
+                 this.tierIdExists.message="Terminal Extension Coverage should be Unique per Tier";
+                 this.tierIdExists.flag=true;
+               }
+               else{
+                 this.tierIdExists.message='';
+                 this.tierIdExists.flag=false;
+               }   
+             }
+             if(o>1){
+               this.tierIdExists.message="One Tier cannot be repeated morethan two times";
+               this.tierIdExists.flag=true;
+             }
+             o++;    
           }
         }
     }
@@ -627,7 +685,7 @@ validateTierIDs(){
       // reset alerts on submit
       this.validateYear();
       this.alertService.clear();
-      this.validateTierIDs();
+    this.validateTierIDs();
       // stop here if form is invalid
       if (this.planForm.invalid) {
           return;
@@ -636,7 +694,6 @@ validateTierIDs(){
         return;
       if(this.tierIdExists.flag)
         return;
-      
        //(V.E 27-Jul-2021 starts )
       if(this.planForm.valid){
         if(this.isAddMode){
@@ -666,7 +723,8 @@ validateTierIDs(){
               
               this.addPlan();
 
-            });            
+            });
+            
         }
         if(this.t.length>0){
           for(let i=0;i<this.t.length; i++){
@@ -681,7 +739,7 @@ validateTierIDs(){
 
       }
      
-      
+      if(this.duplicatePlanTierErr.flag) return;
       this.loading = true;
       if(!this.isAddMode){
         const pid= this.planService.checkDuplicatePlanId(this.f.planCode.value);
@@ -722,13 +780,9 @@ validateTierIDs(){
           
           this.updatePlan();
         }
-          
-
-
-        
-
-       }//(V.E 27-Jul-2021 Ends)
-
+       }
+  
+  
   private addPlan() {
     this.isAddTier=false;
     this.isPatchInputValue=false;
@@ -757,7 +811,7 @@ validateTierIDs(){
             this.t.value[i].tierId=Number(this.t.value[i].tierId);
             this.t.value[i].tierAmount=this.t.value[i].tierAmount==''?0:this.decimalValue(this.t.value[i].tierAmount),
             this.t.value[i].expectedClaimsRate=this.t.value[i].expectedClaimsRate==''?0:this.decimalValue(this.t.value[i].expectedClaimsRate),
-            this.t.value[i].isTerminalExtCoverage=this.t.value[i].isTerminalExtCoverage==true?'Y':'N';
+            this.t.value[i].isTerminalExtCoverage=this.t.value[i].isTerminalExtCoverage==true?'Y':'N';            
           }
         }
         //this.planForm.patchValue(this.planForm.value);
@@ -820,6 +874,7 @@ validateTierIDs(){
     //console.log(this.updatePlanID);
     //this.planForm.patchValue(this.planForm.value);
     this.t.patchValue(this.t.value);
+    
     let flag=false;
     for (let i = 0; i < this.t.length;) {
       
@@ -831,7 +886,6 @@ validateTierIDs(){
        if(flag) i--;
         //this.planForm.patchValue(this.t.value);
         console.log(this.t.value);
-        debugger;
         
       }
       else{
@@ -843,7 +897,6 @@ validateTierIDs(){
         this.t.value[i].isTerminalExtCoverage=this.t.value[i].isTerminalExtCoverage==true?'Y':'N';
         i++;
         console.log(this.t.value);
-        debugger;
       }
     }
     this.t.patchValue(this.t.value); 
@@ -862,7 +915,7 @@ validateTierIDs(){
     }
     
     
-
+    
       console.log(this.updatePlanObj);
       this.planService.updatePlan(this.updatePlanObj)
           .pipe(first())

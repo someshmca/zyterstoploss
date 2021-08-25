@@ -105,6 +105,7 @@
                <div *ngIf="tierIdExists.flag">{{tierIdExists.message}}</div>
                <div *ngIf="planIdErr.isDuplicate">{{planIdErr.errMsg}}</div>
                <div *ngIf="planNameErr.isDuplicate">{{planNameErr.errMsg}}</div>
+               <div *ngIf="duplicatePlanTierErr.flag">{{duplicatePlanTierErr.message}}</div>
              </div>  
              <div class="row">
                  <div class="col-md-4">

@@ -29,7 +29,7 @@
     position:absolute;
     height:90%;
     width: 100%;
-    background: rgba(255,255,255.0.5);
+    background: rgba(255,255,255.0.3) !important;
     backdrop-filter: blur(1px) saturate(100%) contrast(45%) brightness(130%);
     -moz-bacdrop-filter: blur(1px) saturate(100%) contrast(45%) brightness(130%);
     z-index: 9999;
