@@ -257,18 +257,18 @@
                 <input type="number" formControlName="sslPartcipantLimit" class="form-control"/>
               </div>
             </div>
-            <!-- <div class="col-md-4">
+            <div class="col-md-4">
               <div class="form-group">
                 <label>Limit of Liability - Pharmacy Claims Contract</label>
-                <input type="number"  class="form-control"/>
+                <input type="number" onkeypress="return ((event.charCode !=8 && event.charCode ==0) || (event.charCode == 46)||(event.charCode >= 48 && event.charCode <= 57))" class="form-control" formControlName="sslPharmContractLimit"/>
               </div>
             </div>
             <div class="col-md-4">
               <div class="form-group">
                 <label>Limit of Liability - Pharmacy Claims Participant</label>
-                <input type="number" class="form-control"/>
+                <input type="number" onkeypress="return ((event.charCode !=8 && event.charCode ==0) ||(event.charCode == 46)||(event.charCode >= 48 && event.charCode <= 57))"class="form-control" formControlName="sslPharmParticipantLimit" />
               </div>
-            </div> -->
+            </div>
           </div>
           <div class="row">
             <div class="col-md-4">
@@ -458,12 +458,12 @@
         </div>
       </div>
 
-      <!-- <div class="col-md-4">
+      <div class="col-md-4">
         <div class="form-group">
           <label>Limit of Liability - Pharmacy Claims</label>
-          <input type="number" class="form-control"/>
+          <input type="number" onkeypress="return ((event.charCode !=8 && event.charCode ==0) ||(event.charCode == 46)|| (event.charCode >= 48 && event.charCode <= 57))" class="form-control" formControlName="aslPharmClaimsLimit"/>
         </div>
-      </div> -->
+      </div>
       <div class="col-md-4">
         <div class="form-group">
           <label></label>

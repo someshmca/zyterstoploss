@@ -43,6 +43,9 @@ export interface IProductAll{
     sslExclusionIncurredEndDate:Date;
     sslExclusionPaidStartDate:Date;
     sslExclusionPaidEndDate:Date;
+    sslPharmContractLimit: number;
+    sslPharmParticipantLimit: number;
+    aslPharmClaimsLimit: number;
 }
 export interface IProductAdd{
     productId: number;
@@ -90,6 +93,9 @@ export interface IProductAdd{
     sslExclusionIncurredEndDate:Date;
     sslExclusionPaidStartDate:Date;
     sslExclusionPaidEndDate:Date;
+    sslPharmContractLimit: number;
+    sslPharmParticipantLimit: number;
+    aslPharmClaimsLimit: number;
 }
 export interface IProductUpdate{
   productId: number;
@@ -136,6 +142,9 @@ export interface IProductUpdate{
     sslExclusionIncurredEndDate:Date;
     sslExclusionPaidStartDate:Date;
     sslExclusionPaidEndDate:Date;
+    sslPharmContractLimit: number;
+    sslPharmParticipantLimit: number;
+    aslPharmClaimsLimit: number;
 }
 export interface IActiveClient{
     clientId: string;
@@ -196,6 +205,9 @@ export interface IProduct{
     sslExclusionIncurredEndDate:Date;
     sslExclusionPaidStartDate:Date;
     sslExclusionPaidEndDate:Date;
+    sslPharmContractLimit: number;
+    sslPharmParticipantLimit: number;
+    aslPharmClaimsLimit: number;
 }
 
 export interface ICoveredClaims{

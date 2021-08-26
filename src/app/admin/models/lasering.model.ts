@@ -54,4 +54,5 @@ export interface ILaseringUpdate{
   updatedBy:string;
   createdOn:Date;
   updatedOn:Date;
+  exclusion:string;
 }

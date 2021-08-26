@@ -91,6 +91,7 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
     othersFlag:false,
     othersMsg:''
   };
+  tierIdRequiredErr={flag:false, msg:''};
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
@@ -117,7 +118,7 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
       userId: '',
       planCode:  ['', Validators.required],
       planName:  ['', Validators.required],
-      contractYear: [''],
+      contractYear: ['', Validators.required],
       clientName: '',
       status: 1,
       lstTblPlanTier: new FormArray([])
@@ -342,7 +343,8 @@ clearErrorMessages(){
     familyMsg:'',
     othersFlag:false,
     othersMsg:''
-  };
+  };  
+  this.tierIdRequiredErr={flag:false, msg:''};
   this.duplicatePlanTierErr.flag=false;
   this.duplicatePlanTierErr.message='';
 }
@@ -701,16 +703,13 @@ validateTierIDs(){
       this.alertService.clear();
     this.validateTierIDs();
       // stop here if form is invalid
-      if (this.planForm.invalid) {
-          return;
-      }
-      if(this.isContractYearInvalid.flag)
-        return;
-      if(this.tierIdExists.singleFlag)
-        return;
+      if (this.planForm.invalid) return;
+      if(this.isContractYearInvalid.flag) return;
+      if(this.tierIdExists.singleFlag) return;
       if(this.tierIdExists.dualFlag) return;
       if(this.tierIdExists.familyFlag) return;
       if(this.tierIdExists.othersFlag) return;
+      if(this.tierIdRequiredErr.flag) return;
        //(V.E 27-Jul-2021 starts )
       if(this.planForm.valid){
         if(this.isAddMode){
@@ -812,23 +811,41 @@ validateTierIDs(){
         
         this.t.patchValue(this.t.value);
         
+    let flag=false;
         //let tiersArr=this.t.value;
-        for (let i = 0; i < this.t.length; i++) {
-          if(this.t.value[i].tierId=='' && this.t.value[i].tierAmount=='' && this.t.value[i].expectedClaimsRate=='' && this.t.value[i].isTerminalExtCoverage==''){
-          //  this.t.value.splice(i,1);
-           
-            this.t.removeAt(i);
-            this.t.value.splice(i,1);
-            this.t.patchValue(this.t.value);  
-            //this.planForm.patchValue(this.t.value);
-            
+        for (let i = 0; i < this.t.value.length;) {
+          console.log(this.t.value[i].tierId);
+          console.log(this.t.value[i].tierAmount);
+          console.log(this.t.value[i].expectedClaimsRate);
+          console.log(this.t.value[i].isTerminalExtCoverage);
+          debugger;
+          if((this.t.value[i].tierId=='' || this.t.value[i].tierId==0) && this.t.value[i].tierAmount=='' && this.t.value[i].expectedClaimsRate=='' && (this.t.value[i].isTerminalExtCoverage=='' || this.t.value[i].isTerminalExtCoverage==false)){
+            //  this.t.value.splice(i,1);
+            flag=true;
+              this.t.removeAt(i);
+             // this.t.value.splice(i,1);
+             if(flag) i--;
+             this.t.value.length-=1;
+              //this.planForm.patchValue(this.t.value);
+              console.log(this.t.value);
+             
+              this.tierIdRequiredErr.flag=false;
+              this.tierIdRequiredErr.msg='';        
+          }
+          else if((this.t.value[i].tierId=='' || this.t.value[i].tierId==0) && (this.t.value[i].tierAmount!='' || this.t.value[i].expectedClaimsRate!='' && (this.t.value[i].isTerminalExtCoverage==false || this.t.value[i].isTerminalExtCoverage==true) )){
+
+            this.tierIdRequiredErr.flag=true;
+            this.tierIdRequiredErr.msg="Tier ID is required for row "+(i+1)+". Row cannot be saved without TierID"
           }
           else{
             this.t.value[i].planId=0;
             this.t.value[i].tierId=Number(this.t.value[i].tierId);
             this.t.value[i].tierAmount=this.t.value[i].tierAmount==''?0:this.decimalValue(this.t.value[i].tierAmount),
             this.t.value[i].expectedClaimsRate=this.t.value[i].expectedClaimsRate==''?0:this.decimalValue(this.t.value[i].expectedClaimsRate),
-            this.t.value[i].isTerminalExtCoverage=this.t.value[i].isTerminalExtCoverage==true?'Y':'N';            
+            this.t.value[i].isTerminalExtCoverage=this.t.value[i].isTerminalExtCoverage==true?'Y':'N';    
+            this.tierIdRequiredErr.flag=false;
+            this.tierIdRequiredErr.msg='';        
+            i++;
           }
         }
         //this.planForm.patchValue(this.planForm.value);
@@ -893,18 +910,28 @@ validateTierIDs(){
     this.t.patchValue(this.t.value);
     
     let flag=false;
-    for (let i = 0; i < this.t.length;) {
+    for (let i = 0; i < this.t.value.length;) {
       
-      if(this.t.value[i].tierId=='' && this.t.value[i].tierAmount=='' && this.t.value[i].expectedClaimsRate=='' && this.t.value[i].isTerminalExtCoverage==false){
-      //  this.t.value.splice(i,1);
-      flag=true;
-        this.t.removeAt(i);
-       // this.t.value.splice(i,1);
-       if(flag) i--;
-        //this.planForm.patchValue(this.t.value);
-        console.log(this.t.value);
-        
-      }
+     
+      
+      if((this.t.value[i].tierId=='' || this.t.value[i].tierId==0) && this.t.value[i].tierAmount=='' && this.t.value[i].expectedClaimsRate=='' && (this.t.value[i].isTerminalExtCoverage=='' || this.t.value[i].isTerminalExtCoverage==false)){
+        //  this.t.value.splice(i,1);
+        flag=true;
+          this.t.removeAt(i);
+         // this.t.value.splice(i,1);
+         if(flag) i--;
+         this.t.value.length-=1;
+          //this.planForm.patchValue(this.t.value);
+          console.log(this.t.value);
+         
+          this.tierIdRequiredErr.flag=false;
+          this.tierIdRequiredErr.msg='';            
+        }
+        else if((this.t.value[i].tierId=='' || this.t.value[i].tierId==0) && (this.t.value[i].tierAmount!='' || this.t.value[i].expectedClaimsRate!='' && (this.t.value[i].isTerminalExtCoverage==false || this.t.value[i].isTerminalExtCoverage==true) )){
+
+          this.tierIdRequiredErr.flag=true;
+          this.tierIdRequiredErr.msg="Tier ID is required for row "+(i+1)+". Row cannot be saved without TierID"
+        }
       else{
         flag=false;
         this.t.value[i].planId=this.updatePlanID;

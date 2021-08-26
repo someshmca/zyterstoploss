@@ -60,4 +60,5 @@ export interface IMemberUpdate{
   updatedBy:string;
   createdOn:Date;
   updatedOn:Date;
+  exclusion: string;
 }

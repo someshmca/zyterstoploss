@@ -85,10 +85,10 @@ export class LoginComponent implements OnInit {
      this.loginService.getLoginDetails(this.userName, this.password).subscribe(
             (data:LoginResponseModel ) =>  {
               if(data){
-                
                 this.loginData = data;
-                
-                this.loginService.setMenu(this.loginData.menuDetails); 
+                localStorage.setItem("loginData",JSON.stringify(data));  // aug 26 2021 added
+                this.loginData = JSON.parse(this.loginData=localStorage.getItem("loginData")); // aug 26 2021 added
+                this.loginService.setMenu(this.loginData.menuDetails);  
                 
                 this.loginService.setToken(this.loginData.token);
                 this.loginService.curToken.subscribe(d => {                    

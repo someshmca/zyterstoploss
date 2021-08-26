@@ -160,6 +160,10 @@ export class ProductComponent implements OnInit {
       sslExclusionIncurredEndDate:[''],
       sslExclusionPaidStartDate:[''],
       sslExclusionPaidEndDate:[''],
+      
+    sslPharmContractLimit: [''],
+    sslPharmParticipantLimit: [''],
+    aslPharmClaimsLimit: [''],
 
       //below from aslDeductible to aslExpecteddClaimLiability are number fields
       //aslDeductible:'',
@@ -194,7 +198,8 @@ export class ProductComponent implements OnInit {
 
       status:false,
       userId: this.loginService.currentUserValue.name,
-      lstContractClaims: []
+      lstContractClaims: [],
+
     });
   }
   getProductStatus(){
@@ -680,6 +685,8 @@ openViewModal(bool, id:any){
                 sslAnnualLimit: this.numberValueString(x[0].sslAnnualLimit),
                 sslLifetimeLimit: this.numberValueString(x[0].sslLifetimeLimit),
                 sslPartcipantLimit: this.numberValueString(x[0].sslPartcipantLimit),
+                sslPharmContractLimit: this.numberValueString(x[0].sslPharmContractLimit),                
+                sslPharmParticipantLimit:this.numberValueString(x[0].sslPharmParticipantLimit),
                 sslIsImmediateReimbursement:x[0].sslIsImmediateReimbursement,
                 sslTermCoverageExtEndDate:this.dateValueString(x[0].sslTermCoverageExtEndDate),
               //  x[0].sslTermCoverageExtEndDate==null?"":this.datePipe.transform(new Date(x[0].sslTermCoverageExtEndDate), 'yyyy-MM-dd'),
@@ -689,6 +696,8 @@ openViewModal(bool, id:any){
                 sslExclusionPaidStartDate:this.dateValueString(x[0].sslExclusionPaidStartDate),
                   sslExclusionPaidEndDate:this.dateValueString(x[0].sslExclusionPaidEndDate),
                // aslDeductible:x[0].aslDeductible==0?'':x[0].aslDeductible,
+
+
                 aslMinDeductible:this.numberValueString(x[0].aslMinDeductible),
                 aslExpectedClaimLiability:this.numberValueString(x[0].aslExpectedClaimLiability),
                 aslIncurrredStartDate:this.dateValueString(x[0].aslIncurrredStartDate),
@@ -702,6 +711,7 @@ openViewModal(bool, id:any){
                 aslClaimBasis:x[0].aslClaimBasis,
                 aslAnnualLimit:this.numberValueString(x[0].aslAnnualLimit),
                 aslLifeTimeLimit:this.numberValueString(x[0].aslLifeTimeLimit),
+                aslPharmClaimsLimit:this.numberValueString(x[0].aslPharmClaimsLimit),
                 aslIsMonthlyAccomidation:x[0].aslIsMonthlyAccomidation,
                 aslTermCoverageExtEndDate:this.dateValueString(x[0].aslTermCoverageExtEndDate),
                 isMaxLiability:x[0].isMaxLiability,
@@ -891,6 +901,8 @@ patchProductForm(){
     sslAnnualLimit: this.numberValue(this.f.sslAnnualLimit.value),
     sslLifetimeLimit: this.numberValue(this.f.sslLifetimeLimit.value),
     sslPartcipantLimit:this.numberValue(this.f.sslPartcipantLimit.value),//(VE 1-08-2021 starts)
+    sslPharmContractLimit:this.numberValue(this.f.sslPharmContractLimit.value),    
+    sslPharmParticipantLimit:this.numberValue(this.f.sslPharmParticipantLimit.value),
     sslTermCoverageExtEndDate: this.dateValue(this.f.sslTermCoverageExtEndDate.value),
     //sslIsImmediateReimbursement: boolean;
     sslLasering: this.f.sslLasering.value==false?false:true,
@@ -900,6 +912,7 @@ patchProductForm(){
     sslExclusionPaidEndDate:this.dateValue(this.f.sslExclusionPaidEndDate.value),
     //aslClaimBasis: string;
     //aslDeductible:0, // not using currently
+
     aslMinDeductible: this.numberValue(this.f.aslMinDeductible.value),
     aslExpectedClaimLiability:this.numberValue(this.f.aslExpectedClaimLiability.value),
     aslIncurrredStartDate: this.dateValue(this.f.aslIncurrredStartDate.value),
@@ -911,6 +924,7 @@ patchProductForm(){
     aslRunInLimit: this.numberValue(this.f.aslRunInLimit.value),
     aslAnnualLimit: this.numberValue(this.f.aslAnnualLimit.value),
     aslLifeTimeLimit: this.numberValue(this.f.aslLifeTimeLimit.value),
+    aslPharmClaimsLimit: this.numberValue(this.f.aslPharmClaimsLimit.value),
     //aslIsMonthlyAccomidation: boolean;
     aslTermCoverageExtEndDate: this.dateValue(this.f.aslTermCoverageExtEndDate.value),
 	  aslCorridor:this.numberValue(this.f.aslCorridor.value),

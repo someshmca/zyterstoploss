@@ -109,6 +109,7 @@
                <div *ngIf="planIdErr.isDuplicate">{{planIdErr.errMsg}}</div>
                <div *ngIf="planNameErr.isDuplicate">{{planNameErr.errMsg}}</div>
                <div *ngIf="duplicatePlanTierErr.flag">{{duplicatePlanTierErr.message}}</div>
+               <div *ngIf="tierIdRequiredErr.flag">{{this.tierIdRequiredErr.msg}}</div>
              </div>  
              <div class="row">
                  <div class="col-md-4">
@@ -147,8 +148,8 @@
                     </div>
                     <div class="col-md-4">
                       <div class="form-group">
-                        <label>Contract Year</label>
-                        <input type="text" class="form-control" formControlName="contractYear" maxlength="4" [ngClass]="{ 'is-invalid': isContractYearInvalid.flag}" placeholder="YYYY"/>
+                        <label>Contract Year<small class="starmark">*</small> </label>
+                        <input type="text" class="form-control" formControlName="contractYear" maxlength="4" [ngClass]="{ 'is-invalid': (submitted && f.contractYear.errors) || isContractYearInvalid.flag}" placeholder="YYYY"/>
                       </div>
                     </div>
                     <!-- <div class="col-md-4">
@@ -180,12 +181,12 @@
                               <ng-container *ngFor="let tier of tierFormGroups; let i = index">
                               <tr [formGroup]="tier">
                                 <td>
-                                    <select class="form-control" formControlName="tierId">
+                                    <select class="form-control" formControlName="tierId" [ngClass]="{'is-invalid':tierIdRequiredErr.flag}">
                                       <option value="1">Single</option>
                                       <option value="2">Dual</option>
                                       <option value="3">Family</option>
                                       <option value="4">Others</option>
-                                    </select> 
+                                    </select>
                                 </td>
                                 <td>
                                     <input type="number" formControlName="tierAmount" class="form-control" [ngClass]="{ 'is-invalid': isTierAmountInvalid}" />

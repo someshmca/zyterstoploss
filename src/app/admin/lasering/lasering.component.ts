@@ -112,7 +112,8 @@ export class LaseringComponent implements OnInit {
       contractId: ['', Validators.required],
       planId: ['', Validators.required],
       tierId: ['', Validators.required],
-      dateOfBirth: ['', Validators.required]
+      dateOfBirth: ['', Validators.required],
+      exclusion: false
     });
     this.today=this.datePipe.transform(new Date(Date.now()), "MM/dd/yyyy");    
     this.getLaseringStatus();
@@ -268,7 +269,8 @@ export class LaseringComponent implements OnInit {
               isUnlimited: (id.isUnlimited==null || id.isUnlimited=='N')?false:true,
               memberStartDate: this.datePipe.transform(id.memberStartDate, 'yyyy-MM-dd'),
               memberEndDate: this.datePipe.transform(id.memberEndDate, 'yyyy-MM-dd'),
-              dateOfBirth: this.datePipe.transform(id.dateOfBirth, 'yyyy-MM-dd')          
+              dateOfBirth: this.datePipe.transform(id.dateOfBirth, 'yyyy-MM-dd'),
+              exclusion:(id.exclusion == null || id.exclusion =='N')?false : true       
             });
 
           },900);
@@ -279,6 +281,9 @@ export class LaseringComponent implements OnInit {
           
           this.memberForm.disable();
           this.f.laserValue.enable();
+           this.f.exclusion.enable();
+
+
          // this.f.isUnlimited.enable(); 
           //this.isUnlimitedChecked();
           if(this.isViewModal==true){
@@ -287,6 +292,7 @@ export class LaseringComponent implements OnInit {
           if(this.isViewModal==false){
             this.memberForm.disable();
             this.f.laserValue.enable();
+            this.f.exclusion.enable();
             // this.f.isUnlimited.enable(); 
             // if(this.f.isUnlimited.value==true || id.isUnlimited=='Y'){
             //   this.memberForm.patchValue({
@@ -436,7 +442,8 @@ decimalValue(inputValue:number){
       createdBy: this.loginService.currentUserValue.name,
       updatedBy: this.loginService.currentUserValue.name,
       createdOn:null,
-      updatedOn:null  
+      updatedOn:null ,
+      exclusion: this.f.exclusion.value == true ? 'Y' : 'N'
       }
       
       this.laseringService.updateMember(updateMemberObj)

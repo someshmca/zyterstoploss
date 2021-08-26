@@ -46,7 +46,6 @@ export class MainSideNavComponent implements OnInit, AfterViewInit {
         
       let cdata=JSON.parse(localStorage.getItem("currentUser"));
       console.log(cdata);
-      this.menu= cdata.menus;
       //
   }  
 }

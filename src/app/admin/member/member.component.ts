@@ -124,7 +124,8 @@ export class MemberComponent implements OnInit {
       tierId: ['', Validators.required],
       dateOfBirth: ['', Validators.required],
       tier: [''],
-      benefitPlanId: ['']
+      benefitPlanId: [''],
+      exclusion:false
     });
     //this.today=this.datePipe.transform(new Date(Date.now()), "MM/dd/yyyy");    
     this.today = new Date().toJSON().split('T')[0];
@@ -666,7 +667,8 @@ export class MemberComponent implements OnInit {
             isUnlimited: (id.isUnlimited == null || id.isUnlimited == 'N') ? false : true,
             memberStartDate: this.datePipe.transform(id.memberStartDate, 'yyyy-MM-dd'),
             memberEndDate: this.datePipe.transform(id.memberEndDate, 'yyyy-MM-dd'),
-            dateOfBirth: this.datePipe.transform(id.dateOfBirth, 'yyyy-MM-dd')
+            dateOfBirth: this.datePipe.transform(id.dateOfBirth, 'yyyy-MM-dd'),
+            exclusion:(id.exclusion == null || id.exclusion =='N')?false : true,
           });
 
         }, 900);
@@ -678,6 +680,7 @@ export class MemberComponent implements OnInit {
         console.log(this.memberForm.value);
         this.memberForm.disable();
         this.f.laserValue.enable();
+        this.f.exclusion.enable();
         // this.f.isUnlimited.enable(); 
         //this.isUnlimitedChecked();
 
@@ -688,6 +691,7 @@ export class MemberComponent implements OnInit {
         if (this.isViewModal == false) {
           this.memberForm.disable();
           this.f.laserValue.enable();
+          this.f.exclusion.enable();
           // this.f.isUnlimited.enable(); 
           // if(this.f.isUnlimited.value==true || id.isUnlimited=='Y'){
           //   this.memberForm.patchValue({
@@ -811,7 +815,8 @@ export class MemberComponent implements OnInit {
       createdBy: this.loginService.currentUserValue.name,
       updatedBy: this.loginService.currentUserValue.name,
       createdOn: null,
-      updatedOn: null
+      updatedOn: null,
+      exclusion: this.f.exclusion.value == true ? 'Y' : 'N'
     }
     debugger;
     this.memberService.updateMember(updateMemberObj)

@@ -2,6 +2,7 @@ import { AfterViewInit, Component, OnInit } from '@angular/core';
 import {Router} from '@angular/router';
 import { Observable } from 'rxjs';
 import { NavPopupService } from './admin/services/nav-popup.service';
+import { LoginResponseModel } from './shared/models/login.model';
 import {LoginService} from './shared/services/login.service';
 @Component({
   selector: 'app-root',
@@ -13,6 +14,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   role: string;
   isLoggedIn: boolean=false;
   isStopScroll:boolean=false;
+  loginData:LoginResponseModel; // aug 26 2021 added
 
   constructor(private loginService: LoginService, private route: Router){
 
@@ -20,9 +22,13 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   ngOnInit(){
     let temp = localStorage.getItem('loginStatus');
+
     console.log(temp);
-    if(temp=="true")
-    this.isLoggedIn = true;
+    if(temp=="true"){
+      this.isLoggedIn = true;
+      this.loginData = JSON.parse(localStorage.getItem("loginData")); // aug 26 2021 added
+      this.loginService.setMenu(this.loginData.menuDetails); // aug 26 2021 added
+    }
     else
     this.isLoggedIn = false;
       }
