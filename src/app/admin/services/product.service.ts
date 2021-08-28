@@ -43,7 +43,9 @@ export class ProductService {
     return this.http.post<IProductAdd
       >(Paths.productAdd, body,{headers: headerOptions} ).pipe(catchError(this.handleError.bind(this))); 
  }
-
+ getProductByContractPeriod(productId:number, contractPeriod:string){
+   return this.http.get(Paths.productByContractPeriod+"productId="+productId+"&contractPeriod="+contractPeriod).pipe(catchError(this.handleError.bind(this))); 
+ }
  checkDuplicateContract(contractId:number){
    return this.http.get(Paths.duplicateContract+contractId).pipe(catchError(this.handleError.bind(this)));
  }

@@ -231,7 +231,12 @@ input[type='date'].form-control{
       -webkit-appearance: none;
       display: none;
     }
-
+    .view-modal .slider{
+        cursor: default;
+    }
+    .view-modal input.success:checked + .slider {
+        background-color: #b8e683;
+    }
     .form-group .mat-form-field-infix{
         border-top: 0;
     }

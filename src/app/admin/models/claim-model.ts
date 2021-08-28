@@ -17,7 +17,8 @@ export interface IClaim{
     planName: string;
     memberStartDate: string;
     memberEndDate: string;
-    stopLossAmount: number
+    stopLossAmount: number,
+    exclusion: string;
 }
 
 

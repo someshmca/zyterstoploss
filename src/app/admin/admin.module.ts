@@ -41,6 +41,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { ExcelUploadComponent } from '../admin/excel-upload/excel-uplaod.component';
 import { Nl2brPipe } from '../nl2br.pipe';
 import { LaseringComponent } from './lasering/lasering.component';
+import {LaseringSearchComponent} from './lasering-search/lasering-search.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';//added by Venkatesh Enigonda
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import{InterceptorService} from'./services/interceptor.service';
@@ -49,7 +50,7 @@ import { PlanFactorComponent } from './health-plan/plan-factor/plan-factor.compo
 
 
 @NgModule({
-  declarations: [BatchSettingsComponent, ClaimSearchComponent, ClaimResultComponent, ClaimComponent, BenefitsComponent, ProgramsComponent, ContractsComponent, RoleComponent, RulesComponent, ClientComponent, AttributesComponent, UsersSecurityComponent, MemberComponent, AlertComponent, HealthPlanComponent, ProductComponent, ExcelUploadComponent, Nl2brPipe, LaseringComponent, PlanFactorComponent],
+  declarations: [BatchSettingsComponent, ClaimSearchComponent, ClaimResultComponent, ClaimComponent, BenefitsComponent, ProgramsComponent, ContractsComponent, RoleComponent, RulesComponent, ClientComponent, AttributesComponent, UsersSecurityComponent, MemberComponent, AlertComponent, HealthPlanComponent, ProductComponent, ExcelUploadComponent, Nl2brPipe, LaseringComponent, PlanFactorComponent, LaseringSearchComponent],
   imports: [
     CommonModule,
     FormsModule,

@@ -810,7 +810,8 @@ export class LaseringSearchComponent implements OnInit {
       createdBy: this.loginService.currentUserValue.name,
       updatedBy: this.loginService.currentUserValue.name,
       createdOn: null,
-      updatedOn: null
+      updatedOn: null,
+      exclusion: this.f.exclusion.value
     }
     debugger;
     this.memberService.updateMember(updateMemberObj)

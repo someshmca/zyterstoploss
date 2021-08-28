@@ -152,10 +152,10 @@
               </div>
             </div>
             <h1 class="text-primary">Specific Stop Loss
-              <!-- <select name="years" id="year">
-                <option value="year1">Year 1</option>
-                <option value="year2">Year 2</option>
-              </select> -->
+              <select formControlName="contractPeriod" (change)="getProductByContractPeriod($event.target.value)" [ngClass]="{ 'is-invalid': submitted && f.contractPeriod.errors }">
+                <option value="Year 1">Year 1</option>
+                <option value="Year 2">Year 2</option>
+              </select>
             </h1>
           <div class="row">
             <div class="col-md-4">
@@ -296,7 +296,7 @@
               </div>
             </div>
           </div>	
-          <!-- <div class="row">
+          <div class="row">
             <div class="col-md-4">
               <div class="form-group">
                 <label>Exclusion Incurred Period Start Date</label>
@@ -323,7 +323,7 @@
               <input type="date"  value="MM/DD/yyyy" formControlName="sslExclusionPaidEndDate"class="form-control" max="2999-12-31" [ngClass]="{ 'is-invalid': sslExPaidStartEndDateErr.isDateErr}"/>
             </div>              
           </div>
-        </div> -->
+        </div>
           <div class="row"> 
             <div class="col-md-4">
               <div class="form-group">
@@ -368,7 +368,7 @@
             </option>
           </select>  -->
 
-          <input type="text" formControlName="aslClaimBasis" class="form-control" placeholder="MM/MM" maxlength="5" [ngClass]="{ 'is-invalid': submitted && f.aslClaimBasis.errors || aslClaimBasisErr.isValid  }"/><!--Modified By Venkatesh Enigonda-->
+          <input type="text" formControlName="aslClaimBasis" class="form-control" placeholder="MM/MM" maxlength="5" [ngClass]="{ 'is-invalid': submitted && f.aslClaimBasis.errors || aslClaimBasisErr.isValid  }" [readonly]="updateStatus" /><!--Modified By Venkatesh Enigonda-->
         </div>
       </div>
       <!-- <div class="col-md-4">
@@ -380,13 +380,13 @@
       <div class="col-md-4">
         <div class="form-group">
           <label>Min Aggregate Deductible <small class="starmark">*</small></label>
-          <input type="number" formControlName="aslMinDeductible" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.aslMinDeductible.errors }"/>
+          <input type="number" formControlName="aslMinDeductible" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.aslMinDeductible.errors }" [readonly]="updateStatus"/>
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-group">
           <label>Expected Claim Liability</label>
-          <input type="number" formControlName="aslExpectedClaimLiability" class="form-control"/>
+          <input type="number" formControlName="aslExpectedClaimLiability" class="form-control" [readonly]="updateStatus"/>
         </div>
       </div>
     </div>
@@ -394,19 +394,19 @@
       <div class="col-md-4">
         <div class="form-group">
           <label>Incurred Start Date<small class="starmark">*</small></label>
-          <input type="date" formControlName="aslIncurrredStartDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.aslIncurrredStartDate.errors || aslIncurredEndErr.isDateErr  }" max="2999-12-31"/>
+          <input type="date" formControlName="aslIncurrredStartDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.aslIncurrredStartDate.errors || aslIncurredEndErr.isDateErr  }" max="2999-12-31" [readonly]="updateStatus"/>
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-group">
           <label>Incurred End Date<small class="starmark">*</small></label>
-          <input type="date" formControlName="aslIncurredEndDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.aslIncurredEndDate.errors || aslIncurredEndErr.isDateErr }" max="2999-12-31"/>
+          <input type="date" formControlName="aslIncurredEndDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.aslIncurredEndDate.errors || aslIncurredEndErr.isDateErr }" max="2999-12-31" [readonly]="updateStatus"/>
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-group">
           <label>Run-In Limit</label>
-          <input type="number" formControlName="aslRunInLimit" class="form-control"/>
+          <input type="number" formControlName="aslRunInLimit" class="form-control" [readonly]="updateStatus"/>
         </div>
       </div>
     </div>
@@ -414,19 +414,19 @@
       <div class="col-md-4">
         <div class="form-group">
           <label>Aggregate Start Date</label>
-          <input type="date" formControlName="aslContractStartDate" class="form-control" max="2999-12-31" [ngClass]="{ 'is-invalid': aslAggregateErr.isDateErr}"/>
+          <input type="date" formControlName="aslContractStartDate" class="form-control" max="2999-12-31" [ngClass]="{ 'is-invalid': aslAggregateErr.isDateErr}" [readonly]="updateStatus"/>
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-group">
           <label>Aggregate End Date</label>
-          <input type="date" formControlName="aslContractEndDate" class="form-control" max="2999-12-31"[ngClass]="{ 'is-invalid': aslAggregateErr.isDateErr}"/>
+          <input type="date" formControlName="aslContractEndDate" class="form-control" max="2999-12-31"[ngClass]="{ 'is-invalid': aslAggregateErr.isDateErr}" [readonly]="updateStatus"/>
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-group">
           <label>Aggregate Corridor</label>
-          <input type="number" formControlName="aslCorridor" class="form-control"/>
+          <input type="number" formControlName="aslCorridor" class="form-control" [readonly]="updateStatus"/>
         </div>
       </div>
     </div>
@@ -434,19 +434,19 @@
       <div class="col-md-4">
         <div class="form-group">
           <label>Paid Start Date<small class="starmark">*</small></label>
-          <input type="date" formControlName="aslPaidStartDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.aslPaidStartDate.errors || aslPaidEndErr.isDateErr  }" max="2999-12-31"/>
+          <input type="date" formControlName="aslPaidStartDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.aslPaidStartDate.errors || aslPaidEndErr.isDateErr  }" max="2999-12-31" [readonly]="updateStatus"/>
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-group">
           <label>Paid End Date<small class="starmark">*</small></label>
-          <input type="date" formControlName="aslPaidEndDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.aslPaidEndDate.errors || aslPaidEndErr.isDateErr }" max="2999-12-31"/>
+          <input type="date" formControlName="aslPaidEndDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.aslPaidEndDate.errors || aslPaidEndErr.isDateErr }" max="2999-12-31" [readonly]="updateStatus"/>
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-group">
           <label>Limit of Liability - Contract</label>
-          <input type="number" formControlName="aslAnnualLimit" class="form-control"/>
+          <input type="number" formControlName="aslAnnualLimit" class="form-control" [readonly]="updateStatus"/>
         </div>
       </div>
     </div>
@@ -454,21 +454,21 @@
       <div class="col-md-4">
         <div class="form-group">
           <label>Limit of Liability - Lifetime</label>
-          <input type="number" formControlName="aslLifeTimeLimit" class="form-control"/>
+          <input type="number" formControlName="aslLifeTimeLimit" class="form-control" [readonly]="updateStatus"/>
         </div>
       </div>
 
       <div class="col-md-4">
         <div class="form-group">
           <label>Limit of Liability - Pharmacy Claims</label>
-          <input type="number" onkeypress="return ((event.charCode !=8 && event.charCode ==0) ||(event.charCode == 46)|| (event.charCode >= 48 && event.charCode <= 57))" class="form-control" formControlName="aslPharmClaimsLimit"/>
+          <input type="number" onkeypress="return ((event.charCode !=8 && event.charCode ==0) ||(event.charCode == 46)|| (event.charCode >= 48 && event.charCode <= 57))" class="form-control" formControlName="aslPharmClaimsLimit" [readonly]="updateStatus"/>
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-group">
           <label></label>
           <div class="custom-control custom-checkbox">
-            <input type="checkbox" class="custom-control-input" formControlName="aslIsMonthlyAccomidation" id="aslMonAcc" checked>
+            <input type="checkbox" class="custom-control-input" formControlName="aslIsMonthlyAccomidation" id="aslMonAcc" checked [readonly]="updateStatus">
             <label class="custom-control-label" for="aslMonAcc"> Monthly Accomodation</label>
           </div>
         </div>
@@ -478,7 +478,7 @@
       <div class="col-md-4">
         <div class="form-group">
           <label>Terminal Extension Coverage End Date</label>
-          <input type="date" formControlName="aslTermCoverageExtEndDate" class="form-control" [ngClass]="{ 'is-invalid': aslTermCovrErr.isDateErr }" max="2999-12-31" />
+          <input type="date" formControlName="aslTermCoverageExtEndDate" class="form-control" [ngClass]="{ 'is-invalid': aslTermCovrErr.isDateErr }" max="2999-12-31" [readonly]="updateStatus" />
         </div>
       </div> 
       <div class="col-md-4">
@@ -491,7 +491,7 @@
          </select>-->
          <div>
             <mat-form-field>
-            <mat-select class="form-control" formControlName="aslCoveredClaims"  multiple [ngClass]="{ 'is-invalid': submitted && f.aslCoveredClaims.errors }">
+            <mat-select class="form-control" formControlName="aslCoveredClaims"  multiple [ngClass]="{ 'is-invalid': submitted && f.aslCoveredClaims.errors }" [disabled]="updateStatus">
               <mat-option *ngFor="let coveredClaim of coveredClaims" [value]="coveredClaim.claimTypeCode">{{coveredClaim.claimType}}</mat-option>
             </mat-select>
           </mat-form-field>
@@ -508,20 +508,20 @@
     <div class="row">
       <div class="col-md-4">
         <div class="custom-control custom-checkbox">
-          <input type="checkbox" class="custom-control-input" id="max" formControlName="isMaxLiability" (change)="checkMaxLiability()">
+          <input type="checkbox" class="custom-control-input" id="max" formControlName="isMaxLiability" (change)="checkMaxLiability()" [readonly]="updateStatus">
           <label class="custom-control-label" for="max">Max Liability</label>
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-group">
           <label>IBNR Reserve Percentage <small class="starmark" *ngIf="f.isMaxLiability.value">*</small> </label>
-          <input type="number" formControlName="ibnrPercentage" [readonly]="!f.isMaxLiability.value" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.ibnrPercentage.errors }"/>
+          <input type="number" formControlName="ibnrPercentage" [readonly]="!f.isMaxLiability.value || updateStatus" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.ibnrPercentage.errors }" [readonly]="updateStatus"/>
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-group">
           <label>Deferred Service Fee Percentage<small class="starmark" *ngIf="f.isMaxLiability.value">*</small></label>
-          <input type="number" formControlName="defferedFeePercentage" [readonly]="!f.isMaxLiability.value" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.defferedFeePercentage.errors }"/>
+          <input type="number" formControlName="defferedFeePercentage" [readonly]="!f.isMaxLiability.value || updateStatus" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.defferedFeePercentage.errors }" [readonly]="updateStatus"/>
         </div>
       </div>
     </div>

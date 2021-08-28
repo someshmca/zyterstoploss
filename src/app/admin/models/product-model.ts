@@ -46,6 +46,7 @@ export interface IProductAll{
     sslPharmContractLimit: number;
     sslPharmParticipantLimit: number;
     aslPharmClaimsLimit: number;
+    contractPeriod: string;
 }
 export interface IProductAdd{
     productId: number;
@@ -96,6 +97,7 @@ export interface IProductAdd{
     sslPharmContractLimit: number;
     sslPharmParticipantLimit: number;
     aslPharmClaimsLimit: number;
+    contractPeriod: string;
 }
 export interface IProductUpdate{
   productId: number;
@@ -145,6 +147,7 @@ export interface IProductUpdate{
     sslPharmContractLimit: number;
     sslPharmParticipantLimit: number;
     aslPharmClaimsLimit: number;
+    contractPeriod: string;
 }
 export interface IActiveClient{
     clientId: string;
@@ -208,6 +211,7 @@ export interface IProduct{
     sslPharmContractLimit: number;
     sslPharmParticipantLimit: number;
     aslPharmClaimsLimit: number;
+    contractPeriod: string;
 }
 
 export interface ICoveredClaims{

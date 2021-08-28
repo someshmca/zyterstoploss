@@ -244,7 +244,8 @@ initClaimForm(){
     claimType:  [''],
     alternateId:  [''],
     subscriberFirstName: [''],
-    subscriberLastName:  ['']
+    subscriberLastName:  [''],
+    exclusion: false
   });
 }
 openViewModal(bool, id:any){
@@ -292,7 +293,8 @@ openCustomModal(open: boolean, id:any) {
             claimType:  id.claimType,
             alternateId: id.alternateId,
             subscriberFirstName:id.subscriberFirstName,
-            subscriberLastName:  id.subscriberLastName
+            subscriberLastName:  id.subscriberLastName,
+            exclusion:(id.exclusion == null || id.exclusion =='N')?false : true,
           });
 
 
