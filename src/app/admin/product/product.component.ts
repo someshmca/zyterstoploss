@@ -52,6 +52,7 @@ export class ProductComponent implements OnInit {
   uProductId: number;
   uClientId: string;
   uContractId: number;
+  uContractPeriod: string;
   claimBasis : string[];
   toSwitchOtherScreen: boolean=false;
   sslClaimBasisErr = {isValid: false,errMsg:''};
@@ -79,6 +80,8 @@ export class ProductComponent implements OnInit {
   isEditSelected: boolean = false;
   searchInputValue: string='';
   sharedContractID: number;
+  contractPeroidErr={flag:false, message:''};
+  isAddContractPeriod: boolean = false;
   // contractAddStatus: boolean;
   // contractUpdateStatus: boolean;
   // productAddStatus: boolean;
@@ -294,8 +297,8 @@ export class ProductComponent implements OnInit {
     )
   }  
  
-  doFilter(filterValue:string){ //added by Venkatesh Enigonda
-    this.dataSource.filter=filterValue.trim().toLowerCase();
+  doFilter(filterValue){ //added by Venkatesh Enigonda
+    this.dataSource.filter=filterValue;
     // this.dataSource.filterPredicate = (data:IProductAll, filter: string) => {
     //   const Id=data.contractId.toString();
     //   const CompareData=data.clientName.toLowerCase() ||  '';
@@ -339,6 +342,8 @@ export class ProductComponent implements OnInit {
     this.sslExPaidStartDateErr.dateErrMsg='';
     this.duplicateContractErr.flag=false;
     this.duplicateContractErr.message='';
+    this.contractPeroidErr={flag:false, message:''};
+    this.isAddContractPeriod=false;
     if(this.isAddMode)
         this.productForm.patchValue({isMaxLiability:false})
   }
@@ -360,6 +365,10 @@ export class ProductComponent implements OnInit {
     this.sslClaimBasisErr.isValid=true;
     this.sslClaimBasisErr.errMsg='In-Valid Format in Specific ClaimBasis';
     return;
+   }
+   if(this.contractPeroidErr.flag) return;
+   if(this.isAddContractPeriod){
+     this.isAddMode = true;
    }
   
    if(this.f.sslClaimBasis.value.charAt(2)!='/')
@@ -589,7 +598,7 @@ openViewModal(bool, id:any){
   this.isViewModal = true;
   this.openCustomModal(bool, id);
 }
-  openCustomModal(open: boolean, id:any) {    
+  openCustomModal(open: boolean, id:any) { 
     this.checkMaxLiability();
     setTimeout(()=>{
       this.focusTag.nativeElement.focus()
@@ -631,12 +640,12 @@ openViewModal(bool, id:any){
       this.isAddMode = false;
       this.isEditSelected = true;
       this.isFilterOn=false;
-      this.uProductId=id.productId
+      this.uContractId=id;
+      this.uContractPeriod='Year 1';
+      this.getProductByContractPeriod(this.uContractPeriod);
       this.f.clientId.disable();
       this.f.contractId.disable();
       this.getAllProducts();
-      
-      this.getProductDetails(this.uProductId);
 
       if(this.isAddMode){
         this.productForm.enable();
@@ -652,125 +661,35 @@ openViewModal(bool, id:any){
     }
   }
 
-      getProductDetails(productId){
-        this.productService.getProduct(productId).subscribe(x => {     
-        
-          this.uProductId = x[0].productId;  
-          this.uClientId = x[0].clientId,
-          this.uContractId = x[0].contractId,
-          this.getContractIDs(x[0].clientId);
-          
-          console.log(x[0].productId);  
-          console.log("Account "+this.uClientId);
-          console.log("Contract ID "+this.uContractId);
-               console.log("x of 0 id "+x[0].contractId);
-               
-          this.getContractIDs(x[0].clientId);
-              this.productForm.patchValue({
-                productId:x[0].productId,
-                contractId:x[0].contractId,
-                clientId:this.uClientId,
-               // sslPaidEndDate: this.dateValue(this.f.sslPaidEndDate.value),
-                //sslRunInLimit: this.numberValue(this.f.sslRunInLimit.value),
-                sslIncurredStartDate: this.dateValueString(x[0].sslIncurredStartDate),
-                //this.datePipe.transform(new Date(x[0].sslIncurredStartDate), 'yyyy-MM-dd'),
-                sslIncurredEndDate: this.dateValueString(x[0].sslIncurredEndDate),
-                sslContractStartDate:this.dateValueString(x[0].sslContractStartDate),
-                sslContractEndDate: this.dateValueString(x[0].sslContractEndDate),
-                sslPaidStartDate:this.dateValueString(x[0].sslPaidStartDate),
-                sslPaidEndDate:this.dateValueString(x[0].sslPaidEndDate),
-                sslRunInLimit:this.numberValueString(x[0].sslRunInLimit),
-                //x[0].sslRunInLimit==0?'':x[0].sslRunInLimit, 
-                sslClaimBasis:x[0].sslClaimBasis,
-                sslDeductible:this.numberValueString(x[0].sslDeductible),
-                sslAggDeductible:this.numberValueString(x[0].sslAggDeductible),
-                sslAnnualLimit: this.numberValueString(x[0].sslAnnualLimit),
-                sslLifetimeLimit: this.numberValueString(x[0].sslLifetimeLimit),
-                sslPartcipantLimit: this.numberValueString(x[0].sslPartcipantLimit),
-                sslPharmContractLimit: this.numberValueString(x[0].sslPharmContractLimit),                
-                sslPharmParticipantLimit:this.numberValueString(x[0].sslPharmParticipantLimit),
-                sslIsImmediateReimbursement:x[0].sslIsImmediateReimbursement,
-                sslTermCoverageExtEndDate:this.dateValueString(x[0].sslTermCoverageExtEndDate),
-              //  x[0].sslTermCoverageExtEndDate==null?"":this.datePipe.transform(new Date(x[0].sslTermCoverageExtEndDate), 'yyyy-MM-dd'),
-                sslLasering: x[0].sslLasering,
-                sslExclusionIncurredStartDate: this.dateValueString(x[0].sslExclusionIncurredStartDate),
-                sslExclusionIncurredEndDate:this.dateValueString(x[0].sslExclusionIncurredEndDate),
-                sslExclusionPaidStartDate:this.dateValueString(x[0].sslExclusionPaidStartDate),
-                  sslExclusionPaidEndDate:this.dateValueString(x[0].sslExclusionPaidEndDate),
-               // aslDeductible:x[0].aslDeductible==0?'':x[0].aslDeductible,
-
-
-                aslMinDeductible:this.numberValueString(x[0].aslMinDeductible),
-                aslExpectedClaimLiability:this.numberValueString(x[0].aslExpectedClaimLiability),
-                aslIncurrredStartDate:this.dateValueString(x[0].aslIncurrredStartDate),
-                aslIncurredEndDate: this.dateValueString(x[0].aslIncurredEndDate),
-                aslContractStartDate:this.dateValueString(x[0].aslContractStartDate),
-                aslContractEndDate:this.dateValueString(x[0].aslContractEndDate),
-                aslCorridor: this.numberValueString(x[0].aslCorridor),
-                aslPaidStartDate:this.dateValueString(x[0].aslPaidStartDate),
-                aslPaidEndDate:this.dateValueString(x[0].aslPaidEndDate),
-                aslRunInLimit:this.numberValueString(x[0].aslRunInLimit),
-                aslClaimBasis:x[0].aslClaimBasis,
-                aslAnnualLimit:this.numberValueString(x[0].aslAnnualLimit),
-                aslLifeTimeLimit:this.numberValueString(x[0].aslLifeTimeLimit),
-                aslPharmClaimsLimit:this.numberValueString(x[0].aslPharmClaimsLimit),
-                aslIsMonthlyAccomidation:x[0].aslIsMonthlyAccomidation,
-                aslTermCoverageExtEndDate:this.dateValueString(x[0].aslTermCoverageExtEndDate),
-                isMaxLiability:x[0].isMaxLiability,
-                ibnrPercentage:this.numberValueString(x[0].ibnrPercentage),
-                defferedFeePercentage:this.numberValueString(x[0].defferedFeePercentage),
-                status:x[0].status, 
-                userId: this.loginService.currentUserValue.name,
-                contractPeriod: x[0].contractPeriod
-              });
-              console.log(this.productForm.value);
-              
-              let aslCc=[];
-              let sslCc=[];
-              console.log(x[0].lstContractClaims.length)
-              for(let i=0; i<x[0].lstContractClaims.length; i++){
-                  console.log(x[0].lstContractClaims[i].sltype);
-                  console.log(x[0].lstContractClaims[i].claimtypecode);
-                  if(x[0].lstContractClaims[i].sltype=='A'){
-                    aslCc.push(x[0].lstContractClaims[i].claimtypecode);
-                  }
-                  if(x[0].lstContractClaims[i].sltype=='S'){
-                    sslCc.push(x[0].lstContractClaims[i].claimtypecode);
-                  }
-              }
-              
-              this.productForm.patchValue({
-                sslCoveredClaims: sslCc,
-                aslCoveredClaims: aslCc
-              });
-              this.checkMaxLiability();
-              console.log(this.productForm.value);
-              
-            });
-      }
-      getProductByContractPeriod(contractPeriod: string){
+      
+      getProductByContractPeriod(contractPeriod:string){
         debugger;
         if(!this.isAddMode){
-          this.productService.getProductByContractPeriod(this.uProductId,contractPeriod).subscribe((res)=>{
+          this.productService.getProductByContractPeriod(this.uContractId,contractPeriod).subscribe((res)=>{
+            debugger;
            // this.productForm.patchValue(res);
-           if(res.length==0){
+           if(res.length==0 && contractPeriod=='Year 1'){
+             debugger;
              this.clearSSLSection();
+             this.uProductId=0;             
            }
-           else{
+           else if(res.length==0 && contractPeriod=='Year 2'){
+             debugger;
+            this.clearSSLSection();   
+           }
+           else if(res.length>0 && contractPeriod=='Year 1'){
+            debugger;
             this.patchSSL(res);
+            this.updateStatus = false;   
+            debugger;
             debugger;
            }
+           else if(res.length>0 && contractPeriod=="Year 2"){
             debugger;
-            if(contractPeriod=="Year 2"){
-              debugger;
-              this.updateStatus = true;
-              //this.changeASLMaxLiability(this.updateStatus);
-            }
-            if(contractPeriod=="Year 1"){   
-              debugger;      
-              this.updateStatus = false;   
-              //this.changeASLMaxLiability(this.updateStatus );
-            }
+            this.patchSSL(res);
+            this.updateStatus = true;
+            debugger;
+           }
           });
         }
       }
@@ -800,42 +719,27 @@ openViewModal(bool, id:any){
           sslCoveredClaims: ''
         });
       }
-      changeASLMaxLiability(status){
-        this.productForm.patchValue({
-          aslClaimBasis: [{disabled: status}],      
-          aslMinDeductible:  [{disabled: status}],   
-          aslExpectedClaimLiability: [{disabled: status}],   
-          aslIncurrredStartDate:  [{disabled: status}],   
-          aslIncurredEndDate:  [{disabled: status}],   
-          aslContractStartDate: [{disabled: status}],   
-          aslContractEndDate: [{disabled: status}],   
-          aslPaidStartDate:  [{disabled: status}],   
-          aslPaidEndDate:  [{disabled: status}],   
-          aslRunInLimit: [{disabled: status}],   
-          aslAnnualLimit:  [{disabled: status}],   
-          aslLifeTimeLimit:  [{disabled: status}],   
-          aslPharmClaimsLimit:  [{disabled: status}],   
-          aslTermCoverageExtEndDate:  [{disabled: status}],   
-          aslCorridor: [{disabled: status}],   
-        });
-      }
       patchSSL(x){
+        console.log(x[0].contractPeriod);
+        console.log(x[0].contractId);
+        console.log(this.contractsByClientId.length);
+        console.log(x[0].clientName);
+        debugger;
         this.productForm.patchValue({
         productId:x[0].productId,
         contractId:x[0].contractId,
-        clientId:this.uClientId,
-       // sslPaidEndDate: this.dateValue(this.f.sslPaidEndDate.value),
-        //sslRunInLimit: this.numberValue(this.f.sslRunInLimit.value),
+        clientId:x[0].clientId,
+          
         sslIncurredStartDate: this.dateValueString(x[0].sslIncurredStartDate),
-        //this.datePipe.transform(new Date(x[0].sslIncurredStartDate), 'yyyy-MM-dd'),
         sslIncurredEndDate: this.dateValueString(x[0].sslIncurredEndDate),
         sslContractStartDate:this.dateValueString(x[0].sslContractStartDate),
         sslContractEndDate: this.dateValueString(x[0].sslContractEndDate),
         sslPaidStartDate:this.dateValueString(x[0].sslPaidStartDate),
         sslPaidEndDate:this.dateValueString(x[0].sslPaidEndDate),
         sslRunInLimit:this.numberValueString(x[0].sslRunInLimit),
-        //x[0].sslRunInLimit==0?'':x[0].sslRunInLimit, 
+
         sslClaimBasis:x[0].sslClaimBasis,
+
         sslDeductible:this.numberValueString(x[0].sslDeductible),
         sslAggDeductible:this.numberValueString(x[0].sslAggDeductible),
         sslAnnualLimit: this.numberValueString(x[0].sslAnnualLimit),
@@ -845,15 +749,37 @@ openViewModal(bool, id:any){
         sslPharmParticipantLimit:this.numberValueString(x[0].sslPharmParticipantLimit),
         sslIsImmediateReimbursement:x[0].sslIsImmediateReimbursement,
         sslTermCoverageExtEndDate:this.dateValueString(x[0].sslTermCoverageExtEndDate),
-      //  x[0].sslTermCoverageExtEndDate==null?"":this.datePipe.transform(new Date(x[0].sslTermCoverageExtEndDate), 'yyyy-MM-dd'),
         sslLasering: x[0].sslLasering,
         sslExclusionIncurredStartDate: this.dateValueString(x[0].sslExclusionIncurredStartDate),
         sslExclusionIncurredEndDate:this.dateValueString(x[0].sslExclusionIncurredEndDate),
         sslExclusionPaidStartDate:this.dateValueString(x[0].sslExclusionPaidStartDate),
-          sslExclusionPaidEndDate:this.dateValueString(x[0].sslExclusionPaidEndDate),
-       // aslDeductible:x[0].aslDeductible==0?'':x[0].aslDeductible,
+        sslExclusionPaidEndDate:this.dateValueString(x[0].sslExclusionPaidEndDate),
+        
+        aslMinDeductible:this.numberValueString(x[0].aslMinDeductible),
+        aslExpectedClaimLiability:this.numberValueString(x[0].aslExpectedClaimLiability),
+        aslIncurrredStartDate:this.dateValueString(x[0].aslIncurrredStartDate),
+        aslIncurredEndDate: this.dateValueString(x[0].aslIncurredEndDate),
+        aslContractStartDate:this.dateValueString(x[0].aslContractStartDate),
+        aslContractEndDate:this.dateValueString(x[0].aslContractEndDate),
+        aslCorridor: this.numberValueString(x[0].aslCorridor),
+        aslPaidStartDate:this.dateValueString(x[0].aslPaidStartDate),
+        aslPaidEndDate:this.dateValueString(x[0].aslPaidEndDate),
+        aslRunInLimit:this.numberValueString(x[0].aslRunInLimit),
+        aslClaimBasis:x[0].aslClaimBasis,
+        aslAnnualLimit:this.numberValueString(x[0].aslAnnualLimit),
+        aslLifeTimeLimit:this.numberValueString(x[0].aslLifeTimeLimit),
+        aslPharmClaimsLimit:this.numberValueString(x[0].aslPharmClaimsLimit),
+        aslIsMonthlyAccomidation:x[0].aslIsMonthlyAccomidation,
+        aslTermCoverageExtEndDate:this.dateValueString(x[0].aslTermCoverageExtEndDate),
+        isMaxLiability:x[0].isMaxLiability,
+        ibnrPercentage:this.numberValueString(x[0].ibnrPercentage),
+        defferedFeePercentage:this.numberValueString(x[0].defferedFeePercentage),
+        status:x[0].status, 
+        userId: this.loginService.currentUserValue.name,
+        contractPeriod: (x[0].contractPeriod==null ||  x[0].contractPeriod==undefined)?"Year 1": x[0].contractPeriod
       });
-
+      console.log(this.productForm.value);
+      debugger;
       }
 
       checkDuplicateContract(contractId){       
@@ -1082,12 +1008,12 @@ private addProduct() {
   contractId: this.sharedContractID>0?this.sharedContractID:this.f.contractId.value,  
   lstContractClaims: this.listContractClaims
  })
- 
+ debugger;
   this.productService.addProduct(this.productForm.value)
       .pipe(first())
       .subscribe({ 
           next: () => {
-            
+            debugger;
             this.getAllProducts(); 
             this.clearErrorMessages();           
               this.alertService.success('New Product added', { keepAfterRouteChange: true });   
@@ -1170,7 +1096,7 @@ private addProduct() {
                  // this.openCustomModal(false,null);                     
                    // this.productForm.reset();                       
                   
-                    this.getProductDetails(this.uProductId);
+                    this.getProductByContractPeriod(this.uContractPeriod);
                     this.f.clientId.disable();
                     this.f.contractId.disable();
                     
