@@ -81,6 +81,8 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
   isPlanFormInvalid:boolean;
   isTierAmountInvalid:boolean;
   isExpectedClaimsRateInvalid: boolean;
+  slTierSDateErr={isDateErr: false, dateErrMsg: ''};
+  slTierEDateErr={isDateErr: false, dateErrMsg: ''};
   tierIdExists={
     singleFlag:false,
     singleMsg:'',
@@ -118,7 +120,7 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
       userId: '',
       planCode:  ['', Validators.required],
       planName:  ['', Validators.required],
-      contractYear: ['', Validators.required],
+      contractYear: [''],
       clientName: '',
       status: 1,
       lstTblPlanTier: new FormArray([])
@@ -150,7 +152,9 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
             tierId: [''],
             tierAmount: [''],
             expectedClaimsRate: [''],
-            isTerminalExtCoverage: [false]
+            isTerminalExtCoverage: [false],
+            stopLossTierStartDate: null,
+            stopLossTierEndDate: null
         }));
     }
   addTier(){
@@ -160,9 +164,9 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
           //  for (let i = this.t.length; i < numberOfTickets; i++) {
                 
 
-                if(this.t.length>7){
+                if(this.t.length>15){
                   this.tiersLimitExceeded.flag=true;
-                  this.tiersLimitExceeded.value='Maximum Eight Rows are allowed';
+                  this.tiersLimitExceeded.value='Maximum Sixteen Rows are allowed';
                 }
                 else{
                   if(this.isAddMode){
@@ -171,7 +175,9 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
                       tierId: [''],
                       tierAmount: [''],
                       expectedClaimsRate: [''],
-                      isTerminalExtCoverage: [false]
+                      isTerminalExtCoverage: [false],
+                      stopLossTierStartDate: null,
+                      stopLossTierEndDate: null
                     }));
                   }
                   if(!this.isAddMode){
@@ -180,7 +186,9 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
                       tierId: [''],
                       tierAmount: [''],
                       expectedClaimsRate: [''],
-                      isTerminalExtCoverage: [false]
+                      isTerminalExtCoverage: [false],
+                      stopLossTierStartDate: null,
+                      stopLossTierEndDate: null
                     }));
                   }
                   
@@ -347,6 +355,10 @@ clearErrorMessages(){
   this.tierIdRequiredErr={flag:false, msg:''};
   this.duplicatePlanTierErr.flag=false;
   this.duplicatePlanTierErr.message='';
+  this.slTierSDateErr.isDateErr=false;
+  this.slTierSDateErr.dateErrMsg=''
+  this.slTierEDateErr.isDateErr=false;
+  this.slTierEDateErr.dateErrMsg=''
 }
 //(V.E 27-Jul-2021 Ends)
 doFilter(filterValue:string){ //added by Venkatesh Enigonda
@@ -361,6 +373,18 @@ doFilter(filterValue:string){ //added by Venkatesh Enigonda
 
 }//Ends here
 
+dateValueString(dateVal){
+  if(dateVal==null) dateVal='';
+  else dateVal=this.datePipe.transform(dateVal, 'yyyy-MM-dd');
+  console.log(dateVal);
+  return dateVal;
+}
+dateValue(dateVal){
+  if(dateVal=='') dateVal=null;
+  else dateVal=this.datePipe.transform(dateVal, 'yyyy-MM-dd');
+  console.log(dateVal);
+  return dateVal;
+}
   openViewModal(bool, id:any){
     this.isViewModal = true;
     this.openCustomModal(bool, id);
@@ -439,7 +463,9 @@ doFilter(filterValue:string){ //added by Venkatesh Enigonda
               tierId: elem.lstTblPlanTier[i].tierId,
               tierAmount: elem.lstTblPlanTier[i].tierAmount==0?'':this.decimalValue(elem.lstTblPlanTier[i].tierAmount),
               expectedClaimsRate: elem.lstTblPlanTier[i].expectedClaimsRate==0?'':this.decimalValue(elem.lstTblPlanTier[i].expectedClaimsRate),
-              isTerminalExtCoverage: elem.lstTblPlanTier[i].isTerminalExtCoverage=='Y'?true:false
+              isTerminalExtCoverage: elem.lstTblPlanTier[i].isTerminalExtCoverage=='Y'?true:false,
+              stopLossTierStartDate: this.dateValueString(elem.lstTblPlanTier[i].stopLossTierStartDate),
+              stopLossTierEndDate: this.dateValueString(elem.lstTblPlanTier[i].stopLossTierEndDate),
           }));
       }
       
@@ -457,7 +483,7 @@ doFilter(filterValue:string){ //added by Venkatesh Enigonda
         userId: this.loginService.currentUserValue.name,
         planCode: elem.planCode,
         planName: elem.planName,
-        contractYear: elem.contractYear,
+       contractYear: '',
         clientName: elem.clientName,
         status: elem.status,
         lstTblPlanTier: this.t.value
@@ -527,22 +553,21 @@ doFilter(filterValue:string){ //added by Venkatesh Enigonda
     this.filterSearchInput.nativeElement.focus();
     this.getAllPlans();
   }
-  validateYear(){
-    console.log(this.f.contractYear.value);
+  // validateYear(){
     
-    if(this.f.contractYear.value.length>0){
-      let num = /^([0-9]+)$/; 
-      let a1=num.test(this.f.contractYear.value);
-      if(!a1 || (a1 && this.f.contractYear.value.length>0 && this.f.contractYear.value.length<4)){
-        this.isContractYearInvalid.flag=true;
-        this.isContractYearInvalid.message="Invalid Contract Year. Enter 4 digit Year";
-      }
-      else if(a1 && Number(this.f.contractYear.value)<1900 || Number(this.f.contractYear.value)>3000){
-        this.isContractYearInvalid.flag=true;
-        this.isContractYearInvalid.message="Year should be greater than 1900 and less than 3000";
-      }
-    }
-  }
+  //   if(this.f.contractYear.value.length>0){
+  //     let num = /^([0-9]+)$/; 
+  //     let a1=num.test(this.f.contractYear.value);
+  //     if(!a1 || (a1 && this.f.contractYear.value.length>0 && this.f.contractYear.value.length<4)){
+  //       this.isContractYearInvalid.flag=true;
+  //       this.isContractYearInvalid.message="Invalid Contract Year. Enter 4 digit Year";
+  //     }
+  //     else if(a1 && Number(this.f.contractYear.value)<1900 || Number(this.f.contractYear.value)>3000){
+  //       this.isContractYearInvalid.flag=true;
+  //       this.isContractYearInvalid.message="Year should be greater than 1900 and less than 3000";
+  //     }
+  //   }
+  // }
 
   validateNumber(labelName, fieldValue, index){
     
@@ -604,8 +629,8 @@ validateTierIDs(){
                 this.tierIdExists.singleFlag=false;
               }   
             }
-            if(s>1){
-              this.tierIdExists.singleMsg="Single Tier cannot be repeated morethan two times";
+            if(s>3){
+              this.tierIdExists.singleMsg="Single Tier cannot be repeated morethan four times";
               this.tierIdExists.singleFlag=true;
             }
             s++;           
@@ -624,8 +649,8 @@ validateTierIDs(){
                  this.tierIdExists.dualFlag=false;
                }   
              }
-             if(d>1){
-               this.tierIdExists.dualMsg="Dual Tier cannot be repeated morethan two times";
+             if(d>3){
+               this.tierIdExists.dualMsg="Dual Tier cannot be repeated morethan four times";
                this.tierIdExists.dualFlag=true;
              }
              d++;    
@@ -643,7 +668,7 @@ validateTierIDs(){
                  this.tierIdExists.familyFlag=false;
                }   
              }
-             if(f>1){
+             if(f>3){
                this.tierIdExists.familyMsg="Family Tier cannot be repeated morethan two times";
                this.tierIdExists.familyFlag=true;
              }
@@ -662,7 +687,7 @@ validateTierIDs(){
                  this.tierIdExists.othersFlag=false;
                }   
              }
-             if(o>1){
+             if(o>3){
                this.tierIdExists.othersMsg="Others Tier cannot be repeated morethan two times";
                this.tierIdExists.othersFlag=true;
              }
@@ -699,9 +724,11 @@ validateTierIDs(){
     this.clearErrorMessages();
       this.submitted = true;
       // reset alerts on submit
-      this.validateYear();
+    //  this.validateYear();
       this.alertService.clear();
     this.validateTierIDs();
+    // let stopLossTierStartDate=this.f.stopLossTierStartDate.value;
+    // let stopLossTierEndDate=this.f.stopLossTierEndDate.value;
       // stop here if form is invalid
       if (this.planForm.invalid) return;
       if(this.isContractYearInvalid.flag) return;
@@ -712,6 +739,20 @@ validateTierIDs(){
       if(this.tierIdRequiredErr.flag) return;
        //(V.E 27-Jul-2021 starts )
       if(this.planForm.valid){
+      //   if(stopLossTierStartDate!=null && stopLossTierEndDate!=null && stopLossTierStartDate!='' &&  stopLossTierEndDate!=''){
+      //     if(stopLossTierStartDate > stopLossTierEndDate){
+      //       this.slTierSDateErr.isDateErr=true;
+      //       this.slTierSDateErr.dateErrMsg = 'Tier start date should not be greater than Tier end date';  
+      //       return;
+      //     }
+       
+      //     if(stopLossTierStartDate == stopLossTierEndDate){
+      //       this.slTierEDateErr.isDateErr=true;
+      //       this.slTierEDateErr.dateErrMsg = 'Tier Start date should not be Equal to Tier End date';    
+      //       return;
+      //     }
+   
+      //  }
         if(this.isAddMode){
           const pid= this.planService.checkDuplicatePlanId(this.f.planCode.value);
           const pname = this.planService.checkDuplicatePlanName(this.f.planName.value);
@@ -818,7 +859,7 @@ validateTierIDs(){
           console.log(this.t.value[i].tierAmount);
           console.log(this.t.value[i].expectedClaimsRate);
           console.log(this.t.value[i].isTerminalExtCoverage);
-          debugger;
+          
           if((this.t.value[i].tierId=='' || this.t.value[i].tierId==0) && this.t.value[i].tierAmount=='' && this.t.value[i].expectedClaimsRate=='' && (this.t.value[i].isTerminalExtCoverage=='' || this.t.value[i].isTerminalExtCoverage==false)){
             //  this.t.value.splice(i,1);
             flag=true;
@@ -843,6 +884,8 @@ validateTierIDs(){
             this.t.value[i].tierAmount=this.t.value[i].tierAmount==''?0:this.decimalValue(this.t.value[i].tierAmount),
             this.t.value[i].expectedClaimsRate=this.t.value[i].expectedClaimsRate==''?0:this.decimalValue(this.t.value[i].expectedClaimsRate),
             this.t.value[i].isTerminalExtCoverage=this.t.value[i].isTerminalExtCoverage==true?'Y':'N';    
+            this.t.value[i].stopLossTierStartDate=this.dateValue(this.t.value[i].stopLossTierStartDate),
+            this.t.value[i].stopLossTierEndDate=this.dateValue(this.t.value[i].stopLossTierEndDate),
             this.tierIdRequiredErr.flag=false;
             this.tierIdRequiredErr.msg='';        
             i++;
@@ -857,7 +900,7 @@ validateTierIDs(){
           userId: this.loginService.currentUserValue.name,
           planCode: this.f.planCode.value,
           planName: this.f.planName.value,
-          contractYear: this.f.contractYear.value,
+          contractYear: '',
           //clientName: this.locClientName,
           status: this.f.status.value==true?1:0,
           lstTblPlanTier: this.t.value
@@ -936,9 +979,11 @@ validateTierIDs(){
         flag=false;
         this.t.value[i].planId=this.updatePlanID;
         this.t.value[i].tierId=Number(this.t.value[i].tierId);
-        this.t.value[i].tierAmount=this.t.value[i].tierAmount==''?0:this.decimalValue(this.t.value[i].tierAmount);
-        this.t.value[i].expectedClaimsRate=this.t.value[i].expectedClaimsRate==''?0:this.decimalValue(this.t.value[i].expectedClaimsRate);
+        this.t.value[i].tierAmount=this.t.value[i].tierAmount==''?0:Number(this.decimalValue(this.t.value[i].tierAmount));
+        this.t.value[i].expectedClaimsRate=this.t.value[i].expectedClaimsRate==''?0:Number(this.decimalValue(this.t.value[i].expectedClaimsRate));
         this.t.value[i].isTerminalExtCoverage=this.t.value[i].isTerminalExtCoverage==true?'Y':'N';
+        this.t.value[i].stopLossTierStartDate=this.dateValue(this.t.value[i].stopLossTierStartDate),
+        this.t.value[i].stopLossTierEndDate=this.dateValue(this.t.value[i].stopLossTierEndDate),
         i++;
         console.log(this.t.value);
       }
@@ -952,15 +997,15 @@ validateTierIDs(){
       userId: this.loginService.currentUserValue.name,
       planCode: this.f.planCode.value,
       planName: this.f.planName.value,
-      contractYear: this.f.contractYear.value,
+      contractYear: '',
      // clientName: this.locClientName,
       status: this.f.status.value==true?1:0,
       lstTblPlanTier: this.t.value
     }
     
     
-    
       console.log(this.updatePlanObj);
+      
       this.planService.updatePlan(this.updatePlanObj)
           .pipe(first())
           .subscribe({

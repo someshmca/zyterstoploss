@@ -60,3 +60,24 @@
         color: #f0f0f0;
         padding: .375rem .75rem;  
     }
+    .product-fieldset{
+        border: 1px solid #c0c0c0;
+        margin: 2px;
+        padding: 2px 10px 2px 0;
+        min-width: initial;
+        background: #fafafb;
+        box-shadow: 0 0 3px 3px #f0f0f0;
+    }
+    .product-fieldset legend{
+        display: initial;
+        width: initial;
+        max-width: initial;
+        padding: initial;
+        margin-bottom: initial;
+        line-height: initial;
+        white-space: normal;
+        font-weight: bold;
+        color: #002c77;
+        margin-left: 15px;
+        font-size: 1.1rem;
+    }

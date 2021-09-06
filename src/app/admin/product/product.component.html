@@ -152,206 +152,405 @@
                 </div>  -->
               </div>
             </div>
-            <h1 class="text-primary">Specific Stop Loss
-              <select formControlName="contractPeriod" (change)="getProductByContractPeriod($event.target.value)" [ngClass]="{ 'is-invalid': submitted && f.contractPeriod.errors }">
+            <h1 class="text-primary">Specific Stop Loss 
+              <!-- <select formControlName="contractPeriod" (change)="getProductByContractPeriod($event.target.value)" [ngClass]="{ 'is-invalid': submitted && f.contractPeriod.errors }">
                 <option value="Year 1" selected="selected">Year 1</option>
                 <option value="Year 2" *ngIf="!isAddMode">Year 2</option>
-              </select>
-            </h1>
-          <div class="row">
-            <div class="col-md-4">
-              <div class="form-group">
-                <label>Claim Basis<small class="starmark">*</small></label>
-                <!-- <input type="text" formControlName="sslClaimBasis" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.sslClaimBasis.errors }"/> -->
-                <!-- <select class="form-control" formControlName="sslClaimBasis" [ngClass]="{ 'is-invalid': submitted && f.sslClaimBasis.errors }"> -->
-                  <!-- <option value="12/12">12/12</option>
-                  <option value="12/15">12/15</option>
-                  <option value="12/18">12/18</option>
-                  <option value="15/12">15/12</option>
-                  <option value="24/12">24/12</option> -->
-            <!-- <option [value]="i" *ngFor="let i of claimBasis">
-              {{i}}
-              </option>
-                </select>  -->
+              </select> -->
 
-                <input type="text" formControlName="sslClaimBasis" class="form-control" placeholder="MM/MM" maxlength="5" [ngClass]="{ 'is-invalid': submitted && f.sslClaimBasis.errors || sslClaimBasisErr.isValid }"/><!--Modified by Venkatesh Enigonda-->
-              </div>                
-            </div>
-            <div class="col-md-4">
-              <div class="form-group">
-                <label>Incurred Start Date<small class="starmark">*</small></label>
-                <input type="date" value="MM/DD/yyyy" formControlName="sslIncurredStartDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.sslIncurredStartDate.errors || sslIncurredEndErr.isDateErr }" max="2999-12-31"/>
+            </h1>
+            <fieldset class="product-fieldset">
+              <legend>{{contractPeriodLabel}}</legend>
+          <div class="ssl-section">
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label>Claim Basis<small class="starmark">*</small></label>
+                    <!-- <input type="text" formControlName="sslClaimBasis" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.sslClaimBasis.errors }"/> -->
+                    <!-- <select class="form-control" formControlName="sslClaimBasis" [ngClass]="{ 'is-invalid': submitted && f.sslClaimBasis.errors }"> -->
+                      <!-- <option value="12/12">12/12</option>
+                      <option value="12/15">12/15</option>
+                      <option value="12/18">12/18</option>
+                      <option value="15/12">15/12</option>
+                      <option value="24/12">24/12</option> -->
+                <!-- <option [value]="i" *ngFor="let i of claimBasis">
+                  {{i}}
+                  </option>
+                    </select>  -->
+
+                    <input type="text" formControlName="sslClaimBasis" class="form-control" placeholder="MM/MM" maxlength="5" [ngClass]="{ 'is-invalid': submitted && f.sslClaimBasis.errors || sslClaimBasisErr.isValid }"/><!--Modified by Venkatesh Enigonda-->
+                  </div>                
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label>Incurred Start Date<small class="starmark">*</small></label>
+                    <input type="date" value="MM/DD/yyyy" formControlName="sslIncurredStartDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.sslIncurredStartDate.errors || sslIncurredEndErr.isDateErr }" max="2999-12-31"/>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label>Incurred End Date<small class="starmark">*</small></label>
+                    <input type="date" value="MM/DD/yyyy" formControlName="sslIncurredEndDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.sslIncurredEndDate.errors || sslIncurredEndErr.isDateErr }" max="2999-12-31"/>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label>Specific Start Date</label>
+                    <input type="date" value="MM/DD/yyyy" formControlName="sslContractStartDate" class="form-control" max="2999-12-31" [ngClass]="{ 'is-invalid':sslSPecificErr.isDateErr}"/>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label>Specific End Date</label>
+                    <input type="date" value="MM/DD/yyyy" formControlName="sslContractEndDate" class="form-control" max="2999-12-31" [ngClass]="{ 'is-invalid':sslSPecificErr.isDateErr}"/>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label>Run-In Limit</label>
+                    <input type="number" formControlName="sslRunInLimit" class="form-control"/>
+                  </div>
+                </div>
+                
+              </div>
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label>Paid Start Date<small class="starmark">*</small></label>
+                    <input type="date" value="MM/DD/yyyy" formControlName="sslPaidStartDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.sslPaidStartDate.errors || sslPaidEndErr.isDateErr  }" max="2999-12-31"/>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label>Paid End Date<small class="starmark">*</small></label>
+                    <input type="date" value="MM/DD/yyyy" formControlName="sslPaidEndDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.sslPaidEndDate.errors || sslPaidEndErr.isDateErr }" max="2999-12-31"/>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label>Specific Deductible<small class="starmark">*</small></label>
+                    <input type="number" formControlName="sslDeductible" class="form-control" [ngClass]="{ 'is-invalid': submitted && sslDeductibleErr.isValid }"/>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label>Aggregating Specific Deductible</label>
+                    <input type="number" formControlName="sslAggDeductible" class="form-control"/>
+                  </div>
+                </div> 
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label>Limit of Liability - Contract</label>
+                    <input type="number" formControlName="sslAnnualLimit" class="form-control"/>
+                  </div>              
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label>Limit of Liability - Lifetime</label>
+                    <input type="number" formControlName="sslLifetimeLimit" class="form-control"/>
+                  </div>
+                </div>
+              </div>
+              <div class="row"> 
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label>Limit of Liability - Participant</label>
+                    <input type="number" formControlName="sslPartcipantLimit" class="form-control"/>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label>Limit of Liability - Pharmacy Claims Contract</label>
+                    <input type="number" onkeypress="return ((event.charCode !=8 && event.charCode ==0) || (event.charCode == 46)||(event.charCode >= 48 && event.charCode <= 57))" class="form-control" formControlName="sslPharmContractLimit"/>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label>Limit of Liability - Pharmacy Claims Participant</label>
+                    <input type="number" onkeypress="return ((event.charCode !=8 && event.charCode ==0) ||(event.charCode == 46)||(event.charCode >= 48 && event.charCode <= 57))"class="form-control" formControlName="sslPharmParticipantLimit" />
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label>Terminal Extension Coverage End Date</label>
+                    <input type="date" formControlName="sslTermCoverageExtEndDate" class="form-control" [ngClass]="{ 'is-invalid': sslTermCovrErr.isDateErr }" max="2999-12-31"/>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label></label>
+                    <div class="custom-control custom-checkbox">
+                      <input type="checkbox" class="custom-control-input" id="las" formControlName="sslLasering">
+                      <label class="custom-control-label" for="las"> Lasering</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label></label>
+                    <div class="custom-control custom-checkbox">
+                      <input type="checkbox" class="custom-control-input" formControlName="sslIsImmediateReimbursement" id="imReimb" checked>
+                      <label class="custom-control-label" for="imReimb"> Immediate Reimbursement</label>
+                    </div>
+                  </div>
+                </div>
+              </div>	
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label>Exclusion Incurred Period Start Date</label>
+                    <input type="date"  value="MM/DD/yyyy" formControlName="sslExclusionIncurredStartDate"class="form-control" max="2999-12-31" [ngClass]="{ 'is-invalid': sslExInStartEndDateErr.isDateErr || sslExInStartDateErr.isDateErr}"/>
+                  </div>              
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label>Exclusion Incurred Period End Date</label>
+                    <input type="date"  value="MM/DD/yyyy" formControlName="sslExclusionIncurredEndDate"class="form-control" max="2999-12-31" [ngClass]="{ 'is-invalid': sslExInStartEndDateErr.isDateErr}"/>
+                  </div>              
+                </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Exclusion Paid Start Date</label>
+                  <input type="date"  value="MM/DD/yyyy" formControlName="sslExclusionPaidStartDate"class="form-control" max="2999-12-31" [ngClass]="{ 'is-invalid': sslExPaidStartEndDateErr.isDateErr || sslExPaidStartDateErr.isDateErr}"/>
+                </div>              
+              </div>
+              </div>
+              <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Exclusion Paid  End Date</label>
+                  <input type="date"  value="MM/DD/yyyy" formControlName="sslExclusionPaidEndDate"class="form-control" max="2999-12-31" [ngClass]="{ 'is-invalid': sslExPaidStartEndDateErr.isDateErr}"/>
+                </div>              
               </div>
             </div>
-            <div class="col-md-4">
-              <div class="form-group">
-                <label>Incurred End Date<small class="starmark">*</small></label>
-                <input type="date" value="MM/DD/yyyy" formControlName="sslIncurredEndDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.sslIncurredEndDate.errors || sslIncurredEndErr.isDateErr }" max="2999-12-31"/>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-4">
-              <div class="form-group">
-                <label>Specific Start Date</label>
-                <input type="date" value="MM/DD/yyyy" formControlName="sslContractStartDate" class="form-control" max="2999-12-31" [ngClass]="{ 'is-invalid':sslSPecificErr.isDateErr}"/>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="form-group">
-                <label>Specific End Date</label>
-                <input type="date" value="MM/DD/yyyy" formControlName="sslContractEndDate" class="form-control" max="2999-12-31" [ngClass]="{ 'is-invalid':sslSPecificErr.isDateErr}"/>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="form-group">
-                <label>Run-In Limit</label>
-                <input type="number" formControlName="sslRunInLimit" class="form-control"/>
+              <div class="row"> 
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label>Covered Benefits<small class="starmark">*</small></label>
+                    <!-- <select formControlName="sslCoveredClaims" class="form-control" multiple [ngClass]="{ 'is-invalid': submitted && f.sslCoveredClaims.errors }">
+                      <option *ngFor="let coveredClaim of coveredClaims" [value]="coveredClaim.claimTypeCode">
+                        {{coveredClaim.claimType}}
+                      </option>
+                  </select>  -->    
+                  
+                    <div>
+                      <mat-form-field>
+                        <mat-select class="form-control" formControlName="sslCoveredClaims"  multiple [ngClass]="{ 'is-invalid': submitted && f.sslCoveredClaims.errors }">
+                          <mat-option *ngFor="let coveredClaim of coveredClaims" [value]="coveredClaim.claimTypeCode">{{coveredClaim.claimType}}</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4"> </div>
+                <div class="col-md-4">
+                  <!-- <div class="product-cell-area">                
+                      <a class="text-primary" routerLink="/member" routerLinkActive="active">Lasering</a>
+                  </div> -->
+                </div>
               </div>
             </div>
             
-          </div>
-          <div class="row">
-            <div class="col-md-4">
-              <div class="form-group">
-                <label>Paid Start Date<small class="starmark">*</small></label>
-                <input type="date" value="MM/DD/yyyy" formControlName="sslPaidStartDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.sslPaidStartDate.errors || sslPaidEndErr.isDateErr  }" max="2999-12-31"/>
+          </fieldset>
+           <h2>
+             <label for="y2">Year 2 
+              <input type="checkbox" class="success" id="y2" formControlName="isContractPeriod" (change)="checkYear2Selected()"> 
+              <input type="text" formControlName="contractPeriod" style="visibility:hidden">
+              </label>
+            </h2>
+            
+          <div class="ssl-section">
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Claim Basis<small class="starmark">*</small></label>
+                  <input type="text" formControlName="y2sslClaimBasis" class="form-control" placeholder="MM/MM" maxlength="5" [ngClass]="{ 'is-invalid': submitted && f.y2sslClaimBasis.errors }"/>
+                </div>                
               </div>
-            </div>
-            <div class="col-md-4">
-              <div class="form-group">
-                <label>Paid End Date<small class="starmark">*</small></label>
-                <input type="date" value="MM/DD/yyyy" formControlName="sslPaidEndDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.sslPaidEndDate.errors || sslPaidEndErr.isDateErr }" max="2999-12-31"/>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Incurred Start Date<small class="starmark">*</small></label>
+                  <input type="date" value="MM/DD/yyyy"  formControlName="y2sslIncurredStartDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.y2sslIncurredStartDate.errors}" max="2999-12-31"/>
+                </div>
               </div>
-            </div>
-            <div class="col-md-4">
-              <div class="form-group">
-                <label>Specific Deductible<small class="starmark">*</small></label>
-                <input type="number" formControlName="sslDeductible" class="form-control" [ngClass]="{ 'is-invalid': submitted && sslDeductibleErr.isValid }"/>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-4">
-              <div class="form-group">
-                <label>Aggregating Specific Deductible</label>
-                <input type="number" formControlName="sslAggDeductible" class="form-control"/>
-              </div>
-            </div> 
-            <div class="col-md-4">
-              <div class="form-group">
-                <label>Limit of Liability - Contract</label>
-                <input type="number" formControlName="sslAnnualLimit" class="form-control"/>
-              </div>              
-            </div>
-            <div class="col-md-4">
-              <div class="form-group">
-                <label>Limit of Liability - Lifetime</label>
-                <input type="number" formControlName="sslLifetimeLimit" class="form-control"/>
-              </div>
-            </div>
-          </div>
-          <div class="row"> 
-            <div class="col-md-4">
-              <div class="form-group">
-                <label>Limit of Liability - Participant</label>
-                <input type="number" formControlName="sslPartcipantLimit" class="form-control"/>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="form-group">
-                <label>Limit of Liability - Pharmacy Claims Contract</label>
-                <input type="number" onkeypress="return ((event.charCode !=8 && event.charCode ==0) || (event.charCode == 46)||(event.charCode >= 48 && event.charCode <= 57))" class="form-control" formControlName="sslPharmContractLimit"/>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="form-group">
-                <label>Limit of Liability - Pharmacy Claims Participant</label>
-                <input type="number" onkeypress="return ((event.charCode !=8 && event.charCode ==0) ||(event.charCode == 46)||(event.charCode >= 48 && event.charCode <= 57))"class="form-control" formControlName="sslPharmParticipantLimit" />
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-4">
-              <div class="form-group">
-                <label>Terminal Extension Coverage End Date</label>
-                <input type="date" formControlName="sslTermCoverageExtEndDate" class="form-control" [ngClass]="{ 'is-invalid': sslTermCovrErr.isDateErr }" max="2999-12-31"/>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="form-group">
-                <label></label>
-                <div class="custom-control custom-checkbox">
-                  <input type="checkbox" class="custom-control-input" id="las" formControlName="sslLasering">
-                  <label class="custom-control-label" for="las"> Lasering</label>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Incurred End Date<small class="starmark">*</small></label>
+                  <input type="date" value="MM/DD/yyyy"  formControlName="y2sslIncurredEndDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.y2sslIncurredEndDate.errors }" max="2999-12-31"/>
                 </div>
               </div>
             </div>
-            <div class="col-md-4">
-              <div class="form-group">
-                <label></label>
-                <div class="custom-control custom-checkbox">
-                  <input type="checkbox" class="custom-control-input" formControlName="sslIsImmediateReimbursement" id="imReimb" checked>
-                  <label class="custom-control-label" for="imReimb"> Immediate Reimbursement</label>
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Specific Start Date</label>
+                  <input type="date" value="MM/DD/yyyy"  formControlName="y2sslContractStartDate" class="form-control" max="2999-12-31"/>
                 </div>
               </div>
-            </div>
-          </div>	
-          <div class="row">
-            <div class="col-md-4">
-              <div class="form-group">
-                <label>Exclusion Incurred Period Start Date</label>
-                <input type="date"  value="MM/DD/yyyy" formControlName="sslExclusionIncurredStartDate"class="form-control" max="2999-12-31" [ngClass]="{ 'is-invalid': sslExInStartEndDateErr.isDateErr || sslExInStartDateErr.isDateErr}"/>
-              </div>              
-            </div>
-            <div class="col-md-4">
-              <div class="form-group">
-                <label>Exclusion Incurred Period End Date</label>
-                <input type="date"  value="MM/DD/yyyy" formControlName="sslExclusionIncurredEndDate"class="form-control" max="2999-12-31" [ngClass]="{ 'is-invalid': sslExInStartEndDateErr.isDateErr}"/>
-              </div>              
-            </div>
-          <div class="col-md-4">
-            <div class="form-group">
-              <label>Exclusion Paid Start Date</label>
-              <input type="date"  value="MM/DD/yyyy" formControlName="sslExclusionPaidStartDate"class="form-control" max="2999-12-31" [ngClass]="{ 'is-invalid': sslExPaidStartEndDateErr.isDateErr || sslExPaidStartDateErr.isDateErr}"/>
-            </div>              
-          </div>
-          </div>
-          <div class="row">
-          <div class="col-md-4">
-            <div class="form-group">
-              <label>Exclusion Paid  End Date</label>
-              <input type="date"  value="MM/DD/yyyy" formControlName="sslExclusionPaidEndDate"class="form-control" max="2999-12-31" [ngClass]="{ 'is-invalid': sslExPaidStartEndDateErr.isDateErr}"/>
-            </div>              
-          </div>
-        </div>
-          <div class="row"> 
-            <div class="col-md-4">
-              <div class="form-group">
-                <label>Covered Benefits<small class="starmark">*</small></label>
-                <!-- <select formControlName="sslCoveredClaims" class="form-control" multiple [ngClass]="{ 'is-invalid': submitted && f.sslCoveredClaims.errors }">
-                  <option *ngFor="let coveredClaim of coveredClaims" [value]="coveredClaim.claimTypeCode">
-                    {{coveredClaim.claimType}}
-                  </option>
-               </select>  -->    
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Specific End Date</label>
+                  <input type="date" value="MM/DD/yyyy"  formControlName="y2sslContractEndDate" class="form-control" max="2999-12-31" />
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Run-In Limit</label>
+                  <input type="number"  formControlName="y2sslRunInLimit" class="form-control"/>
+                </div>
+              </div>
               
-                <div>
-                  <mat-form-field>
-                    <mat-select class="form-control" formControlName="sslCoveredClaims"  multiple [ngClass]="{ 'is-invalid': submitted && f.sslCoveredClaims.errors }">
-                      <mat-option *ngFor="let coveredClaim of coveredClaims" [value]="coveredClaim.claimTypeCode">{{coveredClaim.claimType}}</mat-option>
-                    </mat-select>
-                  </mat-form-field>
-                </div>
-               </div>
             </div>
-            <div class="col-md-4"> </div>
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Paid Start Date<small class="starmark">*</small></label>
+                  <input type="date" value="MM/DD/yyyy"  formControlName="y2sslPaidStartDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.y2sslPaidStartDate.errors }" max="2999-12-31"/>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Paid End Date<small class="starmark">*</small></label>
+                  <input type="date" value="MM/DD/yyyy"  formControlName="y2sslPaidEndDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.y2sslPaidEndDate.errors }" max="2999-12-31"/>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Specific Deductible<small class="starmark">*</small></label>
+                  <input type="number"   formControlName="y2sslDeductible" class="form-control"/>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Aggregating Specific Deductible</label>
+                  <input type="number"  formControlName="y2sslAggDeductible" class="form-control"/>
+                </div>
+              </div> 
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Limit of Liability - Contract</label>
+                  <input type="number"  formControlName="y2sslAnnualLimit" class="form-control"/>
+                </div>              
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Limit of Liability - Lifetime</label>
+                  <input type="number"  formControlName="y2sslLifetimeLimit" class="form-control"/>
+                </div>
+              </div>
+            </div>
+            <div class="row"> 
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Limit of Liability - Participant</label>
+                  <input type="number"  formControlName="y2sslPartcipantLimit" class="form-control"/>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Limit of Liability - Pharmacy Claims Contract</label>
+                  <input type="number"  onkeypress="return ((event.charCode !=8 && event.charCode ==0) || (event.charCode == 46)||(event.charCode >= 48 && event.charCode <= 57))" class="form-control" formControlName="y2sslPharmContractLimit"/>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Limit of Liability - Pharmacy Claims Participant</label>
+                  <input type="number"  onkeypress="return ((event.charCode !=8 && event.charCode ==0) ||(event.charCode == 46)||(event.charCode >= 48 && event.charCode <= 57))"class="form-control" formControlName="y2sslPharmParticipantLimit" />
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Terminal Extension Coverage End Date</label>
+                  <input type="date"  formControlName="y2sslTermCoverageExtEndDate" class="form-control"  max="2999-12-31"/>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label></label>
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox"  class="custom-control-input" id="las2" formControlName="y2sslLasering">
+                    <label class="custom-control-label" for="las2"> Lasering</label>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label></label>
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox"  class="custom-control-input" formControlName="y2sslIsImmediateReimbursement" id="x" checked>
+                    <label class="custom-control-label" for="imReimb2"> Immediate Reimbursement</label>
+                  </div>
+                </div>
+              </div>
+            </div>	
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Exclusion Incurred Period Start Date</label>
+                  <input type="date"   value="MM/DD/yyyy" formControlName="y2sslExclusionIncurredStartDate"class="form-control" max="2999-12-31" />
+                </div>              
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Exclusion Incurred Period End Date</label>
+                  <input type="date"   value="MM/DD/yyyy" formControlName="y2sslExclusionIncurredEndDate"class="form-control" max="2999-12-31" />
+                </div>              
+              </div>
             <div class="col-md-4">
-              <!-- <div class="product-cell-area">                
-                  <a class="text-primary" routerLink="/member" routerLinkActive="active">Lasering</a>
-              </div> -->
+              <div class="form-group">
+                <label>Exclusion Paid Start Date</label>
+                <input type="date"   value="MM/DD/yyyy" formControlName="y2sslExclusionPaidStartDate"class="form-control" max="2999-12-31" />
+              </div>              
+            </div>
+            </div>
+            <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Exclusion Paid  End Date</label>
+                <input type="date"   value="MM/DD/yyyy" formControlName="y2sslExclusionPaidEndDate"class="form-control" max="2999-12-31" />
+              </div>              
             </div>
           </div>
-		
+            <div class="row"> 
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Covered Benefits<small class="starmark">*</small></label>
+                  <!-- <select formControlName="sslCoveredClaims" class="form-control" multiple [ngClass]="{ 'is-invalid': submitted && f.sslCoveredClaims.errors }">
+                    <option *ngFor="let coveredClaim of coveredClaims" [value]="coveredClaim.claimTypeCode">
+                      {{coveredClaim.claimType}}
+                    </option>
+                </select>  -->    
+                
+                  <div>
+                    <mat-form-field>
+                      <mat-select class="form-control" formControlName="y2sslCoveredClaims"    multiple [ngClass]="{ 'is-invalid': submitted && f.y2sslCoveredClaims.errors }">
+                        <mat-option *ngFor="let coveredClaim of coveredClaims" [value]="coveredClaim.claimTypeCode">{{coveredClaim.claimType}}</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4"> </div>
+              <div class="col-md-4">
+                <!-- <div class="product-cell-area">                
+                    <a class="text-primary" routerLink="/member" routerLinkActive="active">Lasering</a>
+                </div> -->
+              </div>
+            </div>
+          </div>
+
+            <br/>
+
 		<h1>Aggregate Stop Loss</h1>
     <div class="row">
       <div class="col-md-4">

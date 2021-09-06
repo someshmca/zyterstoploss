@@ -35,7 +35,7 @@ export class LaseringSearchComponent implements OnInit {
   searchResult: any;
   memberForm: FormGroup;
   searchErrorMessage: string;
-  displayedColumns: string[] = ['memberHrid', 'clientName', 'contractId', 'planId', 'tierId', 'fname', 'lname', 'mname', 'gender', 'memberStartDate', 'memberEndDate', 'dateOfBirth', 'subscriberId', 'alternateId', 'laserValue', 'isUnlimited', 'tier', 'benefitPlanId', 'userId'];
+  displayedColumns: string[] = [ 'clientName', 'contractId', 'planId', 'tierId', 'fname', 'lname', 'mname','memberHrid', 'gender', 'memberStartDate', 'memberEndDate', 'dateOfBirth', 'subscriberId', 'alternateId', 'laserValue', 'isUnlimited', 'tier', 'benefitPlanId', 'userId'];
   searchDataSource: any;
 
 
@@ -123,7 +123,8 @@ export class LaseringSearchComponent implements OnInit {
       tierId: ['', Validators.required],
       dateOfBirth: ['', Validators.required],
       tier: [''],
-      benefitPlanId: ['']
+      benefitPlanId: [''],
+      exclusion:false
     });
     //this.today=this.datePipe.transform(new Date(Date.now()), "MM/dd/yyyy");    
     this.today = new Date().toJSON().split('T')[0];
@@ -595,7 +596,7 @@ export class LaseringSearchComponent implements OnInit {
 
 
   exportAsXLSX(): void {
-    this.excelService.exportAsExcelFile(this.excel1, "MemberList")
+    this.excelService.exportAsExcelFile(this.excel1, "Lasering_Results")
 
     console.log("working");
   }
@@ -660,9 +661,10 @@ export class LaseringSearchComponent implements OnInit {
             gender: id.gender,
             status: id.status,
 
-            laserValue: this.decimalValue(id.laserValue) == 0 ? '' : this.decimalValue(id.laserValue),
+            laserValue: this.decimalValueString(id.laserValue) == 0 ? '' : this.decimalValueString(id.laserValue),
 
             isUnlimited: (id.isUnlimited == null || id.isUnlimited == 'N') ? false : true,
+            exclusion:(id.exclusion == null || id.exclusion =='N')?false : true,
             memberStartDate: this.datePipe.transform(id.memberStartDate, 'yyyy-MM-dd'),
             memberEndDate: this.datePipe.transform(id.memberEndDate, 'yyyy-MM-dd'),
             dateOfBirth: this.datePipe.transform(id.dateOfBirth, 'yyyy-MM-dd')
@@ -730,7 +732,8 @@ export class LaseringSearchComponent implements OnInit {
     if (this.isAddMode) {
 
       this.addMember();
-    } else {
+    } else{
+  //debugger;
       this.updateMember();
 
     }
@@ -739,11 +742,11 @@ export class LaseringSearchComponent implements OnInit {
   //PV 08-05-2021 Starts
   decimalValueString(inputValue) {
     let a;
-    if (inputValue == 0 || inputValue == '') {
+    if (inputValue == 0 || inputValue == ''|| inputValue == null) {
       a = 0;
     }
     else {
-      a = this.decimalPipe.transform(inputValue, this.format);
+      a = this.decimalPipe.transform(inputValue, this.format).replace(/,/g,"");
     }
     console.log(a);
 
@@ -776,6 +779,7 @@ export class LaseringSearchComponent implements OnInit {
       userId: this.loginService.currentUserValue.name,
       memberStartDate: this.datePipe.transform(this.f.memberStartDate.value, 'yyyy-MM-dd'),
       memberEndDate: this.datePipe.transform(this.f.memberEndDate.value, 'yyyy-MM-dd'),
+      exclusion: this.f.exclusion.value == true ? 'Y' : 'N',
       dateOfBirth: this.datePipe.transform(this.f.dateOfBirth.value, 'yyyy-MM-dd')
     }
     console.log(addMembObj);
@@ -811,14 +815,14 @@ export class LaseringSearchComponent implements OnInit {
       updatedBy: this.loginService.currentUserValue.name,
       createdOn: null,
       updatedOn: null,
-      exclusion: this.f.exclusion.value
+      exclusion: this.f.exclusion.value == true ? 'Y' : 'N',
     }
-    debugger;
+    //debugger;
     this.memberService.updateMember(updateMemberObj)
       .pipe(first())
       .subscribe({
         next: () => {
-          debugger;
+          //debugger;
           this.openCustomModal(false, null);
           this.searchLasering(this.memberSearchForm);
           this.memberForm.reset();

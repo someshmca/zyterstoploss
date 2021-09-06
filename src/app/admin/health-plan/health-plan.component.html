@@ -110,6 +110,8 @@
                <div *ngIf="planNameErr.isDuplicate">{{planNameErr.errMsg}}</div>
                <div *ngIf="duplicatePlanTierErr.flag">{{duplicatePlanTierErr.message}}</div>
                <div *ngIf="tierIdRequiredErr.flag">{{this.tierIdRequiredErr.msg}}</div>
+               <div *ngIf="slTierSDateErr.isDateErr">{{slTierSDateErr.dateErrMsg}}</div>
+               <div *ngIf="slTierEDateErr.isDateErr">{{slTierEDateErr.dateErrMsg}}</div>
              </div>  
              <div class="row">
                  <div class="col-md-4">
@@ -146,16 +148,10 @@
                            </select>
                      </div>
                     </div>
-                    <div class="col-md-4">
+                    <!-- <div class="col-md-4">
                       <div class="form-group">
                         <label>Contract Year<small class="starmark">*</small> </label>
                         <input type="text" class="form-control" formControlName="contractYear" maxlength="4" [ngClass]="{ 'is-invalid': (submitted && f.contractYear.errors) || isContractYearInvalid.flag}" placeholder="YYYY"/>
-                      </div>
-                    </div>
-                    <!-- <div class="col-md-4">
-                      <div class="form-group">
-                        <label>Single Factor Amount</label>
-                  <input type="text" formControlName="factor1" [value]="locTires[0].tierId" class="form-control" />
                       </div>
                     </div> -->
                    </div>  
@@ -171,9 +167,11 @@
                           <table class="table table-striped table-bordered tier-table">
                             <thead>
                               <tr>
-                                  <th>Stop Loss Tier</th>
-                                  <th>Stop Loss Tier Factor</th>
+                                  <th>StopLoss Tier</th>
+                                  <th>StopLoss Tier Factor</th>
                                   <th>Expected Claim Rate</th>
+                                  <th>StopLoss Tier Start Date</th>
+                                  <th>StopLoss Tier End Date</th>
                                   <th>Terminal Extension Coverage</th>
                                 </tr>
                             </thead>
@@ -193,6 +191,12 @@
                                 </td>
                                 <td>
                                   <input type="number" formControlName="expectedClaimsRate" class="form-control" [ngClass]="{ 'is-invalid': isExpectedClaimsRateInvalid}" />
+                                </td>
+                                <td>
+                                  <input type="date" formControlName="stopLossTierStartDate" class="form-control" [ngClass]="{'is-invalid':slTierSDateErr.isDateErr || slTierEDateErr.isDateErr }"  />
+                                </td>
+                                <td>
+                                  <input type="date" formControlName="stopLossTierEndDate" class="form-control" [ngClass]="{'is-invalid':slTierEDateErr.isDateErr }" />
                                 </td>
                                 <td>
                                   <div class="form-group switch-group">

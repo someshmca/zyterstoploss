@@ -67,7 +67,7 @@ export interface IProductAdd{
     sslIsImmediateReimbursement: boolean;
     sslLasering: boolean;
     aslClaimBasis: string;
-    aslDeductible: number;
+    //aslDeductible: number;
     aslMinDeductible: number;
     aslExpectedClaimLiability: number;
     aslIncurrredStartDate: string;
@@ -117,7 +117,7 @@ export interface IProductUpdate{
   sslIsImmediateReimbursement: boolean;
   sslLasering: boolean;
   aslClaimBasis: string;
-  aslDeductible: number;
+  //aslDeductible: number;
   aslMinDeductible: number;
   aslExpectedClaimLiability: number;
   aslIncurrredStartDate: string;

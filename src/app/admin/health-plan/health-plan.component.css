@@ -38,6 +38,7 @@
 }
 .tier-table-wrap tr th{
     vertical-align: middle;
+    font-size: 12px;
 }
 .tier-table-wrap tr th, 
 .tier-table-wrap tr td{
@@ -57,6 +58,10 @@
 .tier-table-wrap tr td .form-control{
     margin: 0;
     height: 30px;
+}
+.tier-table-wrap tr th:nth-child(1)
+{
+    width: 95px;
 }
 /*::ng-deep .mat-form-field-underline {
     display: none;

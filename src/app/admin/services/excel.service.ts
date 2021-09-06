@@ -23,7 +23,7 @@ export class ExcelService {
     const data = json;
 
     const header1=['Medica Member ID','Alternate Member ID','Account ID','Contract ID','Plan ID','Member First Name','Member Last Name','Member Middle Name','Birth Date','Gender',
-     'Member Start Date','Member Start Date','Medica Subscriber ID','Subscriber First Name','Subscriber First Name',
+     'Member Start Date','Member End Date','Medica Subscriber ID','Subscriber First Name','Subscriber Last Name',
      'Laser Value','User Id','Account Name','Subscriber Start Date','Subscriber End Date','Coverage Tier','Medica Benefit Plan ID']
 
     let workbook = new Workbook();

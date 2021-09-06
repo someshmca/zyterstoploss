@@ -36,22 +36,24 @@ export class ProductService {
     return this.http.get<IProduct[]>(Paths.product+productId).pipe(catchError(this.handleError.bind(this)));
  }
 
- addProduct(formData:IProductAdd ): Observable<IProductAdd>{
+ addProduct(formData:IProductAdd[] ): Observable<IProductAdd[]>{
     const body = JSON.stringify(formData);
     console.log(body); 
     const headerOptions = new HttpHeaders({ 'Content-Type': 'application/json'});
+    
     return this.http.post<IProductAdd
       >(Paths.productAdd, body,{headers: headerOptions} ).pipe(catchError(this.handleError.bind(this))); 
  }
- getProductByContractPeriod(contractId:number, contractPeriod:string){
-   return this.http.get(Paths.productByContractPeriod+"contractId="+contractId+"&contractPeriod="+contractPeriod).pipe(catchError(this.handleError.bind(this))); 
+ getProductByContractPeriod(contractId:number){
+   return this.http.get(Paths.productByContractPeriod+"contractId="+contractId).pipe(catchError(this.handleError.bind(this))); 
  }
  checkDuplicateContract(contractId:number){
    return this.http.get(Paths.duplicateContract+contractId).pipe(catchError(this.handleError.bind(this)));
  }
- updateProduct(formData:IProductUpdate ): Observable<IProductAdd>{ 
+ updateProduct(formData:IProductUpdate[] ): Observable<IProductUpdate[]>{ 
     const body = JSON.stringify(formData); 
     const headerOptions = new HttpHeaders({ 'Content-Type': 'application/json' });
+    
     return this.http.put<IProductUpdate>(Paths.productUpdate, body,{headers: headerOptions} ).pipe(catchError(this.handleError.bind(this))); 
  }
 

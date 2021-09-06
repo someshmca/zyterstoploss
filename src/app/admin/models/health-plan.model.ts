@@ -36,6 +36,8 @@ export interface IPlanTierChild{
     tierName: string;
     expectedClaimsRate: number;
     isTerminalExtCoverage: string;
+    stopLossTierStartDate: Date;
+    stopLossTierEndDate: Date;
     createdOn?: Date;
     userId?: string;
     updatedOn?: Date;
