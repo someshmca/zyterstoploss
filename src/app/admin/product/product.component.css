@@ -81,3 +81,10 @@
         margin-left: 15px;
         font-size: 1.1rem;
     }
+    .product-fieldset legend input[type='checkbox']{
+        margin-left: 3px;
+        margin-right: 5px;
+    }
+    .product-fieldset legend input[type='text']{
+        width: 0;
+    }

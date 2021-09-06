@@ -118,6 +118,17 @@
               <span *ngIf="sslExPaidStartDateErr.isDateErr">{{sslExPaidStartDateErr.dateErrMsg}}</span>  
               <div *ngIf="duplicateContractErr.flag">{{duplicateContractErr.message}}</div>     
               <div *ngIf="contractPeroidErr.flag">{{contractPeroidErr.message}}</div>
+              
+              <span *ngIf="y2sslSPecificErr.isDateErr">{{y2sslSPecificErr.dateErrMsg}}</span> <!--Modified by Venkatesh Enigonda-->
+              <span *ngIf="y2sslDeductibleErr.isValid">{{y2sslDeductibleErr.errMsg}}</span>
+              <span *ngIf="y2sslClaimBasisErr.isValid">{{y2sslClaimBasisErr.errMsg}}</span>
+              <span *ngIf="y2sslTermCovrErr.isDateErr">{{y2sslTermCovrErr.dateErrMsg}}</span>
+              <span *ngIf="y2sslIncurredEndErr.isDateErr">{{y2sslIncurredEndErr.dateErrMsg}}</span>
+              <span *ngIf="y2sslPaidEndErr.isDateErr">{{y2sslPaidEndErr.dateErrMsg}}</span>
+              <span *ngIf="y2sslExInStartEndDateErr.isDateErr">{{y2sslExInStartEndDateErr.dateErrMsg}}</span>
+              <span *ngIf="y2sslExInStartDateErr.isDateErr">{{y2sslExInStartDateErr.dateErrMsg}}</span>
+              <span *ngIf="y2sslExPaidStartEndDateErr.isDateErr">{{y2sslExPaidStartEndDateErr.dateErrMsg}}</span>
+              <span *ngIf="y2sslExPaidStartDateErr.isDateErr">{{y2sslExPaidStartDateErr.dateErrMsg}}</span> 
              </div>  
             <div class="row">
               <div class="col-md-4">
@@ -358,13 +369,19 @@
             </div>
             
           </fieldset>
-           <h2>
+           <!-- <h2>
              <label for="y2">Year 2 
               <input type="checkbox" class="success" id="y2" formControlName="isContractPeriod" (change)="checkYear2Selected()"> 
               <input type="text" formControlName="contractPeriod" style="visibility:hidden">
               </label>
-            </h2>
+            </h2> -->
             
+            <fieldset class="product-fieldset">
+              <legend>
+                  <input type="checkbox" class="success" id="y2" formControlName="isContractPeriod" (change)="checkYear2Selected()"> 
+                  <label for="y2">Year 2 </label>
+                  <input type="text" formControlName="contractPeriod" style="visibility:hidden">
+                </legend>
           <div class="ssl-section">
             <div class="row">
               <div class="col-md-4">
@@ -376,13 +393,13 @@
               <div class="col-md-4">
                 <div class="form-group">
                   <label>Incurred Start Date<small class="starmark">*</small></label>
-                  <input type="date" value="MM/DD/yyyy"  formControlName="y2sslIncurredStartDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.y2sslIncurredStartDate.errors}" max="2999-12-31"/>
+                  <input type="date" value="MM/DD/yyyy"  formControlName="y2sslIncurredStartDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.y2sslIncurredStartDate.errors || y2sslIncurredEndErr.isDateErr }" max="2999-12-31"/>
                 </div>
               </div>
               <div class="col-md-4">
                 <div class="form-group">
                   <label>Incurred End Date<small class="starmark">*</small></label>
-                  <input type="date" value="MM/DD/yyyy"  formControlName="y2sslIncurredEndDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.y2sslIncurredEndDate.errors }" max="2999-12-31"/>
+                  <input type="date" value="MM/DD/yyyy"  formControlName="y2sslIncurredEndDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.y2sslIncurredEndDate.errors || y2sslIncurredEndErr.isDateErr }" max="2999-12-31"/>
                 </div>
               </div>
             </div>
@@ -390,13 +407,13 @@
               <div class="col-md-4">
                 <div class="form-group">
                   <label>Specific Start Date</label>
-                  <input type="date" value="MM/DD/yyyy"  formControlName="y2sslContractStartDate" class="form-control" max="2999-12-31"/>
+                  <input type="date" value="MM/DD/yyyy"  formControlName="y2sslContractStartDate" class="form-control" max="2999-12-31"  [ngClass]="{ 'is-invalid':y2sslSPecificErr.isDateErr}"/>
                 </div>
               </div>
               <div class="col-md-4">
                 <div class="form-group">
                   <label>Specific End Date</label>
-                  <input type="date" value="MM/DD/yyyy"  formControlName="y2sslContractEndDate" class="form-control" max="2999-12-31" />
+                  <input type="date" value="MM/DD/yyyy"  formControlName="y2sslContractEndDate" class="form-control" max="2999-12-31"  [ngClass]="{ 'is-invalid':y2sslSPecificErr.isDateErr}"/>
                 </div>
               </div>
               <div class="col-md-4">
@@ -411,19 +428,19 @@
               <div class="col-md-4">
                 <div class="form-group">
                   <label>Paid Start Date<small class="starmark">*</small></label>
-                  <input type="date" value="MM/DD/yyyy"  formControlName="y2sslPaidStartDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.y2sslPaidStartDate.errors }" max="2999-12-31"/>
+                  <input type="date" value="MM/DD/yyyy"  formControlName="y2sslPaidStartDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.y2sslPaidStartDate.errors || y2sslPaidEndErr.isDateErr  }" max="2999-12-31"/>
                 </div>
               </div>
               <div class="col-md-4">
                 <div class="form-group">
                   <label>Paid End Date<small class="starmark">*</small></label>
-                  <input type="date" value="MM/DD/yyyy"  formControlName="y2sslPaidEndDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.y2sslPaidEndDate.errors }" max="2999-12-31"/>
+                  <input type="date" value="MM/DD/yyyy"  formControlName="y2sslPaidEndDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.y2sslPaidEndDate.errors || y2sslPaidEndErr.isDateErr }" max="2999-12-31"/>
                 </div>
               </div>
               <div class="col-md-4">
                 <div class="form-group">
                   <label>Specific Deductible<small class="starmark">*</small></label>
-                  <input type="number"   formControlName="y2sslDeductible" class="form-control"/>
+                  <input type="number"   formControlName="y2sslDeductible" class="form-control" [ngClass]="{ 'is-invalid': submitted && y2sslDeductibleErr.isValid }"/>
                 </div>
               </div>
             </div>
@@ -471,7 +488,7 @@
               <div class="col-md-4">
                 <div class="form-group">
                   <label>Terminal Extension Coverage End Date</label>
-                  <input type="date"  formControlName="y2sslTermCoverageExtEndDate" class="form-control"  max="2999-12-31"/>
+                  <input type="date"  formControlName="y2sslTermCoverageExtEndDate" class="form-control"  max="2999-12-31" [ngClass]="{ 'is-invalid': y2sslTermCovrErr.isDateErr }"/>
                 </div>
               </div>
               <div class="col-md-4">
@@ -497,19 +514,19 @@
               <div class="col-md-4">
                 <div class="form-group">
                   <label>Exclusion Incurred Period Start Date</label>
-                  <input type="date"   value="MM/DD/yyyy" formControlName="y2sslExclusionIncurredStartDate"class="form-control" max="2999-12-31" />
+                  <input type="date"   value="MM/DD/yyyy" formControlName="y2sslExclusionIncurredStartDate" class="form-control" max="2999-12-31" [ngClass]="{ 'is-invalid': y2sslExInStartEndDateErr.isDateErr || y2sslExInStartDateErr.isDateErr}" />
                 </div>              
               </div>
               <div class="col-md-4">
                 <div class="form-group">
                   <label>Exclusion Incurred Period End Date</label>
-                  <input type="date"   value="MM/DD/yyyy" formControlName="y2sslExclusionIncurredEndDate"class="form-control" max="2999-12-31" />
+                  <input type="date"   value="MM/DD/yyyy" formControlName="y2sslExclusionIncurredEndDate" class="form-control" [ngClass]="{ 'is-invalid': y2sslExInStartEndDateErr.isDateErr}" max="2999-12-31" />
                 </div>              
               </div>
             <div class="col-md-4">
               <div class="form-group">
                 <label>Exclusion Paid Start Date</label>
-                <input type="date"   value="MM/DD/yyyy" formControlName="y2sslExclusionPaidStartDate"class="form-control" max="2999-12-31" />
+                <input type="date"   value="MM/DD/yyyy" formControlName="y2sslExclusionPaidStartDate" class="form-control" [ngClass]="{ 'is-invalid': y2sslExPaidStartEndDateErr.isDateErr || sslExPaidStartDateErr.isDateErr}" max="2999-12-31" />
               </div>              
             </div>
             </div>
@@ -517,7 +534,7 @@
             <div class="col-md-4">
               <div class="form-group">
                 <label>Exclusion Paid  End Date</label>
-                <input type="date"   value="MM/DD/yyyy" formControlName="y2sslExclusionPaidEndDate"class="form-control" max="2999-12-31" />
+                <input type="date"   value="MM/DD/yyyy" formControlName="y2sslExclusionPaidEndDate" class="form-control" max="2999-12-31" [ngClass]="{ 'is-invalid': y2sslExPaidStartEndDateErr.isDateErr}" />
               </div>              
             </div>
           </div>
@@ -548,6 +565,7 @@
               </div>
             </div>
           </div>
+              </fieldset>
 
             <br/>
 
