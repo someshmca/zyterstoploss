@@ -52,7 +52,7 @@
                   <th mat-header-cell *matHeaderCellDef> Action </th>
                   <td mat-cell *matCellDef="let element" class="action-link">
                     <span class="view-icon" 
-                          (click)="openViewModal(true, element)" title="View"></span>
+                          (click)="openViewModal(true,  element.contractId)" title="View"></span>
                     <span class="fa fa-edit" (click)="openCustomModal(true, element.contractId)" title="Update" *ngIf="isAdmin"></span>
                   </td>
                 </ng-container>
