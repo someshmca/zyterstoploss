@@ -102,12 +102,10 @@
 
 // for Medica Dev 
 
-
 export const Paths = {
   loginPath : "http://10.48.30.158:92/api/Login/UserLogin/",
   reportPath : "http://10.48.30.158:92/api/Claim/GetClaimReport",
   claimPath: "http://10.48.30.158:92/api/Claim/GetClaim",
-  
   
   
   attributes: "http://10.48.30.158:92/api/Attribute/GetAllAttributeID",
@@ -132,7 +130,7 @@ export const Paths = {
   contractAdd: "http://10.48.30.158:92/api/Contracts/AddContracts",
   contractUpdate: "http://10.48.30.158:92/api/Contracts/UpdateContracts",
   contractAll: "http://10.48.30.158:92/api/Contracts/GetAllContracts",
-  contractDateValidation: "http://10.48.30.158:92/api/Contracts/DateValidation/",
+ contractDateValidation: "http://10.48.30.158:92/api/Contracts/DateValidation/",
 
   clients: "http://10.48.30.158:92/api/Clients/LoadClientDetails",
   client: "http://10.48.30.158:92/api/Clients/GetClientDetails/",
@@ -141,8 +139,9 @@ export const Paths = {
   getClientDetails: "http://10.48.30.158:92/api/Clients/GetClientDetails/",
   activeClients:"http://10.48.30.158:92/api/Clients/GetActiveClients",
   parentClient:"http://10.48.30.158:92/api/Clients/GetParentClient",
-  duplicateClientId: "http://10.48.30.158:92/api/Clients/DuplicateClientID?clientId=",
-  duplicateClientName: "http://10.48.30.158:92/api/Clients/DuplicateClient?client=",
+    duplicateClientId: "http://10.48.30.158:92/api/Clients/DuplicateClientID?clientId=",
+    duplicateClientName: "http://10.48.30.158:92/api/Clients/DuplicateClient?client=",
+
 
 
   roles: "http://10.48.30.158:92/api/Roles/GetAllRoles",
@@ -170,21 +169,21 @@ export const Paths = {
   BatchProcessAdd: "http://10.48.30.158:92/api/BatchProcess/AddBatchProcess",
   BatchProcessUpdate: "http://10.48.30.158:92/api/BatchProcess/UpdateBatchProcess",
   BatchProcessCalculate: "http://10.48.30.158:92/api/BatchProcess/BatchCalculateClaimAmount?",
-  duplicateBatchProcess: "http://10.48.30.158:92/api/BatchProcess/DuplicateBatchProcess?batchProcessId=", 
+  duplicateBatchProcess: "http://10.48.30.158:92/api/BatchProcess/DuplicateBatchProcess?batchProcessId=",
 
   planTires: "http://10.48.30.158:92/api/Plan/GetTiers",
   planAll: "http://10.48.30.158:92/api/Plan/GetPlanDetails",
   planAdd: "http://10.48.30.158:92/api/Plan/AddPlan",
   planUpdate: "http://10.48.30.158:92/api/Plan/UpdatePlan",
-  duplicatePlanId:"http://10.48.30.158:92/api/Plan/DuplicatePlanCode?planCode=", 
-  duplicatePlanName:"http://10.48.30.158:92/api/Plan/DuplicatePlanName?planName=", 
+  duplicatePlanId:"http://10.48.30.158:92/api/Plan/DuplicatePlanCode?planCode=", //(V.E 27-Jul-2021 )
+   duplicatePlanName:"http://10.48.30.158:92/api/Plan/DuplicatePlanName?planName=", //(V.E 27-Jul-2021 )
 
   memberSearch: "http://10.48.30.158:92/api/Member/GetMemberdetail?",
   memberAdd: "http://10.48.30.158:92/api/Member/AddMember",
   memberUpdate: "http://10.48.30.158:92/api/Member/UpdateMember",
-  memberAll: "http://10.48.30.158:92/api/Member/GetAllMember",
-  member:"http://10.48.30.158:92/api/Member/GetMemberDetailsByClientId/",
-
+    memberAll: "http://10.48.30.158:92/api/Member/GetAllMember",
+    member:"http://10.48.30.158:92/api/Member/GetMemberDetailsByClientId/",
+  
 
   productAll: "http://10.48.30.158:92/api/Product/GetAllProducts",
   product: "http://10.48.30.158:92/api/Product/GetProducts?productId=",
@@ -194,16 +193,13 @@ export const Paths = {
   duplicateContract: "http://10.48.30.158:92/api/Product/DuplicateContract?contractId=",
   productByContractPeriod: "http://10.48.30.158:92/api/Product/GetProductByContractPeriod?",
 
-  ExcelUploadPath: "http://10.48.30.158:92/api/ExcelUpload/UploadExcel?userId=",
-
-  sslReportURL: "https://medicaanalytics-axw4of8ufwa4-hy.analytics.ocp.oraclecloud.com/ui/dv/ui/project.jsp?pageid=visualAnalyzer&reportmode=full&reportpath=%2F%40Catalog%2Fshared%2FMedica%20SL%2FSpecific%20Report",
-  aslReportURL: "https://medicaanalytics-axw4of8ufwa4-hy.analytics.ocp.oraclecloud.com/ui/dv/ui/project.jsp?pageid=visualAnalyzer&reportmode=full&reportpath=%2F%40Catalog%2Fusers%2Fsrajamani%40infinite.com%2FMedica%20SL%2FSpecific%20Report",
-  maxLiabilityReportURL: "https://medicaanalytics-axw4of8ufwa4-hy.analytics.ocp.oraclecloud.com/ui/dv/ui/project.jsp?pageid=visualAnalyzer&reportmode=full&reportpath=%2F%40Catalog%2Fusers%2Fsrajamani%40infinite.com%2FMedica%20SL%2FSpecific%20Report",
-
-  authenticateUser: "http://10.48.30.158:92/api/Login/AuthenticateUser?userName="
+ ExcelUploadPath: "http://10.48.30.158:92/api/ExcelUpload/UploadExcel?userId=",
+  
+  sslReportURL: "http://dwim4-obiee01.qdint.local:9502/analytics/saw.dll?PortalGo&Action=prompt&path=%2Fshared%2FPOC%2FAgg_Claim_Expenese",
+  aslReportURL: "http://dwim4-obiee01.qdint.local:9502/analytics/saw.dll?PortalGo&Action=prompt&path=%2Fshared%2FPOC%2FAgg_Claim_Expenese",
+  maxLiabilityReportURL: "http://dwim4-obiee01.qdint.local:9502/analytics/saw.dll?PortalGo&Action=prompt&path=%2Fshared%2FPOC%2FAgg_Claim_Expenese"
 
 }
-
 
 
 // for Medica QA
