@@ -380,22 +380,16 @@ export class ProductComponent implements OnInit {
   checkMaxLiability(){    
     
     console.log(this.f.isMaxLiability.value);
-    debugger;
+    
     if(this.f.isMaxLiability.value){
-      this.productForm.patchValue({
-        ibnrPercentage:[true], 
-        defferedFeePercentage:[true]
-      });
+     // this.productForm.patchValue({isMaxLiability: true });
       this.f.ibnrPercentage.setValidators([Validators.required]);
       this.f.ibnrPercentage.updateValueAndValidity(); 
       this.f.defferedFeePercentage.setValidators([Validators.required]);
       this.f.defferedFeePercentage.updateValueAndValidity(); 
     }
     else{
-      this.productForm.patchValue({
-        ibnrPercentage:[false], 
-        defferedFeePercentage:[false]
-      });
+     // this.productForm.patchValue({isMaxLiability: false });
       this.f.ibnrPercentage.clearValidators();
       this.f.ibnrPercentage.updateValueAndValidity(); 
       this.f.defferedFeePercentage.clearValidators();
@@ -754,33 +748,43 @@ if(this.f.sslExclusionIncurredStartDate.value !=null && this.f.sslExclusionIncur
     }
   // exclusion code ends
   // y2 starts 
+    if(this.f.isContractPeriod.value){
+      if( this.f.y2sslClaimBasis.value.length < 5 ) // starts here added by Venkatesh Enigonda
+      {
+       this.y2sslClaimBasisErr.isValid=true;
+       this.y2sslClaimBasisErr.errMsg='In-Valid Format in Year 2 Specific ClaimBasis';
+       return;
+      }
+       if(this.f.y2sslClaimBasis.value.charAt(2)!='/')   {​​​​​       this.y2sslClaimBasisErr.isValid=true;     this.y2sslClaimBasisErr.errMsg='In-Valid Format in Year 2 Specific ClaimBasis';     return;   }​​​​​
+      
+       if(this.productForm.valid && this.f.y2sslIncurredStartDate.value > this.f.y2sslIncurredEndDate.value){​​​​​    this.y2sslIncurredEndErr.isDateErr=true;    this.y2sslIncurredEndErr.dateErrMsg = ' Year 2 SSL Incurred start date should not be greater than SSL Incurred End date';        return;  }​​​​​
+      
+       if(this.productForm.valid && this.f.y2sslIncurredStartDate.value == this.f.y2sslIncurredEndDate.value){​​​​​     this.y2sslIncurredEndErr.isDateErr=true;    this.y2sslIncurredEndErr.dateErrMsg = ' Year 2 SSL Incurred start date should not be Equal to SSL Incurred End date';        return;  }​​​​​
+      
+      if(this.productForm.valid && this.f.y2sslPaidStartDate.value > this.f.y2sslPaidEndDate.value){​​​​​  
+        this.y2sslPaidEndErr.isDateErr=true;  this.y2sslPaidEndErr.dateErrMsg = 'Year 2 SSL Paid Start date should not be greater than SSL Paid End date';    return;}​​​​​
+      
+      if(this.productForm.valid && this.f.y2sslPaidStartDate.value == this.f.y2sslPaidEndDate.value){​​​​​   this.y2sslPaidEndErr.isDateErr=true;  this.y2sslPaidEndErr.dateErrMsg ='Year 2 SSL Paid Start date should not be Equal to SSL Paid End date';      return;}​​​​​
+      
+      if(this.f.y2sslContractStartDate.value !=null && this.f.y2sslContractStartDate.value !='' && this.f.y2sslContractEndDate.value!=null && this.f.y2sslContractEndDate.value!=''){​​​​​    
+        
+        if(this.f.y2sslContractStartDate.value > this.f.y2sslContractEndDate.value){​​​​​      
+          this.y2sslSPecificErr.isDateErr=true;    
+          this.y2sslSPecificErr.dateErrMsg =' Year 2 SSL Specific Start date should not be greater than to SSL Specific End date' ;        return;  }​​​​​  
+      
+      if(this.f.y2sslContractStartDate.value == this.f.y2sslContractEndDate.value){​​​​​    this.y2sslSPecificErr.isDateErr=true;    this.y2sslSPecificErr.dateErrMsg =' Year 2 SSL Specific Start date should not be Equal to SSL Specific End date' ;        return;  }​​​​​}​​​​​
+      
+      if((this.f.y2sslContractStartDate.value ==null || this.f.y2sslContractStartDate.value =='') && this.f.y2sslContractEndDate.value!=null && this.f.y2sslContractEndDate.value!=''){​​​​​    this.y2sslSPecificErr.isDateErr=true;  this.y2sslSPecificErr.dateErrMsg ='Year 2 SSL Specific Start date is not valid' ;      return;}​​​​​if(this.f.y2sslContractStartDate.value !=null && this.f.y2sslContractStartDate.value !='' && (this.f.y2sslContractEndDate.value==null || this.f.y2sslContractEndDate.value=='')){​​​​​    this.y2sslSPecificErr.isDateErr=true;  this.y2sslSPecificErr.dateErrMsg ='Year 2 SSL Specific End date is not valid' ;      return;}​​​​​
+      
+      if(this.productForm.valid && Number(this.f.y2sslDeductible.value)<=0){​​​​​  this.y2sslDeductibleErr.isValid=true;  this.y2sslDeductibleErr.errMsg="Year 2 SSL Deductible value should be greater than 0";  return;}​​​​​if(this.productForm.valid && this.f.y2sslDeductible.value==''){​​​​​  this.y2sslDeductibleErr.isValid=true;  this.y2sslDeductibleErr.errMsg="Year 2 SSL Deductible is not valid";  return;}​​​​​
+      
+      
+      if(y2sslTermVal!='' && this.productForm.valid){​​​​​    if(this.f.y2sslTermCoverageExtEndDate.value <= this.f.y2sslIncurredEndDate.value){​​​​​    this.y2sslTermCovrErr.isDateErr=true;        this.y2sslTermCovrErr.dateErrMsg = 'Year 2 SSL Term Coverage Date should be greater than SSL Incurred End Date';      return;  }​​​​​}​​​​​
+      
+          if(this.f.y2sslExclusionIncurredStartDate.value !=null && this.f.y2sslExclusionIncurredStartDate.value !='' && this.f.y2sslExclusionIncurredEndDate.value!=null && this.f.y2sslExclusionIncurredEndDate.value!=''){​​​​​   if(this.f.y2sslExclusionIncurredStartDate.value == this.f.y2sslExclusionIncurredEndDate.value)  {​​​​​    this.y2sslExInStartEndDateErr.isDateErr=true;    this.y2sslExInStartEndDateErr.dateErrMsg="Year 2 SSL Exclusion Incurred start date should not be equal to SSL Exclusion Incurred End date";    return;  }​​​​​  if(this.f.y2sslExclusionIncurredStartDate.value > this.f.y2sslExclusionIncurredEndDate.value)  {​​​​​    this.y2sslExInStartDateErr.isDateErr=true;    this.y2sslExInStartDateErr.dateErrMsg="Year 2 SSL Exclusion Incurred start date should not be greaterthan SSL Exclusion Incurred End date";    return;  }​​​​​     }​​​​​  if(this.f.y2sslExclusionPaidStartDate.value !=null && this.f.y2sslExclusionPaidStartDate.value !='' && this.f.y2sslExclusionPaidEndDate.value!=null && this.f.y2sslExclusionPaidEndDate.value!=''){​​​​​     if(this.f.y2sslExclusionPaidStartDate.value == this.f.y2sslExclusionPaidEndDate.value)    {​​​​​      this.y2sslExPaidStartEndDateErr.isDateErr=true;      this.y2sslExPaidStartEndDateErr.dateErrMsg="Year 2 SSL Exclusion Paid start date should not be equal to SSL Exclusion paid End date";      return;    }​​​​​    if(this.f.y2sslExclusionPaidStartDate.value > this.f.y2sslExclusionPaidEndDate.value)    {​​​​​      this.y2sslExPaidStartDateErr.isDateErr=true;      this.y2sslExPaidStartDateErr.dateErrMsg="Year 2 SSL Exclusion Paid start date should not be greaterthan SSL Exclusion paid End date";      return;      }​​​​​        }
 
-  if( this.f.y2sslClaimBasis.value.length < 5 ) // starts here added by Venkatesh Enigonda
-  {
-   this.y2sslClaimBasisErr.isValid=true;
-   this.y2sslClaimBasisErr.errMsg='In-Valid Format in Year 2 Specific ClaimBasis';
-   return;
-  }
-   if(this.f.y2sslClaimBasis.value.charAt(2)!='/')   {​​​​​       this.y2sslClaimBasisErr.isValid=true;     this.y2sslClaimBasisErr.errMsg='In-Valid Format in Year 2 Specific ClaimBasis';     return;   }​​​​​
-  
-   if(this.productForm.valid && this.f.y2sslIncurredStartDate.value > this.f.y2sslIncurredEndDate.value){​​​​​    this.y2sslIncurredEndErr.isDateErr=true;    this.y2sslIncurredEndErr.dateErrMsg = ' Year 2 SSL Incurred start date should not be greater than SSL Incurred End date';        return;  }​​​​​
-  
-   if(this.productForm.valid && this.f.y2sslIncurredStartDate.value == this.f.y2sslIncurredEndDate.value){​​​​​     this.y2sslIncurredEndErr.isDateErr=true;    this.y2sslIncurredEndErr.dateErrMsg = ' Year 2 SSL Incurred start date should not be Equal to SSL Incurred End date';        return;  }​​​​​
-  
-  if(this.productForm.valid && this.f.y2sslPaidStartDate.value > this.f.y2sslPaidEndDate.value){​​​​​  this.sslPaidEndErr.isDateErr=true;  this.sslPaidEndErr.dateErrMsg = 'Year 2 SSL Paid Start date should not be greater than SSL Paid End date';    return;}​​​​​
-  
-  if(this.productForm.valid && this.f.y2sslPaidStartDate.value == this.f.y2sslPaidEndDate.value){​​​​​   this.y2sslPaidEndErr.isDateErr=true;  this.y2sslPaidEndErr.dateErrMsg ='Year 2 SSL Paid Start date should not be Equal to SSL Paid End date';      return;}​​​​​
-  
-  if(this.f.y2sslContractStartDate.value !=null && this.f.y2sslContractStartDate.value !='' && this.f.y2sslContractEndDate.value!=null && this.f.y2sslContractEndDate.value!=''){​​​​​    if(this.f.y2sslContractStartDate.value == this.f.y2sslContractEndDate.value){​​​​​      this.y2sslSPecificErr.isDateErr=true;    this.y2sslSPecificErr.dateErrMsg =' Year 2 SSL Specific Start date should not be Equal to SSL Specific End date' ;        return;  }​​​​​  if(this.f.y2sslContractStartDate.value == this.f.y2sslContractEndDate.value){​​​​​    this.y2sslSPecificErr.isDateErr=true;    this.y2sslSPecificErr.dateErrMsg =' Year 2 SSL Specific Start date should not be Equal to SSL Specific End date' ;        return;  }​​​​​}​​​​​
-  
-  if((this.f.y2sslContractStartDate.value ==null || this.f.y2sslContractStartDate.value =='') && this.f.y2sslContractEndDate.value!=null && this.f.y2sslContractEndDate.value!=''){​​​​​    this.y2sslSPecificErr.isDateErr=true;  this.y2sslSPecificErr.dateErrMsg ='Year 2 SSL Specific Start date is not valid' ;      return;}​​​​​if(this.f.y2sslContractStartDate.value !=null && this.f.y2sslContractStartDate.value !='' && (this.f.y2sslContractEndDate.value==null || this.f.y2sslContractEndDate.value=='')){​​​​​    this.y2sslSPecificErr.isDateErr=true;  this.y2sslSPecificErr.dateErrMsg ='Year 2 SSL Specific End date is not valid' ;      return;}​​​​​
-  
-  if(this.productForm.valid && Number(this.f.y2sslDeductible.value)<=0){​​​​​  this.y2sslDeductibleErr.isValid=true;  this.y2sslDeductibleErr.errMsg="Year 2 SSL Deductible value should be greater than 0";  return;}​​​​​if(this.productForm.valid && this.f.y2sslDeductible.value==''){​​​​​  this.y2sslDeductibleErr.isValid=true;  this.y2sslDeductibleErr.errMsg="Year 2 SSL Deductible is not valid";  return;}​​​​​
-  
-  
-  if(y2sslTermVal!='' && this.productForm.valid){​​​​​    if(this.f.y2sslTermCoverageExtEndDate.value <= this.f.y2sslIncurredEndDate.value){​​​​​    this.y2sslTermCovrErr.isDateErr=true;        this.y2sslTermCovrErr.dateErrMsg = 'Year 2 SSL Term Coverage Date should be greater than SSL Incurred End Date';      return;  }​​​​​}​​​​​
-  
-      if(this.f.y2sslExclusionIncurredStartDate.value !=null && this.f.y2sslExclusionIncurredStartDate.value !='' && this.f.y2sslExclusionIncurredEndDate.value!=null && this.f.y2sslExclusionIncurredEndDate.value!=''){​​​​​   if(this.f.y2sslExclusionIncurredStartDate.value == this.f.y2sslExclusionIncurredEndDate.value)  {​​​​​    this.y2sslExInStartEndDateErr.isDateErr=true;    this.y2sslExInStartEndDateErr.dateErrMsg="Year 2 SSL Exclusion Incurred start date should not be equal to SSL Exclusion Incurred End date";    return;  }​​​​​  if(this.f.y2sslExclusionIncurredStartDate.value > this.f.y2sslExclusionIncurredEndDate.value)  {​​​​​    this.y2sslExInStartDateErr.isDateErr=true;    this.y2sslExInStartDateErr.dateErrMsg="Year 2 SSL Exclusion Incurred start date should not be greaterthan SSL Exclusion Incurred End date";    return;  }​​​​​     }​​​​​  if(this.f.y2sslExclusionPaidStartDate.value !=null && this.f.y2sslExclusionPaidStartDate.value !='' && this.f.y2sslExclusionPaidEndDate.value!=null && this.f.y2sslExclusionPaidEndDate.value!=''){​​​​​     if(this.f.y2sslExclusionPaidStartDate.value == this.f.y2sslExclusionPaidEndDate.value)    {​​​​​      this.y2sslExPaidStartEndDateErr.isDateErr=true;      this.y2sslExPaidStartEndDateErr.dateErrMsg="Year 2 SSL Exclusion Paid start date should not be equal to SSL Exclusion paid End date";      return;    }​​​​​    if(this.f.y2sslExclusionPaidStartDate.value > this.f.y2sslExclusionPaidEndDate.value)    {​​​​​      this.y2sslExPaidStartDateErr.isDateErr=true;      this.y2sslExPaidStartDateErr.dateErrMsg="Year 2 SSL Exclusion Paid start date should not be greaterthan SSL Exclusion paid End date";      return;      }​​​​​        }​​​​​
+    }​​​​​
+    // y2 ends
   
   
 
@@ -800,7 +804,6 @@ openViewModal(bool, id:any){
   this.openCustomModal(bool, id);
 }
   openCustomModal(open: boolean, id:any) { 
-    this.checkMaxLiability();
     setTimeout(()=>{
       this.focusTag.nativeElement.focus()
     }, 100);
@@ -812,7 +815,9 @@ openViewModal(bool, id:any){
     if(open && id==null){
       this.initProductForm();
       this.isAddMode = true;    
-      this.productForm.patchValue({isContractPeriod:false});      
+      this.productForm.patchValue({isContractPeriod:false}); 
+      this.productForm.patchValue({isMaxLiability: false });  
+      this.checkMaxLiability();   
       this.checkYear2Selected();
       this.contractPeriodLabel = 'Year 1';
       
@@ -834,6 +839,10 @@ openViewModal(bool, id:any){
       this.isAdded=false;
       this.isViewModal=false;      
       this.contractPeriodLabel = '';
+      this.productForm.patchValue({isContractPeriod:false}); 
+      this.productForm.patchValue({isMaxLiability: false }); 
+      this.checkMaxLiability();   
+      this.checkYear2Selected();
       if(!this.isFilterOn){
         this.navService.resetProductObj();
         this.navService.resetContractID();
@@ -1557,6 +1566,7 @@ private addProduct() {
     this.callYear1Obj();
     if(this.f.isContractPeriod.value){
       this.callYear2Obj();
+      
       
     }
     console.log()

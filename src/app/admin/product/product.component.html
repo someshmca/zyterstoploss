@@ -75,7 +75,7 @@
   </div>
 </div>
 <!-- Add/Update Plans Modal -->
-<div class="modal fade" role="dialog" [ngClass]="{'view-modal':isViewModal}" [ngStyle]="{'display': isCustomModalOpen ? 'block' : 'none', 'opacity': 1}">
+<div class="modal fade product-modal" role="dialog" [ngClass]="{'view-modal':isViewModal}" [ngStyle]="{'display': isCustomModalOpen ? 'block' : 'none', 'opacity': 1}">
   <div class="modal-dialog modal-dialog-centered" style="max-width: 80vw; margin-top: 13vh;">
     <div class="modal-content">
       <!-- Modal Header -->
@@ -97,39 +97,39 @@
             </div>
       <!-- Modal body -->
       <div class="modal-body">
+        <div class="mandate-fields">
+          <span *ngIf="submitted && (!productForm.valid && !productForm.errors?.dates)">Fields marked with * are mandatory</span>
+          <span *ngIf="productForm.errors">{{ productForm.errors?.dates | json }}</span>
+          <span *ngIf="sslIncurredEndErr.isDateErr">{{sslIncurredEndErr.dateErrMsg}}</span>
+          <span *ngIf="sslPaidEndErr.isDateErr">{{sslPaidEndErr.dateErrMsg}}</span>
+          <span *ngIf="aslIncurredEndErr.isDateErr">{{aslIncurredEndErr.dateErrMsg}}</span>
+          <span *ngIf="aslPaidEndErr.isDateErr">{{aslPaidEndErr.dateErrMsg}}</span>
+          <span *ngIf="sslTermCovrErr.isDateErr">{{sslTermCovrErr.dateErrMsg}}</span>
+          <span *ngIf="aslTermCovrErr.isDateErr">{{aslTermCovrErr.dateErrMsg}}</span>
+          <span *ngIf="sslDeductibleErr.isValid">{{sslDeductibleErr.errMsg}}</span>
+          <span *ngIf="sslClaimBasisErr.isValid">{{sslClaimBasisErr.errMsg}}</span>
+          <span *ngIf="aslClaimBasisErr.isValid">{{aslClaimBasisErr.errMsg}}</span>
+          <span *ngIf="sslSPecificErr.isDateErr">{{sslSPecificErr.dateErrMsg}}</span> <!--Modified by Venkatesh Enigonda-->
+          <span *ngIf="aslAggregateErr.isDateErr">{{aslAggregateErr.dateErrMsg}}</span>    
+          <span *ngIf="sslExInStartEndDateErr.isDateErr">{{sslExInStartEndDateErr.dateErrMsg}}</span>
+          <span *ngIf="sslExInStartDateErr.isDateErr">{{sslExInStartDateErr.dateErrMsg}}</span>
+          <span *ngIf="sslExPaidStartEndDateErr.isDateErr">{{sslExPaidStartEndDateErr.dateErrMsg}}</span>
+          <span *ngIf="sslExPaidStartDateErr.isDateErr">{{sslExPaidStartDateErr.dateErrMsg}}</span>  
+          <div *ngIf="duplicateContractErr.flag">{{duplicateContractErr.message}}</div>     
+          <div *ngIf="contractPeroidErr.flag">{{contractPeroidErr.message}}</div>
+          
+          <span *ngIf="y2sslSPecificErr.isDateErr">{{y2sslSPecificErr.dateErrMsg}}</span> <!--Modified by Venkatesh Enigonda-->
+          <span *ngIf="y2sslDeductibleErr.isValid">{{y2sslDeductibleErr.errMsg}}</span>
+          <span *ngIf="y2sslClaimBasisErr.isValid">{{y2sslClaimBasisErr.errMsg}}</span>
+          <span *ngIf="y2sslTermCovrErr.isDateErr">{{y2sslTermCovrErr.dateErrMsg}}</span>
+          <span *ngIf="y2sslIncurredEndErr.isDateErr">{{y2sslIncurredEndErr.dateErrMsg}}</span>
+          <span *ngIf="y2sslPaidEndErr.isDateErr">{{y2sslPaidEndErr.dateErrMsg}}</span>
+          <span *ngIf="y2sslExInStartEndDateErr.isDateErr">{{y2sslExInStartEndDateErr.dateErrMsg}}</span>
+          <span *ngIf="y2sslExInStartDateErr.isDateErr">{{y2sslExInStartDateErr.dateErrMsg}}</span>
+          <span *ngIf="y2sslExPaidStartEndDateErr.isDateErr">{{y2sslExPaidStartEndDateErr.dateErrMsg}}</span>
+          <span *ngIf="y2sslExPaidStartDateErr.isDateErr">{{y2sslExPaidStartDateErr.dateErrMsg}}</span> 
+         </div>  
           <div class="product-form-wrap">
-            <div class="mandate-fields">
-              <span *ngIf="submitted && (!productForm.valid && !productForm.errors?.dates)">Fields marked with * are mandatory</span>
-              <span *ngIf="productForm.errors">{{ productForm.errors?.dates | json }}</span>
-              <span *ngIf="sslIncurredEndErr.isDateErr">{{sslIncurredEndErr.dateErrMsg}}</span>
-              <span *ngIf="sslPaidEndErr.isDateErr">{{sslPaidEndErr.dateErrMsg}}</span>
-              <span *ngIf="aslIncurredEndErr.isDateErr">{{aslIncurredEndErr.dateErrMsg}}</span>
-              <span *ngIf="aslPaidEndErr.isDateErr">{{aslPaidEndErr.dateErrMsg}}</span>
-              <span *ngIf="sslTermCovrErr.isDateErr">{{sslTermCovrErr.dateErrMsg}}</span>
-              <span *ngIf="aslTermCovrErr.isDateErr">{{aslTermCovrErr.dateErrMsg}}</span>
-              <span *ngIf="sslDeductibleErr.isValid">{{sslDeductibleErr.errMsg}}</span>
-              <span *ngIf="sslClaimBasisErr.isValid">{{sslClaimBasisErr.errMsg}}</span>
-              <span *ngIf="aslClaimBasisErr.isValid">{{aslClaimBasisErr.errMsg}}</span>
-              <span *ngIf="sslSPecificErr.isDateErr">{{sslSPecificErr.dateErrMsg}}</span> <!--Modified by Venkatesh Enigonda-->
-              <span *ngIf="aslAggregateErr.isDateErr">{{aslAggregateErr.dateErrMsg}}</span>    
-              <span *ngIf="sslExInStartEndDateErr.isDateErr">{{sslExInStartEndDateErr.dateErrMsg}}</span>
-              <span *ngIf="sslExInStartDateErr.isDateErr">{{sslExInStartDateErr.dateErrMsg}}</span>
-              <span *ngIf="sslExPaidStartEndDateErr.isDateErr">{{sslExPaidStartEndDateErr.dateErrMsg}}</span>
-              <span *ngIf="sslExPaidStartDateErr.isDateErr">{{sslExPaidStartDateErr.dateErrMsg}}</span>  
-              <div *ngIf="duplicateContractErr.flag">{{duplicateContractErr.message}}</div>     
-              <div *ngIf="contractPeroidErr.flag">{{contractPeroidErr.message}}</div>
-              
-              <span *ngIf="y2sslSPecificErr.isDateErr">{{y2sslSPecificErr.dateErrMsg}}</span> <!--Modified by Venkatesh Enigonda-->
-              <span *ngIf="y2sslDeductibleErr.isValid">{{y2sslDeductibleErr.errMsg}}</span>
-              <span *ngIf="y2sslClaimBasisErr.isValid">{{y2sslClaimBasisErr.errMsg}}</span>
-              <span *ngIf="y2sslTermCovrErr.isDateErr">{{y2sslTermCovrErr.dateErrMsg}}</span>
-              <span *ngIf="y2sslIncurredEndErr.isDateErr">{{y2sslIncurredEndErr.dateErrMsg}}</span>
-              <span *ngIf="y2sslPaidEndErr.isDateErr">{{y2sslPaidEndErr.dateErrMsg}}</span>
-              <span *ngIf="y2sslExInStartEndDateErr.isDateErr">{{y2sslExInStartEndDateErr.dateErrMsg}}</span>
-              <span *ngIf="y2sslExInStartDateErr.isDateErr">{{y2sslExInStartDateErr.dateErrMsg}}</span>
-              <span *ngIf="y2sslExPaidStartEndDateErr.isDateErr">{{y2sslExPaidStartEndDateErr.dateErrMsg}}</span>
-              <span *ngIf="y2sslExPaidStartDateErr.isDateErr">{{y2sslExPaidStartDateErr.dateErrMsg}}</span> 
-             </div>  
             <div class="row">
               <div class="col-md-4">
                 <div class="form-group">
@@ -387,7 +387,7 @@
               <div class="col-md-4">
                 <div class="form-group">
                   <label>Claim Basis<small class="starmark">*</small></label>
-                  <input type="text" formControlName="y2sslClaimBasis" class="form-control" placeholder="MM/MM" maxlength="5" [ngClass]="{ 'is-invalid': submitted && f.y2sslClaimBasis.errors }"/>
+                  <input type="text" formControlName="y2sslClaimBasis" class="form-control" placeholder="MM/MM" maxlength="5" [ngClass]="{ 'is-invalid': submitted && f.y2sslClaimBasis.errors || y2sslClaimBasisErr.isValid}"/>
                 </div>                
               </div>
               <div class="col-md-4">
@@ -733,13 +733,13 @@
       <div class="col-md-4">
         <div class="form-group">
           <label>IBNR Reserve Percentage <small class="starmark" *ngIf="f.isMaxLiability.value">*</small> </label>
-          <input type="number" formControlName="ibnrPercentage" [readonly]="!f.isMaxLiability.value || updateStatus" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.ibnrPercentage.errors }" [readonly]="updateStatus"/>
+          <input type="number" formControlName="ibnrPercentage" [readonly]="!f.isMaxLiability.value" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.ibnrPercentage.errors }"/>
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-group">
           <label>Deferred Service Fee Percentage<small class="starmark" *ngIf="f.isMaxLiability.value">*</small></label>
-          <input type="number" formControlName="defferedFeePercentage" [readonly]="!f.isMaxLiability.value || updateStatus" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.defferedFeePercentage.errors }" [readonly]="updateStatus"/>
+          <input type="number" formControlName="defferedFeePercentage" [readonly]="!f.isMaxLiability.value" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.defferedFeePercentage.errors }"/>
         </div>
       </div>
     </div>
