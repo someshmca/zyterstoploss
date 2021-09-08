@@ -288,11 +288,11 @@
     <!-- Modal Header -->
     <div class="modal-header">
         <h4 class="modal-title" *ngIf="!isViewModal">
-            <span *ngIf="isAddMode">Add Member</span>
-            <span *ngIf="!isAddMode">Update Member</span>
+            <span *ngIf="isAddMode">Add Lasering</span>
+            <span *ngIf="!isAddMode">Update Lasering</span>
         </h4>
         <h4 class="modal-title" *ngIf="isViewModal">
-            <span>Member</span>
+            <span>Lasering</span>
         </h4>
         <a class="fa fa-2x fa-times-circle" (click)="openCustomModal(false, null)">
         </a>
@@ -469,7 +469,8 @@
            
           
           <div class="row">  
-           <!-- <div class="col-md-4" *ngIf="!isAddMode">
+           <div class="col-md-4" *ngIf="!isAddMode">
+            <label>&nbsp;</label>
                <div class="form-group switch-group">
                    Exclusions
                      <label class="switch">
@@ -477,7 +478,7 @@
                        <span class="slider round"></span>
                      </label>                  
                </div>
-           </div>                     -->
+           </div>                    
           </div>
      </div>      
    </div>

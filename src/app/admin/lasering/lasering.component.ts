@@ -450,10 +450,13 @@ decimalValue(inputValue:number){
           .pipe(first())
           .subscribe({
               next: () => {
+                this.memberForm.patchValue(updateMemberObj);
+                this.memberForm.patchValue({
+                  exclusion: updateMemberObj.exclusion=='N'?false:true
+                });
                   //this.openCustomModal(false,null); 
                   //this.memberForm.reset();
-                    this.memberForm.patchValue(updateMemberObj);
-                  this.alertService.success('Member updated', { 
+                    this.alertService.success('Member updated', { 
                     keepAfterRouteChange: true });
                  // this.router.navigate(['../../'], { relativeTo: this.route });                    
               },

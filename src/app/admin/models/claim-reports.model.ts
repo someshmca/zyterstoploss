@@ -20,4 +20,11 @@ export interface IClaimReportsModel{
         paidFromDate: string;
         paidToDate: string
 }
-
+export interface IClaimUpdate{  
+        claimId: string;
+        exclusion:string;
+}
+export interface IClaimUpdateResponse{  
+        id: string;
+        message:string;
+}

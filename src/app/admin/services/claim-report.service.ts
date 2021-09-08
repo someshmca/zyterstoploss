@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import {IClaimReportsModel} from '../models/claim-reports.model';
+import {IClaimReportsModel, IClaimUpdate, IClaimUpdateResponse} from '../models/claim-reports.model';
 import {IClaimSearch} from '../models/claim-search.model';
 import { Observable, throwError, BehaviorSubject } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -34,6 +34,10 @@ export class ClaimReportService {
     return this.http.post<IClaimReportsModel[]>(Paths.reportPath, body, {
            headers: headerOptions
     }).pipe(catchError(this.handleError.bind(this)));
+ }
+ claimUpdate(claimId:string, exclusion:string){
+   
+   return this.http.put<IClaimUpdateResponse>(Paths.claimUpdate+'claimId='+claimId+'&exclusion='+exclusion,'').pipe(catchError(this.handleError.bind(this)));
  }
 
   handleError(errorResponse: HttpErrorResponse) {

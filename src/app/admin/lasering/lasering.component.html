@@ -90,8 +90,8 @@
         <!-- Modal Header -->
         <div class="modal-header">
             <h4 class="modal-title"*ngIf="!isViewModal">
-                <span *ngIf="isAddMode">Add Member</span>
-                <span *ngIf="!isAddMode">Update Member</span>
+                <span *ngIf="isAddMode">Add Lasering</span>
+                <span *ngIf="!isAddMode">Update Lasering</span>
             </h4>
             <h4 class="modal-title" *ngIf="isViewModal">Member</h4>
             <div>
@@ -245,10 +245,10 @@
                     <label>Laser Value</label> 
                     <input type="number" formControlName="laserValue" maxlength="20" class="form-control"/>                        
                   </div>
-               </div>    
-              </div>
-              <div class="row">
+               </div>   
                <div class="col-md-4" *ngIf="!isAddMode">
+                 <div class="form-group">
+                   <label>&nbsp;</label>
                    <div class="form-group switch-group">
                        Exclusion
                          <label class="switch">
@@ -256,7 +256,8 @@
                            <span class="slider round"></span>
                          </label>                  
                    </div>
-               </div>                    
+                 </div>
+               </div>     
               </div>
          </div>      
        </div>

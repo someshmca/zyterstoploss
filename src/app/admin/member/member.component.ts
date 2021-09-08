@@ -818,12 +818,12 @@ export class MemberComponent implements OnInit {
       updatedOn: null,
       exclusion: this.f.exclusion.value == true ? 'Y' : 'N'
     }
-    debugger;
+    
     this.memberService.updateMember(updateMemberObj)
       .pipe(first())
       .subscribe({
         next: () => {
-          debugger;
+          
           this.openCustomModal(false, null);
           this.searchMember(this.memberSearchForm);
           this.memberForm.reset();

@@ -53,6 +53,7 @@
 //   ruleUpdate: "https://medicaslapiorc.azurewebsites.net/api/Rules/UpdateRules",
   
 //   claimCalculate: "https://medicaslapiorc.azurewebsites.net/api/Claim/CalculateClaimAmount/",
+//   claimUpdate: "https://medicaslapiorc.azurewebsites.net/api/Claim/UpdateClaim?",
 
 //   UsersPath:"https://medicaslapiorc.azurewebsites.net/api/UserAdministration/GetAllUsers",
 //   UserDetailPath:"https://medicaslapiorc.azurewebsites.net/api/UserAdministration/GetUserDetails/",
@@ -156,6 +157,7 @@ export const Paths = {
   ruleUpdate: "http://10.48.30.158:92/api/Rules/UpdateRules",
   
   claimCalculate: "http://10.48.30.158:92/api/Claim/CalculateClaimAmount/",
+ claimUpdate: "http://10.48.30.158:92/api/Claim/UpdateClaim?",
 
   UsersPath:"http://10.48.30.158:92/api/UserAdministration/GetAllUsers",
   UserDetailPath:"http://10.48.30.158:92/api/UserAdministration/GetUserDetails/",
@@ -175,8 +177,8 @@ export const Paths = {
   planAll: "http://10.48.30.158:92/api/Plan/GetPlanDetails",
   planAdd: "http://10.48.30.158:92/api/Plan/AddPlan",
   planUpdate: "http://10.48.30.158:92/api/Plan/UpdatePlan",
-  duplicatePlanId:"http://10.48.30.158:92/api/Plan/DuplicatePlanCode?planCode=", //(V.E 27-Jul-2021 )
-   duplicatePlanName:"http://10.48.30.158:92/api/Plan/DuplicatePlanName?planName=", //(V.E 27-Jul-2021 )
+  duplicatePlanId:"http://10.48.30.158:92/api/Plan/DuplicatePlanCode?planCode=", 
+   duplicatePlanName:"http://10.48.30.158:92/api/Plan/DuplicatePlanName?planName=",
 
   memberSearch: "http://10.48.30.158:92/api/Member/GetMemberdetail?",
   memberAdd: "http://10.48.30.158:92/api/Member/AddMember",

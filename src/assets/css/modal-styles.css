@@ -84,7 +84,7 @@ div.modal-footer{
 
 @media (min-width: 576px){ 
     .contract-modal .modal-dialog{
-        max-width: 700px;
+        max-width: 800px;
     }
 }
 .cdk-overlay-container, .cdk-overlay-pane {

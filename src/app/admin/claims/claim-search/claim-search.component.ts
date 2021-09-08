@@ -6,6 +6,7 @@ import {IClaimReportsModel} from '../../models/claim-reports.model';
 import {ClaimReportService} from '../../services/claim-report.service';
 import {ClaimService} from '../../services/claim.service';
 import { ICoveredClaims } from '../../models/product-model';
+import { first, max, retryWhen } from 'rxjs/operators';
 import {Paths} from '../../admin-paths';
 import { Observable } from 'rxjs';
 import { AlertService } from '../../services/alert.service';
@@ -76,6 +77,8 @@ export class ClaimSearchComponent implements OnInit {
   isSequenceNumInvalid: boolean=false;
   isDiagnosisCodeInvalid: boolean=false;
   isClaimSourceInvalid: boolean=false;
+  uClaimId: string = '';
+  uExclusion: string = '';
   excel1; //(VE 4/8/2021 )
   //(VE 11/8/2021  starts ) 
  names=[];
@@ -273,7 +276,8 @@ openCustomModal(open: boolean, id:any) {
 
     this.isAddMode = false;
       console.log(id);
-
+          this.uClaimId= id.claimId;
+          this.uExclusion = id.exclusion;
           this.claimForm.patchValue({
             claimId: id.claimId,
             clientId:  id.clientId,
@@ -299,15 +303,43 @@ openCustomModal(open: boolean, id:any) {
 
 
 
-        if(this.isViewModal==true){
+        if(this.isViewModal) this.claimForm.disable();
+        else{
           this.claimForm.disable();
-        }
-        if(this.isViewModal==false){
-          this.claimForm.enable();
-        }
+          this.c.exclusion.enable();
+        } 
+        console.log(this.claimForm.value);
+        
+        
 }
 }
+updateClaim(claimId:string,  exclusion:string ){
+  let updateClaimObj = {
+    claimId : claimId,
+    exclusion: (exclusion==null || exclusion == 'N') ? false : true
+  }
+  this.claimForm.patchValue({exclusion: updateClaimObj.exclusion});
+  
+      this._claimReportService.claimUpdate(claimId, exclusion).pipe(first())
+      .subscribe({
+        next: () => {
+          
+          this.openCustomModal(false, null);
+          this.claimForm.patchValue({exclusion:exclusion=='N'?false:true});
+          this.claimForm.reset();
+         // this.searchClaim(this.claimSearchForm);
+          
+          this.alertService.success('Claim updated', {
+            keepAfterRouteChange: true
+          });          
 
+        },
+        error: error => {
+          this.alertService.error(error);
+          this.loading = false;
+        }
+      });
+}
 onSubmit() {
 
   this.submitted = true;
@@ -327,7 +359,10 @@ onSubmit() {
      // this.addMember();
   } else {
     //  this.updateMember();
-
+    if(this.c.exclusion.value) this.uExclusion = 'Y';
+    else this.uExclusion='N';
+    
+    this.updateClaim(this.uClaimId, this.uExclusion);
   }
 }
 // claim form modal end
@@ -690,5 +725,9 @@ onSubmit() {
    // this.isClaimReportsHidden= true;
     this._route.navigate(['/claim']);
   }
+
+  
+
+
 
 }

@@ -580,7 +580,7 @@ openViewModal(bool, id:any){
                   if(exclusionIncurredStartDate == exclusionIncurredEndDate)
                   {
                     this.exIncStartEndErr.isDateErr=true;
-                    this.exIncStartEndErr.dateErrMsg = 'Incurred Start Date should not be equal to Incurred End Date';
+                    this.exIncStartEndErr.dateErrMsg = 'Exclusion_Incurred Start Date should not be equal to Incurred End Date';
                     return;
  
                   }
@@ -588,7 +588,7 @@ openViewModal(bool, id:any){
                   {
                     console.log("inside");
                     this.exIncStartErr.isDateErr=true;
-                    this.exIncStartErr.dateErrMsg = 'Incurred Start Date should not be greaterthan Incurred End Date';
+                    this.exIncStartErr.dateErrMsg = 'Exclusion_Incurred Start Date should not be greaterthan Incurred End Date';
                     return;
  
                   }
@@ -597,18 +597,42 @@ openViewModal(bool, id:any){
                   if(exclusionPaidStartDate == exclusionPaidEndDate)
                   {
                     this.exPaidStartEndErr.isDateErr=true;
-                    this.exPaidStartEndErr.dateErrMsg = 'Paid Start Date should not be equal to  Paid End Date'
+                    this.exPaidStartEndErr.dateErrMsg = 'Exclusion_Paid Start Date should not be equal to  Paid End Date'
                     return;
  
                   }
                   if(exclusionPaidStartDate > exclusionPaidEndDate)
                   {
                     this.exPaidStartErr.isDateErr=true;
-                    this.exPaidStartErr.dateErrMsg = 'Paid Start Date should not be greaterthan Paid End Date';
+                    this.exPaidStartErr.dateErrMsg = 'Exclusion_Paid Start Date should not be greaterthan Paid End Date';
                     return;
  
                   }
                 }
+                if((exclusionIncurredStartDate ==null || exclusionIncurredStartDate =='') && exclusionIncurredEndDate!='' && exclusionIncurredEndDate!=null){
+                  this.exIncStartEndErr.isDateErr=true;
+                  this.exIncStartEndErr.dateErrMsg = 'Exclusion_Incurred Start date should not be empty or Invalid';
+          
+                  return;
+                }
+                if((exclusionIncurredEndDate==null || exclusionIncurredEndDate=='') && exclusionIncurredStartDate!='' && exclusionIncurredStartDate!=null){
+                  this.exIncStartEndErr.isDateErr =true;
+                  this.exIncStartEndErr.dateErrMsg = 'Exclusion_Incurred End date should not be empty or Invalid';
+          
+                return;
+              }
+              if((exclusionPaidStartDate ==null || exclusionPaidStartDate =='') && exclusionPaidEndDate!='' && exclusionPaidEndDate!=null){
+                this.exPaidStartEndErr.isDateErr=true;
+                this.exPaidStartEndErr.dateErrMsg = 'Exclusion_Paid Start date should not be empty or Invalid';
+        
+                return;
+              }
+              if((exclusionPaidEndDate==null || exclusionPaidEndDate=='') && exclusionPaidStartDate!='' && exclusionPaidStartDate!=null){
+                this.exPaidStartEndErr.isDateErr =true;
+                this.exPaidStartEndErr.dateErrMsg = 'Exclusion_Paid End date should not be empty or Invalid';
+        
+              return;
+            }
       if (this.isAddMode) {
         
         this.addContract();

@@ -689,6 +689,7 @@ export class LaseringSearchComponent implements OnInit {
         if (this.isViewModal == false) {
           this.memberForm.disable();
           this.f.laserValue.enable();
+          this.f.exclusion.enable();
           // this.f.isUnlimited.enable(); 
           // if(this.f.isUnlimited.value==true || id.isUnlimited=='Y'){
           //   this.memberForm.patchValue({
@@ -825,9 +826,12 @@ export class LaseringSearchComponent implements OnInit {
           //debugger;
           this.openCustomModal(false, null);
           this.searchLasering(this.memberSearchForm);
-          this.memberForm.reset();
 
           this.memberForm.patchValue(updateMemberObj);
+          this.memberForm.patchValue({
+            exclusion: updateMemberObj.exclusion=='N'?false:true
+          });          
+          this.memberForm.reset();
           this.alertService.success('Member updated', {
             keepAfterRouteChange: true
           });

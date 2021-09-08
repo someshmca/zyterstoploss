@@ -502,7 +502,7 @@ export class ProductComponent implements OnInit {
     this.y2sslIncurredEndErr.dateErrMsg='';
     this.y2sslPaidEndErr.isDateErr=false;
     this.y2sslPaidEndErr.dateErrMsg='';
-    this.sslExInStartEndDateErr.isDateErr=false;
+    this.y2sslExInStartEndDateErr.isDateErr=false;
     this.y2sslExInStartEndDateErr.dateErrMsg='';
     this.y2sslExInStartDateErr.isDateErr=false;
     this.y2sslExInStartDateErr.dateErrMsg='';
@@ -690,6 +690,53 @@ if(this.productForm.valid && this.f.sslDeductible.value==''){
   this.sslDeductibleErr.errMsg="Year 1 SSL Deductible is not valid";
   return;
 }
+// Year 1 Exclusions validations sep-08-2021 start 
+if((this.f.sslExclusionIncurredStartDate.value==null || this.f.sslExclusionIncurredStartDate.value=='') && this.f.sslExclusionIncurredEndDate.value!='' && this.f.sslExclusionIncurredEndDate.value!=null){
+  this.sslExInStartEndDateErr.isDateErr = true;
+  this.sslExInStartEndDateErr.dateErrMsg = 'Year 1 SSL_Exclusion Incurred Start date should not be empty or Invalid';
+  return;
+}
+if((this.f.sslExclusionIncurredEndDate.value==null ||this.f.sslExclusionIncurredEndDate.value=='') && this.f.sslExclusionIncurredStartDate.value!='' && this.f.sslExclusionIncurredStartDate.value!=null){
+  this.sslExInStartEndDateErr.isDateErr = true;
+  this.sslExInStartEndDateErr.dateErrMsg  = 'Year 1 SSL_Exclusion Incurred End date should not be empty or Invalid';
+return;
+}
+if((this.f.sslExclusionPaidStartDate.value==null || this.f.sslExclusionPaidStartDate.value=='') && this.f.sslExclusionPaidEndDate.value!='' && this.f.sslExclusionPaidEndDate.value!=null){
+this.sslExPaidStartEndDateErr.isDateErr = true;
+this.sslExPaidStartEndDateErr.dateErrMsg = 'Year 1 SSL_Exclusion Paid Start date should not be empty or Invalid';
+return;
+}
+if((this.f.sslExclusionPaidEndDate.value==null ||this.f.sslExclusionPaidEndDate.value=='') && this.f.sslExclusionPaidStartDate.value!='' && this.f.sslExclusionPaidStartDate.value!=null){
+this.sslExPaidStartEndDateErr.isDateErr = true;
+this.sslExPaidStartEndDateErr.dateErrMsg  = 'Year 1 SSL_Exclusion Paid End date should not be empty or Invalid';
+return;
+}
+// Year 1 Exclusions validations sep-08-2021 end
+
+// Year 2 Exclusions validations sep-08-2021 Start
+
+if((this.f.y2sslExclusionIncurredStartDate.value==null || this.f.y2sslExclusionIncurredStartDate.value=='') && this.f.y2sslExclusionIncurredEndDate.value!='' && this.f.y2sslExclusionIncurredEndDate.value!=null){
+  this.y2sslExInStartEndDateErr.isDateErr = true;
+  this.y2sslExInStartEndDateErr.dateErrMsg = 'Year 2 SSL_Exclusion Incurred Start date should not be empty or Invalid';
+  return;
+}
+if((this.f.y2sslExclusionIncurredEndDate.value==null ||this.f.y2sslExclusionIncurredEndDate.value=='') && this.f.y2sslExclusionIncurredStartDate.value!='' && this.f.y2sslExclusionIncurredStartDate.value!=null){
+  this.y2sslExInStartEndDateErr.isDateErr = true;
+  this.y2sslExInStartEndDateErr.dateErrMsg  = 'Year 2 SSL_Exclusion Incurred End date should not be empty or Invalid';
+return;
+}
+if((this.f.y2sslExclusionPaidStartDate.value==null || this.f.y2sslExclusionPaidStartDate.value=='') && this.f.y2sslExclusionPaidEndDate.value!='' && this.f.y2sslExclusionPaidEndDate.value!=null){
+this.y2sslExPaidStartEndDateErr.isDateErr = true;
+this.y2sslExPaidStartEndDateErr.dateErrMsg = 'Year 2 SSL_Exclusion Paid Start date should not be empty or Invalid';
+return;
+}
+if((this.f.y2sslExclusionPaidEndDate.value==null ||this.f.y2sslExclusionPaidEndDate.value=='') && this.f.y2sslExclusionPaidStartDate.value!='' && this.f.y2sslExclusionPaidStartDate.value!=null){
+this.y2sslExPaidStartEndDateErr.isDateErr = true;
+this.y2sslExPaidStartEndDateErr.dateErrMsg  = 'Year 2 SSL_Exclusion Paid End date should not be empty or Invalid';
+return;
+}
+// Year 2 Exclusions validations sep-08-2021 End
+
 console.log(this.f.sslTermCoverageExtEndDate.value );
 console.log(this.f.sslTermCoverageExtEndDate.valid);
 
