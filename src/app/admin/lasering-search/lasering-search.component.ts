@@ -817,6 +817,9 @@ export class LaseringSearchComponent implements OnInit {
       createdOn: null,
       updatedOn: null,
       exclusion: this.f.exclusion.value == true ? 'Y' : 'N',
+      contractId: this.f.contractId.value,
+      memberStartDate: this.datePipe.transform(this.f.memberStartDate.value, 'yyyy-MM-dd'),
+      memberEndDate: this.datePipe.transform(this.f.memberEndDate.value, 'yyyy-MM-dd')
     }
     //debugger;
     this.memberService.updateMember(updateMemberObj)

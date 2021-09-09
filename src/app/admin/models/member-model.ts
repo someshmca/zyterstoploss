@@ -61,4 +61,7 @@ export interface IMemberUpdate{
   createdOn:Date;
   updatedOn:Date;
   exclusion: string;
+  contractId: number;
+  memberStartDate: string;
+  memberEndDate: string;
 }

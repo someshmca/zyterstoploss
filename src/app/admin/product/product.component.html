@@ -171,7 +171,8 @@
 
             </h1>
             <fieldset class="product-fieldset">
-              <legend>{{contractPeriodLabel}}</legend>
+              <!-- <legend>{{contractPeriodLabel}}</legend> -->
+              <legend>Contract Period 1</legend>
           <div class="ssl-section">
               <div class="row">
                 <div class="col-md-4">
@@ -376,10 +377,10 @@
               </label>
             </h2> -->
             
-            <fieldset class="product-fieldset">
+            <fieldset class="product-fieldset" *ngIf="isContractPeriod2Visible">
               <legend>
                   <input type="checkbox" class="success" id="y2" formControlName="isContractPeriod" (change)="checkYear2Selected()"> 
-                  <label for="y2">Year 2 </label>
+                  <label for="y2">Contract Period 2 </label>
                   <input type="text" formControlName="contractPeriod" style="visibility:hidden">
                 </legend>
           <div class="ssl-section">

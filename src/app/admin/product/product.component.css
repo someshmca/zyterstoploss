@@ -77,6 +77,11 @@
     .product-fieldset legend input[type='text']{
         width: 0;
     }
+    .product-fieldset legend label{
+        color: #002c77;
+        margin-left: 0;
+        font-size: 1.1rem;
+    }
     .modal.product-modal .modal-body{
         padding: 0;
         margin: 0;

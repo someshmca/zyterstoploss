@@ -103,6 +103,8 @@ export class ProductComponent implements OnInit {
   isAddContractPeriod: boolean = false;
   year2checked: boolean=true;
   contractPeriodLabel:string='';
+  isContractPeriod2Visible: boolean = true;
+  resLength: number = 0;
   // contractAddStatus: boolean;
   // contractUpdateStatus: boolean;
   // productAddStatus: boolean;
@@ -485,6 +487,7 @@ export class ProductComponent implements OnInit {
     this.duplicateContractErr.message='';
     this.contractPeroidErr={flag:false, message:''};
     this.isAddContractPeriod=false;
+    this.resLength = 0;
     this.year1Added=false;
     if(this.isAddMode)
         this.productForm.patchValue({isMaxLiability:false});
@@ -849,6 +852,7 @@ if(this.f.sslExclusionIncurredStartDate.value !=null && this.f.sslExclusionIncur
 openViewModal(bool, id:any){
   this.isViewModal = true;
   this.openCustomModal(bool, id);
+
 }
   openCustomModal(open: boolean, id:any) { 
     setTimeout(()=>{
@@ -862,11 +866,12 @@ openViewModal(bool, id:any){
     if(open && id==null){
       this.initProductForm();
       this.isAddMode = true;    
+      this.productForm.enable();
       this.productForm.patchValue({isContractPeriod:false}); 
       this.productForm.patchValue({isMaxLiability: false });  
       this.checkMaxLiability();   
       this.checkYear2Selected();
-      this.contractPeriodLabel = 'Year 1';
+      this.contractPeriodLabel = 'Contract Period 1';
       
       this.isEditSelected = false;
       
@@ -878,6 +883,7 @@ openViewModal(bool, id:any){
     this.isCustomModalOpen = open;
     if (!open && id==null) {
       this.getAllProducts();
+      this.productForm.enable();
       this.productForm.reset();
       this.clearErrorMessages();
       this.isAddMode = false;
@@ -886,6 +892,7 @@ openViewModal(bool, id:any){
       this.isAdded=false;
       this.isViewModal=false;      
       this.contractPeriodLabel = '';
+      this.isContractPeriod2Visible = true;
       this.productForm.patchValue({isContractPeriod:false}); 
       this.productForm.patchValue({isMaxLiability: false }); 
       this.checkMaxLiability();   
@@ -904,8 +911,7 @@ openViewModal(bool, id:any){
       this.isEditSelected = true;
       this.isFilterOn=false;
       this.uContractId=id;
-      
-     // this.uContractPeriod='Year 1';
+      this.isContractPeriod2Visible =true;  
       
       this.getProductByContractPeriod(this.uContractId);
       
@@ -914,6 +920,7 @@ openViewModal(bool, id:any){
       this.getAllProducts();
 
       if(this.isAddMode){
+        
         this.productForm.enable();
       }
       if(!this.isAddMode){
@@ -923,6 +930,7 @@ openViewModal(bool, id:any){
       }
       if(this.isViewModal){
         this.productForm.disable();
+        
       }
     }
   }
@@ -939,14 +947,18 @@ openViewModal(bool, id:any){
               this.uProductIdYear2=0;
               this.productForm.patchValue({isContractPeriod:false});      
               this.checkYear2Selected();
+              this.resLength=1;
+              
             }
             if(res.length>1){
               this.productForm.patchValue({isContractPeriod: true})
               
               this.fetchYear2SSL(res[1]);
               
-              
             }
+            if(this.resLength==1 && this.isViewModal) this.isContractPeriod2Visible=false;
+            else this.isContractPeriod2Visible =true;  
+            
             
           });
         }
@@ -1374,6 +1386,7 @@ callYear2Obj(){
 }
 
 fetchProduct(x){
+  
   this.contractPeriodLabel = x.contractPeriod;
   if(x.contractPeriod == "Year 1" || x.contractPeriod=="Year 2"){
     

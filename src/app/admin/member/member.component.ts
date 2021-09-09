@@ -816,7 +816,10 @@ export class MemberComponent implements OnInit {
       updatedBy: this.loginService.currentUserValue.name,
       createdOn: null,
       updatedOn: null,
-      exclusion: this.f.exclusion.value == true ? 'Y' : 'N'
+      exclusion: this.f.exclusion.value == true ? 'Y' : 'N',
+      contractId: this.f.contractId.value,
+      memberStartDate: this.datePipe.transform(this.f.memberStartDate.value, 'yyyy-MM-dd'),
+      memberEndDate: this.datePipe.transform(this.f.memberEndDate.value, 'yyyy-MM-dd')
     }
     
     this.memberService.updateMember(updateMemberObj)

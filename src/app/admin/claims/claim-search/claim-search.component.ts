@@ -325,9 +325,9 @@ updateClaim(claimId:string,  exclusion:string ){
         next: () => {
           
           this.openCustomModal(false, null);
+          this.searchClaim(this.claimSearchForm);
+          //this.claimForm.reset();
           this.claimForm.patchValue({exclusion:exclusion=='N'?false:true});
-          this.claimForm.reset();
-         // this.searchClaim(this.claimSearchForm);
           
           this.alertService.success('Claim updated', {
             keepAfterRouteChange: true
