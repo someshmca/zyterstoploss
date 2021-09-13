@@ -606,6 +606,11 @@ dateValue(dateVal){
     }
   }
 }
+validateTierDates(date1:Date, date2:Date){
+  date1.getDate();
+  date2.getDate();
+  debugger;
+}
 validateTierIDs(){
   
     if(this.t.length>1){
@@ -788,6 +793,9 @@ validateTierIDs(){
             
             this.validateNumber("Tier Amount", this.t.value[i].tierAmount, i);
             this.validateNumber("Expected Claims Rate", this.t.value[i].expectedClaimsRate, i);
+            debugger;
+            this.validateTierDates(this.t.value[i].stopLossTierStartDate, this.t.value[i].stopLossTierEndDate);
+            debugger;
             if(this.isPlanFormInvalid)
               return;
           }
