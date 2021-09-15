@@ -169,8 +169,8 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
             tierAmount: [''],
             expectedClaimsRate: [''],
             isTerminalExtCoverage: [false],
-            stopLossTierStartDate: [null, [Validators.required]],
-            stopLossTierEndDate: [null, [Validators.required]],
+            stopLossTierStartDate: [null],
+            stopLossTierEndDate: [null],
         }));
     }
   addTier(){
@@ -660,7 +660,9 @@ validateTierIDs(){
             if(this.single>0 && this.single<4){
               if(this.t.value[i].stopLossTierStartDate)
               this.curSingle=i;
-              if(this.t.value[this.prevSingle].isTerminalExtCoverage == this.t.value[this.curSingle].isTerminalExtCoverage){
+              if(this.t.value[this.prevSingle].isTerminalExtCoverage == this.t.value[this.curSingle].isTerminalExtCoverage && 
+                this.t.value[this.prevSingle].stopLossTierStartDate == this.t.value[this.curSingle].stopLossTierEndDate && 
+                this.t.value[this.prevSingle].stopLossTierStartDate!=null && this.t.value[this.prevSingle].stopLossTierStartDate!=null){
                 this.tierIdExists.singleFlag=true;
                 this.tierIdExists.singleMsg="Terminal Extension Coverage should be Unique for Single Tier";
               }
@@ -683,7 +685,9 @@ validateTierIDs(){
             this.dualArr.termCovs.push(this.t.value[i].isTerminalExtCoverage);
              if(this.dual>0 && this.dual<2){
                this.curDual=i
-               if(this.t.value[this.prevDual].isTerminalExtCoverage == this.t.value[this.curDual].isTerminalExtCoverage){
+               if(this.t.value[this.prevDual].isTerminalExtCoverage == this.t.value[this.curDual].isTerminalExtCoverage && 
+                this.t.value[this.prevSingle].stopLossTierStartDate == this.t.value[this.curSingle].stopLossTierEndDate && 
+                this.t.value[this.prevSingle].stopLossTierStartDate!=null && this.t.value[this.prevSingle].stopLossTierStartDate!=null){
                  this.tierIdExists.dualMsg="Terminal Extension Coverage should be Unique for Dual Tier";
                  this.tierIdExists.dualFlag=true;
                }
@@ -704,7 +708,9 @@ validateTierIDs(){
             this.familyArr.termCovs.push(this.t.value[i].isTerminalExtCoverage);
              if(this.family>0 && this.family<2){
                this.curFamily=i;
-               if(this.t.value[this.prevFamily].isTerminalExtCoverage == this.t.value[this.curFamily].isTerminalExtCoverage){
+               if(this.t.value[this.prevFamily].isTerminalExtCoverage == this.t.value[this.curFamily].isTerminalExtCoverage && 
+                this.t.value[this.prevSingle].stopLossTierStartDate == this.t.value[this.curSingle].stopLossTierEndDate && 
+                this.t.value[this.prevSingle].stopLossTierStartDate!=null && this.t.value[this.prevSingle].stopLossTierStartDate!=null){
                  this.tierIdExists.familyMsg="Terminal Extension Coverage should be Unique for Family Tier";
                  this.tierIdExists.familyFlag=true;
                }
@@ -725,7 +731,9 @@ validateTierIDs(){
             this.othersArr.termCovs.push(this.t.value[i].isTerminalExtCoverage);
              if(this.others>0 && this.others<2){
                this.curOthers=i;
-               if(this.t.value[this.prevOthers].isTerminalExtCoverage == this.t.value[this.curOthers].isTerminalExtCoverage){
+               if(this.t.value[this.prevOthers].isTerminalExtCoverage == this.t.value[this.curOthers].isTerminalExtCoverage && 
+                this.t.value[this.prevSingle].stopLossTierStartDate == this.t.value[this.curSingle].stopLossTierEndDate && 
+                this.t.value[this.prevSingle].stopLossTierStartDate!=null && this.t.value[this.prevSingle].stopLossTierStartDate!=null){
                  this.tierIdExists.othersMsg="Terminal Extension Coverage should be Unique for Others Tier";
                  this.tierIdExists.othersFlag=true;
                }
