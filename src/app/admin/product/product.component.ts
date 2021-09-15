@@ -162,7 +162,7 @@ export class ProductComponent implements OnInit {
   checkYear2Selected(){
     console.log(this.f.contractPeriod.value);
     
-    if(this.f.isContractPeriod.value){
+    if(this.f.isMultiContractPeriod.value){
       this.productForm.patchValue({contractPeriod: 'Year 2'});
       this.f.y2sslClaimBasis.enable();  
       this.f.y2sslIncurredStartDate.enable();
@@ -210,7 +210,7 @@ export class ProductComponent implements OnInit {
       
     }
     else{
-      if(!this.f.isContractPeriod.value){
+      if(!this.f.isMultiContractPeriod.value){
         this.productForm.patchValue({contractPeriod: 'Year 1'});
         this.disableYear2SSL();
       } 
@@ -298,7 +298,7 @@ export class ProductComponent implements OnInit {
       status:false,
       userId: this.loginService.currentUserValue.name,
       lstContractClaims: [],
-      isContractPeriod:[false],
+      isMultiContractPeriod:[false],
       contractPeriod: ['Year 1']
 
     });
@@ -804,7 +804,7 @@ if(this.f.sslExclusionIncurredStartDate.value !=null && this.f.sslExclusionIncur
     }
   // exclusion code ends
   // y2 starts 
-    if(this.f.isContractPeriod.value){
+    if(this.f.isMultiContractPeriod.value){
       if( this.f.y2sslClaimBasis.value.length < 5 ) // starts here added by Venkatesh Enigonda
       {
        this.y2sslClaimBasisErr.isValid=true;
@@ -874,7 +874,7 @@ openViewModal(bool, id:any){
       this.initProductForm();
       this.isAddMode = true;    
       this.productForm.enable();
-      this.productForm.patchValue({isContractPeriod:false}); 
+     // this.productForm.patchValue({isMultiContractPeriod:false}); 
       this.productForm.patchValue({isMaxLiability: false });  
       this.checkMaxLiability();   
       this.checkYear2Selected();
@@ -901,7 +901,7 @@ openViewModal(bool, id:any){
       this.isViewModal=false;      
       this.contractPeriodLabel = '';
       this.isContractPeriod2Visible = true;
-      this.productForm.patchValue({isContractPeriod:false}); 
+    //  this.productForm.patchValue({isMultiContractPeriod:false}); 
       this.productForm.patchValue({isMaxLiability: false }); 
       this.checkMaxLiability();   
       this.checkYear2Selected();
@@ -951,12 +951,14 @@ openViewModal(bool, id:any){
             
             console.log(res.length);
             this.fetchProduct(res[0]);   
+            
             // new code for checking length of products for one contract 
             let y2count=0;
             for(let i=0; i<res.length;i++){
               if(res[i].contractPeriod=='Year 2'){
                 y2count++;
-                this.productForm.patchValue({isContractPeriod: true})
+                this.productForm.patchValue({isMultiContractPeriod: res[i].isMultiContractPeriod});
+               // this.productForm.patchValue({isMultiContractPeriod: true})
                 
                 this.fetchYear2SSL(res[i]);
 
@@ -966,22 +968,26 @@ openViewModal(bool, id:any){
             }
             if(y2count == 0){
               this.uProductIdYear2=0;
-              this.productForm.patchValue({isContractPeriod:false}); 
+              this.productForm.patchValue({isMultiContractPeriod:false}); 
               
             }
             // new code ends
             res[0].contractPeriod         
             if(res.length == 1){
               this.uProductIdYear2=0;
-              this.productForm.patchValue({isContractPeriod:false}); 
+              this.productForm.patchValue({isMultiContractPeriod:false}); 
                    
               this.checkYear2Selected();
               this.resLength=1;
               
             }
             if(res.length>1 && res.length<3){
-              this.productForm.patchValue({isContractPeriod: true})
-              
+            //  this.productForm.patchValue({isMultiContractPeriod: true})
+              if(res[1].isMultiContractPeriod == 'N')
+              {
+                this.checkYear2Selected();
+                console.log('DISABLED')
+              }
               this.fetchYear2SSL(res[1]);
               
             }
@@ -1327,7 +1333,8 @@ callYear1Obj(){
     sslContractEndDate: this.dateValue(this.f.sslContractEndDate.value),
     userId: this.loginService.currentUserValue.name, 
     lstContractClaims: this.listContractClaims,    
-    contractPeriod: 'Year 1'
+    contractPeriod: 'Year 1',
+    isMultiContractPeriod:  this.f.isMultiContractPeriod.value == true ? 'Y' : 'N'
   }
   if(!this.isAddMode){
     this.year1Obj.productId = this.uProductId;
@@ -1410,7 +1417,8 @@ callYear2Obj(){
     defferedFeePercentage: this.year1Obj.defferedFeePercentage,
     userId: this.year1Obj.userId,
     contractPeriod: 'Year 2',
-    lstContractClaims: this.listContractClaimsYear2
+    lstContractClaims: this.listContractClaimsYear2,
+    isMultiContractPeriod:  this.year1Obj.isMultiContractPeriod
   }
   if(!this.isAddMode){
     this.year2Obj.productId=this.uProductIdYear2;
@@ -1569,7 +1577,8 @@ fetchYear2SSL(x){
         y2sslExclusionIncurredEndDate:this.dateValueString(x.sslExclusionIncurredEndDate),
         y2sslExclusionPaidStartDate:this.dateValueString(x.sslExclusionPaidStartDate),
         y2sslExclusionPaidEndDate:this.dateValueString(x.sslExclusionPaidEndDate),
-        y2sslCoveredClaims: sslCc
+        y2sslCoveredClaims: sslCc,
+        isMultiContractPeriod: x.isMultiContractPeriod=='Y'?true:false
     });
     console.log(this.productForm.value);  
     
@@ -1622,13 +1631,13 @@ private addProduct() {
   console.log(this.addObj.length);
   
  this.callYear1Obj();
-  if(this.f.isContractPeriod.value){
+  if(this.f.isMultiContractPeriod.value){
     this.callYear2Obj();
     
   }
   console.log()
   this.addObj.push(this.year1Obj);
-  if(this.f.isContractPeriod.value) this.addObj.push(this.year2Obj);
+  if(this.f.isMultiContractPeriod.value) this.addObj.push(this.year2Obj);
   console.log(this.addObj.length);
   
   this.productService.addProduct(this.addObj).pipe(first()).subscribe({ 
@@ -1658,14 +1667,15 @@ private addProduct() {
     console.log(this.updateObj.length);
     
     this.callYear1Obj();
-    if(this.f.isContractPeriod.value){
+    //if(this.f.isMultiContractPeriod.value){
       this.callYear2Obj();
       
       
-    }
+ //   }
     console.log()
     this.updateObj.push(this.year1Obj);
-    if(this.f.isContractPeriod.value) this.updateObj.push(this.year2Obj);
+   // if(this.f.isMultiContractPeriod.value) 
+   this.updateObj.push(this.year2Obj);
     console.log(this.updateObj.length);
     
     

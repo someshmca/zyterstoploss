@@ -352,7 +352,7 @@
                   </select>  -->    
                   
                     <div>
-                      <mat-form-field>
+                      <mat-form-field id="line">
                         <mat-select class="form-control" formControlName="sslCoveredClaims"  multiple [ngClass]="{ 'is-invalid': submitted && f.sslCoveredClaims.errors }">
                           <mat-option *ngFor="let coveredClaim of coveredClaims" [value]="coveredClaim.claimTypeCode">{{coveredClaim.claimType}}</mat-option>
                         </mat-select>
@@ -379,7 +379,7 @@
             
             <fieldset class="product-fieldset" *ngIf="isContractPeriod2Visible">
               <legend>
-                  <input type="checkbox" class="success" id="y2" formControlName="isContractPeriod" (change)="checkYear2Selected()"> 
+                  <input type="checkbox" class="success" id="y2" formControlName="isMultiContractPeriod" (change)="checkYear2Selected()"> 
                   <label for="y2">Contract Period 2 </label>
                   <input type="text" formControlName="contractPeriod" style="visibility:hidden">
                 </legend>
@@ -550,7 +550,7 @@
                 </select>  -->    
                 
                   <div>
-                    <mat-form-field>
+                    <mat-form-field id="line">
                       <mat-select class="form-control" formControlName="y2sslCoveredClaims"    multiple [ngClass]="{ 'is-invalid': submitted && f.y2sslCoveredClaims.errors }">
                         <mat-option *ngFor="let coveredClaim of coveredClaims" [value]="coveredClaim.claimTypeCode">{{coveredClaim.claimType}}</mat-option>
                       </mat-select>
@@ -709,7 +709,7 @@
             </option>
          </select>-->
          <div>
-            <mat-form-field>
+            <mat-form-field id="line">
             <mat-select class="form-control" formControlName="aslCoveredClaims"  multiple [ngClass]="{ 'is-invalid': submitted && f.aslCoveredClaims.errors }" [disabled]="updateStatus">
               <mat-option *ngFor="let coveredClaim of coveredClaims" [value]="coveredClaim.claimTypeCode">{{coveredClaim.claimType}}</mat-option>
             </mat-select>

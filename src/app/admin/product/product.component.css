@@ -114,3 +114,7 @@
     .mandate-fields{
         padding: 10px 15px;
     }
+
+    ::ng-deep #line .mat-form-field-underline {
+        display:none;      
+      }

@@ -112,6 +112,7 @@
                <div *ngIf="tierIdRequiredErr.flag">{{this.tierIdRequiredErr.msg}}</div>
                <div *ngIf="slTierSDateErr.isDateErr">{{slTierSDateErr.dateErrMsg}}</div>
                <div *ngIf="slTierEDateErr.isDateErr">{{slTierEDateErr.dateErrMsg}}</div>
+               <div *ngIf="tierDateErr.flag">{{tierDateErr.msg}}</div>
              </div>  
              <div class="row">
                  <div class="col-md-4">
@@ -170,8 +171,8 @@
                                   <th>StopLoss Tier</th>
                                   <th>StopLoss Tier Factor</th>
                                   <th>Expected Claim Rate</th>
-                                  <th>StopLoss Tier Start Date</th>
-                                  <th>StopLoss Tier End Date</th>
+                                  <th>StopLoss Tier Start Date<small class="starmark">*</small></th>
+                                  <th>StopLoss Tier End Date<small class="starmark">*</small></th>
                                   <th>Terminal Extension Coverage</th>
                                 </tr>
                             </thead>
@@ -193,10 +194,10 @@
                                   <input type="number" formControlName="expectedClaimsRate" class="form-control" [ngClass]="{ 'is-invalid': isExpectedClaimsRateInvalid}" />
                                 </td>
                                 <td>
-                                  <input type="date" formControlName="stopLossTierStartDate" class="form-control" [ngClass]="{'is-invalid':slTierSDateErr.isDateErr || slTierEDateErr.isDateErr }"  />
+                                  <input type="date" formControlName="stopLossTierStartDate" class="form-control" [ngClass]="{ 'is-invalid': t.stopLossTierStartDate.errors}" />
                                 </td>
                                 <td>
-                                  <input type="date" formControlName="stopLossTierEndDate" class="form-control" [ngClass]="{'is-invalid':slTierEDateErr.isDateErr }" />
+                                  <input type="date" formControlName="stopLossTierEndDate" class="form-control"  [ngClass]="{ 'is-invalid': t.stopLossTierEndDate.errors}"/>
                                 </td>
                                 <td>
                                   <div class="form-group switch-group">
