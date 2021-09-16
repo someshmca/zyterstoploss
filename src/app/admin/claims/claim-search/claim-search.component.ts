@@ -562,7 +562,7 @@ onSubmit() {
   searchClaim(form: FormGroup) {
    this.names.length=0;  //(VE 11/8/2021 ) 
     //console.log(this.f.minPaidAmount.value);
-    this.isClaimResult=false;
+    //this.isClaimResult=false;
     console.log(this.dateErr.fromDateErr);
     this.clearErrorMessages();
     this.isClaimSearchFormInvalid=false;
@@ -703,6 +703,7 @@ onSubmit() {
       },
       (error) => {
         this.claimSearchNotFound = true;
+        this.isClaimResult=false;
        // this._claimService.setIsClaimResult(false);
 
       }

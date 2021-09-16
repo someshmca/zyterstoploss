@@ -61,7 +61,11 @@
 }
 .tier-table-wrap tr th:nth-child(1)
 {
-    width: 95px;
+    width: 110px;
+}
+.tier-table-wrap tr th:nth-child(2)
+{
+    width: 140px;
 }
 /*::ng-deep .mat-form-field-underline {
     display: none;

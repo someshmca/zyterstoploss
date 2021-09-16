@@ -638,116 +638,124 @@ dateValue(dateVal){
 validateTierIDs(){
   let singleCount=0;
   let singleTerminals
-    if(this.t.length>1){
-      for(let i=0; i<this.t.length;i++){    
+  
+  this.t.patchValue(this.t.value);
+  
+  for(let i=0; i<this.t.length;i++){ 
+    console.log(this.t.value[i].tierId);
+    console.log(this.t.value[i].tierAmount);    
+if(i>0){
+  if((this.t.value[i].tierId=='' || this.t.value[i].tierId==null) && 
+    (this.t.value[i].tierAmount=='' || this.t.value[i].tierAmount==null) && 
+    (this.t.value[i].expectedClaimsRate=='' || this.t.value[i].expectedClaimsRate==null) && 
+    (this.t.value[i].stopLossTierStartDate=='' || this.t.value[i].stopLossTierStartDate==null) && 
+    (this.t.value[i].stopLossTierEndDate=='' || this.t.value[i].stopLossTierEndDate==null) && 
+    (this.t.value[i].isTerminalExtCoverage==false || this.t.value[i].isTerminalExtCoverage==null)){
+      
+      this.t.removeAt(i);
+      console.log(this.t.length);
+      
+    }
+
+}
+    
+      if(this.t.value[i].tierId=='' || this.t.value[i].tierId==null){
+        this.tierDateErr.flag=true;
+        this.tierDateErr.msg="Tier ID is required for the row number "+(i+1);
+        return;
+      }
+      else if(this.t.value[i].tierAmount=='' || this.t.value[i].tierAmount==null){
+        this.tierDateErr.flag=true;
+        this.tierDateErr.msg="Tier Amount is required for the row number "+(i+1);
+        return;
+      }
+      else if(this.t.value[i].stopLossTierStartDate==null || this.t.value[i].stopLossTierStartDate=='' ){
+        this.tierDateErr.flag=true;
+        this.tierDateErr.msg="Tier Start Date is required for the row number "+(i+1);
+        return;
+      }
+      else if(this.t.value[i].stopLossTierEndDate==null || this.t.value[i].stopLossTierEndDate==''){
+        this.tierDateErr.flag=true;
+        this.tierDateErr.msg="Tier End Date is required for the row number "+(i+1);
+        return;
+      }
+      else if(this.t.value[i].stopLossTierStartDate!=null && this.t.value[i].stopLossTierEndDate!=null){
         if(this.t.value[i].stopLossTierStartDate > this.t.value[i].stopLossTierEndDate ){
           this.tierDateErr.flag=true;
-          this.tierDateErr.msg="Tier Start Date should not be greater than Tier End Date for row "+(i+1);
+          this.tierDateErr.msg="Tier Start Date should not be greater than Tier End Date for row ";
+          return;
         }
         else if(this.t.value[i].stopLossTierStartDate == this.t.value[i].stopLossTierEndDate ){
           this.tierDateErr.flag=true;
-          this.tierDateErr.msg="Tier Start Date should not be equal to Tier End Date for row "+(i+1);
+          this.tierDateErr.msg="Tier Start Date should not be equal to Tier End Date for row ";
+          return;
         }
-
-        this.t.value[i].tierId=Number(this.t.value[i].tierId);
+      }
+      
+    
+  }
+    if(this.t.length>1){
+      for(let i=0; i<this.t.length;i++){ 
+        
+          if(this.t.value[i].stopLossTierStartDate!=null && this.t.value[i].stopLossTierEndDate!=null){
+            this.t.value[i].tierId=Number(this.t.value[i].tierId);
 
         if(this.t.value[i].tierId==1){
-           if(this.single==0) this.prevSingle=i;
-          console.log(this.t.value[i].stopLossTierStartDate);
         this.singleArr.startDates.push(this.t.value[i].stopLossTierStartDate);
-        console.log(this.t.value[i].isTerminalExtCoverage);
         this.singleArr.termCovs.push(this.t.value[i].isTerminalExtCoverage);
-            if(this.single>0 && this.single<4){
-              if(this.t.value[i].stopLossTierStartDate)
-              this.curSingle=i;
-              if(this.t.value[this.prevSingle].isTerminalExtCoverage == this.t.value[this.curSingle].isTerminalExtCoverage && 
-                this.t.value[this.prevSingle].stopLossTierStartDate == this.t.value[this.curSingle].stopLossTierEndDate && 
-                this.t.value[this.prevSingle].stopLossTierStartDate!=null && this.t.value[this.prevSingle].stopLossTierStartDate!=null){
-                this.tierIdExists.singleFlag=true;
-                this.tierIdExists.singleMsg="Terminal Extension Coverage should be Unique for Single Tier";
-              }
-              else{
-                this.tierIdExists.singleMsg='';
-                this.tierIdExists.singleFlag=false;
-              }   
-            }
+           
             if(this.single>3){
               this.tierIdExists.singleMsg="Single Tier cannot be repeated morethan four times";
               this.tierIdExists.singleFlag=true;
+              return;
             }
             this.single++;      
             console.log("Single count : "+this.single); 
           }
           else if(this.t.value[i].tierId==2){
-            
-            if(this.dual==0) this.prevDual=i;
             this.dualArr.startDates.push(this.t.value[i].stopLossTierStartDate);
             this.dualArr.termCovs.push(this.t.value[i].isTerminalExtCoverage);
-             if(this.dual>0 && this.dual<2){
-               this.curDual=i
-               if(this.t.value[this.prevDual].isTerminalExtCoverage == this.t.value[this.curDual].isTerminalExtCoverage && 
-                this.t.value[this.prevSingle].stopLossTierStartDate == this.t.value[this.curSingle].stopLossTierEndDate && 
-                this.t.value[this.prevSingle].stopLossTierStartDate!=null && this.t.value[this.prevSingle].stopLossTierStartDate!=null){
-                 this.tierIdExists.dualMsg="Terminal Extension Coverage should be Unique for Dual Tier";
-                 this.tierIdExists.dualFlag=true;
-               }
-               else{
-                 this.tierIdExists.dualMsg='';
-                 this.tierIdExists.dualFlag=false;
-               }   
-             }
+           
              if(this.dual>3){
                this.tierIdExists.dualMsg="Dual Tier cannot be repeated morethan four times";
                this.tierIdExists.dualFlag=true;
+               return;
              }
              this.dual++;    
           }
           else if(this.t.value[i].tierId==3){
-            if(this.family==0) this.prevFamily=i;
             this.familyArr.startDates.push(this.t.value[i].stopLossTierStartDate);
             this.familyArr.termCovs.push(this.t.value[i].isTerminalExtCoverage);
-             if(this.family>0 && this.family<2){
-               this.curFamily=i;
-               if(this.t.value[this.prevFamily].isTerminalExtCoverage == this.t.value[this.curFamily].isTerminalExtCoverage && 
-                this.t.value[this.prevSingle].stopLossTierStartDate == this.t.value[this.curSingle].stopLossTierEndDate && 
-                this.t.value[this.prevSingle].stopLossTierStartDate!=null && this.t.value[this.prevSingle].stopLossTierStartDate!=null){
-                 this.tierIdExists.familyMsg="Terminal Extension Coverage should be Unique for Family Tier";
-                 this.tierIdExists.familyFlag=true;
-               }
-               else{
-                 this.tierIdExists.familyMsg='';
-                 this.tierIdExists.familyFlag=false;
-               }   
-             }
+           
              if(this.family>3){
-               this.tierIdExists.familyMsg="Family Tier cannot be repeated morethan two times";
+               this.tierIdExists.familyMsg="Family Tier cannot be repeated morethan four times";
                this.tierIdExists.familyFlag=true;
+               return;
              }
              this.family++;    
           }
           else if(this.t.value[i].tierId==4){
-            if(this.others==0) this.prevOthers=i;
-            this.othersArr.startDates.push(this.t.value[i].stopLossTierStartDate);
-            this.othersArr.termCovs.push(this.t.value[i].isTerminalExtCoverage);
-             if(this.others>0 && this.others<2){
-               this.curOthers=i;
-               if(this.t.value[this.prevOthers].isTerminalExtCoverage == this.t.value[this.curOthers].isTerminalExtCoverage && 
-                this.t.value[this.prevSingle].stopLossTierStartDate == this.t.value[this.curSingle].stopLossTierEndDate && 
-                this.t.value[this.prevSingle].stopLossTierStartDate!=null && this.t.value[this.prevSingle].stopLossTierStartDate!=null){
-                 this.tierIdExists.othersMsg="Terminal Extension Coverage should be Unique for Others Tier";
-                 this.tierIdExists.othersFlag=true;
-               }
-               else{
-                 this.tierIdExists.othersMsg='';
-                 this.tierIdExists.othersFlag=false;
-               }   
-             }
+              this.othersArr.startDates.push(this.t.value[i].stopLossTierStartDate);
+              this.othersArr.termCovs.push(this.t.value[i].isTerminalExtCoverage);
+            
              if(this.others>3){
-               this.tierIdExists.othersMsg="Others Tier cannot be repeated morethan two times";
+               this.tierIdExists.othersMsg="Others Tier cannot be repeated morethan four times";
                this.tierIdExists.othersFlag=true;
+               return;
              }
              this.others++;    
           }
+            // sep 16th code end
+
+          }
+          else if(this.t.value[i].stopLossTierStartDate==null || this.t.value[i].stopLossTierStartDate==''){
+            this.tierDateErr.flag=true;
+            this.tierDateErr.msg="Tier Start Date is invalid for the row number "+(i+1);
+          }
+          else if(this.t.value[i].stopLossTierEndDate==null || this.t.value[i].stopLossTierEndDate==''){
+            this.tierDateErr.flag=true;
+            this.tierDateErr.msg="Tier End Date is invalid for the row number "+(i+1);
+          }        
         }
         console.log("Single count : "+this.single);
         console.log("Dual count : "+this.dual);
@@ -762,245 +770,307 @@ validateTierIDs(){
     this.validateDualArr();
     this.validateFamilyArr();
     this.validateOthersArr();
-    if(this.single>3){
-
-        let singleStart =0;
-        for(let i=0; i<this.single; i++){
-
-        }
-    }
+  
   }
 
-  validateSingleArr(){
-    if(this.singleArr.startDates.length==3 && 
+  validateSingleArr(){    
+    if(this.singleArr.startDates.length==2 && 
+      this.singleArr.startDates[0] == this.singleArr.startDates[1] && this.singleArr.termCovs[0]==this.singleArr.termCovs[1]){
+        this.tierIdExists.singleMsg="Two Single Tiers with same Start Dates should not have same Terminal Coverage ";
+        this.tierIdExists.singleFlag=true;     
+        return;       
+      }
+    else if(this.singleArr.startDates.length==3 && 
       this.singleArr.startDates[0] == this.singleArr.startDates[1] && 
       this.singleArr.startDates[0] == this.singleArr.startDates[2] ){
         this.tierIdExists.singleMsg="Single Tier Start Date cannot be same for 3 times";
-        this.tierIdExists.singleFlag=true;            
+        this.tierIdExists.singleFlag=true;   
+        return;          
       }
     else if(this.singleArr.startDates.length==3 && 
       this.singleArr.startDates[1] == this.singleArr.startDates[0] && 
       this.singleArr.startDates[1] == this.singleArr.startDates[2] ){
         this.tierIdExists.singleMsg="Single Tier Start Date cannot be same for 3 times";
-        this.tierIdExists.singleFlag=true;            
+        this.tierIdExists.singleFlag=true;     
+        return;        
       }
     else if(this.singleArr.startDates.length==3 && 
       this.singleArr.startDates[0] == this.singleArr.startDates[1] && 
       this.singleArr.startDates[1] != this.singleArr.startDates[2] && this.singleArr.termCovs[0]==this.singleArr.termCovs[1]){
         this.tierIdExists.singleMsg="Two Single Tiers with same Start Dates should not have same Terminal Coverage ";
-        this.tierIdExists.singleFlag=true;            
+        this.tierIdExists.singleFlag=true;       
+        return;      
       }
     else if(this.singleArr.startDates.length==3 && 
       this.singleArr.startDates[0] != this.singleArr.startDates[1] && 
       this.singleArr.startDates[1] == this.singleArr.startDates[2] && this.singleArr.termCovs[1]==this.singleArr.termCovs[2]){
         this.tierIdExists.singleMsg="Two Single Tiers with same Start Dates should not have same Terminal Coverage ";
-        this.tierIdExists.singleFlag=true;            
+        this.tierIdExists.singleFlag=true;       
+        return;      
       }
     else if(this.singleArr.startDates.length==4 && 
       this.singleArr.startDates[0] == this.singleArr.startDates[1] && 
       this.singleArr.startDates[0] == this.singleArr.startDates[2] && 
       this.singleArr.startDates[0] == this.singleArr.startDates[3]){
         this.tierIdExists.singleMsg="Single Tier Start Date cannot be same for 3 times";
-        this.tierIdExists.singleFlag=true;            
+        this.tierIdExists.singleFlag=true;             
+        return;
       }
     else if(this.singleArr.startDates.length==4 && 
       this.singleArr.startDates[1] == this.singleArr.startDates[0] && 
       this.singleArr.startDates[1] == this.singleArr.startDates[2] && 
       this.singleArr.startDates[1] == this.singleArr.startDates[3]){
         this.tierIdExists.singleMsg="Single Tier Start Date cannot be same for 3 times";
-        this.tierIdExists.singleFlag=true;            
+        this.tierIdExists.singleFlag=true;        
+        return;     
       }
     else if(this.singleArr.startDates.length==4 && 
       this.singleArr.startDates[2] == this.singleArr.startDates[0] && 
       this.singleArr.startDates[2] == this.singleArr.startDates[1] && 
       this.singleArr.startDates[2] == this.singleArr.startDates[3]){
         this.tierIdExists.singleMsg="Single Tier Start Date cannot be same for 3 times";
-        this.tierIdExists.singleFlag=true;            
+        this.tierIdExists.singleFlag=true;           
+        return;  
       }
     else if(this.singleArr.startDates.length==4 && 
       this.singleArr.startDates[3] == this.singleArr.startDates[0] && 
       this.singleArr.startDates[3] == this.singleArr.startDates[1] && 
       this.singleArr.startDates[3] == this.singleArr.startDates[2]){
         this.tierIdExists.singleMsg="Single Tier Start Date cannot be same for 3 times";
-        this.tierIdExists.singleFlag=true;            
+        this.tierIdExists.singleFlag=true;    
+        return;         
       }
     else if(this.singleArr.startDates.length==4 && 
       this.singleArr.startDates[0] == this.singleArr.startDates[1] && 
       this.singleArr.startDates[1] != this.singleArr.startDates[2] &&  
       this.singleArr.startDates[2] != this.singleArr.startDates[3] && this.singleArr.termCovs[0]==this.singleArr.termCovs[1]){
         this.tierIdExists.singleMsg="Two Single Tiers with same Start Dates should not have same Terminal Coverage ";
-        this.tierIdExists.singleFlag=true;            
+        this.tierIdExists.singleFlag=true;       
+        return;      
       }
     else if(this.singleArr.startDates.length==4 && 
       this.singleArr.startDates[0] != this.singleArr.startDates[1] && 
       this.singleArr.startDates[1] == this.singleArr.startDates[2] &&  
       this.singleArr.startDates[2] != this.singleArr.startDates[3] && this.singleArr.termCovs[1]==this.singleArr.termCovs[2]){
         this.tierIdExists.singleMsg="Two Single Tiers with same Start Dates should not have same Terminal Coverage ";
-        this.tierIdExists.singleFlag=true;            
+        this.tierIdExists.singleFlag=true;    
+        return;         
       }
     else if(this.singleArr.startDates.length==4 && 
       this.singleArr.startDates[0] != this.singleArr.startDates[1] && 
       this.singleArr.startDates[1] != this.singleArr.startDates[2] &&  
       this.singleArr.startDates[2] == this.singleArr.startDates[3] && this.singleArr.termCovs[2]==this.singleArr.termCovs[3]){
         this.tierIdExists.singleMsg="Two Single Tiers with same Start Dates should not have same Terminal Coverage ";
-        this.tierIdExists.singleFlag=true;            
+        this.tierIdExists.singleFlag=true;          
+        return;   
       }    
+    else{
+      this.tierIdExists.singleMsg='';
+      this.tierIdExists.singleFlag=false;                  
+    }
   }
 
-  validateDualArr(){
-    if(this.dualArr.startDates.length==3 && 
+  validateDualArr(){ 
+    if(this.dualArr.startDates.length==2 && 
+      this.dualArr.startDates[0] == this.dualArr.startDates[1] && this.dualArr.termCovs[0]==this.dualArr.termCovs[1]){
+        this.tierIdExists.dualMsg="Two Dual Tiers with same Start Dates should not have same Terminal Coverage ";
+        this.tierIdExists.dualFlag=true;      
+        return;       
+      }
+   else if(this.dualArr.startDates.length==3 && 
       this.dualArr.startDates[0] == this.dualArr.startDates[1] && 
       this.dualArr.startDates[0] == this.dualArr.startDates[2] ){
         this.tierIdExists.dualMsg="Dual Tier Start Date cannot be same for 3 times";
-        this.tierIdExists.dualFlag=true;            
+        this.tierIdExists.dualFlag=true;         
+        return;    
       }
     else if(this.dualArr.startDates.length==3 && 
       this.dualArr.startDates[1] == this.dualArr.startDates[0] && 
       this.dualArr.startDates[1] == this.dualArr.startDates[2] ){
         this.tierIdExists.dualMsg="Dual Tier Start Date cannot be same for 3 times";
-        this.tierIdExists.dualFlag=true;            
+        this.tierIdExists.dualFlag=true;         
+        return;    
       }
     else if(this.dualArr.startDates.length==3 && 
       this.dualArr.startDates[0] == this.dualArr.startDates[1] && 
       this.dualArr.startDates[1] != this.dualArr.startDates[2] && this.dualArr.termCovs[0]==this.dualArr.termCovs[1]){
         this.tierIdExists.dualMsg="Two Dual Tiers with same Start Dates should not have same Terminal Coverage ";
-        this.tierIdExists.dualFlag=true;            
+        this.tierIdExists.dualFlag=true;        
+        return;     
       }
     else if(this.dualArr.startDates.length==3 && 
       this.dualArr.startDates[0] != this.dualArr.startDates[1] && 
       this.dualArr.startDates[1] == this.dualArr.startDates[2] && this.dualArr.termCovs[1]==this.dualArr.termCovs[2]){
         this.tierIdExists.dualMsg="Two Dual Tiers with same Start Dates should not have same Terminal Coverage ";
-        this.tierIdExists.dualFlag=true;            
+        this.tierIdExists.dualFlag=true;    
+        return;         
       }
     else if(this.dualArr.startDates.length==4 && 
       this.dualArr.startDates[0] == this.dualArr.startDates[1] && 
       this.dualArr.startDates[0] == this.dualArr.startDates[2] && 
       this.dualArr.startDates[0] == this.dualArr.startDates[3]){
         this.tierIdExists.dualMsg="Dual Tier Start Date cannot be same for 3 times";
-        this.tierIdExists.dualFlag=true;            
+        this.tierIdExists.dualFlag=true;          
+        return;   
       }
     else if(this.dualArr.startDates.length==4 && 
       this.dualArr.startDates[1] == this.dualArr.startDates[0] && 
       this.dualArr.startDates[1] == this.dualArr.startDates[2] && 
       this.dualArr.startDates[1] == this.dualArr.startDates[3]){
         this.tierIdExists.dualMsg="Dual Tier Start Date cannot be same for 3 times";
-        this.tierIdExists.dualFlag=true;            
+        this.tierIdExists.dualFlag=true;         
+        return;    
       }
     else if(this.dualArr.startDates.length==4 && 
       this.dualArr.startDates[2] == this.dualArr.startDates[0] && 
       this.dualArr.startDates[2] == this.dualArr.startDates[1] && 
       this.dualArr.startDates[2] == this.dualArr.startDates[3]){
         this.tierIdExists.dualMsg="Dual Tier Start Date cannot be same for 3 times";
-        this.tierIdExists.dualFlag=true;            
+        this.tierIdExists.dualFlag=true;          
+        return;   
       }
     else if(this.dualArr.startDates.length==4 && 
       this.dualArr.startDates[3] == this.dualArr.startDates[0] && 
       this.dualArr.startDates[3] == this.dualArr.startDates[1] && 
       this.dualArr.startDates[3] == this.dualArr.startDates[2]){
         this.tierIdExists.dualMsg="Dual Tier Start Date cannot be same for 3 times";
-        this.tierIdExists.dualFlag=true;            
+        this.tierIdExists.dualFlag=true;   
+        return;          
       }
     else if(this.dualArr.startDates.length==4 && 
       this.dualArr.startDates[0] == this.dualArr.startDates[1] && 
       this.dualArr.startDates[1] != this.dualArr.startDates[2] &&  
       this.dualArr.startDates[2] != this.dualArr.startDates[3] && this.dualArr.termCovs[0]==this.dualArr.termCovs[1]){
         this.tierIdExists.dualMsg="Two Dual Tiers with same Start Dates should not have same Terminal Coverage ";
-        this.tierIdExists.dualFlag=true;            
+        this.tierIdExists.dualFlag=true;      
+        return;       
       }
     else if(this.dualArr.startDates.length==4 && 
       this.dualArr.startDates[0] != this.dualArr.startDates[1] && 
       this.dualArr.startDates[1] == this.dualArr.startDates[2] &&  
       this.dualArr.startDates[2] != this.dualArr.startDates[3] && this.dualArr.termCovs[1]==this.dualArr.termCovs[2]){
         this.tierIdExists.dualMsg="Two Dual Tiers with same Start Dates should not have same Terminal Coverage ";
-        this.tierIdExists.dualFlag=true;            
+        this.tierIdExists.dualFlag=true;          
+        return;   
       }
     else if(this.dualArr.startDates.length==4 && 
       this.dualArr.startDates[0] != this.dualArr.startDates[1] && 
       this.dualArr.startDates[1] != this.dualArr.startDates[2] &&  
       this.dualArr.startDates[2] == this.dualArr.startDates[3] && this.dualArr.termCovs[2]==this.dualArr.termCovs[3]){
         this.tierIdExists.dualMsg="Two Dual Tiers with same Start Dates should not have same Terminal Coverage ";
-        this.tierIdExists.dualFlag=true;            
-      }    
+        this.tierIdExists.dualFlag=true;      
+        return;       
+      }   
+      else{
+        this.tierIdExists.dualMsg='';
+        this.tierIdExists.dualFlag=false;                  
+      }   
   }
 
   validateFamilyArr(){
-    if(this.familyArr.startDates.length==3 && 
+    if(this.familyArr.startDates.length==2 && 
+      this.familyArr.startDates[0] == this.familyArr.startDates[1] && this.familyArr.termCovs[0]==this.familyArr.termCovs[1]){
+        this.tierIdExists.familyMsg="Two Family Tiers with same Start Dates should not have same Terminal Coverage ";
+        this.tierIdExists.familyFlag=true;       
+        return;      
+      }
+    else if(this.familyArr.startDates.length==3 && 
       this.familyArr.startDates[0] == this.familyArr.startDates[1] && 
       this.familyArr.startDates[0] == this.familyArr.startDates[2] ){
         this.tierIdExists.familyMsg="Family Tier Start Date cannot be same for 3 times";
-        this.tierIdExists.familyFlag=true;            
+        this.tierIdExists.familyFlag=true;    
+        return;         
       }
     else if(this.familyArr.startDates.length==3 && 
       this.familyArr.startDates[1] == this.familyArr.startDates[0] && 
       this.familyArr.startDates[1] == this.familyArr.startDates[2] ){
         this.tierIdExists.familyMsg="Family Tier Start Date cannot be same for 3 times";
-        this.tierIdExists.familyFlag=true;            
+        this.tierIdExists.familyFlag=true;   
+        return;          
       }
     else if(this.familyArr.startDates.length==3 && 
       this.familyArr.startDates[0] == this.familyArr.startDates[1] && 
       this.familyArr.startDates[1] != this.familyArr.startDates[2] && this.familyArr.termCovs[0]==this.familyArr.termCovs[1]){
         this.tierIdExists.familyMsg="Two Family Tiers with same Start Dates should not have same Terminal Coverage ";
-        this.tierIdExists.familyFlag=true;            
+        this.tierIdExists.familyFlag=true;       
+        return;      
       }
     else if(this.familyArr.startDates.length==3 && 
       this.familyArr.startDates[0] != this.familyArr.startDates[1] && 
       this.familyArr.startDates[1] == this.familyArr.startDates[2] && this.familyArr.termCovs[1]==this.familyArr.termCovs[2]){
         this.tierIdExists.familyMsg="Two Family Tiers with same Start Dates should not have same Terminal Coverage ";
-        this.tierIdExists.familyFlag=true;            
+        this.tierIdExists.familyFlag=true;       
+        return;      
       }
     else if(this.familyArr.startDates.length==4 && 
       this.familyArr.startDates[0] == this.familyArr.startDates[1] && 
       this.familyArr.startDates[0] == this.familyArr.startDates[2] && 
       this.familyArr.startDates[0] == this.familyArr.startDates[3]){
         this.tierIdExists.familyMsg="Family Tier Start Date cannot be same for 3 times";
-        this.tierIdExists.familyFlag=true;            
+        this.tierIdExists.familyFlag=true;    
+        return;         
       }
     else if(this.familyArr.startDates.length==4 && 
       this.familyArr.startDates[1] == this.familyArr.startDates[0] && 
       this.familyArr.startDates[1] == this.familyArr.startDates[2] && 
       this.familyArr.startDates[1] == this.familyArr.startDates[3]){
         this.tierIdExists.familyMsg="Family Tier Start Date cannot be same for 3 times";
-        this.tierIdExists.familyFlag=true;            
+        this.tierIdExists.familyFlag=true;       
+        return;      
       }
     else if(this.familyArr.startDates.length==4 && 
       this.familyArr.startDates[2] == this.familyArr.startDates[0] && 
       this.familyArr.startDates[2] == this.familyArr.startDates[1] && 
       this.familyArr.startDates[2] == this.familyArr.startDates[3]){
         this.tierIdExists.familyMsg="Family Tier Start Date cannot be same for 3 times";
-        this.tierIdExists.familyFlag=true;            
+        this.tierIdExists.familyFlag=true;      
+        return;       
       }
     else if(this.familyArr.startDates.length==4 && 
       this.familyArr.startDates[3] == this.familyArr.startDates[0] && 
       this.familyArr.startDates[3] == this.familyArr.startDates[1] && 
       this.familyArr.startDates[3] == this.familyArr.startDates[2]){
         this.tierIdExists.familyMsg="Family Tier Start Date cannot be same for 3 times";
-        this.tierIdExists.familyFlag=true;            
+        this.tierIdExists.familyFlag=true;      
+        return;       
       }
     else if(this.familyArr.startDates.length==4 && 
       this.familyArr.startDates[0] == this.familyArr.startDates[1] && 
       this.familyArr.startDates[1] != this.familyArr.startDates[2] &&  
       this.familyArr.startDates[2] != this.familyArr.startDates[3] && this.familyArr.termCovs[0]==this.familyArr.termCovs[1]){
         this.tierIdExists.familyMsg="Two Family Tiers with same Start Dates should not have same Terminal Coverage ";
-        this.tierIdExists.familyFlag=true;            
+        this.tierIdExists.familyFlag=true;       
+        return;      
       }
     else if(this.familyArr.startDates.length==4 && 
       this.familyArr.startDates[0] != this.familyArr.startDates[1] && 
       this.familyArr.startDates[1] == this.familyArr.startDates[2] &&  
       this.familyArr.startDates[2] != this.familyArr.startDates[3] && this.familyArr.termCovs[1]==this.familyArr.termCovs[2]){
         this.tierIdExists.familyMsg="Two Family Tiers with same Start Dates should not have same Terminal Coverage ";
-        this.tierIdExists.familyFlag=true;            
+        this.tierIdExists.familyFlag=true;    
+        return;         
       }
     else if(this.familyArr.startDates.length==4 && 
       this.familyArr.startDates[0] != this.familyArr.startDates[1] && 
       this.familyArr.startDates[1] != this.familyArr.startDates[2] &&  
       this.familyArr.startDates[2] == this.familyArr.startDates[3] && this.familyArr.termCovs[2]==this.familyArr.termCovs[3]){
         this.tierIdExists.familyMsg="Two Family Tiers with same Start Dates should not have same Terminal Coverage ";
-        this.tierIdExists.familyFlag=true;            
-      }    
+        this.tierIdExists.familyFlag=true;    
+        return;         
+      } 
+      else{
+        this.tierIdExists.familyMsg='';
+        this.tierIdExists.familyFlag=false;                  
+      }       
   }
 
   validateOthersArr(){
-    if(this.othersArr.startDates.length==3 && 
+    if(this.othersArr.startDates.length==2 && 
+      this.othersArr.startDates[0] == this.othersArr.startDates[1] && this.othersArr.termCovs[0]==this.othersArr.termCovs[1]){
+        this.tierIdExists.othersMsg="Two Others Tiers with same Start Dates should not have same Terminal Coverage ";
+        this.tierIdExists.othersFlag=true;            
+      }
+    else if(this.othersArr.startDates.length==3 && 
       this.othersArr.startDates[0] == this.othersArr.startDates[1] && 
       this.othersArr.startDates[0] == this.othersArr.startDates[2] ){
         this.tierIdExists.othersMsg="Others Tier Start Date cannot be same for 3 times";
@@ -1072,7 +1142,11 @@ validateTierIDs(){
       this.othersArr.startDates[2] == this.othersArr.startDates[3] && this.othersArr.termCovs[2]==this.othersArr.termCovs[3]){
         this.tierIdExists.othersMsg="Two Others Tiers with same Start Dates should not have same Terminal Coverage ";
         this.tierIdExists.othersFlag=true;            
-      }    
+      }  
+      else{
+        this.tierIdExists.othersMsg='';
+        this.tierIdExists.othersFlag=false;                  
+      }      
   }
 
   decimalValue(inputValue:number){
