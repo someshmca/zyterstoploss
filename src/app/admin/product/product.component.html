@@ -761,7 +761,7 @@
           </div>
           <div class="col_2">
             <button type="button" class="btn btn-outline-primary" (click)="openCustomModal(false, null)">Cancel</button>
-           <button type="submit" class="btn btn-primary" *ngIf="!isAddMode && !isViewModal">Update</button>
+           <button type="submit" class="btn btn-primary" [disabled]="isDisabled" *ngIf="!isAddMode && !isViewModal">Update</button>
             <button type="submit" class="btn btn-primary" [disabled]="isAdded" *ngIf="isAddMode">Add</button>
           </div>
         </div>
