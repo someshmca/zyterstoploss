@@ -118,6 +118,7 @@ export class ProductComponent implements OnInit {
   isAdmin: boolean;
   updateStatus: boolean;
   year1Added:boolean=false;
+  isMultiContractCheckedStatus: boolean;
   constructor(
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
@@ -1462,6 +1463,12 @@ fetchProduct(x){
     //     sltype: 'A'
     //   })
     // }  
+    this.isMultiContractCheckedStatus = x.isMultiContractPeriod=='Y'?true:false;
+    
+    this.productForm.patchValue({
+      isMultiContractPeriod: this.isMultiContractCheckedStatus
+    });
+  this.checkYear2Selected();
     this.productForm.patchValue({
     productId:x.productId,
     contractId:x.contractId,
@@ -1516,7 +1523,8 @@ fetchProduct(x){
     status:x.status, 
     userId: this.loginService.currentUserValue.name,
     contractPeriod: x.contractPeriod,  
-    lstContractClaims: x.listContractClaims
+    lstContractClaims: x.listContractClaims,
+    isMultiContractPeriod: this.isMultiContractCheckedStatus
   });
   console.log(this.productForm.value);
   
@@ -1578,7 +1586,7 @@ fetchYear2SSL(x){
         y2sslExclusionPaidStartDate:this.dateValueString(x.sslExclusionPaidStartDate),
         y2sslExclusionPaidEndDate:this.dateValueString(x.sslExclusionPaidEndDate),
         y2sslCoveredClaims: sslCc,
-        isMultiContractPeriod: x.isMultiContractPeriod=='Y'?true:false
+        isMultiContractPeriod: this.isMultiContractCheckedStatus
     });
     console.log(this.productForm.value);  
     
@@ -1667,14 +1675,12 @@ private addProduct() {
     console.log(this.updateObj.length);
     
     this.callYear1Obj();
-    //if(this.f.isMultiContractPeriod.value){
+    if(this.f.isMultiContractPeriod.value){
       this.callYear2Obj();
-      
-      
- //   }
+    }
     console.log()
     this.updateObj.push(this.year1Obj);
-   // if(this.f.isMultiContractPeriod.value) 
+   if(this.f.isMultiContractPeriod.value) 
    this.updateObj.push(this.year2Obj);
     console.log(this.updateObj.length);
     
