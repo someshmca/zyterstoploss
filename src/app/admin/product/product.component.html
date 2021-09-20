@@ -144,13 +144,18 @@
               <div class="col-md-4">
                 <div class="form-group">
                   <label>Contract<small class="starmark">*</small></label>
-                  <select class="form-control" formControlName="contractId" (change)="checkDuplicateContract($event.target.value)" [ngClass]="{ 'is-invalid': duplicateContractErr.flag}">
+                  <div *ngIf="isAddMode">
+                  <select class="form-control" formControlName="contractId" (change)="checkDuplicateContract($event.target.value)" [ngClass]="{ 'is-invalid': submitted && f.contractId.errors || duplicateContractErr.flag}">
                     <option value='' *ngIf="isAddMode"></option>
                     <option *ngFor="let obj of contractsByClientId" [value]="obj.contractId">
                       {{obj.contractId}} 
                       <!-- <span *ngIf="obj.description.length>0">({{obj.description}})</span> -->
                     </option> 
                   </select>
+                </div>
+                <div *ngIf="!isAddMode" >
+                  <input type ="text" class="form-control" formControlName="contractId"  [ngClass]="{ 'is-invalid': submitted && f.contractId.errors || duplicateContractErr.flag}">
+                </div>
                 </div>
               </div>
               <div class="col-md-4">
@@ -190,7 +195,8 @@
                   </option>
                     </select>  -->
 
-                    <input type="text" formControlName="sslClaimBasis" class="form-control" placeholder="MM/MM" maxlength="5" [ngClass]="{ 'is-invalid': submitted && f.sslClaimBasis.errors || sslClaimBasisErr.isValid }"/><!--Modified by Venkatesh Enigonda-->
+                    <!-- <input type="text" formControlName="sslClaimBasis" class="form-control" placeholder="MM/MM" maxlength="5" [ngClass]="{ 'is-invalid': submitted && f.sslClaimBasis.errors || sslClaimBasisErr.isValid }"/> -->
+                    <input type="text" formControlName="sslClaimBasis" onkeypress="return ( (event.charCode !=8 && event.charCode ==0)||(event.charCode >= 127) || (event.charCode >= 47 && event.charCode <= 57))"  (keyup)="claimBasisFn($event, 'SSL Claim Basis')" class="form-control claimbasis" placeholder="MM / MM" maxlength="5" [ngClass]="{ 'is-invalid': submitted && f.sslClaimBasis.errors || sslClaimBasisErr.isValid }"/>
                   </div>                
                 </div>
                 <div class="col-md-4">
@@ -222,7 +228,7 @@
                 <div class="col-md-4">
                   <div class="form-group">
                     <label>Run-In Limit</label>
-                    <input type="number" formControlName="sslRunInLimit" class="form-control"/>
+                    <input type="number" formControlName="sslRunInLimit" onkeypress="return ((event.charCode !=8 && event.charCode ==0)||(event.charCode == 46) || (event.charCode >= 48 && event.charCode <= 57))" class="form-control"/>
                   </div>
                 </div>
                 
@@ -243,7 +249,7 @@
                 <div class="col-md-4">
                   <div class="form-group">
                     <label>Specific Deductible<small class="starmark">*</small></label>
-                    <input type="number" formControlName="sslDeductible" class="form-control" [ngClass]="{ 'is-invalid': submitted && sslDeductibleErr.isValid }"/>
+                    <input type="number" formControlName="sslDeductible"  onkeypress="return ((event.charCode !=8 && event.charCode ==0)||(event.charCode == 46) || (event.charCode >= 48 && event.charCode <= 57))" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.sslDeductible.errors }"/>
                   </div>
                 </div>
               </div>
@@ -251,19 +257,19 @@
                 <div class="col-md-4">
                   <div class="form-group">
                     <label>Aggregating Specific Deductible</label>
-                    <input type="number" formControlName="sslAggDeductible" class="form-control"/>
+                    <input type="number" formControlName="sslAggDeductible"  onkeypress="return ((event.charCode !=8 && event.charCode ==0)||(event.charCode == 46) || (event.charCode >= 48 && event.charCode <= 57))" class="form-control"/>
                   </div>
                 </div> 
                 <div class="col-md-4">
                   <div class="form-group">
                     <label>Limit of Liability - Contract</label>
-                    <input type="number" formControlName="sslAnnualLimit" class="form-control"/>
+                    <input type="number" formControlName="sslAnnualLimit" onkeypress="return ((event.charCode !=8 && event.charCode ==0)||(event.charCode == 46) || (event.charCode >= 48 && event.charCode <= 57))" class="form-control"/>
                   </div>              
                 </div>
                 <div class="col-md-4">
                   <div class="form-group">
                     <label>Limit of Liability - Lifetime</label>
-                    <input type="number" formControlName="sslLifetimeLimit" class="form-control"/>
+                    <input type="number" formControlName="sslLifetimeLimit" onkeypress="return ((event.charCode !=8 && event.charCode ==0)||(event.charCode == 46) || (event.charCode >= 48 && event.charCode <= 57))" class="form-control"/>
                   </div>
                 </div>
               </div>
@@ -271,7 +277,7 @@
                 <div class="col-md-4">
                   <div class="form-group">
                     <label>Limit of Liability - Participant</label>
-                    <input type="number" formControlName="sslPartcipantLimit" class="form-control"/>
+                    <input type="number" formControlName="sslPartcipantLimit"  onkeypress="return ((event.charCode !=8 && event.charCode ==0)||(event.charCode == 46) || (event.charCode >= 48 && event.charCode <= 57))" class="form-control"/>
                   </div>
                 </div>
                 <div class="col-md-4">
@@ -352,11 +358,16 @@
                   </select>  -->    
                   
                     <div>
-                      <mat-form-field id="line">
-                        <mat-select class="form-control" formControlName="sslCoveredClaims"  multiple [ngClass]="{ 'is-invalid': submitted && f.sslCoveredClaims.errors }">
+                      <mat-form-field id='line'>
+                        <mat-select  #matSelect class="form-control" formControlName="sslCoveredClaims"  multiple [ngClass]="{ 'is-invalid': submitted && f.sslCoveredClaims.errors }">
                           <mat-option *ngFor="let coveredClaim of coveredClaims" [value]="coveredClaim.claimTypeCode">{{coveredClaim.claimType}}</mat-option>
+                          <!-- <footer>
+                            <button type="button" class="btn btn-outline-primary"  (click)="finish(matSelect)">Close</button>
+                          </footer> -->
                         </mat-select>
+                       
                       </mat-form-field>
+                     
                     </div>
                   </div>
                 </div>
@@ -388,7 +399,7 @@
               <div class="col-md-4">
                 <div class="form-group">
                   <label>Claim Basis<small class="starmark">*</small></label>
-                  <input type="text" formControlName="y2sslClaimBasis" class="form-control" placeholder="MM/MM" maxlength="5" [ngClass]="{ 'is-invalid': submitted && f.y2sslClaimBasis.errors || y2sslClaimBasisErr.isValid}"/>
+                  <input type="text" formControlName="y2sslClaimBasis" class="form-control"  onkeypress="return ( (event.charCode !=8 && event.charCode ==0)||(event.charCode >= 127) || (event.charCode >= 47 && event.charCode <= 57))"  (keyup)="claimBasisFn($event, 'Y2SSL Claim Basis')"placeholder="MM/MM" maxlength="5" [ngClass]="{ 'is-invalid': submitted && f.y2sslClaimBasis.errors || y2sslClaimBasisErr.isValid}"/>
                 </div>                
               </div>
               <div class="col-md-4">
@@ -420,7 +431,7 @@
               <div class="col-md-4">
                 <div class="form-group">
                   <label>Run-In Limit</label>
-                  <input type="number"  formControlName="y2sslRunInLimit" class="form-control"/>
+                  <input type="number"  formControlName="y2sslRunInLimit"  onkeypress="return ((event.charCode !=8 && event.charCode ==0)||(event.charCode == 46) || (event.charCode >= 48 && event.charCode <= 57))"class="form-control"/>
                 </div>
               </div>
               
@@ -441,7 +452,7 @@
               <div class="col-md-4">
                 <div class="form-group">
                   <label>Specific Deductible<small class="starmark">*</small></label>
-                  <input type="number"   formControlName="y2sslDeductible" class="form-control" [ngClass]="{ 'is-invalid': submitted && y2sslDeductibleErr.isValid }"/>
+                  <input type="number"   formControlName="y2sslDeductible"  onkeypress="return ((event.charCode !=8 && event.charCode ==0)||(event.charCode == 46) || (event.charCode >= 48 && event.charCode <= 57))" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.y2sslDeductible.errors }"/>
                 </div>
               </div>
             </div>
@@ -449,19 +460,19 @@
               <div class="col-md-4">
                 <div class="form-group">
                   <label>Aggregating Specific Deductible</label>
-                  <input type="number"  formControlName="y2sslAggDeductible" class="form-control"/>
+                  <input type="number"  formControlName="y2sslAggDeductible" onkeypress="return ((event.charCode !=8 && event.charCode ==0)||(event.charCode == 46) || (event.charCode >= 48 && event.charCode <= 57))" class="form-control"/>
                 </div>
               </div> 
               <div class="col-md-4">
                 <div class="form-group">
                   <label>Limit of Liability - Contract</label>
-                  <input type="number"  formControlName="y2sslAnnualLimit" class="form-control"/>
+                  <input type="number"  formControlName="y2sslAnnualLimit"  onkeypress="return ((event.charCode !=8 && event.charCode ==0)||(event.charCode == 46) || (event.charCode >= 48 && event.charCode <= 57))" class="form-control"/>
                 </div>              
               </div>
               <div class="col-md-4">
                 <div class="form-group">
                   <label>Limit of Liability - Lifetime</label>
-                  <input type="number"  formControlName="y2sslLifetimeLimit" class="form-control"/>
+                  <input type="number"  formControlName="y2sslLifetimeLimit"  onkeypress="return ((event.charCode !=8 && event.charCode ==0)||(event.charCode == 46) || (event.charCode >= 48 && event.charCode <= 57))" class="form-control"/>
                 </div>
               </div>
             </div>
@@ -469,7 +480,7 @@
               <div class="col-md-4">
                 <div class="form-group">
                   <label>Limit of Liability - Participant</label>
-                  <input type="number"  formControlName="y2sslPartcipantLimit" class="form-control"/>
+                  <input type="number"  formControlName="y2sslPartcipantLimit" onkeypress="return ((event.charCode !=8 && event.charCode ==0)||(event.charCode == 46) || (event.charCode >= 48 && event.charCode <= 57))" class="form-control"/>
                 </div>
               </div>
               <div class="col-md-4">
@@ -505,8 +516,8 @@
                 <div class="form-group">
                   <label></label>
                   <div class="custom-control custom-checkbox">
-                    <input type="checkbox"  class="custom-control-input" formControlName="y2sslIsImmediateReimbursement" id="y2imReimb2" checked>
-                    <label class="custom-control-label" for="y2imReimb2"> Immediate Reimbursement</label>
+                    <input type="checkbox"  class="custom-control-input" formControlName="y2sslIsImmediateReimbursement" id="x" checked>
+                    <label class="custom-control-label" for="imReimb2"> Immediate Reimbursement</label>
                   </div>
                 </div>
               </div>
@@ -550,10 +561,19 @@
                 </select>  -->    
                 
                   <div>
-                    <mat-form-field id="line">
-                      <mat-select class="form-control" formControlName="y2sslCoveredClaims"    multiple [ngClass]="{ 'is-invalid': submitted && f.y2sslCoveredClaims.errors }">
+                    <mat-form-field id='line'>
+                      <mat-select #matSelect1 class="form-control" formControlName="y2sslCoveredClaims"    multiple [ngClass]="{ 'is-invalid': submitted && f.y2sslCoveredClaims.errors }">
+                        <app-select-check-all [model]="productForm.get('coveredClaim')" [values]="coveredClaims">
+                        </app-select-check-all>
                         <mat-option *ngFor="let coveredClaim of coveredClaims" [value]="coveredClaim.claimTypeCode">{{coveredClaim.claimType}}</mat-option>
+                        
+                        <!-- <footer>
+                          <button type="button" class="btn btn-outline-primary"  (click)="matSelect1.close()">Close</button>
+                        </footer> -->
+                       
+                        
                       </mat-select>
+                  
                     </mat-form-field>
                   </div>
                 </div>
@@ -586,8 +606,8 @@
             {{i}}
             </option>
           </select>  -->
-
-          <input type="text" formControlName="aslClaimBasis" class="form-control" placeholder="MM/MM" maxlength="5" [ngClass]="{ 'is-invalid': submitted && f.aslClaimBasis.errors || aslClaimBasisErr.isValid  }" [readonly]="updateStatus" /><!--Modified By Venkatesh Enigonda-->
+   
+          <input type="text" formControlName="aslClaimBasis" onkeypress="return ( (event.charCode !=8 && event.charCode ==0)||(event.charCode >= 127) || (event.charCode >= 47 && event.charCode <= 57))"  (keyup)="claimBasisFn($event, 'ASL Claim Basis')"class="form-control" placeholder="MM/MM" maxlength="5" [ngClass]="{ 'is-invalid': submitted && f.aslClaimBasis.errors || aslClaimBasisErr.isValid  }" [readonly]="updateStatus" /><!--Modified By Venkatesh Enigonda-->
         </div>
       </div>
       <!-- <div class="col-md-4">
@@ -599,13 +619,13 @@
       <div class="col-md-4">
         <div class="form-group">
           <label>Min Aggregate Deductible <small class="starmark">*</small></label>
-          <input type="number" formControlName="aslMinDeductible" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.aslMinDeductible.errors }" [readonly]="updateStatus"/>
+          <input type="number" formControlName="aslMinDeductible" class="form-control"  onkeypress="return ((event.charCode !=8 && event.charCode ==0)||(event.charCode == 46) || (event.charCode >= 48 && event.charCode <= 57))" [ngClass]="{ 'is-invalid': submitted && f.aslMinDeductible.errors }" [readonly]="updateStatus"/>
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-group">
           <label>Expected Claim Liability</label>
-          <input type="number" formControlName="aslExpectedClaimLiability" class="form-control" [readonly]="updateStatus"/>
+          <input type="number" formControlName="aslExpectedClaimLiability"  onkeypress="return ((event.charCode !=8 && event.charCode ==0)||(event.charCode == 46) || (event.charCode >= 48 && event.charCode <= 57))"class="form-control" [readonly]="updateStatus"/>
         </div>
       </div>
     </div>
@@ -625,7 +645,7 @@
       <div class="col-md-4">
         <div class="form-group">
           <label>Run-In Limit</label>
-          <input type="number" formControlName="aslRunInLimit" class="form-control" [readonly]="updateStatus"/>
+          <input type="number" formControlName="aslRunInLimit"  onkeypress="return ((event.charCode !=8 && event.charCode ==0)||(event.charCode == 46) || (event.charCode >= 48 && event.charCode <= 57))" class="form-control" [readonly]="updateStatus"/>
         </div>
       </div>
     </div>
@@ -645,7 +665,7 @@
       <div class="col-md-4">
         <div class="form-group">
           <label>Aggregate Corridor</label>
-          <input type="number" formControlName="aslCorridor" class="form-control" [readonly]="updateStatus"/>
+          <input type="number" formControlName="aslCorridor"  onkeypress="return ((event.charCode !=8 && event.charCode ==0)||(event.charCode == 46) || (event.charCode >= 48 && event.charCode <= 57))" class="form-control" [readonly]="updateStatus"/>
         </div>
       </div>
     </div>
@@ -665,7 +685,7 @@
       <div class="col-md-4">
         <div class="form-group">
           <label>Limit of Liability - Contract</label>
-          <input type="number" formControlName="aslAnnualLimit" class="form-control" [readonly]="updateStatus"/>
+          <input type="number" formControlName="aslAnnualLimit"  onkeypress="return ((event.charCode !=8 && event.charCode ==0)||(event.charCode == 46) || (event.charCode >= 48 && event.charCode <= 57))" class="form-control" [readonly]="updateStatus"/>
         </div>
       </div>
     </div>
@@ -673,7 +693,7 @@
       <div class="col-md-4">
         <div class="form-group">
           <label>Limit of Liability - Lifetime</label>
-          <input type="number" formControlName="aslLifeTimeLimit" class="form-control" [readonly]="updateStatus"/>
+          <input type="number" formControlName="aslLifeTimeLimit"  onkeypress="return ((event.charCode !=8 && event.charCode ==0)||(event.charCode == 46) || (event.charCode >= 48 && event.charCode <= 57))" class="form-control" [readonly]="updateStatus"/>
         </div>
       </div>
 
@@ -709,11 +729,16 @@
             </option>
          </select>-->
          <div>
-            <mat-form-field id="line">
-            <mat-select class="form-control" formControlName="aslCoveredClaims"  multiple [ngClass]="{ 'is-invalid': submitted && f.aslCoveredClaims.errors }" [disabled]="updateStatus">
+            <mat-form-field id='line'>
+            <mat-select #matSelect3 class="form-control" formControlName="aslCoveredClaims"  multiple [ngClass]="{ 'is-invalid': submitted && f.aslCoveredClaims.errors }" [disabled]="updateStatus">
               <mat-option *ngFor="let coveredClaim of coveredClaims" [value]="coveredClaim.claimTypeCode">{{coveredClaim.claimType}}</mat-option>
+              <!-- <footer>
+                <button type="button" class="btn btn-outline-primary"  (click)="matSelect3.close()">Close</button>
+              </footer> -->
             </mat-select>
+           
           </mat-form-field>
+         
         </div>   
         </div>
       </div>
@@ -734,13 +759,13 @@
       <div class="col-md-4">
         <div class="form-group">
           <label>IBNR Reserve Percentage <small class="starmark" *ngIf="f.isMaxLiability.value">*</small> </label>
-          <input type="number" formControlName="ibnrPercentage" [readonly]="!f.isMaxLiability.value" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.ibnrPercentage.errors }"/>
+          <input type="number" formControlName="ibnrPercentage"   onkeypress="return ((event.charCode !=8 && event.charCode ==0)||(event.charCode == 46) || (event.charCode >= 48 && event.charCode <= 57))" [readonly]="!f.isMaxLiability.value" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.ibnrPercentage.errors }"/>
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-group">
           <label>Deferred Service Fee Percentage<small class="starmark" *ngIf="f.isMaxLiability.value">*</small></label>
-          <input type="number" formControlName="defferedFeePercentage" [readonly]="!f.isMaxLiability.value" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.defferedFeePercentage.errors }"/>
+          <input type="number" formControlName="defferedFeePercentage"  onkeypress="return ((event.charCode !=8 && event.charCode ==0)||(event.charCode == 46) || (event.charCode >= 48 && event.charCode <= 57))" [readonly]="!f.isMaxLiability.value" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.defferedFeePercentage.errors }"/>
         </div>
       </div>
     </div>
@@ -761,7 +786,7 @@
           </div>
           <div class="col_2">
             <button type="button" class="btn btn-outline-primary" (click)="openCustomModal(false, null)">Cancel</button>
-           <button type="submit" class="btn btn-primary" [disabled]="isDisabled" *ngIf="!isAddMode && !isViewModal">Update</button>
+           <button type="submit" class="btn btn-primary" *ngIf="!isAddMode && !isViewModal">Update</button>
             <button type="submit" class="btn btn-primary" [disabled]="isAdded" *ngIf="isAddMode">Add</button>
           </div>
         </div>

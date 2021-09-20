@@ -53,13 +53,13 @@
                         <div class="form-field">
                             <label class="form-field-label">Min Paid Amount</label>
                           <div class="form-field-input">
-                                <input type="number" class="form-control field-input-text" formControlName="minPaidAmount" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))" [ngClass]="{'is-invalid':isMinPaidAmountInvalid}" />                        
+                                <input type="number" class="form-control field-input-text" formControlName="minPaidAmount" onkeypress="return ((event.charCode !=8 && event.charCode ==0)||(event.charCode == 46) || (event.charCode >= 48 && event.charCode <= 57))" [ngClass]="{'is-invalid':isMinPaidAmountInvalid}" />                        
                             </div>
                             </div>
                             <div class="form-field">
                                 <label class="form-field-label">Max Paid Amount</label>
                               <div class="form-field-input">
-                                    <input type="number" class="form-control field-input-text" formControlName="maxPaidAmount" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))" [ngClass]="{'is-invalid':isMaxPaidAmountInvalid}" />                        
+                                    <input type="number" class="form-control field-input-text" formControlName="maxPaidAmount" onkeypress="return ((event.charCode !=8 && event.charCode ==0)||(event.charCode == 46) || (event.charCode >= 48 && event.charCode <= 57))" [ngClass]="{'is-invalid':isMaxPaidAmountInvalid}" />                        
                                 </div>
                                 </div>
                             <div class="form-field">

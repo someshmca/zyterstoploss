@@ -442,17 +442,17 @@ export class ProductComponent implements OnInit {
     )
   }  
  
-  doFilter(filterValue){ //added by Venkatesh Enigonda
-    this.dataSource.filter=filterValue;
-    // this.dataSource.filterPredicate = (data:IProductAll, filter: string) => {
-    //   const Id=data.contractId.toString();
-    //   const CompareData=data.clientName.toLowerCase() ||  '';
-    //   const CompareData1=Id||'';
-    //   const CompareData2=data.aslClaimBasis.toLowerCase() ||'';
-    //   return CompareData.indexOf(filter)!==-1 || CompareData1.indexOf(filter)!==-1 || CompareData2.indexOf(filter)!==-1 || ;
-    // };
-
-  }//Ends here
+  doFilter(filterValue:string){ 
+    // this.dataSource.filter=filterValue.trim().toLowerCase();
+     this.dataSource.filter=filterValue.trim().toLowerCase();
+     this.dataSource.filterPredicate = (data:IProductAll, filter: string) => {
+       const Id=data.contractId.toString();
+       const CompareData=data.clientName.toLowerCase()||'';
+       const CompareData1=Id||'';
+       const CompareData2=data.aslClaimBasis.toLowerCase() ||'';
+       return CompareData.indexOf(filter)!==-1 || CompareData1.indexOf(filter)!==-1 || CompareData2.indexOf(filter)!==-1 
+     };
+   }
   
   clearErrorMessages(){
     this.sslIncurredEndErr.isDateErr=false;
@@ -545,8 +545,7 @@ export class ProductComponent implements OnInit {
    if(this.isAddContractPeriod){
      this.isAddMode = true;
    }
-  
-   if(this.f.sslClaimBasis.value.charAt(2)!='/')
+   if(this.f.sslClaimBasis.value.charAt(0)=='/'||this.f.sslClaimBasis.value.charAt(1)=='/'||this.f.sslClaimBasis.value.charAt(3)=='/'||this.f.sslClaimBasis.value.charAt(4)=='/')
    {  
      this.sslClaimBasisErr.isValid=true;
      this.sslClaimBasisErr.errMsg='Contract Period 1 In-Valid Format in Specific ClaimBasis';
@@ -559,7 +558,7 @@ export class ProductComponent implements OnInit {
     return;
    }
   
-   if(this.f.aslClaimBasis.value.charAt(2)!='/')
+   if(this.f.aslClaimBasis.value.charAt(0)=='/'||this.f.aslClaimBasis.value.charAt(1)=='/'||this.f.aslClaimBasis.value.charAt(3)=='/'||this.f.aslClaimBasis.value.charAt(4)=='/')
    {
      this.aslClaimBasisErr.isValid=true;
      this.aslClaimBasisErr.errMsg='In-Valid Format in Aggregate ClaimBasis';
@@ -812,7 +811,8 @@ if(this.f.sslExclusionIncurredStartDate.value !=null && this.f.sslExclusionIncur
        this.y2sslClaimBasisErr.errMsg='In-Valid Format in Contract Period 2 Specific ClaimBasis';
        return;
       }
-       if(this.f.y2sslClaimBasis.value.charAt(2)!='/')   {​​​​​       this.y2sslClaimBasisErr.isValid=true;     this.y2sslClaimBasisErr.errMsg='In-Valid Format in Contract Period 2 Specific ClaimBasis';     return;   }​​​​​
+       
+   if(this.f.y2sslClaimBasis.value.charAt(0)=='/'||this.f.y2sslClaimBasis.value.charAt(1)=='/'||this.f.y2sslClaimBasis.value.charAt(3)=='/'||this.f.y2sslClaimBasis.value.charAt(4)=='/')   {​​​​​       this.y2sslClaimBasisErr.isValid=true;     this.y2sslClaimBasisErr.errMsg='In-Valid Format in Contract Period 2 Specific ClaimBasis';     return;   }​​​​​
       
        if(this.productForm.valid && this.f.y2sslIncurredStartDate.value > this.f.y2sslIncurredEndDate.value){​​​​​    this.y2sslIncurredEndErr.isDateErr=true;    
         this.y2sslIncurredEndErr.dateErrMsg = ' Contract Period 2 SSL Incurred start date should not be greater than SSL Incurred End date';        return;  }​​​​​
@@ -856,7 +856,34 @@ if(this.f.sslExclusionIncurredStartDate.value !=null && this.f.sslExclusionIncur
       }
     
 }
-
+claimBasisFn(event, labelName){
+  if(labelName=="SSL Claim Basis"){   
+  
+      if(this.f.sslClaimBasis.value.length>1 && this.f.sslClaimBasis.value.length<3){
+        this.f.sslClaimBasis.patchValue(this.f.sslClaimBasis.value+'/');
+        //this.f.sslClaimBasis.value.splice(2,0,'/');
+      }    
+   
+  }
+  if(labelName=="Y2SSL Claim Basis"){
+ 
+    if(this.f.y2sslClaimBasis.value.length>1 && this.f.y2sslClaimBasis.value.length<3){
+      this.f.y2sslClaimBasis.patchValue(this.f.y2sslClaimBasis.value+'/');
+      //this.f.sslClaimBasis.value.splice(2,0,'/');
+    }
+  
+  
+}
+  if(labelName=="ASL Claim Basis"){
+ 
+      if(this.f.aslClaimBasis.value.length>1 && this.f.aslClaimBasis.value.length<3){
+        this.f.aslClaimBasis.patchValue(this.f.aslClaimBasis.value+'/');
+        //this.f.sslClaimBasis.value.splice(2,0,'/');
+      }
+    
+    
+  }
+}
 openViewModal(bool, id:any){
   this.isViewModal = true;
   this.openCustomModal(bool, id);
@@ -1696,7 +1723,7 @@ private addProduct() {
                  // this.openCustomModal(false,null);                     
                    // this.productForm.reset();                       
                   
-                   // this.getProductByContractPeriod(this.uContractPeriod);
+                    this.getProductByContractPeriod(this.uContractId);
                     this.f.clientId.disable();
                     this.f.contractId.disable();
                     
