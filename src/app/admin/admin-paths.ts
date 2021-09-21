@@ -401,8 +401,8 @@ export const Paths = {
 
  ExcelUploadPath: "http://10.12.30.40:92/api/ExcelUpload/UploadExcel?userId=",
   
-  sslReportURL: "http://dwim4-obiee01.qdint.local:9502/analytics/saw.dll?PortalGo&Action=prompt&path=%2Fshared%2FPOC%2FAgg_Claim_Expenese",
-  aslReportURL: "http://dwim4-obiee01.qdint.local:9502/analytics/saw.dll?PortalGo&Action=prompt&path=%2Fshared%2FPOC%2FAgg_Claim_Expenese",
-  maxLiabilityReportURL: "http://dwim4-obiee01.qdint.local:9502/analytics/saw.dll?PortalGo&Action=prompt&path=%2Fshared%2FPOC%2FAgg_Claim_Expenese"
+  sslReportURL: "https://obianalyticsstg.corp.medica.com/analytics",
+  aslReportURL: "https://obianalyticsstg.corp.medica.com/analytics",
+  maxLiabilityReportURL: "https://obianalyticsstg.corp.medica.com/analytics"
 
 }
