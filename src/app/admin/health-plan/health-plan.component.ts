@@ -652,7 +652,7 @@ validateTierIDs(){
     let tTerminalExtCov=this.t.value[i].isTerminalExtCoverage;
     if(i>0){
       if((tId=='' || tId==null) && 
-        (tAmount='' || tAmount==null) && 
+        (tAmount=='' || tAmount==null) && 
         (tExpectedClaims=='' || tExpectedClaims==null) && 
         (tSLStartDate=='' || tSLStartDate==null) && 
         (tSLEndDate=='' || tSLEndDate==null) && 
