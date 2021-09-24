@@ -131,6 +131,7 @@
                <!--Modified by Venkatesh Enigonda-->
                <div *ngIf="subSubChkErr.isValid">{{subSubChkErr.errMsg}}</div>
                <div *ngIf="isHRIdInvalid.flag">{{isHRIdInvalid.message}}</div>  
+               <div *ngIf="updateNoChange.flag">{{updateNoChange.message}}</div>
             </div>
              <div class="row">
               <div class="col-md-6">
@@ -230,7 +231,7 @@
             </div>
             <div class="col_2">
               <button type="button" class="btn btn-outline-primary" (click)="openCustomModal(false, null)">Cancel</button>  
-              <button type="submit" class="btn btn-primary" *ngIf="!isAddMode && !isViewModal ">Update</button>
+              <button type="submit" class="btn btn-primary" [disabled]="isDisabled" *ngIf="!isAddMode && !isViewModal ">Update</button>
               <button type="submit" class="btn btn-primary" *ngIf="isAddMode" [disabled]="isAdded">Add</button>              
             </div>
           </div>          

@@ -87,6 +87,9 @@ export class ClientComponent implements OnInit {
     flag: false,
     message: ''
   }
+  fetchAccDetailsOld: any;
+  fetchAccDetailsNew: any;
+  updateNoChange= {flag: false, message: ''};
   ngOnInit() {
     this.getAllClients();
     this.getAllContracts();
@@ -259,6 +262,8 @@ clearErrorMessages(){
     this.subChkErr.errMsg = '';
     this.subSubChkErr.isValid = false;//Modified by Venkatesh Enigonda
     this.subSubChkErr.errMsg = '';
+
+  this.updateNoChange= {flag: false, message: ''};
 }
 checkDuplicateAccountName(aname){
   return this.clientService.checkDuplicateAccountName(aname).toPromise();
@@ -417,11 +422,13 @@ openViewModal(bool, id:any){
             ftn: x[0].ftn,
             ftnname: x[0].ftnname,
             status:x[0].status,
-            createdon: x[0].createdon
+            createdon: x[0].createdon,            
+            userId:this.loginService.currentUserValue.name
           });
           this.uAccountName = x[0].clientName;
           this.navService.setClientObj(x[0].clientId, x[0].clientName, false, true);          
-         
+          this.fetchAccDetailsOld = this.clientForm.value;
+          debugger;
         });
         if(this.isViewModal==true){
           
@@ -658,7 +665,13 @@ openViewModal(bool, id:any){
 
       this.loading = true;
       if (!this.isAddMode) {
+        this.fetchAccDetailsNew = this.clientForm.value
 
+        if(JSON.stringify(this.fetchAccDetailsOld) == JSON.stringify(this.fetchAccDetailsNew)){
+          this.updateNoChange.flag=true;
+          this.updateNoChange.message="No new values are updated. Update atleast one field to update";
+        }        
+        if(this.updateNoChange.flag) return;
         if(this.uAccountName.toLowerCase() !== this.f.clientName.value.toLowerCase()){
           this.checkDuplicateAccountName(this.f.clientName.value).then(data => {
             if(data>0) {
@@ -708,7 +721,7 @@ openViewModal(bool, id:any){
                 });              
                 this.isAdded = true;
                 //this.getContractAddStatus();
-                this.alertService.success('New Client added', { keepAfterRouteChange: true });
+                this.alertService.success('New Account added', { keepAfterRouteChange: true });
               }
             },
             error: error => {
@@ -730,7 +743,7 @@ openViewModal(bool, id:any){
         if(this.f.startDate.value==''){
 
         }
-
+        
         this.clientService.updateClient(this.clientForm.value)
             .pipe(first())
             .subscribe({
@@ -739,7 +752,9 @@ openViewModal(bool, id:any){
 
                     this.uAccountName='';
                     //this.clientForm.reset();
-                    this.alertService.success('Client updated', {
+                    this.updateNoChange.flag=false;
+                    this.updateNoChange.message='';
+                    this.alertService.success('Account updated', {
                       keepAfterRouteChange: true });
                     this.isDisabled=true;
                     this.contractService.setContractAddStatus(false);  

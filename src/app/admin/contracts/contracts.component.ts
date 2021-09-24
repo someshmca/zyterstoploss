@@ -73,7 +73,9 @@ export class ContractsComponent implements OnInit {
 
   isContractStartDateInvalid: boolean=false;
   clientDetails: any;
-
+  fetchContractDetailsOld: any;
+  fetchContractDetailsNew: any;
+  updateNoChange= {flag: false, message: ''}
   //contractAddStatus: boolean; 
   //contractUpdateStatus: boolean;
 
@@ -266,7 +268,7 @@ export class ContractsComponent implements OnInit {
         exclusionPaidStartDate:this.datePipe.transform(this.updateObj[0].exclusionPaidStartDate,'yyyy-MM-dd'),
         exclusionPaidEndDate:this.datePipe.transform(this.updateObj[0].exclusionPaidEndDate,'yyyy-MM-dd')
       });
-      
+      this.fetchContractDetailsOld=this.contractForm.value;
     })
   }
   dateLessThan(from: string, to: string) {
@@ -316,6 +318,7 @@ clearErrorMessages(){
   this.exPaidStartEndErr.dateErrMsg='';
   this.exPaidStartErr.isDateErr=false;
   this.exPaidStartErr.dateErrMsg='';
+  this.updateNoChange= {flag: false, message: ''}
 }
 openViewModal(bool, id:any){
   this.isViewModal = true;
@@ -568,7 +571,7 @@ openViewModal(bool, id:any){
                   }//Ends here
                 if(terminationDateValue !='' && terminationDateValue!=null){
                     if(terminationDateValue < startDateValue || terminationDateValue > endDateValue){   
-                      debugger;     
+                           
                       this.terminationDateErr.isDateErr=true;
                       this.terminationDateErr.dateErrMsg = 'Termination date should be between Contract Start and End Dates'; 
                       flag=false;          
@@ -637,7 +640,7 @@ openViewModal(bool, id:any){
         
         this.addContract();
       } else {
-          
+        //  if(this.updateNoChange.flag) return;
           this.updateContract();            
       }
       
@@ -727,7 +730,6 @@ openViewModal(bool, id:any){
     }
 
     private updateContract() {
-      this.isDisabled = true;
         let updateConObj={
           contractId: this.uContractId,
           clientId: this.contractForm.get('clientId').value,
@@ -765,7 +767,13 @@ openViewModal(bool, id:any){
           console.log("start date should not be greater than end date");
           
         }
-        
+        this.fetchContractDetailsNew = this.contractForm.value;
+        if(JSON.stringify(this.fetchContractDetailsOld) == JSON.stringify(this.fetchContractDetailsNew) ){
+          
+          this.updateNoChange.flag=true;
+          this.updateNoChange.message="No Values updated. Update atleast one value to update";
+          return;
+        }
         this.contractService.updateContract(updateConObj)
             .pipe(first())
             .subscribe({
@@ -774,6 +782,9 @@ openViewModal(bool, id:any){
                     //this.contractForm.reset();
                     
                     this.getAllContracts();
+                    this.updateNoChange.flag=false;
+                    this.updateNoChange.message="";
+                    this.isDisabled = true;
                     this.alertService.success('Contract updated', { 
                       keepAfterRouteChange: true });
                    // this.router.navigate(['../../'], { relativeTo: this.route });

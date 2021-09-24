@@ -120,6 +120,7 @@
      <div *ngIf="exIncStartErr.isDateErr">{{exIncStartErr.dateErrMsg}}</div>
      <div *ngIf="exPaidStartEndErr.isDateErr">{{exPaidStartEndErr.dateErrMsg}}</div>
      <div *ngIf="exPaidStartErr.isDateErr">{{exPaidStartErr.dateErrMsg}}</div>
+     <div *ngIf="updateNoChange.flag">{{updateNoChange.message}}</div>
      <!-- <div *ngIf="startDateRangeErr.isDateErr">{{startDateRangeErr.dateErrMsg}}</div> -->
     </div>  
     <div class="contract-form-wrap">
