@@ -613,9 +613,11 @@ export class MemberComponent implements OnInit {
     this.openCustomModal(bool, id);
   }
   openCustomModal(open: boolean, id: any) {
+    document.getElementById("m1").scrollTop=0;
     this.isDisabled = false;
     setTimeout(() => {
       this.focusTag.nativeElement.focus()
+      
     }, 100);
     this.isCustomModalOpen = open;
     this.submitted = false;
