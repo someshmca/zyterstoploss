@@ -1,305 +1,304 @@
 
  <div class="page-content">
   
-    <div class="card custom-card">
-     <div class="card-header">
-           <h3>Plan &amp; Tier</h3>
-            <div class="edit-update-alert">
-              <!-- <alert></alert> -->
-           </div>           
-     </div>
-     <div class="card-body">
-         <div class="select-grid-wrap">
-             <div class="select-grid-header">
-               <div>
-                 <label class="form-field-label">
-                     Search Plan &amp; Tier 
-                 </label>
-                 <div class="search-field-clear-area">   
-                  <div fxLayout fxLayoutAlign="center center">
-                    <mat-form-field fxFlex="40%">
-                      <input matInput type="text" #filterSearchInput [value]="searchInputValue" (keyup)="doFilter($event.target.value)"  (focus)="doFilter($event.target.value)" placeholder="Search a Plan &amp; Tier">
-                    </mat-form-field>
-                  </div>   
-                  <div class="clear-btn-div">
-                    <button type="button" class="btn btn-outline-secondary" (click)="clearSearchInput()">Clear</button>
-                  </div>
-                </div> 
-               </div> 
+  <div class="card custom-card">
+   <div class="card-header">
+         <h3>Plan &amp; Tier</h3>
+          <div class="edit-update-alert">
+            <!-- <alert></alert> -->
+         </div>           
+   </div>
+   <div class="card-body">
+       <div class="select-grid-wrap">
+           <div class="select-grid-header">
+             <div>
+               <label class="form-field-label">
+                   Search Plan &amp; Tier 
+               </label>
+               <div class="search-field-clear-area">   
+                <div fxLayout fxLayoutAlign="center center">
+                  <mat-form-field fxFlex="40%">
+                    <input matInput type="text" #filterSearchInput [value]="searchInputValue" (keyup)="doFilter($event.target.value)"  (focus)="doFilter($event.target.value)" placeholder="Search a Plan &amp; Tier">
+                  </mat-form-field>
+                </div>   
+                <div class="clear-btn-div">
+                  <button type="button" class="btn btn-outline-secondary" (click)="clearSearchInput()">Clear</button>
+                </div>
+              </div> 
              </div> 
-             <div class="card-table-area">
-         <div class="table-responsive">
-             <div class="cust-add-area">
-                 <span class="fa fa-plus-circle" (click)="openCustomModal(true, null)" *ngIf="isAdmin"></span>
-             </div>    
-             <div class="mat-elevation-z8">
-               <table mat-table matSort #planTable [dataSource]="dataSource" class="table table-bordered table-striped table-hover card-table">
-             
-                 <ng-container matColumnDef="clientName">
-                   <th mat-header-cell *matHeaderCellDef mat-sort-header > Account </th>
-                   <td mat-cell *matCellDef="let element"> {{element.clientName}} </td>
-                 </ng-container>
-                 <ng-container matColumnDef="planCode">
-                   <th mat-header-cell *matHeaderCellDef mat-sort-header > Plan ID </th>
-                   <td mat-cell *matCellDef="let element"> {{element.planCode}} </td>
-                 </ng-container>
-                 <ng-container  matColumnDef="planName">
-                   <th mat-header-cell *matHeaderCellDef mat-sort-header > Plan Name </th>
-                   <td mat-cell *matCellDef="let element"> {{element.planName}} </td>
-                 </ng-container>
-                
-                 <ng-container matColumnDef="planID">
-                   <th mat-header-cell *matHeaderCellDef> Action </th>
-                   <td mat-cell *matCellDef="let element" class="action-link"> 
-                    <span class="view-icon" 
-                          (click)="openViewModal(true, element)" title="View"></span>
-                     <span class="fa fa-edit" 
-                           (click)="openCustomModal(true, element)" title="Update"  *ngIf="isAdmin"></span>
-                   </td>
-                 </ng-container>
-                 <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                 <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-               </table>
-               <div class="grid-footer">
-                 <div class="col_1">
-                   <a class="text-primary" routerLinkActive="active" (click)="goBackPreviousNoFilter()">Back</a>
-                 </div>
-                 <div class="col_2">
-                   <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
-                 </div>
+           </div> 
+           <div class="card-table-area">
+       <div class="table-responsive">
+           <div class="cust-add-area">
+               <span class="fa fa-plus-circle" (click)="openCustomModal(true, null)" *ngIf="isAdmin"></span>
+           </div>    
+           <div class="mat-elevation-z8">
+             <table mat-table matSort #planTable [dataSource]="dataSource" class="table table-bordered table-striped table-hover card-table">
+           
+               <ng-container matColumnDef="clientName">
+                 <th mat-header-cell *matHeaderCellDef mat-sort-header > Account </th>
+                 <td mat-cell *matCellDef="let element"> {{element.clientName}} </td>
+               </ng-container>
+               <ng-container matColumnDef="planCode">
+                 <th mat-header-cell *matHeaderCellDef mat-sort-header > Plan ID </th>
+                 <td mat-cell *matCellDef="let element"> {{element.planCode}} </td>
+               </ng-container>
+               <ng-container  matColumnDef="planName">
+                 <th mat-header-cell *matHeaderCellDef mat-sort-header > Plan Name </th>
+                 <td mat-cell *matCellDef="let element"> {{element.planName}} </td>
+               </ng-container>
+              
+               <ng-container matColumnDef="planID">
+                 <th mat-header-cell *matHeaderCellDef> Action </th>
+                 <td mat-cell *matCellDef="let element" class="action-link"> 
+                  <span class="view-icon" 
+                        (click)="openViewModal(true, element)" title="View"></span>
+                   <span class="fa fa-edit" 
+                         (click)="openCustomModal(true, element)" title="Update"  *ngIf="isAdmin"></span>
+                 </td>
+               </ng-container>
+               <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+               <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+             </table>
+             <div class="grid-footer">
+               <div class="col_1">
+                 <a class="text-primary" routerLinkActive="active" (click)="goBackPreviousNoFilter()">Back</a>
+               </div>
+               <div class="col_2">
+                 <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
                </div>
              </div>
-         </div>
-         </div>
-         </div>
-     </div>
+           </div>
+       </div>
+       </div>
+       </div>
    </div>
-   </div>
-   
-   
-   <!-- Add/Update Plans Modal -->
-   <div class="modal fade" role="dialog" [ngClass]="{'view-modal':isViewModal}" [ngStyle]="{'display': isCustomModalOpen ? 'block' : 'none', 'opacity': 1}">
-    <div class="modal-dialog modal-dialog-centered" style="max-width: 870px;">
-      <div class="modal-content">        
-        <!-- Modal Header -->
-        <div class="modal-header">
-            <h4 class="modal-title" *ngIf="!isViewModal">
-                <span *ngIf="isAddMode">Add Plan &amp; Tier</span>
-                <span *ngIf="!isAddMode">Update Plan &amp; Tier</span>
-            </h4>
-            <h4 class="modal-title" *ngIf="isViewModal">Plan &amp; Tier</h4>
-            <div>
-              <alert></alert>
-              <a class="fa fa-2x fa-times-circle" (click)="openCustomModal(false, null)">
-              </a>
-            </div>
-        </div>
-        <form [formGroup]="planForm" (ngSubmit)="onSubmit()">
-        <!-- Modal body -->
-        <div class="modal-body"> 
-    <div class="helth-plan-form-area">
-             <div class="mandate-fields">
-               <span *ngIf="submitted && !planForm.valid">Fields marked with * are mandatory</span>
-               <span *ngIf="submitted && isNoFactAmount">Enter any Factor Amount. Atleast One Factor amount is required</span>
-               <div *ngIf="isContractYearInvalid.flag">{{isContractYearInvalid.message}}</div>
-               <div *ngIf="tierIdExists.singleFlag">{{tierIdExists.singleMsg}}</div>
-               <div *ngIf="tierIdExists.dualFlag">{{tierIdExists.dualMsg}}</div>
-               <div *ngIf="tierIdExists.familyFlag">{{tierIdExists.familyMsg}}</div>
-               <div *ngIf="tierIdExists.othersFlag">{{tierIdExists.othersMsg}}</div>
-               <div *ngIf="planIdErr.isDuplicate">{{planIdErr.errMsg}}</div>
-               <div *ngIf="planNameErr.isDuplicate">{{planNameErr.errMsg}}</div>
-               <div *ngIf="duplicatePlanTierErr.flag">{{duplicatePlanTierErr.message}}</div>
-               <div *ngIf="tierIdRequiredErr.flag">{{this.tierIdRequiredErr.msg}}</div>
-               <div *ngIf="slTierSDateErr.isDateErr">{{slTierSDateErr.dateErrMsg}}</div>
-               <div *ngIf="slTierEDateErr.isDateErr">{{slTierEDateErr.dateErrMsg}}</div>
-               <div *ngIf="tierDateErr.flag">{{tierDateErr.msg}}</div>
-               <div *ngIf="updateNoChange.flag">{{updateNoChange.message}}</div>
-             </div>  
-             <div class="row">
-                 <div class="col-md-4">
-                  <div class="form-group">
-                    <label>Medica Plan ID<small class="starmark">*</small></label>
-                    <input #focusElem type="text" class="form-control" formControlName="planCode" [ngClass]="{ 'is-invalid': planIdErr.isDuplicate }" />
-                  </div>
-                 </div>
-                 <div class="col-md-4">
-                  <div class="form-group">
-                    <label>Medica Plan Name<small class="starmark">*</small></label>
-                    <input type="text" formControlName="planName" maxlength="50" class="form-control" [ngClass]="{ 'is-invalid': planNameErr.isDuplicate }" />                
-                        </div>   
-                 </div>
-                 <div class="col-md-4">  
-                  <div class="form-group">
-                    <label>Medica Account<small class="starmark">*</small> </label>
-              <select formControlName="clientId" class="form-control" (change)="getContractsByClientID($event.target.value)" [ngClass]="{ 'is-invalid': submitted && f.clientId.errors }">
-                    <option *ngFor="let client of locClients" [value]="client.clientId">
-                        {{client.clientName}}
-                    </option>
-                  </select>
-                  </div>
-                 </div>
+ </div>
+ </div>
+ 
+ 
+ <!-- Add/Update Plans Modal -->
+ <div class="modal fade" role="dialog" [ngClass]="{'view-modal':isViewModal}" [ngStyle]="{'display': isCustomModalOpen ? 'block' : 'none', 'opacity': 1}">
+  <div class="modal-dialog modal-dialog-centered" style="max-width: 870px;">
+    <div class="modal-content">        
+      <!-- Modal Header -->
+      <div class="modal-header">
+          <h4 class="modal-title" *ngIf="!isViewModal">
+              <span *ngIf="isAddMode">Add Plan &amp; Tier</span>
+              <span *ngIf="!isAddMode">Update Plan &amp; Tier</span>
+          </h4>
+          <h4 class="modal-title" *ngIf="isViewModal">Plan &amp; Tier</h4>
+          <div>
+            <alert></alert>
+            <a class="fa fa-2x fa-times-circle" (click)="openCustomModal(false, null)">
+            </a>
+          </div>
+      </div>
+      <form [formGroup]="planForm" (ngSubmit)="onSubmit()">
+      <!-- Modal body -->
+      <div class="modal-body"> 
+  <div class="helth-plan-form-area">
+           <div class="mandate-fields">
+             <span *ngIf="submitted && !planForm.valid">Fields marked with * are mandatory</span>
+             <span *ngIf="submitted && isNoFactAmount">Enter any Factor Amount. Atleast One Factor amount is required</span>
+             <div *ngIf="isContractYearInvalid.flag">{{isContractYearInvalid.message}}</div>
+             <div *ngIf="tierIdExists.singleFlag">{{tierIdExists.singleMsg}}</div>
+             <div *ngIf="tierIdExists.dualFlag">{{tierIdExists.dualMsg}}</div>
+             <div *ngIf="tierIdExists.familyFlag">{{tierIdExists.familyMsg}}</div>
+             <div *ngIf="tierIdExists.othersFlag">{{tierIdExists.othersMsg}}</div>
+             <div *ngIf="planIdErr.isDuplicate">{{planIdErr.errMsg}}</div>
+             <div *ngIf="planNameErr.isDuplicate">{{planNameErr.errMsg}}</div>
+             <div *ngIf="duplicatePlanTierErr.flag">{{duplicatePlanTierErr.message}}</div>
+             <div *ngIf="tierIdRequiredErr.flag">{{this.tierIdRequiredErr.msg}}</div>
+             <div *ngIf="slTierSDateErr.isDateErr">{{slTierSDateErr.dateErrMsg}}</div>
+             <div *ngIf="slTierEDateErr.isDateErr">{{slTierEDateErr.dateErrMsg}}</div>
+             <div *ngIf="tierDateErr.flag">{{tierDateErr.msg}}</div>
+           </div>  
+           <div class="row">
+               <div class="col-md-4">
+                <div class="form-group">
+                  <label>Medica Plan ID<small class="starmark">*</small></label>
+                  <input #focusElem type="text" class="form-control" formControlName="planCode" [ngClass]="{ 'is-invalid': planIdErr.isDuplicate }" />
                 </div>
-                <div class="row">
-                    <div class="col-md-4">
-                      <div class="form-group">
-                       <label>Contract<small class="starmark">*</small> </label>
-                       <select formControlName="contractId" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.contractId.errors }">
-                         <option *ngFor="let contract of contractsByClientId" [value]="contract.contractId">
-                           {{contract.contractId}}
-                       </option>
-                           </select>
-                     </div>
-                    </div>
-                    <!-- <div class="col-md-4">
-                      <div class="form-group">
-                        <label>Contract Year<small class="starmark">*</small> </label>
-                        <input type="text" class="form-control" formControlName="contractYear" maxlength="4" [ngClass]="{ 'is-invalid': (submitted && f.contractYear.errors) || isContractYearInvalid.flag}" placeholder="YYYY"/>
-                      </div>
-                    </div> -->
-                   </div>  
-                   <div class="tier-grid-area">
-                     <div *ngIf="tiersLimitExceeded.flag" class="text-danger">
-                       {{tiersLimitExceeded.value}}
-                     </div>
-                     <div class="tier-table-wrap">
-                        <div class="tier-add-icon">
-                          <span class="fa fa-plus-circle" (click)="addTier()" *ngIf="!isViewModal"></span>
-                          </div>   
-                          <div class="tier-table-scroll">
-                          <table class="table table-striped table-bordered tier-table">
-                            <thead>
-                              <tr>
-                                  <th>StopLoss Tier<small class="starmark">*</small></th>
-                                  <th>StopLoss Tier Factor<small class="starmark">*</small></th>
-                                  <th>Expected Claim Rate</th>
-                                  <th>StopLoss Tier Start Date<small class="starmark">*</small></th>
-                                  <th>StopLoss Tier End Date<small class="starmark">*</small></th>
-                                  <th>Terminal Extension Coverage</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                              <ng-container *ngFor="let tier of tierFormGroups; let i = index">
-                              <tr [formGroup]="tier">
-                                <td>
-                                    <select class="form-control" formControlName="tierId" [ngClass]="{'is-invalid':tierIdRequiredErr.flag}">
-                                      <option value="1">Single</option>
-                                      <option value="2">Dual</option>
-                                      <option value="3">Family</option>
-                                      <option value="4">Others</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <input type="number" formControlName="tierAmount" class="form-control" [ngClass]="{ 'is-invalid': isTierAmountInvalid}" />
-                                </td>
-                                <td>
-                                  <input type="number" formControlName="expectedClaimsRate" class="form-control" [ngClass]="{ 'is-invalid': isExpectedClaimsRateInvalid}" />
-                                </td>
-                                <td>
-                                  <input type="date" formControlName="stopLossTierStartDate" class="form-control"/>
-                                </td>
-                                <td>
-                                  <input type="date" formControlName="stopLossTierEndDate" class="form-control"/>
-                                </td>
-                                <td>
-                                  <div class="form-group switch-group">
-                                    <label></label>                        
-                                    <label class="switch">
-                                      <input type="checkbox" class="success"  formControlName="isTerminalExtCoverage">
-                                      <span class="slider round"></span>
-                                    </label>  
-                                  </div>
-                                </td>
-                              </tr>
-                              </ng-container>
-                            </tbody>
-                          </table>
-                          </div>
-                        </div>
-                    </div>
-                   <!-- <div class="row">
-                    <div class="col-md-4">
-                      <div class="form-group">
-                        <label>{{locTires[1].tierName}} Factor Amount</label>
-                  <input type="text" formControlName="factor2" [value]="locTires[1].tierId"  class="form-control" />
-                      </div>
-                    </div>
-                     <div class="col-md-4">
-                      <div class="form-group">
-                        <label>{{locTires[2].tierName}} Factor Amount</label>
-                  <input type="text" formControlName="factor3" [value]="locTires[2].tierId" class="form-control" />
-                      </div>
-                     </div>
-                     <div class="col-md-4">
-                      <div class="form-group">
-                     <label>{{locTires[3].tierName}} Factor Amount</label>
-               <input type="text" formControlName="factor4" [value]="locTires[3].tierId" class="form-control" />
-                   </div>
-                     </div>
-                   </div>
-                   <div class="row">
-                    <div class="col-md-4">
-                      <div class="form-group">
-                        <label>Single Expected Claim Rate</label>
-                         <input type="text" formControlName="expectedClaims1" class="form-control" />
-                      </div>
-                    </div>
-                    <div class="col-md-4">
-                      <div class="form-group">
-                        <label>Dual Expected Claim Rate</label>
-                         <input type="text" formControlName="expectedClaims2" class="form-control" />
-                      </div>
-                    </div>
-                    <div class="col-md-4">
-                      <div class="form-group">
-                        <label>Family Expected Claim Rate</label>
-                         <input type="text" formControlName="expectedClaims3" class="form-control" />
-                      </div>
-                    </div>
-                   </div>
-                   <div class="row">
-                    <div class="col-md-4">
-                      <div class="form-group">
-                        <label>Other Expected Claim Rate</label>
-                         <input type="text" formControlName="expectedClaims4" class="form-control" />
-                      </div>
-                    </div>
-                    <div class="col-md-4">
-                     <div class="form-group switch-group">
-                       <label>Terminal Extension Coverage</label>                        
-                       <label class="switch">
-                         <input type="checkbox" class="success" formControlName="isTerminalExtCoverage">
-                         <span class="slider round"></span>
-                       </label>  
-                     </div>
-                    </div>
-                     
-                   </div> -->
-             
-             
-          
-          </div> 
-        </div>    
-        
-          
-        <div class="modal-footer">
-          <div class="modal-footer-btns">
-            <div class="col_1">
-              <button type="button" class="btn btn-primary" *ngIf="isAddMode" routerLinkActive="active" (click)="goBackPreviousScreen()">Back</button>
-              <button type="button" class="btn btn-primary" *ngIf="!isAddMode" routerLinkActive="active" (click)="goBackCurrentScreen()">Back</button>
                </div>
-            <div class="col_2">
-              <button type="button" class="btn btn-outline-primary" (click)="openCustomModal(false, null)">Cancel</button>
-              <button type="submit" class="btn btn-primary" *ngIf="!isAddMode && !isViewModal" [disabled]="isDisabled">Update</button>
-              <button type="submit" class="btn btn-primary" [disabled]="isDisabled" *ngIf="isAddMode">Add</button>
-            </div>
+               <div class="col-md-4">
+                <div class="form-group">
+                  <label>Medica Plan Name<small class="starmark">*</small></label>
+                  <input type="text" formControlName="planName" maxlength="50" class="form-control" [ngClass]="{ 'is-invalid': planNameErr.isDuplicate }" />                
+                      </div>   
+               </div>
+               <div class="col-md-4">  
+                <div class="form-group">
+                  <label>Medica Account<small class="starmark">*</small> </label>
+            <select formControlName="clientId" class="form-control" (change)="getContractsByClientID($event.target.value)" [ngClass]="{ 'is-invalid': submitted && f.clientId.errors }">
+                  <option *ngFor="let client of locClients" [value]="client.clientId">
+                      {{client.clientName}}
+                  </option>
+                </select>
+                </div>
+               </div>
+              </div>
+              <div class="row">
+                  <div class="col-md-4">
+                    <div class="form-group">
+                     <label>Contract<small class="starmark">*</small> </label>
+                     <select formControlName="contractId" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.contractId.errors }">
+                       <option *ngFor="let contract of contractsByClientId" [value]="contract.contractId">
+                         {{contract.contractId}}
+                     </option>
+                         </select>
+                   </div>
+                  </div>
+                  <!-- <div class="col-md-4">
+                    <div class="form-group">
+                      <label>Contract Year<small class="starmark">*</small> </label>
+                      <input type="text" class="form-control" formControlName="contractYear" maxlength="4" [ngClass]="{ 'is-invalid': (submitted && f.contractYear.errors) || isContractYearInvalid.flag}" placeholder="YYYY"/>
+                    </div>
+                  </div> -->
+                 </div>  
+                 <div class="tier-grid-area">
+                   <div *ngIf="tiersLimitExceeded.flag" class="text-danger">
+                     {{tiersLimitExceeded.value}}
+                   </div>
+                   <div class="tier-table-wrap">
+                      <div class="tier-add-icon">
+                        <span class="fa fa-plus-circle" (click)="addTier()" *ngIf="!isViewModal"></span>
+                        </div>   
+                        <div class="tier-table-scroll">
+                        <table class="table table-striped table-bordered tier-table">
+                          <thead>
+                            <tr>
+                                <th>StopLoss Tier<small class="starmark">*</small></th>
+                                <th>StopLoss Tier Factor<small class="starmark">*</small></th>
+                                <th>Expected Claim Rate</th>
+                                <th>StopLoss Tier Start Date<small class="starmark">*</small></th>
+                                <th>StopLoss Tier End Date<small class="starmark">*</small></th>
+                                <th>Terminal Extension Coverage</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                            <ng-container *ngFor="let tier of tierFormGroups; let i = index">
+                            <tr [formGroup]="tier">
+                              <td>
+                                  <select class="form-control" formControlName="tierId" [ngClass]="{'is-invalid':tierIdRequiredErr.flag}">
+                                    <option value="1">Single</option>
+                                    <option value="2">Dual</option>
+                                    <option value="3">Family</option>
+                                    <option value="4">Others</option>
+                                  </select>
+                              </td>
+                              <td>
+                                  <input type="number" formControlName="tierAmount" class="form-control" [ngClass]="{ 'is-invalid': isTierAmountInvalid}" />
+                              </td>
+                              <td>
+                                <input type="number" formControlName="expectedClaimsRate" class="form-control" [ngClass]="{ 'is-invalid': isExpectedClaimsRateInvalid}" />
+                              </td>
+                              <td>
+                                <input type="date" formControlName="stopLossTierStartDate" class="form-control"/>
+                              </td>
+                              <td>
+                                <input type="date" formControlName="stopLossTierEndDate" class="form-control"/>
+                              </td>
+                              <td>
+                                <div class="form-group switch-group">
+                                  <label></label>                        
+                                  <label class="switch">
+                                    <input type="checkbox" class="success"  formControlName="isTerminalExtCoverage">
+                                    <span class="slider round"></span>
+                                  </label>  
+                                </div>
+                              </td>
+                            </tr>
+                            </ng-container>
+                          </tbody>
+                        </table>
+                        </div>
+                      </div>
+                  </div>
+                 <!-- <div class="row">
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label>{{locTires[1].tierName}} Factor Amount</label>
+                <input type="text" formControlName="factor2" [value]="locTires[1].tierId"  class="form-control" />
+                    </div>
+                  </div>
+                   <div class="col-md-4">
+                    <div class="form-group">
+                      <label>{{locTires[2].tierName}} Factor Amount</label>
+                <input type="text" formControlName="factor3" [value]="locTires[2].tierId" class="form-control" />
+                    </div>
+                   </div>
+                   <div class="col-md-4">
+                    <div class="form-group">
+                   <label>{{locTires[3].tierName}} Factor Amount</label>
+             <input type="text" formControlName="factor4" [value]="locTires[3].tierId" class="form-control" />
+                 </div>
+                   </div>
+                 </div>
+                 <div class="row">
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label>Single Expected Claim Rate</label>
+                       <input type="text" formControlName="expectedClaims1" class="form-control" />
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label>Dual Expected Claim Rate</label>
+                       <input type="text" formControlName="expectedClaims2" class="form-control" />
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label>Family Expected Claim Rate</label>
+                       <input type="text" formControlName="expectedClaims3" class="form-control" />
+                    </div>
+                  </div>
+                 </div>
+                 <div class="row">
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label>Other Expected Claim Rate</label>
+                       <input type="text" formControlName="expectedClaims4" class="form-control" />
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                   <div class="form-group switch-group">
+                     <label>Terminal Extension Coverage</label>                        
+                     <label class="switch">
+                       <input type="checkbox" class="success" formControlName="isTerminalExtCoverage">
+                       <span class="slider round"></span>
+                     </label>  
+                   </div>
+                  </div>
+                   
+                 </div> -->
+           
+           
+        
+        </div> 
+      </div>    
+      
+        
+      <div class="modal-footer">
+        <div class="modal-footer-btns">
+          <div class="col_1">
+            <button type="button" class="btn btn-primary" *ngIf="isAddMode" routerLinkActive="active" (click)="goBackPreviousScreen()">Back</button>
+            <button type="button" class="btn btn-primary" *ngIf="!isAddMode" routerLinkActive="active" (click)="goBackCurrentScreen()">Back</button>
+             </div>
+          <div class="col_2">
+            <button type="button" class="btn btn-outline-primary" (click)="openCustomModal(false, null)">Cancel</button>
+            <button type="submit" class="btn btn-primary" *ngIf="!isAddMode && !isViewModal" [disabled]="isDisabled">Update</button>
+            <button type="submit" class="btn btn-primary" [disabled]="isDisabled" *ngIf="isAddMode">Add</button>
           </div>
         </div>
-        </form>       
-        </div>
+      </div>
+      </form>       
       </div>
     </div>
-   
-   
-   
-   
-   
+  </div>
+ 
+ 
+ 
+ 
+ 

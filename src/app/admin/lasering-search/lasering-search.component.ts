@@ -45,7 +45,6 @@ export class LaseringSearchComponent implements OnInit {
   uTierId: any;
   today: string;
    names = [];
-   data1=[];
    countMaxMin = 0;
    pageCount;
   isMemSearchFormInvalid: boolean = false;
@@ -232,162 +231,67 @@ export class LaseringSearchComponent implements OnInit {
     this.clearErrorMessages();
   }
   //(VE 13-08-2021 starts)
-  // validateInputIDs(text, name) {
-  //   this.clearErrorMessages();
-  //   let num1 = /^([0-9]+)$/;
-  //   let alphaNum = /^([a-zA-Z0-9]+)$/;
-  //   let a2 = alphaNum.test(text);
-  //   let a1 = num1.test(text);
-  //   if (!a1 && text != '' && name == 'MemberID') {
-  //     this.memIdErr.isValid = true;
-  //     this.memIdErr.errMsg = 'Member Id is not valid. It should be a number';
-  //     this.isMemSearchFormInvalid = true;
+  validateInputIDs(text, name) {
+    this.clearErrorMessages();
+    let num1 = /^([0-9]+)$/;
+    let alphaNum = /^([a-zA-Z0-9]+)$/;
+    let a2 = alphaNum.test(text);
+    let a1 = num1.test(text);
+    if (!a1 && text != '' && name == 'MemberID') {
+      this.memIdErr.isValid = true;
+      this.memIdErr.errMsg = 'Member Id is not valid. It should be a number';
+      this.isMemSearchFormInvalid = true;
  
-  //   }
-  //   if (!a1 && text != '' && name == 'SubscriberId') {
-  //     this.memSubIdErr.isValid = true;
-  //     this.memSubIdErr.errMsg = 'Subscriber Id is not valid. It should be a number';
-  //     this.isMemSearchFormInvalid = true;
+    }
+    if (!a1 && text != '' && name == 'SubscriberId') {
+      this.memSubIdErr.isValid = true;
+      this.memSubIdErr.errMsg = 'Subscriber Id is not valid. It should be a number';
+      this.isMemSearchFormInvalid = true;
 
-  //   }
-  //   if (!a1 && text != '' && name == 'alternateId') {
-  //     this.altIdErr.isValid = true;
-  //     this.altIdErr.errMsg = 'ALternate Id is not valid. It should be a number';
-  //     this.isMemSearchFormInvalid = true;
+    }
+    if (!a1 && text != '' && name == 'alternateId') {
+      this.altIdErr.isValid = true;
+      this.altIdErr.errMsg = 'ALternate Id is not valid. It should be a number';
+      this.isMemSearchFormInvalid = true;
 
-  //   }
-  //   if (!a2 && text != '' && name == 'clientId') {
-  //     this.accountIdErr.isValid = true;
-  //     this.accountIdErr.errMsg = 'Account Id is not valid.Special Characters not allowed';
-  //     this.isMemSearchFormInvalid = true;
+    }
+    if (!a2 && text != '' && name == 'clientId') {
+      this.accountIdErr.isValid = true;
+      this.accountIdErr.errMsg = 'Account Id is not valid.Special Characters not allowed';
+      this.isMemSearchFormInvalid = true;
      
-  //   }
+    }
 
-  // }
-  // validateInputNames(text, name) {
-  //   this.clearErrorMessages();
-  //   let nam1 = /^([a-zA-Z]+)$/
-  //   let a1 = nam1.test(text);
-  //   if (!a1 && text != '' && name == 'Fname') {
-  //     this.memFnameErr.isValid = true;
-  //     this.memFnameErr.errMsg = 'Member First Name is not valid. It should be a Alphabet';
-  //     this.isMemSearchFormInvalid = true;
+  }
+  validateInputNames(text, name) {
+    this.clearErrorMessages();
+    let nam1 = /^([a-zA-Z]+)$/
+    let a1 = nam1.test(text);
+    if (!a1 && text != '' && name == 'Fname') {
+      this.memFnameErr.isValid = true;
+      this.memFnameErr.errMsg = 'Member First Name is not valid. It should be a Alphabet';
+      this.isMemSearchFormInvalid = true;
      
-  //   }
-  //   if (!a1 && text != '' && name == 'Mname' ) {
-  //     this.memMnameErr.isValid = true;
-  //     this.memMnameErr.errMsg = 'Member Middle Name is not valid. It should be a Alphabet';
-  //     this.isMemSearchFormInvalid = true;
+    }
+    if (!a1 && text != '' && name == 'Mname' ) {
+      this.memMnameErr.isValid = true;
+      this.memMnameErr.errMsg = 'Member Middle Name is not valid. It should be a Alphabet';
+      this.isMemSearchFormInvalid = true;
    
-  //   }
-  //   if (!a1 && text != '' && name == 'Lname')  {
-  //     this.memLnameErr.isValid = true;
-  //     this.memLnameErr.errMsg = 'Member Last Name is not valid. It should be a Alphabet';
-  //     this.isMemSearchFormInvalid = true;
+    }
+    if (!a1 && text != '' && name == 'Lname')  {
+      this.memLnameErr.isValid = true;
+      this.memLnameErr.errMsg = 'Member Last Name is not valid. It should be a Alphabet';
+      this.isMemSearchFormInvalid = true;
    
-  //   }
-  //   if (!a1 && text != '' && name == 'tier') {
-  //     this.coverageTierErr.isValid = true;
-  //     this.coverageTierErr.errMsg = 'Coverage Tier is not valid. It should be a Alphabet';
-  //     this.isMemSearchFormInvalid = true;
-     
-  //   }
-  // }
-
-
-  validateInputNames(labelName, fieldValue){
-    let alpha= /^([A-Za-z ]+)$/;
-    let alphaNum= /^([A-Za-z0-9 ]+)$/; 
-    
-
-    let isValidInputName: boolean=true;
-    if(fieldValue.length>0){
-      let checkInputString = alpha.test(fieldValue);
-      //let checkInputAlphaNum = alphaNum.test(fieldValue);
-      if(!checkInputString){
-        if(labelName=='First Name'){
-          this.memFnameErr.isValid = true;
-          this.memFnameErr.errMsg = 'Invalid '+labelName;
-          this.isMemSearchFormInvalid=true;
-        }
-        else if(labelName=="Last Name"){
-          this.memLnameErr.isValid = true;
-          this.memLnameErr.errMsg = 'Invalid '+labelName;
-          this.isMemSearchFormInvalid=true;
-        }
-        else if(labelName=="Middle Name"){
-          this.memMnameErr.isValid = true;
-          this.memMnameErr.errMsg = 'Invalid '+labelName;
-          this.isMemSearchFormInvalid=true;
-        }
-        
-        else if(labelName=="Coverage Tire"){
-          this.coverageTierErr.isValid = true;
-          this.coverageTierErr.errMsg = 'Invalid '+labelName;
-          this.isMemSearchFormInvalid=true;
-        }
-       
-        else
-          this.isMemSearchFormInvalid=true;
-      }
+    }
+    if (!a1 && text != '' && name == 'tier') {
+      this.coverageTierErr.isValid = true;
+      this.coverageTierErr.errMsg = 'Coverage Tier is not valid. It should be a Alphabet';
+      this.isMemSearchFormInvalid = true;
      
     }
-    // if(!isValidInputName)
-    //   this.isClaimSearchFormInvalid=true;
-    // else
-    //   this.isClaimSearchFormInvalid=false;
-
   }
-  validateInputAlphaNumIds(labelName, fieldValue)
-  {
-    let alphaNum= /^([A-Za-z0-9 ]+)$/; 
-    if(fieldValue.length>0){
-      let checkInputAlphaNum = alphaNum.test(fieldValue);
-      if(!checkInputAlphaNum )
-      {
-        if(labelName=='Account Id'){
-          this.accountIdErr.isValid= true;
-          this.accountIdErr.errMsg = 'Invalid '+labelName;
-          this.isMemSearchFormInvalid=true;
-        }
-        else
-        this.isMemSearchFormInvalid=true;
-      }
-    
-    }
-
-  }
-  validateInputIDs(labelName, fieldValue){
-
-    let Num = /^([0-9]+)$/;
-
-    let isValidInputID: boolean=true;
-    if(fieldValue.length>0){
-      let checkInputString = Num.test(fieldValue);
-      if(!checkInputString){
-        if(labelName=='Subscriber Id'){
-          this.memSubIdErr.isValid=true;
-          this.memSubIdErr.errMsg='Invalid '+labelName;
-          this.isMemSearchFormInvalid=true;
-        }
-        else if(labelName=="Alternate Member Id"){
-          this.altIdErr.isValid=true;
-          this.altIdErr.errMsg='Invalid '+labelName;
-          this.isMemSearchFormInvalid=true;
-        }
-        else if(labelName=="Member Id"){
-          this.memIdErr.isValid=true;
-          this.memIdErr.errMsg='Invalid '+labelName;
-          this.isMemSearchFormInvalid=true;
-        }
-      
-        else{
-          this.isMemSearchFormInvalid=true;
-        }
-      }
-    }
-  }
-
   //(VE 13-08-2021 starts)
   limit(page)
   {
@@ -431,9 +335,7 @@ export class LaseringSearchComponent implements OnInit {
 
   searchLasering(formData: FormGroup) {
      this.names.length = 0;
-    this.data1=[];
     this.memSearchSubmitted = true;
-    this.isMemSearchFormInvalid=false;
     this.memSearchError = false;
     this.isMemCount = true;
 
@@ -455,22 +357,6 @@ export class LaseringSearchComponent implements OnInit {
     let tier = this.memberSearchForm.get("tier").value;
     let alternateId = this.memberSearchForm.get("alternateId").value;
     console.log(this.memberSearchForm.value);
-
-
-
-
-    
-    this.validateInputIDs("Subscriber Id",subscriberId);
-    this.validateInputIDs("Alternate Member Id",alternateId);
-    this.validateInputIDs("Member Id",memberId);
-
-   
-    this.validateInputNames("First Name", fname);
-    this.validateInputNames("Last Name", lname);
-    this.validateInputNames("Middle Name", mname);
-   // this.validateInputNames("Coverage Tire", tier);
-    this.validateInputAlphaNumIds("Account Id", clientId);
-   
     //(VE 13-08-2021 starts)
     //let alphaNum = /^([a-zA-Z0-9 ]+)$/; 
     // let alphaNum = /^([a-zA-Z0-9]+)$/; 
@@ -555,39 +441,7 @@ export class LaseringSearchComponent implements OnInit {
     if (!this.isMemSearchFormInvalid) {
       this.memberService.memberSearch(memberId, fname, mname, lname, subscriberId, dob, Gender, memberStartDate, memberEndDate, benefitPlanId, clientId, tier, alternateId).subscribe(
         (data: IMemberSearchResponse[]) => {
-          this.excel1 = this.data1;
-        // this.data1=[];
-          for (let i = 0; i <data.length; i++)
-          {
-            if(data[i].laserValue > 0 && data[i].laserValue != null && data[i].laserValue != undefined)
-            {
-              console.log(data[i].laserValue)
-            this.data1.push(data[i]);
-            this.memSearchError=false;
-            this.isSearchDataThere=true;
-            //debugger;
-            continue;
-            }
-            // if(data[1].laserValue == 0 || data[1].laserValue == null)
-            // {
-            //   debugger;
-            //   this.memSearchError=true;
-            //   this.isSearchDataThere=false;
-            //   return;
-           // }
-           // if(this.memberSearchErr) return;
-           
-          }
-          console.log(this.data1.length)
-          if(this.data1.length==0)
-          {
-            this.isSearchDataThere=false;
-            this.memSearchError=true;
-            return;
-
-          }
-         
-        
+          this.excel1 = data;
           
           //(VE 13-08-2021)
           // let max = num1.test(minPage);
@@ -595,8 +449,8 @@ export class LaseringSearchComponent implements OnInit {
 
           // let min = num1.test(maxPage);
            //console.log(num1.test(maxPage));
-           this.countMaxMin = this.data1.length;
-           console.log(this.data1[maxPage]);
+           this.countMaxMin = data.length;
+           console.log(data[maxPage]);
           // console.log(maxPage)
           // console.log(minPage);
 
@@ -636,7 +490,7 @@ export class LaseringSearchComponent implements OnInit {
           //   return;
           // }
           for (let i = 0; i <= maxPage - 1; i++) {
-            this.names.push(this.data1[i]);
+            this.names.push(data[i]);
          
             //this.pageCount = this.names.length;
            }
@@ -667,7 +521,7 @@ export class LaseringSearchComponent implements OnInit {
           console.log(data);
           this.clearErrorMessages();
           console.log(data[0].memberId)
-          if (this.data1 == null || this.data1.length == 0) {
+          if (data == null || data.length == 0) {
             console.log("Records are Empty");
 
           }
@@ -679,8 +533,8 @@ export class LaseringSearchComponent implements OnInit {
            // this.searchDataSource = new MatTableDataSource(data)//(VE 13-08-2021)
             
             
-            if (this.data1[maxPage] == undefined) {
-              this.searchDataSource = new MatTableDataSource(this.data1)
+            if (data[maxPage] == undefined) {
+              this.searchDataSource = new MatTableDataSource(data)
             }
             else if(maxPage>=0)
             {
