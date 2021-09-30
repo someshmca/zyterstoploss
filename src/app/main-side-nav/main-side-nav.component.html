@@ -13,7 +13,7 @@
              <ul class="sub-menu collapse" [attr.id]="'a'+cnavitem.menuGroup" data-parent="#accordionExample">
                 <li *ngFor="let itms of cnavitem.menus" [routerLink]="itms.route" routerLinkActive="active" (click)="clearPopupSessions()">
                     <a>
-                        {{itms.name}} 
+                        {{itms.name}}
                     </a>
                 </li> 
             </ul>

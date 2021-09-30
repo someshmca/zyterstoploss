@@ -61,6 +61,9 @@ export class HealthPlanService {
   
     return this.http.get(Paths.duplicatePlanId+PId).pipe(catchError(this.handleError.bind(this)));
   }
+  checkDuplicatePlan(planCode: string, contractId: number, clientId: string){
+    return this.http.get(Paths.duplicatePlan+"planCode="+planCode+"&contractId="+contractId+"&clientId="+clientId).pipe(catchError(this.handleError.bind(this)));
+  }
   checkDuplicatePlanName(PName: string){
   
     return this.http.get(Paths.duplicatePlanName+PName).pipe(catchError(this.handleError.bind(this)));
