@@ -2,8 +2,8 @@
 //const apiPath = "http://10.48.30.158:92/api/"; // Dev Server 
 //const apiPath = "http://10.45.30.100:92/api/"; // QA Server
 //const apiPath = "http://10.12.30.40:92/api/"; //UAT Server
-const apiPath = "http://10.10.30.206:92/api/"; // Production Server 1 
-//const apiPath = "http://10.10.30.207:92/api/"; // Production Server 2
+//const apiPath = "http://10.10.30.206:92/api/"; // Production Server 1 
+const apiPath = "http://10.10.30.207:92/api/"; // Production Server 2
 
 // for Azure 
 export const Paths = {
