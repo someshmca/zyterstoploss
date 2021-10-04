@@ -119,6 +119,8 @@ export class ProductComponent implements OnInit {
   updateStatus: boolean;
   year1Added:boolean=false;
   isMultiContractCheckedStatus: boolean;
+  oldIbnrPercentage: number; newIbnrPercentage: number;
+  oldDefferedPercentage: number; newDefferedPercentage: number;
   constructor(
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
@@ -391,9 +393,23 @@ export class ProductComponent implements OnInit {
       this.f.ibnrPercentage.updateValueAndValidity(); 
       this.f.defferedFeePercentage.setValidators([Validators.required]);
       this.f.defferedFeePercentage.updateValueAndValidity(); 
+      if(!this.isAddMode){
+        this.newIbnrPercentage=this.numberValueString(this.f.ibnrPercentage.value),
+        this.newDefferedPercentage=this.numberValueString(this.f.defferedFeePercentage.value),
+       this.productForm.patchValue({
+         ibnrPercentage: this.newIbnrPercentage,
+         defferedFeePercentage: this.newDefferedPercentage
+       })
+      }
     }
     else{
      // this.productForm.patchValue({isMaxLiability: false });
+     if(!this.isAddMode){
+      this.productForm.patchValue({
+        ibnrPercentage: this.oldIbnrPercentage,
+        defferedFeePercentage: this.oldDefferedPercentage
+      })
+     }
       this.f.ibnrPercentage.clearValidators();
       this.f.ibnrPercentage.updateValueAndValidity(); 
       this.f.defferedFeePercentage.clearValidators();
@@ -1495,6 +1511,8 @@ fetchProduct(x){
     this.productForm.patchValue({
       isMultiContractPeriod: this.isMultiContractCheckedStatus
     });
+    this.oldIbnrPercentage=this.numberValueString(x.ibnrPercentage),
+    this.oldDefferedPercentage=this.numberValueString(x.defferedFeePercentage),
   this.checkYear2Selected();
     this.productForm.patchValue({
     productId:x.productId,
@@ -1545,14 +1563,16 @@ fetchProduct(x){
     aslIsMonthlyAccomidation:x.aslIsMonthlyAccomidation,
     aslTermCoverageExtEndDate:this.dateValueString(x.aslTermCoverageExtEndDate),
     isMaxLiability:x.isMaxLiability,
-    ibnrPercentage:this.numberValueString(x.ibnrPercentage),
-    defferedFeePercentage:this.numberValueString(x.defferedFeePercentage),
+    ibnrPercentage:this.oldIbnrPercentage,
+    defferedFeePercentage:this.oldDefferedPercentage,
     status:x.status, 
     userId: this.loginService.currentUserValue.name,
     contractPeriod: x.contractPeriod,  
     lstContractClaims: x.listContractClaims,
     isMultiContractPeriod: this.isMultiContractCheckedStatus
   });
+  
+
   console.log(this.productForm.value);
   
 

@@ -292,11 +292,13 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
     this.contractService.getContractsByClientID(clientId).subscribe((data)=>{
       data.sort((x,y) => x.contractId - y.contractId);
       this.contractsByClientId = data;      
-      
-      this.planForm.patchValue({
-        contractId: this.contractsByClientId[0].contractId
-      })
+      if(this.isAddMode){
+        this.planForm.patchValue({
+          contractId: this.contractsByClientId[0].contractId
+        })
+      }
       console.log(this.planForm.value);
+      
     })
   }
 initLocalTires(){
@@ -449,8 +451,9 @@ dateValue(dateVal){
       }
     }
     if(open && elem!=null){
+      
       this.isPatchInputValue=true;
-      this.isFilterOn=false;      
+      this.isFilterOn=false;
       this.isAddMode = false;
       // let plansAll = this.plans;
       // let uPlan = plansAll.filter((obj)=>{
@@ -514,6 +517,7 @@ dateValue(dateVal){
       });
       console.log(this.planForm.value);
       console.log(this.t);
+      
       
       if(this.isViewModal==true){
         this.planForm.disable();
