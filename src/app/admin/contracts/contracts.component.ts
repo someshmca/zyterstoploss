@@ -809,12 +809,18 @@ openViewModal(bool, id:any){
     }
 
     gotoProductUpdate(){
-      this.clientService.getClient(this.f.clientId.value).subscribe(
-        (data: IClient[]) => {                  
-          this.navService.setProductObj(data[0].clientId, data[0].clientName, false, true);
+      // this.clientService.getClient(this.f.clientId.value).subscribe(
+      //   (data: IClient[]) => {                  
+      //     this.navService.setProductObj(data[0].clientId, data[0].clientName, false, true);
+      //     this.isAdded = false;
+      //     this.router.navigate(['/product']);   
+      //   });       
+      this.contractService.getContract(this.f.contractId.value).subscribe(
+        (data: IContract[]) => {                  
+          this.navService.setProductObj(data[0].clientId, data[0].contractId, false, true);
           this.isAdded = false;
           this.router.navigate(['/product']);   
-        });       
+        });   
     }
     clearSearchInput(){
       this.searchInputValue='';

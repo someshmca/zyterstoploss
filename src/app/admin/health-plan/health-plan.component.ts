@@ -53,11 +53,14 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
   isDisabled: boolean;
   isAdded: boolean;
   isFilterOn: boolean = false;
-  planIdStatus;//(V.E 27-Jul-2021 )
-  uPlanName;//(V.E 27-Jul-2021 )
-  uplanId;//(V.E 27-Jul-2021 )
-  planIdErr={isDuplicate: false, errMsg:''}; //(V.E 27-Jul-2021 )
-  planNameErr={isDuplicate: false, errMsg:''};//(V.E 27-Jul-2021 )
+  planIdStatus;
+  uPlanName;
+  uplanId;
+  uPlanCode; uContractId; uClientId; fetchPlanOld:any; fetchPlanNew:any;
+  updateNoChange= {flag: false, message: ''};
+
+  planIdErr={isDuplicate: false, errMsg:''}; 
+  planNameErr={isDuplicate: false, errMsg:''};
 
   @ViewChild("focusElem") focusTag: ElementRef;
   @ViewChild("filterSearchInput") filterSearchInput: ElementRef;
@@ -297,8 +300,11 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
           contractId: this.contractsByClientId[0].contractId
         })
       }
+      if(!this.isAddMode){
+        this.planForm.patchValue({contractId: this.uContractId});
+        
+      }
       console.log(this.planForm.value);
-      
     })
   }
 initLocalTires(){
@@ -353,6 +359,7 @@ clearErrorMessages(){
   this.planIdErr.errMsg='';
   this.planNameErr.isDuplicate=false;
   this.planNameErr.errMsg='';
+  this.updateNoChange= {flag: false, message: ''};
   this.isContractYearInvalid={
     flag:false,
     message:''
@@ -451,9 +458,8 @@ dateValue(dateVal){
       }
     }
     if(open && elem!=null){
-      
       this.isPatchInputValue=true;
-      this.isFilterOn=false;
+      this.isFilterOn=false;      
       this.isAddMode = false;
       // let plansAll = this.plans;
       // let uPlan = plansAll.filter((obj)=>{
@@ -469,6 +475,9 @@ dateValue(dateVal){
       this.uplanId=elem.planCode;
       //(V.E 27-Jul-2021 Ends )
       this.planI=elem.planID;
+      this.uPlanCode = elem.planCode;
+      this.uContractId = Number(elem.contractId);
+      this.uClientId=elem.clientId;
 
       console.log(elem.lstTblPlanTier.length);
       
@@ -515,9 +524,9 @@ dateValue(dateVal){
         status: elem.status,
         lstTblPlanTier: this.t.value
       });
+      this.fetchPlanOld = this.planForm.value;
       console.log(this.planForm.value);
       console.log(this.t);
-      
       
       if(this.isViewModal==true){
         this.planForm.disable();
@@ -639,6 +648,11 @@ dateValue(dateVal){
 //   date2.getDate();
   
 // }
+deleteRow(i){       
+  this.t.removeAt(i);
+  console.log(this.t.length);
+  
+}
 validateTierIDs(){
   let singleCount=0;
   let singleTerminals
@@ -1334,34 +1348,56 @@ validateTierIDs(){
    
       //  }
         if(this.isAddMode){
-          const pid= this.planService.checkDuplicatePlanId(this.f.planCode.value);
-          const pname = this.planService.checkDuplicatePlanName(this.f.planName.value);
-          const connectStream = combineLatest([pid, pname]);
-          connectStream.subscribe(
-            ([id,name]) => {
-              console.log('plan Id : '+id);
-              console.log('plan Namem : '+name);
-              if(id>0 && name>0){
-                this.planIdErr.isDuplicate=true;
-                this.planNameErr.isDuplicate=true;
-                this.planIdErr.errMsg="Plan Name "+this.f.planName.value +" and Plan ID "+this.f.planCode.value+" already exists";
-                return;
-              }
-              if(id>0){
-                this.planIdErr.isDuplicate=true;
-                this.planIdErr.errMsg="Plan ID "+this.f.planCode.value +" already exists";
-                return;
-              }
-              if(name>0){
-                this.planNameErr.isDuplicate=true;
-                this.planNameErr.errMsg="Plan Name "+this.f.planName.value+" already exists";
-                return;
-              }
+          //const pid= this.planService.checkDuplicatePlanId(this.f.planCode.value);
+         // const pname = this.planService.checkDuplicatePlanName(this.f.planName.value);
+          // const connectStream = combineLatest([pid, pname]);
+          // connectStream.subscribe(
+          //   ([id,name]) => {
+          //     console.log('plan Id : '+id);
+          //     console.log('plan Namem : '+name);
+          //     if(id>0 && name>0){
+          //       this.planIdErr.isDuplicate=true;
+          //       this.planNameErr.isDuplicate=true;
+          //       this.planIdErr.errMsg="Plan Name "+this.f.planName.value +" and Plan ID "+this.f.planCode.value+" already exists";
+          //       return;
+          //     }
+          //     if(id>0){
+          //       this.planIdErr.isDuplicate=true;
+          //       this.planIdErr.errMsg="Plan ID "+this.f.planCode.value +" already exists";
+          //       return;
+          //     }
+          //     if(name>0){
+          //       this.planNameErr.isDuplicate=true;
+          //       this.planNameErr.errMsg="Plan Name "+this.f.planName.value+" already exists";
+          //       return;
+          //     }
               
-              this.addPlan();
+          //     this.addPlan();
 
-            });
+          //   });
+        const planCode=this.f.planCode.value;
+        const contractId= Number(this.f.contractId.value);
+        const clientId= this.f.clientId.value;
+        
+         if(this.uPlanCode==planCode && this.uContractId==contractId && this.uClientId==clientId){
+          // this.planIdErr.isDuplicate=true;
+          // this.planIdErr.errMsg=";
+         }
+         else{
+          this.planService.checkDuplicatePlan(this.f.planCode.value, Number(this.f.contractId.value), this.f.clientId.value).subscribe((res)=>{
             
+            if(res==0){
+              this.planIdErr.isDuplicate=false;
+              this.planIdErr.errMsg='';
+              this.addPlan();
+            }
+            else if(res>0){       
+              this.planIdErr.isDuplicate=true;
+              this.planIdErr.errMsg="Plan ID "+this.f.planCode.value +" already exists for the Contract "+ Number(this.f.contractId.value);
+            }
+          });
+         }
+
         }
         // if(this.t.length>0){
         //   for(let i=0;i<this.t.length; i++){
@@ -1382,47 +1418,31 @@ validateTierIDs(){
       if(this.duplicatePlanTierErr.flag) return;
       this.loading = true;
       if(!this.isAddMode){
-        const pid= this.planService.checkDuplicatePlanId(this.f.planCode.value);
-        const pname = this.planService.checkDuplicatePlanName(this.f.planName.value);
-        const connectStream = combineLatest([pid, pname]);
-        connectStream.subscribe(
-          ([id,name]) => {
-            console.log('plan Id : '+id);
-            console.log('plan Namem : '+name);
-            if((this.uplanId.toLowerCase()!==this.f.planCode.value.toLowerCase())&& (this.uPlanName.toLowerCase()!==this.f.planName.value.toLowerCase()))
-            {
-            if(id>0 && name>0){
-              this.planIdErr.isDuplicate=true;
-              this.planNameErr.isDuplicate=true;
-              this.planIdErr.errMsg="Plan Name "+this.f.planName.value +" and Plan ID "+this.f.planCode.value+" already exists";
-              return;
-            }
-          }
-            if(this.uplanId.toLowerCase()!==this.f.planCode.value.toLowerCase())
-            {
-            if(id>0){
-              this.planIdErr.isDuplicate=true;
-              this.planIdErr.errMsg="Plan ID "+this.f.planCode.value +" already exists.Please enter different Plan Id";
-              return;
-            }
-          }
-          if(this.uPlanName.toLowerCase()!==this.f.planName.value.toLowerCase())
-            {
-            if(name>0){
-              this.planNameErr.isDuplicate=true;
-              this.planNameErr.errMsg="Plan Name "+this.f.planName.value+" already exists.Please enter different Plan Name";
-              return;
-            }
-          }
-            
-
-          });
+        this.fetchPlanNew=this.planForm.value;
+        if(JSON.stringify(this.fetchPlanOld)==JSON.stringify(this.fetchPlanNew)){
+          this.updateNoChange.flag=true;
+          this.updateNoChange.message="No Values updated. Update atleast one value to update";
+          return;        
+        }
+      //  if(this.uPlanCode == this.f.planCode.value && this.uContractId == Number(this.f.contractId.value) && )
+        this.planService.checkDuplicatePlan(this.f.planCode.value, Number(this.f.contractId.value), this.f.clientId.value).subscribe((res)=>{
           
-          this.updatePlan();
+          if(res==0){
+            this.planIdErr.isDuplicate=false;
+            this.planIdErr.errMsg='';
+            this.updatePlan();
+            this.updateNoChange.flag=false;
+            this.updateNoChange.message="";
+          } 
+          else if(res>0){            
+            this.planIdErr.isDuplicate=true;
+            this.planIdErr.errMsg="Plan ID "+this.f.planCode.value +" already exists for the Contract "+ Number(this.f.contractId.value);
+          }
+        });
         }
        }
   
-  
+      
   private addPlan() {
     this.isAddTier=false;
     this.isPatchInputValue=false;

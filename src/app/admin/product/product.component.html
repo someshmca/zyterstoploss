@@ -135,9 +135,10 @@
                 <div class="form-group">
                   <label>Account<small class="starmark">*</small> </label>
                   <select #focusElem formControlName="clientId" class="form-control" (change)="getContractIDs($event.target.value)" [ngClass]="{ 'is-invalid': submitted && f.clientId.errors }">
-                    <option *ngFor="let client of activeClients" [value]="client.clientId">
+                    <option *ngFor="let client of activeClients" [value]="tempProductObj.isAdd?tempProductObj.clientId:client.clientId">
                       {{client.clientName}}
                     </option>
+                    
                   </select>
                 </div>
               </div>

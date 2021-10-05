@@ -49,41 +49,41 @@
                       <label>Medica Member ID</label>
                   </div>
                   <div class="form-field-input">
-                    <input #focusMemSearch type="text" class="form-control field-input-text"(keyup)="validateInputIDs($event.target.value,'MemberID')" formControlName="MemberId" [ngClass]="{ 'is-invalid': memIdErr.isValid }"/>  <!--(VE 13-08-2021 )-->
+                    <input #focusMemSearch type="text" class="form-control field-input-text"formControlName="MemberId" [ngClass]="{ 'is-invalid': memIdErr.isValid }"/>  <!--(VE 13-08-2021 )-->
                   </div>
               </div>
               <div class="form-field">
                   <label class="form-field-label">
                       Medica Subscriber ID</label>
                   <div class="form-field-input">
-                    <input type="text" class="form-control field-input-text" formControlName="SubscriberId" (keyup)="validateInputIDs($event.target.value,'SubscriberId')"[ngClass]="{ 'is-invalid': memSubIdErr.isValid }" /><!--(VE 13-08-2021 )-->
+                    <input type="text" class="form-control field-input-text" formControlName="SubscriberId" [ngClass]="{ 'is-invalid': memSubIdErr.isValid }" /><!--(VE 13-08-2021 )-->
                   </div>
               </div>
               <!--(VE 28-Jul-2021  starts)-->
               <div class="form-field">
                 <label class="form-field-label">Alternate Member ID</label>
                 <div class="form-field-input">
-                  <input type="text" class="form-control field-input-text"formControlName="alternateId" (keyup)="validateInputIDs($event.target.value,'alternateId')" [ngClass]="{ 'is-invalid': altIdErr.isValid }" /> <!--(VE 13-08-2021 )-->
+                  <input type="text" class="form-control field-input-text"formControlName="alternateId"  [ngClass]="{ 'is-invalid': altIdErr.isValid }" /> <!--(VE 13-08-2021 )-->
                 </div>
             </div>
             <!--(VE 28-Jul-2021  ends)-->
               <div class="form-field">
                   <label class="form-field-label">Member First Name</label>
                   <div class="form-field-input">
-                    <input type="text" class="form-control field-input-text" formControlName="Fname" (keyup)="validateInputNames($event.target.value,'Fname')"  [ngClass]="{ 'is-invalid': memFnameErr.isValid }"/><!--(VE 13-08-2021 )-->
+                    <input type="text" class="form-control field-input-text" formControlName="Fname"  [ngClass]="{ 'is-invalid': memFnameErr.isValid }"/><!--(VE 13-08-2021 )-->
                   </div>
               </div>
               <div class="form-field">
                   <label class="form-field-label">Member Last Name</label>
                   <div class="form-field-input">
                     <input type="text"  
-                   class="form-control field-input-text" formControlName="Lname"(keyup)="validateInputNames($event.target.value,'Lname')" [ngClass]="{ 'is-invalid':memLnameErr.isValid }"/><!--(VE 13-08-2021 )-->
+                   class="form-control field-input-text" formControlName="Lname"[ngClass]="{ 'is-invalid':memLnameErr.isValid }"/><!--(VE 13-08-2021 )-->
                   </div>
               </div>
               <div class="form-field">
                   <label class="form-field-label">Member Middle Name</label>
                   <div class="form-field-input">
-                    <input type="text"  class="form-control field-input-text" formControlName="Mname" (keyup)="validateInputNames($event.target.value,'Mname')" [ngClass]="{ 'is-invalid':memMnameErr.isValid }"/> <!--(VE 13-08-2021 )-->
+                    <input type="text"  class="form-control field-input-text" formControlName="Mname" [ngClass]="{ 'is-invalid':memMnameErr.isValid }"/> <!--(VE 13-08-2021 )-->
                   </div>
               </div>
               <div class="form-field">
@@ -462,7 +462,7 @@
            <div class="col-md-4">
              <div class="form-group">
                 <label>Laser Value</label> 
-                <input type="number" formControlName="laserValue" maxlength="20" class="form-control" onkeypress="return ((event.charCode !=8 && event.charCode ==0)||(event.charCode == 46) || (event.charCode >= 48 && event.charCode <= 57))"/>   <!--PV 08-05-2021  -->                          
+                <input type="number" onkeypress="return ((event.charCode !=8 && event.charCode ==0)||(event.charCode == 46) || (event.charCode >= 48 && event.charCode <= 57))" formControlName="laserValue" maxlength="20" class="form-control"/>   <!--PV 08-05-2021  -->                          
               </div>
            </div>  
            </div>

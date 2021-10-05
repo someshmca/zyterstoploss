@@ -71,3 +71,14 @@
     display: none;
   }
   */
+.delete-a{
+    
+}
+.delete-a .fa{
+    position: static;
+    font-size: 1.2rem;
+    color: #b22222;
+}
+.delete-a .fa:hover{
+    transform: scale(1.4);
+}

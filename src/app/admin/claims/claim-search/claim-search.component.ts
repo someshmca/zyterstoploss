@@ -318,7 +318,7 @@ updateClaim(claimId:string,  exclusion:string ){
     claimId : claimId,
     exclusion: (exclusion==null || exclusion == 'N') ? false : true
   }
-  this.claimForm.patchValue({exclusion: updateClaimObj.exclusion});
+  //this.claimForm.patchValue({exclusion: updateClaimObj.exclusion});
   
       this._claimReportService.claimUpdate(claimId, exclusion).pipe(first())
       .subscribe({
@@ -326,8 +326,10 @@ updateClaim(claimId:string,  exclusion:string ){
           
           this.openCustomModal(false, null);
           this.searchClaim(this.claimSearchForm);
-          //this.claimForm.reset();
-          this.claimForm.patchValue({exclusion:exclusion=='N'?false:true});
+         // this.claimForm.reset();
+         // this.claimForm.patchValue({exclusion:exclusion=='N'?false:true});
+          this.claimForm.patchValue(updateClaimObj);
+
           
           this.alertService.success('Claim updated', {
             keepAfterRouteChange: true
@@ -495,17 +497,17 @@ onSubmit() {
     if(fieldValue.length>0){
       let checkInputString = alphaNum.test(fieldValue);
       if(!checkInputString){
-        if(labelName=='First Name'){
-          this.memberFnameErr.isValid = true;
-          this.memberFnameErr.errMsg = 'Invalid '+labelName;
-          this.isClaimSearchFormInvalid=true;
-        }
-        else if(labelName=="Last Name"){
-          this.memberLnameErr.isValid = true;
-          this.memberLnameErr.errMsg = 'Invalid '+labelName;
-          this.isClaimSearchFormInvalid=true;
-        }
-        else if(labelName=="Claim Source"){
+        // if(labelName=='First Name'){
+        //   this.memberFnameErr.isValid = true;
+        //   this.memberFnameErr.errMsg = 'Invalid '+labelName;
+        //   this.isClaimSearchFormInvalid=true;
+        // }
+        // else if(labelName=="Last Name"){
+        //   this.memberLnameErr.isValid = true;
+        //   this.memberLnameErr.errMsg = 'Invalid '+labelName;
+        //   this.isClaimSearchFormInvalid=true;
+        // }
+      if(labelName=="Claim Source"){
 
           this.isClaimSourceInvalid = true;
           this.isClaimSearchFormInvalid=true;
@@ -563,9 +565,10 @@ onSubmit() {
    this.names.length=0;  //(VE 11/8/2021 ) 
     //console.log(this.f.minPaidAmount.value);
     //this.isClaimResult=false;
-    console.log(this.dateErr.fromDateErr);
+    //console.log(this.dateErr.fromDateErr);
     this.clearErrorMessages();
     this.isClaimSearchFormInvalid=false;
+    //console.log(JSON.stringify(form.value));
 
     this.validateNumber("Min Paid Amount",this.f.minPaidAmount.value);
     this.validateNumber("Max Paid Amount",this.f.maxPaidAmount.value);
@@ -577,8 +580,8 @@ onSubmit() {
     this.validateDate("Paid Start Date",this.f.paidFromDate.value);
     this.validateDate("Paid End Date",this.f.paidToDate.value);
 
-    this.validateInputNames("First Name", this.f.firstName.value);
-    this.validateInputNames("Last Name", this.f.lastName.value);
+    // this.validateInputNames("First Name", this.f.firstName.value);
+    // this.validateInputNames("Last Name", this.f.lastName.value);
     this.validateInputNames("Claim Source", this.f.claimSource.value);
 
     if(this.f.claimId.value=='' && this.f.memberId.value=='' && this.f.firstName.value=='' && this.f.lastName.value=='' && this.f.dateOfBirth.value==null && this.f.clientId.value=='' && this.f.fromDate.value==null && this.f.toDate.value==null && this.f.sequenceNumber.value=='' && this.f.minPaidAmount.value=='' && this.f.maxPaidAmount.value==''  && this.f.diagnosisCode.value=='' && this.f.claimSource.value=='' && this.f.claimType.value=='' && this.f.alternateId.value=='' && this.f.paidFromDate.value==null && this.f.paidToDate.value==null){
@@ -602,6 +605,7 @@ onSubmit() {
       return;
     }
     if(!this.isClaimSearchFormInvalid){
+      
       let claimRequestObj = {
         claimId: this.f.claimId.value,
         memberId: this.f.memberId.value,
@@ -625,12 +629,13 @@ onSubmit() {
       }
      // this._claimService.setClaimSearchRequest(claimRequestObj);
       // this._claimService.claimSearchRequest.subscribe((res)=>{this.claimSearchRequest=res;});
-
+      
        this.getClaimSearchResultsGrid(claimRequestObj);
     }
 
   }
   getClaimSearchResultsGrid(claimSearchFormReq:IClaimSearch){
+    
 
     this._claimReportService.getClaimReport(claimSearchFormReq).subscribe(
       (data) => {
@@ -674,8 +679,8 @@ onSubmit() {
       //    return;
       //  }
      
-      
-       console.log(this.names); 
+     
+      console.log(this.names); 
        console.log(data);
        //(VE 11/8/2021  Ends) 
 
@@ -695,15 +700,16 @@ onSubmit() {
           this.dataSource = new MatTableDataSource(this.names);
          }
          //(VE 11/8/2021 ends ) 
+        // this.isClaimResult=true;
         setTimeout(()=>{
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
-        }, 1000);
+        }, 700);
 
       },
       (error) => {
         this.claimSearchNotFound = true;
-        this.isClaimResult=false;
+        this.isClaimResult = false;
        // this._claimService.setIsClaimResult(false);
 
       }
