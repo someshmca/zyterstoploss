@@ -58,6 +58,14 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
   uplanId;
   uPlanCode; uContractId; uClientId; fetchPlanOld:any; fetchPlanNew:any;
   updateNoChange= {flag: false, message: ''};
+  deleteTierArr = [
+    {
+      PlanId: 0,
+      TierId: 0, 
+      StopLossTierStartDate: '',
+      StopLossTierEndDate: '',
+      IsTerminalExtCoverage: ''
+    }];
 
   planIdErr={isDuplicate: false, errMsg:''}; 
   planNameErr={isDuplicate: false, errMsg:''};
@@ -393,18 +401,17 @@ clearErrorMessages(){
   this.familyArr={ startDates: [],  termCovs:[]  };
   this.othersArr={ startDates: [],  termCovs:[]  };
 }
-//(V.E 27-Jul-2021 Ends)
 doFilter(filterValue:string){ 
   this.dataSource.filter=filterValue.trim().toLowerCase();
   this.dataSource.filterPredicate = (data:IPlanAll, filter: string) => {
-    const Id=data.planCode.toString();
+    const Id=data.planCode.toString().toLowerCase() ;
     const CompareData=data.clientName.toLowerCase() ||'';
     const CompareData1=Id||'';
+    const CompareData3=data.contractId.toString().toLowerCase() ||'';
     const CompareData2=data.planName.toLowerCase() ||'';
-    return CompareData.indexOf(filter)!==-1|| CompareData1.indexOf(filter)!==-1|| CompareData2.indexOf(filter)!==-1
+    return CompareData.indexOf(filter)!==-1|| CompareData1.indexOf(filter)!==-1|| CompareData2.indexOf(filter)!==-1|| CompareData3.indexOf(filter)!==-1
   };
-
-}//Ends here
+}
 
 dateValueString(dateVal){
   if(dateVal==null) dateVal='';
@@ -478,7 +485,7 @@ dateValue(dateVal){
       this.uPlanCode = elem.planCode;
       this.uContractId = Number(elem.contractId);
       this.uClientId=elem.clientId;
-
+      
       console.log(elem.lstTblPlanTier.length);
       
       
@@ -648,8 +655,24 @@ dateValue(dateVal){
 //   date2.getDate();
   
 // }
-deleteRow(i){       
+deleteRow(tier, i){
+ // this.t.removeAt(i);
+ if(tier.value.tierId=='' && tier.value.stopLossTierEndDate==null && tier.value.stopLossTierEndDate==null) this.t.removeAt(i);
+ else{
+  let extn = tier.value.isTerminalExtCoverage==true?'Y':'N';
+  this.deleteTierArr.push({
+    PlanId: tier.value.planId,
+    TierId: tier.value.tierId, 
+    StopLossTierStartDate: tier.value.stopLossTierStartDate,
+    StopLossTierEndDate: tier.value.stopLossTierEndDate,
+    IsTerminalExtCoverage: extn
+  });
   this.t.removeAt(i);
+  // let extn = tier.value.isTerminalExtCoverage==true?'Y':'N'
+  //  this.planService.deletePlan(tier.value.planId, tier.value.tierId, tier.value.stopLossTierStartDate, tier.value.stopLossTierEndDate, extn).subscribe((res)=>{
+  //    if(res == tier.value.planId) this.t.removeAt(i);
+  //  });
+ }
   console.log(this.t.length);
   
 }
@@ -1375,15 +1398,6 @@ validateTierIDs(){
           //     this.addPlan();
 
           //   });
-        const planCode=this.f.planCode.value;
-        const contractId= Number(this.f.contractId.value);
-        const clientId= this.f.clientId.value;
-        
-         if(this.uPlanCode==planCode && this.uContractId==contractId && this.uClientId==clientId){
-          // this.planIdErr.isDuplicate=true;
-          // this.planIdErr.errMsg=";
-         }
-         else{
           this.planService.checkDuplicatePlan(this.f.planCode.value, Number(this.f.contractId.value), this.f.clientId.value).subscribe((res)=>{
             
             if(res==0){
@@ -1398,7 +1412,7 @@ validateTierIDs(){
           });
          }
 
-        }
+        
         // if(this.t.length>0){
         //   for(let i=0;i<this.t.length; i++){
             
@@ -1424,21 +1438,32 @@ validateTierIDs(){
           this.updateNoChange.message="No Values updated. Update atleast one value to update";
           return;        
         }
-      //  if(this.uPlanCode == this.f.planCode.value && this.uContractId == Number(this.f.contractId.value) && )
-        this.planService.checkDuplicatePlan(this.f.planCode.value, Number(this.f.contractId.value), this.f.clientId.value).subscribe((res)=>{
+      
+        const planCode=this.f.planCode.value;
+        const contractId= Number(this.f.contractId.value);
+        const clientId= this.f.clientId.value;
+        
+         if(this.uPlanCode==planCode && this.uContractId==contractId && this.uClientId==clientId){
+          // this.planIdErr.isDuplicate=true;
           
-          if(res==0){
-            this.planIdErr.isDuplicate=false;
-            this.planIdErr.errMsg='';
-            this.updatePlan();
-            this.updateNoChange.flag=false;
-            this.updateNoChange.message="";
-          } 
-          else if(res>0){            
-            this.planIdErr.isDuplicate=true;
-            this.planIdErr.errMsg="Plan ID "+this.f.planCode.value +" already exists for the Contract "+ Number(this.f.contractId.value);
-          }
-        });
+          this.updatePlan();
+          // this.planIdErr.errMsg=";
+         }
+         else{
+              this.planService.checkDuplicatePlan(this.f.planCode.value, Number(this.f.contractId.value), this.f.clientId.value).subscribe((res)=>{          
+                if(res==0){
+                  this.planIdErr.isDuplicate=false;
+                  this.planIdErr.errMsg='';
+                  this.updatePlan();
+                  this.updateNoChange.flag=false;
+                  this.updateNoChange.message="";
+                } 
+                else if(res>0){            
+                  this.planIdErr.isDuplicate=true;
+                  this.planIdErr.errMsg="Plan ID "+this.f.planCode.value +" already exists for the Contract "+ Number(this.f.contractId.value);
+                }
+              });
+            }
         }
        }
   
@@ -1532,6 +1557,14 @@ validateTierIDs(){
     this.isNoFactAmount=false;
     //console.log(this.updatePlanID);
     //this.planForm.patchValue(this.planForm.value);
+    
+    for(let i=0; i<this.deleteTierArr.length; i++){
+        this.planService.deletePlan(this.deleteTierArr[i].PlanId, this.deleteTierArr[i].TierId, this.deleteTierArr[i].StopLossTierStartDate, this.deleteTierArr[i].StopLossTierEndDate, this.deleteTierArr[i].IsTerminalExtCoverage).subscribe((res)=>{
+          //if(res == this.deleteTierArr[i].PlanId) this.deleteTierArr.splice(0,1)
+          //debugger;
+        });
+    }
+    console.log(this.deleteTierArr.length);
     for (let i = 0; i < this.t.value.length;) {
       this.t.value[i].planId=this.updatePlanID;
       this.t.value[i].tierId=Number(this.t.value[i].tierId);
