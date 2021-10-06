@@ -476,6 +476,7 @@ dateValue(dateVal){
       // 
 
       //(V.E 27-Jul-2021 starts )
+      
       console.log(this.uPlanName=elem.planName);
       this.uPlanName=elem.planName;
       console.log(this.uplanId=elem.planCode);
@@ -1561,7 +1562,7 @@ validateTierIDs(){
     for(let i=0; i<this.deleteTierArr.length; i++){
         this.planService.deletePlan(this.deleteTierArr[i].PlanId, this.deleteTierArr[i].TierId, this.deleteTierArr[i].StopLossTierStartDate, this.deleteTierArr[i].StopLossTierEndDate, this.deleteTierArr[i].IsTerminalExtCoverage).subscribe((res)=>{
           //if(res == this.deleteTierArr[i].PlanId) this.deleteTierArr.splice(0,1)
-          //debugger;
+          //
         });
     }
     console.log(this.deleteTierArr.length);

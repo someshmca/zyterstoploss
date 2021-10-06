@@ -129,7 +129,7 @@
                         </div>   
                  </div>
                  <div class="col-md-4">  
-                  <div class="form-group">
+                  <div class="form-group" *ngIf="isAddMode">
                     <label>Medica Account<small class="starmark">*</small> </label>
               <select formControlName="clientId" class="form-control" (change)="getContractsByClientID($event.target.value)" [ngClass]="{ 'is-invalid': submitted && f.clientId.errors }">
                     <option *ngFor="let client of locClients" [value]="client.clientId">
@@ -137,6 +137,11 @@
                     </option>
                   </select>
                   </div>
+                  <div class="form-group" *ngIf="!isAddMode">
+                   <label>Medica Account</label>
+                       <input type="hidden" formControlName="clientId" class="form-control"/>
+                       <input type="text" readonly formControlName="clientName" class="form-control"/>
+                 </div>
                  </div>
                 </div>
                 <div class="row">
