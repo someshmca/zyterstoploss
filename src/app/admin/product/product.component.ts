@@ -3,7 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { AlertService } from '../services/alert.service';
 import {DecimalPipe} from '@angular/common';
 import { IProductAll, IProductAdd,
-  IProductUpdate,IActiveClient, ICoveredClaims, IListContractClaims
+  IProductUpdate,IActiveClient, ICoveredClaims, IListContractClaims, IContracts
   } from '../models/product-model';
 import {ProductService} from '../services/product.service';
 import { first } from 'rxjs/operators';
@@ -420,7 +420,11 @@ export class ProductComponent implements OnInit {
     this.productService.getAllClients().subscribe(
       (data)=>{       
         data.sort((a, b) => (a.clientName > b.clientName) ? 1 : -1); // sorts Ascending order by alphabet
-        this.activeClients = data;        
+        this.activeClients = data;     
+        
+        if(this.tempProductObj.isAdd) {
+
+        }   
       })
   }
   
@@ -1141,12 +1145,20 @@ openViewModal(bool, id:any){
       }
     }
     gotoPlanUpdate(){
+      // this.toSwitchOtherScreen=true;
+      // this.clientService.getClient(this.f.clientId.value).subscribe(
+      //   (data: IClient[]) => {    
+      //     this.isFilterOn=false;
+      //     this.navService.setPlanObj(data[0].clientId, data[0].clientName, false, true);
+      //     this.router.navigate(['/health-plan']);   
+      //   });    
       this.toSwitchOtherScreen=true;
-      this.clientService.getClient(this.f.clientId.value).subscribe(
-        (data: IClient[]) => {    
+      this.contractService.getContract(this.f.contractId.value).subscribe(
+        (data: IContracts[]) => {    
           this.isFilterOn=false;
-          this.navService.setPlanObj(data[0].clientId, data[0].clientName, false, true);
+          this.navService.setPlanObj(data[0].contractId, data[0].contractId, false, true);
           this.router.navigate(['/health-plan']);   
+
         });    
     }
     gotoLaseringAdd(){
