@@ -184,7 +184,7 @@
                                   <th>StopLoss Tier Start Date<small class="starmark">*</small></th>
                                   <th>StopLoss Tier End Date<small class="starmark">*</small></th>
                                   <th>Terminal Extension Coverage</th>
-                                  <!-- <th> </th> -->
+                                  <th *ngIf="!isViewModal"> </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -220,7 +220,7 @@
                                   </div>
                                 </td>
                                 
-                                <td style="text-align: center;">
+                                <td style="text-align: center;" *ngIf="!isViewModal">
                                   <a (click)="deleteRow(tier, i)" class="delete-a" title="Delete">
                                     <i class="fa fa-trash"></i> 
                                   </a>
