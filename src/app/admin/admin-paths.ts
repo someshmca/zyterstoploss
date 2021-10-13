@@ -1,6 +1,6 @@
 
-const apiPath = "https://medicaslapiorc.azurewebsites.net/api/";  // Azure Server Internal
-//const apiPath = "http://10.48.30.158:92/api/"; // Dev Server 
+//const apiPath = "https://medicaslapiorc.azurewebsites.net/api/";  // Azure Server Internal
+const apiPath = "http://10.48.30.158:92/api/"; // Dev Server 
 //const apiPath = "http://10.45.30.100:92/api/"; // QA Server
 //const apiPath = "http://10.12.30.40:92/api/"; //UAT Server
 //const apiPath = "http://10.10.30.206:92/api/"; // Production Server 1 
@@ -98,6 +98,9 @@ export const Paths = {
   productByContractPeriod: apiPath+"Product/GetProductByContractPeriod?",
 
   ExcelUploadPath: apiPath+"ExcelUpload/UploadExcel?userId=",
+  ExcelExportPath: apiPath+"ExcelUpload/ExportExcel",
+
+  ExcelEmptyExportPath: apiPath+"ExcelUpload/ExportBlankExcel",
 
   sslReportURL: "https://medicaanalytics-axw4of8ufwa4-hy.analytics.ocp.oraclecloud.com/ui/dv/ui/project.jsp?pageid=visualAnalyzer&reportmode=full&reportpath=%2F%40Catalog%2Fshared%2FMedica%20SL%2FSpecific%20Report",
   aslReportURL: "https://medicaanalytics-axw4of8ufwa4-hy.analytics.ocp.oraclecloud.com/ui/dv/ui/project.jsp?pageid=visualAnalyzer&reportmode=full&reportpath=%2F%40Catalog%2Fusers%2Fsrajamani%40infinite.com%2FMedica%20SL%2FSpecific%20Report",

@@ -3,8 +3,14 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs'; 
 import {Paths} from '../admin-paths';
 import { ExcelUploadService } from '../services/excel-upload.service';  
+import { ExcelExportService } from '../services/excel-export.service';  
 import { LoginService } from '../../shared/services/login.service';
 import { first } from 'rxjs/operators';
+const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+const EXCEL_EXTENSION = '.xlsx'
+import { Workbook } from 'exceljs'; 
+import * as fs from 'file-saver';
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-excel-uplaod',
@@ -19,7 +25,7 @@ export class ExcelUploadComponent implements OnInit {
   isLoading = false;
   isExcelFile: boolean;
   constructor(private http: HttpClient, private service: ExcelUploadService,private loginService: LoginService
-    ) { }
+    ,private exportService:ExcelExportService) { }
 
   ngOnInit(): void {
   }
@@ -73,4 +79,41 @@ export class ExcelUploadComponent implements OnInit {
       
   
   } 
+  
+
+
+  downloadEmpty() {
+    
+    this.exportService.downloadEmptyFile().subscribe((response) => { 
+			let blob:any = new Blob([response], {type:EXCEL_TYPE});
+      fs.saveAs(blob, 'Export_Contract_Details_Template_' + new Date().getTime() + EXCEL_EXTENSION);
+
+     //const file = new File([blob], 'Export' + '.xlsx', { type: 'application/vnd.ms.excel' });
+     //saveAs(file);
+			
+			//window.open(url); 
+			//window.location.href = response.url;
+		
+		}), error => console.log('Error downloading the file'),
+                 () => console.info('File downloaded successfully');
+  }
+
+
+  download() {
+    
+    this.exportService.downloadFile().subscribe((response) => { 
+			let blob:any = new Blob([response], {type:EXCEL_TYPE});
+      fs.saveAs(blob, 'Export_Contract_Details_' + new Date().getTime() + EXCEL_EXTENSION);
+
+     //const file = new File([blob], 'Export' + '.xlsx', { type: 'application/vnd.ms.excel' });
+     //saveAs(file);
+			
+			//window.open(url); 
+			//window.location.href = response.url;
+		
+		}), error => console.log('Error downloading the file'),
+                 () => console.info('File downloaded successfully');
+  }
+
+
 }  

@@ -1599,7 +1599,7 @@ validateTierIDs(){
     
     
       console.log(this.updatePlanObj);
-      
+      debugger;
     
       this.planService.updatePlan(this.updatePlanObj)
           .pipe(first())
@@ -1625,6 +1625,7 @@ validateTierIDs(){
                     this.getAllPlans();
                     this.tiersLimitExceeded.flag=false;
                     this.tiersLimitExceeded.value='';
+                    debugger;
                   this.alertService.success('Plan & Tier updated', {
                     keepAfterRouteChange: true });
 

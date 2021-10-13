@@ -33,4 +33,11 @@
     line-height: normal;
     padding: 2px 11px;
     height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.excel-upload-btns .btn .fa{
+    margin-right: 5px;
+    color: #ffffff;
 }

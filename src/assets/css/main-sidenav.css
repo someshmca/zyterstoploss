@@ -4,7 +4,7 @@ a{
   
   .nav-side-menu {
       width: 100%;      
-      background: #002C77;
+      background: #354f81;
       color: #ffffff;
     }
     .nav-side-menu .brand {
@@ -86,7 +86,7 @@ a{
     .nav-side-menu li.active {
       border: none;
       /* background-color: #00718f; */
-      background-color: #002C77;
+      background-color: #354f81;
     }
     .nav-side-menu li.active a{
       color: #ffffff;
@@ -110,7 +110,7 @@ a{
     }
     .nav-side-menu ul .sub-menu li,
     .nav-side-menu li .sub-menu li {
-      background-color: #002C77;
+      background-color: #354f81;
       border: none;
       /* border-bottom: 1px solid #9ad4e4; */
       margin-left: 0;
