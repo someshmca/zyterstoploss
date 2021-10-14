@@ -356,7 +356,8 @@ export class ProductComponent implements OnInit {
       this.tempProductObj=data;
       
       if(data.isAdd && !this.planObj.isAdd){
-        this.getContractIDs(data.clientId);        
+        this.getContractIDs(data.clientId);     
+        debugger;   
         this.productForm.patchValue({
           clientId: data.clientId,
           contractId: this.sharedContractID
@@ -365,6 +366,7 @@ export class ProductComponent implements OnInit {
       }
       else if(data.isAdd && this.planObj.isAdd){
         this.searchInputValue=data.clientName;
+        debugger;
         setTimeout(()=>{this.filterSearchInput.nativeElement.blur()},500);
         setTimeout(()=>{this.filterSearchInput.nativeElement.focus()},1000);
       }

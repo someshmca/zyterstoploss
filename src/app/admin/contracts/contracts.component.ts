@@ -801,6 +801,7 @@ openViewModal(bool, id:any){
       if(this.isAdded){
         console.log(this.tempContractObj);
         this.clientService.getClient(this.f.clientId.value).subscribe((data)=>{
+          
           this.navService.setProductObj(data[0].clientId, data[0].clientName, true,false);
           
           this.router.navigate(['/product']); 

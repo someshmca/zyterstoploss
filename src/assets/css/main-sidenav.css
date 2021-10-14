@@ -3,33 +3,9 @@ a{
   }
   
   .nav-side-menu {
-      width: 100%;      
+      width: 200px;      
       background: #354f81;
       color: #ffffff;
-    }
-    .nav-side-menu .brand {
-      height: 70px;
-      align-items: center;
-      background: rgb(231 240 255);
-      border-radius: 50%;
-      position: relative;
-      top: 6px;
-      left: 10px;
-      width: 170px;
-      text-align: center;
-      display: flex;
-      justify-content: center;
-      padding: 0;
-      filter: drop-shadow(1px 1px 3px rgb(231, 240, 255));
-    }
-    .nav-side-menu .brand a{
-      display: inline-block;
-    }
-    .nav-side-menu .brand img{
-        max-width: 121px;
-        position: relative;
-        left: 0;
-        filter: drop-shadow(2px 2px 3px rgba(0, 44, 119, 0.3));
     }
     .nav-side-menu .toggle-btn {
       display: none;

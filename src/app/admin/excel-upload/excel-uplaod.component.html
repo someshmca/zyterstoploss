@@ -11,6 +11,12 @@
         <div class="row">  
              
         </div>  
+        <div *ngIf="downloads">
+                <div *ngIf="loaderService.isLoading | async">
+                    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+                        <h5 style="color: #354f81; padding: 3px 10px; margin: 0;">Downloading.... </h5>
+                </div>  
+        </div>
     <div class="row">  
         <div class="col-12">  
             <div class="excelupload-controls">
@@ -34,7 +40,7 @@
 	<!-- <button class="btn btn-success" (click)="downloadEmpty()" value="Download Empty "> 
         <i class="fa fa-download"></i> Template
     </button> -->
-    <a class="btn btn-primary" href="../../../assets/Contract_Template.xlsx" title="Download Empty "> 
+    <a class="btn btn-primary" href="../../../assets/Contract_Template.xls" title="Download Empty "> 
         <i class="fa fa-download"></i> New Template
     </a>
                 <button [className]="isLoading?'btn btn-secondary':'btn btn-primary'" (click)="resetFileUploader()" [disabled]="isLoading"> Reset  </button>  

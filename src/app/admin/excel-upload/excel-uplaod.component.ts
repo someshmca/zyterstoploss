@@ -5,6 +5,7 @@ import {Paths} from '../admin-paths';
 import { ExcelUploadService } from '../services/excel-upload.service';  
 import { ExcelExportService } from '../services/excel-export.service';  
 import { LoginService } from '../../shared/services/login.service';
+import { LoaderService } from '../services/loader.service';
 import { first } from 'rxjs/operators';
 const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
 const EXCEL_EXTENSION = '.xlsx'
@@ -24,8 +25,9 @@ export class ExcelUploadComponent implements OnInit {
   button = 'Upload';
   isLoading = false;
   isExcelFile: boolean;
+  downloads: boolean= false;
   constructor(private http: HttpClient, private service: ExcelUploadService,private loginService: LoginService
-    ,private exportService:ExcelExportService) { }
+    ,private exportService:ExcelExportService, private loaderService: LoaderService) { }
 
   ngOnInit(): void {
   }
@@ -50,7 +52,7 @@ export class ExcelUploadComponent implements OnInit {
     }
   }
   uploadFile() { 
-
+    this.downloads=false;
     if(this.fileInput.nativeElement.value=="")
       {
         this.message="No file uploaded";
@@ -83,6 +85,7 @@ export class ExcelUploadComponent implements OnInit {
 
 
   downloadEmpty() {
+    this.downloads = true;
     
     this.exportService.downloadEmptyFile().subscribe((response) => { 
 			let blob:any = new Blob([response], {type:EXCEL_TYPE});
@@ -100,7 +103,7 @@ export class ExcelUploadComponent implements OnInit {
 
 
   download() {
-    
+    this.downloads = true;
     this.exportService.downloadFile().subscribe((response) => { 
 			let blob:any = new Blob([response], {type:EXCEL_TYPE});
       fs.saveAs(blob, 'Export_Contract_Details_' + new Date().getTime() + EXCEL_EXTENSION);

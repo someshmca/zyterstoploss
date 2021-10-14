@@ -1,5 +1,5 @@
 
-//const apiPath = "https://medicaslapiorc.azurewebsites.net/api/";  // Azure Server Internal
+//'const apiPath = "https://medicaslapiorc.azurewebsites.net/api/";  // Azure Server Internal
 const apiPath = "http://10.48.30.158:92/api/"; // Dev Server 
 //const apiPath = "http://10.45.30.100:92/api/"; // QA Server
 //const apiPath = "http://10.12.30.40:92/api/"; //UAT Server
