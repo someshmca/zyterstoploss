@@ -117,5 +117,8 @@ input[type=number] {
     background: none !important;
     padding-right: 10px !important;
 }
-
+.btn.btn-primary
+{
+    background: #354f81 !important;
+}
 

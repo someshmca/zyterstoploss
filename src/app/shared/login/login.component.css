@@ -28,8 +28,8 @@ a, a:hover{
 	max-height: 400px;
 	background: #ffffff;
 	border-radius: 10px;	
-    border: 1px solid #ebebeb;
-    box-shadow: 0 0 5px 2px #ebebeb;
+    border: 1px solid #b8c6ff;
+    box-shadow: 0 0 5px 2px #b8c6ff;
 }
 .login-form-area .form-group{
 	padding:0 15px;
