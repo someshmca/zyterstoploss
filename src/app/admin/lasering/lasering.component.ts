@@ -68,7 +68,8 @@ export class LaseringComponent implements OnInit {
 
   isSearchDataThere: boolean = false;
   noSearchResultsFound: boolean = false;
-  uMemberId: any;
+  uMemberHRId: any;
+  updateMemberID: any;
   isDisabled: boolean=false;
   isFilterOn: boolean = false;
   isViewModal: boolean;
@@ -244,7 +245,8 @@ export class LaseringComponent implements OnInit {
       if(id!=null){
         console.log(id);
         
-          this.uMemberId = id.memberHrid;
+          this.uMemberHRId = id.memberHrid;
+          this.updateMemberID = id.memberId;
           setTimeout(()=>{
             this.uClientId=id.clientId;
             this.uContractId=id.contractId;
@@ -435,7 +437,7 @@ decimalValue(inputValue:number){
     this.isDisabled=true;
       let updateMemberObj = {
       laserType:"Member",
-      laserTypeId: String(this.uMemberId),
+      laserTypeId: String(this.uMemberHRId),
       laserValue: this.decimalValue(this.f.laserValue.value), //PV 08-05-2021
       isUnlimited: this.f.isUnlimited.value==true?'Y':'N',
       status: 1,
@@ -445,6 +447,7 @@ decimalValue(inputValue:number){
       updatedOn:null ,
       exclusion: this.f.exclusion.value == true ? 'Y' : 'N',
       contractId: this.f.contractId.value,
+      memberId: this.updateMemberID,
       memberStartDate: this.datePipe.transform(this.f.memberStartDate.value, 'yyyy-MM-dd'),
       memberEndDate: this.datePipe.transform(this.f.memberEndDate.value, 'yyyy-MM-dd')
       }

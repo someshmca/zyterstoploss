@@ -121,4 +121,7 @@ input[type=number] {
 {
     background: #354f81 !important;
 }
+.btn.btn.btn-outline-primary:hover{
+    background: #354f81 !important;
+}
 
