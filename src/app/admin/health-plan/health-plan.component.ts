@@ -277,6 +277,7 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
     this.planService.getTires().subscribe(
     (data)=>{
       this.tires=data;
+      debugger;
     //  this.locTires=this.tires;
       
        for(let i=0;i<this.tires.length;i++){

@@ -191,12 +191,19 @@
                               <ng-container *ngFor="let tier of tierFormGroups; let i = index">
                               <tr [formGroup]="tier">
                                 <td>
-                                    <select class="form-control" formControlName="tierId" [ngClass]="{'is-invalid':tierIdRequiredErr.flag}">
+                                    <!-- <select class="form-control" formControlName="tierId" [ngClass]="{'is-invalid':tierIdRequiredErr.flag}">
                                       <option value="1">Single</option>
                                       <option value="2">Dual</option>
                                       <option value="3">Family</option>
                                       <option value="4">Others</option>
-                                    </select>
+                                    </select> -->
+                                    <select class="form-control" formControlName="tierId" [ngClass]="{'is-invalid':tierIdRequiredErr.flag}">
+                                      <ng-container *ngFor="let tier of tires">                                        
+                                          <option [value]="tier.tierId">
+                                            {{tier.tierName}}
+                                          </option>
+                                      </ng-container>
+                                    </select> 
                                 </td>
                                 <td>
                                     <input type="number" formControlName="tierAmount" class="form-control" [ngClass]="{ 'is-invalid': isTierAmountInvalid}" />
