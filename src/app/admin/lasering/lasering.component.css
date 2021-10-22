@@ -15,4 +15,8 @@
 .card-table-area .mat-table.card-table tr td:nth-child(4){
     width: 20%;
 }
-
+.member-form-wrap{
+    overflow-x: hidden;
+    overflow-y: auto;
+    max-height: 350px;
+}

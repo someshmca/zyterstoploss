@@ -97,7 +97,6 @@
         <form [formGroup]="planForm" (ngSubmit)="onSubmit()">
         <!-- Modal body -->
         <div class="modal-body"> 
-    <div class="helth-plan-form-area">
              <div class="mandate-fields">
                <span *ngIf="submitted && !planForm.valid">Fields marked with * are mandatory</span>
                <span *ngIf="submitted && isNoFactAmount">Enter any Factor Amount. Atleast One Factor amount is required</span>
@@ -115,6 +114,7 @@
                <div *ngIf="tierDateErr.flag">{{tierDateErr.msg}}</div>
                <div *ngIf="updateNoChange.flag">{{updateNoChange.message}}</div>
              </div>  
+    <div class="health-plan-form-area">
              <div class="row">
                  <div class="col-md-4">
                   <div class="form-group">
@@ -178,11 +178,11 @@
                           <table class="table table-striped table-bordered tier-table">
                             <thead>
                               <tr>
-                                  <th>StopLoss Tier<small class="starmark">*</small></th>
-                                  <th>StopLoss Tier Factor<small class="starmark">*</small></th>
+                                  <th>StopLoss Tier<small class="starmark" *ngIf="!isViewModal">*</small></th>
+                                  <th>StopLoss Tier Factor<small class="starmark" *ngIf="!isViewModal">*</small></th>
                                   <th>Expected Claim Rate</th>
-                                  <th>StopLoss Tier Start Date<small class="starmark">*</small></th>
-                                  <th>StopLoss Tier End Date<small class="starmark">*</small></th>
+                                  <th>StopLoss Tier Start Date<small class="starmark" *ngIf="!isViewModal">*</small></th>
+                                  <th>StopLoss Tier End Date<small class="starmark" *ngIf="!isViewModal">*</small></th>
                                   <th>Terminal Extension Coverage</th>
                                   <th *ngIf="!isViewModal"> </th>
                                 </tr>
@@ -191,12 +191,19 @@
                               <ng-container *ngFor="let tier of tierFormGroups; let i = index">
                               <tr [formGroup]="tier">
                                 <td>
-                                    <select class="form-control" formControlName="tierId" [ngClass]="{'is-invalid':tierIdRequiredErr.flag}">
+                                    <!-- <select class="form-control" formControlName="tierId" [ngClass]="{'is-invalid':tierIdRequiredErr.flag}">
                                       <option value="1">Single</option>
                                       <option value="2">Dual</option>
                                       <option value="3">Family</option>
                                       <option value="4">Others</option>
-                                    </select>
+                                    </select> -->
+                                    <select class="form-control" formControlName="tierId" [ngClass]="{'is-invalid':tierIdRequiredErr.flag}">
+                                      <ng-container *ngFor="let tier of tires">                                        
+                                          <option [value]="tier.tierId">
+                                            {{tier.tierName}}
+                                          </option>
+                                      </ng-container>
+                                    </select> 
                                 </td>
                                 <td>
                                     <input type="number" formControlName="tierAmount" class="form-control" [ngClass]="{ 'is-invalid': isTierAmountInvalid}" />
@@ -232,6 +239,26 @@
                           </div>
                         </div>
                     </div>
+                    
+                  <div class="audit-table-area" *ngIf="!isAddMode">
+                      <table class="table table-bordered table-striped table-hover">
+                        <thead>
+                          <tr>
+                            <th>Updated by</th>
+                            <th>Updated On</th>
+                            <th>Action</th>
+                          </tr>                 
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let obj of planAudits">
+                            <td>{{obj.userId}}</td>
+                            <td>{{obj.sysDate}}</td>
+                            <td *ngIf="obj.actionType=='U'">Update</td>
+                            <td *ngIf="obj.actionType=='I'">Add</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                  </div>
                    <!-- <div class="row">
                     <div class="col-md-4">
                       <div class="form-group">

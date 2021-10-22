@@ -1,12 +1,12 @@
 
+
 //const apiPath = "https://medicaslapiorc.azurewebsites.net/api/";  // Azure Server Internal
-//const apiPath = "http://10.48.30.158:92/api/"; // Dev Server 
-const apiPath = "http://10.45.30.100:92/api/"; // QA Server
+const apiPath = "http://10.48.30.158:92/api/"; // Dev Server 
+//const apiPath = "http://10.45.30.100:92/api/"; // QA Server
 //const apiPath = "http://10.12.30.40:92/api/"; //UAT Server
 //const apiPath = "http://10.10.30.206:92/api/"; // Production Server 1 
 //const apiPath = "http://10.10.30.207:92/api/"; // Production Server 2
 
-// for Azure 
 export const Paths = {
   loginPath : apiPath+"Login/UserLogin/",
   reportPath : apiPath+"Claim/GetClaimReport",
@@ -35,6 +35,7 @@ export const Paths = {
   contractUpdate: apiPath+"Contracts/UpdateContracts",
   contractAll: apiPath+"Contracts/GetAllContracts",
   contractDateValidation: apiPath+"Contracts/DateValidation/",
+  contractAudits: apiPath+"Clients/GetTblContractAudit?ContractId=",
 
   clients: apiPath+"Clients/LoadClientDetails",
   client: apiPath+"Clients/GetClientDetails/",
@@ -45,6 +46,7 @@ export const Paths = {
   parentClient:apiPath+"Clients/GetParentClient",
   duplicateClientId: apiPath+"Clients/DuplicateClientID?clientId=",
   duplicateClientName: apiPath+"Clients/DuplicateClient?client=",
+  accountAudits: apiPath+"Clients/GetTblClientAudits?ClientId=",
 
   roles: apiPath+"Roles/GetAllRoles",
   role: apiPath+"Roles/GetRolesDetail/",
@@ -59,6 +61,7 @@ export const Paths = {
   
   claimCalculate: apiPath+"Claim/CalculateClaimAmount/",
   claimUpdate: apiPath+"Claim/UpdateClaim?",
+  claimAudits: apiPath+"Clients/GetTblClaimAudits?ClaimId=",
 
   UsersPath:apiPath+"UserAdministration/GetAllUsers",
   UserDetailPath:apiPath+"UserAdministration/GetUserDetails/",
@@ -82,12 +85,14 @@ export const Paths = {
   duplicatePlan:apiPath+"Plan/DuplicatePlanCode?", 
   duplicatePlanName:apiPath+"Plan/DuplicatePlanName?planName=", 
   deletePlan: apiPath+"Plan/DeletePlanTier?",
+  planAudits: apiPath+"Clients/GetTblPlanAudit?PlanId=",
 
   memberSearch: apiPath+"Member/GetMemberdetail?",
   memberAdd: apiPath+"Member/AddMember",
   memberUpdate: apiPath+"Member/UpdateMember",
   memberAll: apiPath+"Member/GetAllMember",
   member:apiPath+"Member/GetMemberDetailsByClientId/",
+  memberAudits: apiPath+"Clients/GetTblMemberAudits?MemberId=",
 
   productAll: apiPath+"Product/GetAllProducts",
   product: apiPath+"Product/GetProducts?productId=",
@@ -96,8 +101,12 @@ export const Paths = {
   productCovertClaims:apiPath+"Product/GetCoveredClaims",
   duplicateContract: apiPath+"Product/DuplicateContract?contractId=",
   productByContractPeriod: apiPath+"Product/GetProductByContractPeriod?",
+  productAudits: apiPath+"Clients/GetTblProductAudits?ContractId=",
 
   ExcelUploadPath: apiPath+"ExcelUpload/UploadExcel?userId=",
+  ExcelExportPath: apiPath+"ExcelUpload/ExportExcel",
+
+  ExcelEmptyExportPath: apiPath+"ExcelUpload/ExportBlankExcel",
 
   sslReportURL: "https://medicaanalytics-axw4of8ufwa4-hy.analytics.ocp.oraclecloud.com/ui/dv/ui/project.jsp?pageid=visualAnalyzer&reportmode=full&reportpath=%2F%40Catalog%2Fshared%2FMedica%20SL%2FSpecific%20Report",
   aslReportURL: "https://medicaanalytics-axw4of8ufwa4-hy.analytics.ocp.oraclecloud.com/ui/dv/ui/project.jsp?pageid=visualAnalyzer&reportmode=full&reportpath=%2F%40Catalog%2Fusers%2Fsrajamani%40infinite.com%2FMedica%20SL%2FSpecific%20Report",

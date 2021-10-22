@@ -65,3 +65,19 @@ export interface IMemberUpdate{
   memberStartDate: string;
   memberEndDate: string;
 }
+
+export interface IMemberAudit{
+    memberId: number,
+    fname: string,
+    lname: string,
+    dateOfBirth: Date,
+    claimId: string,
+    subsriptionId: string,
+    memberStartDate: Date,
+    gender: string,
+    status: null,
+    mname: string,
+    userId: string,
+    sysDate: Date,
+    actionType: string
+  }

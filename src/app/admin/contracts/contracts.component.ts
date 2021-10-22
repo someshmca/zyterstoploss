@@ -3,7 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { AlertService } from '../services/alert.service';
 import { IContract, IContractIDRequest,
   IContractAdd, IAddContractSuccess,IActiveClient,
-  IContractUpdate, IUpdateContractSuccess} from '../models/contracts-model';
+  IContractUpdate, IUpdateContractSuccess, IContractAudit} from '../models/contracts-model';
 import {ContractService} from '../services/contract.service';
 import { first } from 'rxjs/operators';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -31,6 +31,8 @@ export class ContractsComponent implements OnInit {
   contract: IContractIDRequest;
   activeClients: IActiveClient[]=[];
   updateObj: IContract[]=[];
+  
+  contractAudits: IContractAudit[] = [];
   ustartDate:string;
   uendDate:string;
   uRunInStartDate:string;
@@ -353,13 +355,16 @@ openViewModal(bool, id:any){
     console.log("id inside modal: "+id);
     //this.contId=id.contractId==0?"":id.contractId;
     if(id!=null && open){
+      
       this.isAddMode = false;
       this.isFilterOn=false;
       this.getContract(id);
       this.getClientDetails(id.clientId);
       
+      this.getContractAudits(id);
       //   this.clientService.passClientId(id.clientName);
       // 
+
       console.log(this.updateObj);        
       if(this.isViewModal==true){
         this.contractForm.disable();
@@ -666,6 +671,14 @@ openViewModal(bool, id:any){
     
            
   }
+
+  getContractAudits(contractId: number){
+    
+    this.contractService.getContractAudits(contractId).subscribe((res)=>{
+      this.contractAudits = res;
+      
+    })
+  }
   private addContract() {
     this.isDisabled=true;
     console.log(this.contractForm.value);
@@ -780,7 +793,7 @@ openViewModal(bool, id:any){
                 next: () => {
                     //this.openCustomModal(false,null); 
                     //this.contractForm.reset();
-                    
+                    this.getContractAudits(this.uContractId);
                     this.getAllContracts();
                     this.updateNoChange.flag=false;
                     this.updateNoChange.message="";
@@ -801,6 +814,7 @@ openViewModal(bool, id:any){
       if(this.isAdded){
         console.log(this.tempContractObj);
         this.clientService.getClient(this.f.clientId.value).subscribe((data)=>{
+          
           this.navService.setProductObj(data[0].clientId, data[0].clientName, true,false);
           
           this.router.navigate(['/product']); 

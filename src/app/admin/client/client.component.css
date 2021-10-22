@@ -83,3 +83,40 @@
     width:20px;
     height:20px;
 }
+
+.mat-column-clientId
+
+{  position: relative;
+
+    max-width: 15vh;
+
+}
+
+.mat-column-clientName
+
+{
+
+    position: relative;
+
+    max-width: 15vh;
+
+}
+
+.mat-column-startDate
+
+{
+
+    position: relative;
+
+    max-width: 15vh;
+
+}
+
+.mat-column-endDate
+
+{ position: relative;
+
+    max-width: 15vh;
+
+}
+

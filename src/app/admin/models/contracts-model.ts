@@ -115,3 +115,12 @@ export interface IUpdateContractSuccess{
     message: string;
 }
 
+
+export interface IContractAudit{
+    contractid: number,
+    status: null,
+    userId: string,
+    sysDate: Date,
+    actionType: string
+  }
+  

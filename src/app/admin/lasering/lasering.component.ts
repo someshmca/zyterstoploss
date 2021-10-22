@@ -21,6 +21,7 @@ import {NavPopupService} from '../services/nav-popup.service';
 import { Router } from '@angular/router';
 import { IClientObj } from '../models/nav-popups.model';
 import {DecimalPipe} from '@angular/common'; //PV 08-05-2021
+import { IMemberAudit } from '../models/member-model';
 
 @Component({
   selector: 'app-lasering',
@@ -60,6 +61,7 @@ export class LaseringComponent implements OnInit {
   activeContracts: IContract[]=[];
   plans: IPlanAll[]=[];
   tires: ITire[] = [];
+  memberAudits: IMemberAudit[]=[];
   show: boolean = true;
   memberSearchErr: any;
   memIdErr = {isValid: false, errMsg: ''};
@@ -68,7 +70,8 @@ export class LaseringComponent implements OnInit {
 
   isSearchDataThere: boolean = false;
   noSearchResultsFound: boolean = false;
-  uMemberId: any;
+  uMemberHRId: any;
+  updateMemberID: any;
   isDisabled: boolean=false;
   isFilterOn: boolean = false;
   isViewModal: boolean;
@@ -244,7 +247,8 @@ export class LaseringComponent implements OnInit {
       if(id!=null){
         console.log(id);
         
-          this.uMemberId = id.memberHrid;
+          this.uMemberHRId = id.memberHrid;
+          this.updateMemberID = id.memberId;
           setTimeout(()=>{
             this.uClientId=id.clientId;
             this.uContractId=id.contractId;
@@ -272,6 +276,7 @@ export class LaseringComponent implements OnInit {
               dateOfBirth: this.datePipe.transform(id.dateOfBirth, 'yyyy-MM-dd'),
               exclusion:(id.exclusion == null || id.exclusion =='N')?false : true       
             });
+            this.getMemberAudits(this.updateMemberID);
 
           },900);
           console.log(id.isUnlimited);
@@ -391,6 +396,13 @@ decimalValue(inputValue:number){
   console.log(inputValue);
   return inputValue;
 }     
+
+getMemberAudits(memberId: number){
+    
+  this.laseringService.getMemberAudits(memberId).subscribe((res)=>{
+    this.memberAudits = res;
+  })
+}
 //PV 08-05-2021 Ends
  private addMember() {
   this.isDisabled=true;
@@ -435,7 +447,7 @@ decimalValue(inputValue:number){
     this.isDisabled=true;
       let updateMemberObj = {
       laserType:"Member",
-      laserTypeId: String(this.uMemberId),
+      laserTypeId: String(this.uMemberHRId),
       laserValue: this.decimalValue(this.f.laserValue.value), //PV 08-05-2021
       isUnlimited: this.f.isUnlimited.value==true?'Y':'N',
       status: 1,
@@ -445,6 +457,7 @@ decimalValue(inputValue:number){
       updatedOn:null ,
       exclusion: this.f.exclusion.value == true ? 'Y' : 'N',
       contractId: this.f.contractId.value,
+      memberId: this.updateMemberID,
       memberStartDate: this.datePipe.transform(this.f.memberStartDate.value, 'yyyy-MM-dd'),
       memberEndDate: this.datePipe.transform(this.f.memberEndDate.value, 'yyyy-MM-dd')
       }
@@ -457,10 +470,11 @@ decimalValue(inputValue:number){
                 this.memberForm.patchValue({
                   exclusion: updateMemberObj.exclusion=='N'?false:true
                 });
-                  //this.openCustomModal(false,null); 
                   //this.memberForm.reset();
                     this.alertService.success('Member updated', { 
                     keepAfterRouteChange: true });
+                    this.getMemberAudits(this.updateMemberID);
+                //  this.openCustomModal(false,null); 
                  // this.router.navigate(['../../'], { relativeTo: this.route });                    
               },
               error: error => {

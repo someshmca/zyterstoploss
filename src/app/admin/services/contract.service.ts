@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import {IContract, IContractIDRequest, IContractsByClient, IContractAdd, IAddContractSuccess, IContractUpdate, IUpdateContractSuccess, IActiveClient} from '../models/contracts-model';
+import {IContract, IContractIDRequest, IContractsByClient, IContractAdd, IAddContractSuccess, IContractUpdate, IUpdateContractSuccess, IActiveClient, IContractAudit} from '../models/contracts-model';
 import { Observable, throwError, BehaviorSubject } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import {Paths} from '../admin-paths';
@@ -32,6 +32,11 @@ export class ContractService {
  getContractsByClientID(clientId){
    return this.http.get<IContractsByClient[]>(Paths.contractsByClientPath+clientId);
  }
+ 
+getContractAudits(contractId: number){
+console.log(Paths.contractAudits+contractId);
+  return this.http.get<IContractAudit[]>(Paths.contractAudits+contractId);
+}
  addContract(formData:IContractAdd ): Observable<IAddContractSuccess>{
 
   const body = JSON.stringify(formData);

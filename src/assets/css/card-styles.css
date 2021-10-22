@@ -244,3 +244,9 @@ input[type='date'].form-control{
     .product-form-wrap .mat-form-field-underline  {
         background-color: transparent;
     }
+    .view-modal .mat-select{
+        width: 300px;
+    }
+    .view-modal .mat-form-field .mat-select.mat-select-disabled .mat-select-arrow{
+        color: #ffffff;
+    }

@@ -118,3 +118,34 @@
     ::ng-deep #line .mat-form-field-underline {
         display:none;      
       }
+
+      .mat-column-clientName
+
+      {
+      
+          position: relative;
+      
+          max-width: 10vh;
+      
+      }
+      
+      .mat-column-contractId
+      
+      {
+      
+          position: relative;
+      
+          max-width: 10vh;
+      
+      }
+      
+      .mat-column-claimBasis
+      
+      {
+      
+          position: relative;
+      
+          max-width: 10vh;
+      
+      }
+      

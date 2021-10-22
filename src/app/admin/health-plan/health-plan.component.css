@@ -82,3 +82,39 @@
 .delete-a .fa:hover{
     transform: scale(1.4);
 }
+
+.mat-column-clientName
+
+{
+
+    position: relative;
+
+    max-width: 10vh;
+
+}
+
+.mat-column-planCode
+
+{
+
+    position: relative;
+
+    max-width: 10vh;
+
+}
+
+.mat-column-planName
+
+{
+
+    position: relative;
+
+    max-width: 10vh;
+
+}
+
+.health-plan-form-area{
+    max-height: 350px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}

@@ -20,7 +20,7 @@ html, body, a, i, span, div, table, tr, th, td, input, select, button, form, hea
 	font-size: 13px;
 }
 body{	
-	background-color: #F5FBFF;
+	background-color: #f6f1f2;
 	min-height: 100vh;
 	position: relative;
 	/* padding-bottom: 250px; */
@@ -117,5 +117,26 @@ input[type=number] {
     background: none !important;
     padding-right: 10px !important;
 }
+.btn.btn-primary
+{
+    background: #354f81 !important;
+}
+.btn.btn.btn-outline-primary:hover{
+    background: #354f81 !important;
+}
+.btn-outline-primary {
+    /* color: #007bff; */
+    color: #354f81;
+    /* border-color: #007bff; */
+    border-color: #354f81;
+}
+.modal-body-wrap{
+	max-height: 350px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
 
-
+.audit-table-area{
+	margin: 15px auto;
+	max-width: 95%;
+}

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import {IProductAll,IProductAdd,IProductUpdate,IActiveClient,IProduct,IAddProductSuccess,ICoveredClaims} from '../models/product-model';
+import {IProductAll,IProductAdd,IProductUpdate,IActiveClient,IProduct,IAddProductSuccess,ICoveredClaims, IProductAudit} from '../models/product-model';
 import { Observable, throwError, BehaviorSubject } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import {Paths} from '../admin-paths';
@@ -36,6 +36,10 @@ export class ProductService {
     return this.http.get<IProduct[]>(Paths.product+productId).pipe(catchError(this.handleError.bind(this)));
  }
 
+ getProductAudits(contractId: number){
+  console.log(Paths.productAudits+contractId);
+    return this.http.get<IProductAudit[]>(Paths.productAudits+contractId);
+  }
  addProduct(formData:IProductAdd[] ): Observable<IProductAdd[]>{
     const body = JSON.stringify(formData);
     console.log(body); 

@@ -7,10 +7,10 @@
 	<div class="login-form-area" [hidden]="submitted">
         <div>
             <div class="login-user-avatar-area">
-                <div class="avatar-icon-area">
+                <!-- <div class="avatar-icon-area">
                 <img src="../../../assets/images/user.png" border="0"/>
-                </div>
-                <h3>Medica StopLoss Login</h3>
+                </div> -->
+                <h3>Medica Stoploss Sign In</h3>
             </div>
             <form autocomplete="off" (ngSubmit)="onSubmit()" #loginForm="ngForm">
                 <div class="text-danger login-invalid" *ngIf="invalidLogin">
@@ -24,8 +24,8 @@
                     <label for="pwd">Password</label>
                     <input type="password" class="form-control" id="pwd"  name="password" required [(ngModel)]="loginForm.password" #password="ngModel" (keyup)="checkPwd()">
                 </div>
-                <div class="form-group">
-                    <button type="submit" class="btn btn-success" [disabled]="!loginForm.valid">Login</button>
+                <div class="form-group login-btn-area">
+                    <button type="submit" class="btn btn-success" [disabled]="!loginForm.valid">Sign In</button>
                 </div>
                 <!-- <div class="form-group">
                     Trouble logging in? <a href="#">Contact Admin</a>

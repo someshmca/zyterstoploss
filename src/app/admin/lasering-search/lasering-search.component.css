@@ -107,3 +107,9 @@
 .range-area div:nth-child(2){
     margin-left: 10px;
 }
+.member-form-wrap{
+    max-height: 350px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+

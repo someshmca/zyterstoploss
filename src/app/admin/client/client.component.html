@@ -114,7 +114,6 @@
         <!-- Modal body -->
       <form [formGroup]="clientForm" (ngSubmit)="onSubmit()">
         <div class="modal-body">
-          <div class="client-form-area">
              <div class="mandate-fields">
                <div *ngIf="submitted && (!clientForm.valid && !clientForm.errors?.dates)">Fields marked with * are mandatory</div>
                <div *ngIf="clientForm.errors">{{ clientForm.errors?.dates | json }}</div>
@@ -133,6 +132,7 @@
                <div *ngIf="isHRIdInvalid.flag">{{isHRIdInvalid.message}}</div>  
                <div *ngIf="updateNoChange.flag">{{updateNoChange.message}}</div>
             </div>
+          <div class="modal-body-wrap">
              <div class="row">
               <div class="col-md-6">
                  <div class="form-group">
@@ -220,6 +220,25 @@
                     <input type="text" value="" formControlName="pharmacyClaimsAdministrator" class="form-control"  maxlength="50"/>
                    </div>
                 </div>
+              </div>
+              <div class="audit-table-area" *ngIf="!isAddMode">
+                 <table class="table table-bordered table-striped table-hover">
+                   <thead>
+                     <tr>
+                       <th>Updated by</th>
+                       <th>Updated On</th>
+                       <th>Action</th>
+                     </tr>                 
+                   </thead>
+                   <tbody>
+                     <tr *ngFor="let obj of accountAudits">
+                       <td>{{obj.userId}}</td>
+                       <td>{{obj.sysDate}}</td>
+                       <td *ngIf="obj.actionType=='U'">Update</td>
+                       <td *ngIf="obj.actionType=='I'">Add</td>
+                     </tr>
+                   </tbody>
+                 </table>
               </div>
           </div>
         </div>

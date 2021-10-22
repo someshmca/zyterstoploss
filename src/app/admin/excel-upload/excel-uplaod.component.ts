@@ -3,8 +3,15 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs'; 
 import {Paths} from '../admin-paths';
 import { ExcelUploadService } from '../services/excel-upload.service';  
+import { ExcelExportService } from '../services/excel-export.service';  
 import { LoginService } from '../../shared/services/login.service';
+import { LoaderService } from '../services/loader.service';
 import { first } from 'rxjs/operators';
+const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+const EXCEL_EXTENSION = '.xlsx'
+import { Workbook } from 'exceljs'; 
+import * as fs from 'file-saver';
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-excel-uplaod',
@@ -18,8 +25,9 @@ export class ExcelUploadComponent implements OnInit {
   button = 'Upload';
   isLoading = false;
   isExcelFile: boolean;
+  downloads: boolean= false;
   constructor(private http: HttpClient, private service: ExcelUploadService,private loginService: LoginService
-    ) { }
+    ,private exportService:ExcelExportService, private loaderService: LoaderService) { }
 
   ngOnInit(): void {
   }
@@ -44,7 +52,7 @@ export class ExcelUploadComponent implements OnInit {
     }
   }
   uploadFile() { 
-
+    this.downloads=false;
     if(this.fileInput.nativeElement.value=="")
       {
         this.message="No file uploaded";
@@ -73,4 +81,42 @@ export class ExcelUploadComponent implements OnInit {
       
   
   } 
+  
+
+
+  downloadEmpty() {
+    this.downloads = true;
+    
+    this.exportService.downloadEmptyFile().subscribe((response) => { 
+			let blob:any = new Blob([response], {type:EXCEL_TYPE});
+      fs.saveAs(blob, 'Export_Contract_Details_Template_' + new Date().getTime() + EXCEL_EXTENSION);
+
+     //const file = new File([blob], 'Export' + '.xlsx', { type: 'application/vnd.ms.excel' });
+     //saveAs(file);
+			
+			//window.open(url); 
+			//window.location.href = response.url;
+		
+		}), error => console.log('Error downloading the file'),
+                 () => console.info('File downloaded successfully');
+  }
+
+
+  download() {
+    this.downloads = true;
+    this.exportService.downloadFile().subscribe((response) => { 
+			let blob:any = new Blob([response], {type:EXCEL_TYPE});
+      fs.saveAs(blob, 'Export_Contract_Details_' + new Date().getTime() + EXCEL_EXTENSION);
+
+     //const file = new File([blob], 'Export' + '.xlsx', { type: 'application/vnd.ms.excel' });
+     //saveAs(file);
+			
+			//window.open(url); 
+			//window.location.href = response.url;
+		
+		}), error => console.log('Error downloading the file'),
+                 () => console.info('File downloaded successfully');
+  }
+
+
 }  

@@ -228,3 +228,12 @@ export interface IListContractClaims{
     claimtypecode: string;
     sltype: string;
 }
+
+export interface IProductAudit{
+    productId: number,
+    contractid: number,
+    status: null,
+    userId: string,
+    sysDate: Date,
+    actionType: string
+  }

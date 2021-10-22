@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import {ITire, IPlanAll, IPlanAdd, IPlanUpdate, IActiveClient, IContracts} from '../models/health-plan.model';
+import {ITire, IPlanAll, IPlanAdd, IPlanUpdate, IActiveClient, IContracts, IPlanAudit} from '../models/health-plan.model';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
@@ -38,6 +38,13 @@ export class HealthPlanService {
  getContractsByClient(clientId:string): Observable<IContracts[]>{
   
   return this.http.get<IContracts[]>(Paths.contracts+clientId);
+}
+getPlanAudits(planId: number){
+  console.log(Paths.planAudits+planId);
+  
+
+  return this.http.get<IPlanAudit[]>(Paths.planAudits+planId);
+
 }
  addPlan(formData:IPlanAdd){
    

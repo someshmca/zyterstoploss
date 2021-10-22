@@ -63,3 +63,11 @@ export interface IContracts{
     contractId: number;
     claimsAdministrator: string;
 }
+
+
+export interface IPlanAudit{
+    planId: number,
+    userId: string,
+    sysDate: Date,
+    actionType: string
+  }

@@ -42,6 +42,7 @@ h5, h6{
 } 
 .page-content{
     padding: 15px;
+    width: calc(100vw - 225px);
 }
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

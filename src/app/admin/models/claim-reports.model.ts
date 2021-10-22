@@ -28,3 +28,19 @@ export interface IClaimUpdateResponse{
         id: string;
         message:string;
 }
+
+export interface IClaimAudit{
+        memberId: number,
+        fname: string,
+        lname: string,
+        dateOfBirth: Date,
+        claimId: string,
+        subsriptionId: string,
+        memberStartDate: Date,
+        gender: string,
+        status: null,
+        mname: string,
+        userId: string,
+        sysDate: Date,
+        actionType: string
+      }

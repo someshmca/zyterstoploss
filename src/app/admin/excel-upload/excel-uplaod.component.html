@@ -11,6 +11,12 @@
         <div class="row">  
              
         </div>  
+        <div *ngIf="downloads">
+                <div *ngIf="loaderService.isLoading | async">
+                    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+                        <h5 style="color: #354f81; padding: 3px 10px; margin: 0;">Downloading.... </h5>
+                </div>  
+        </div>
     <div class="row">  
         <div class="col-12">  
             <div class="excelupload-controls">
@@ -27,6 +33,16 @@
             <div class="excel-upload-btns">
                 <button class="btn btn-primary" [disabled]="isLoading" (click)="uploadFile();">
                     <i class="fa" [ngClass]="{'fa-spin fa-spinner': isLoading, 'fa-check': !isLoading}"></i> {{button}}</button>  
+            
+	<button class="btn btn-primary" (click)="download()" value="Download "> 
+        <i class="fa fa-download"></i> Extract
+    </button>
+	<!-- <button class="btn btn-success" (click)="downloadEmpty()" value="Download Empty "> 
+        <i class="fa fa-download"></i> Template
+    </button> -->
+    <a class="btn btn-primary" href="../../../assets/Contract_Template.xls" title="Download Empty "> 
+        <i class="fa fa-download"></i> New Template
+    </a>
                 <button [className]="isLoading?'btn btn-secondary':'btn btn-primary'" (click)="resetFileUploader()" [disabled]="isLoading"> Reset  </button>  
 
             </div>

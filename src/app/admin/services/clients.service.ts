@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import {IClient, IClientIDRequest, IClientAdd, IClientAddSuccess, IClientUpdate,IParentClient, IClientUpdateSuccess, IActiveClient} from '../models/clients-model';
+import {IClient, IClientIDRequest, IClientAdd, IClientAddSuccess, IClientUpdate,IParentClient, IClientUpdateSuccess, IActiveClient, IAccountAudit} from '../models/clients-model';
 import { Observable, throwError, BehaviorSubject } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import {Paths} from '../admin-paths';
@@ -52,6 +52,10 @@ checkDuplicateAccountName(name: string){
 }
 getParentClient(){
   return this.http.get<IParentClient[]>(Paths.parentClient);
+}
+getAccountAudits(clientId: string){
+  console.log(Paths.accountAudits+clientId);
+  return this.http.get<IAccountAudit[]>(Paths.accountAudits+clientId);
 }
  addClient(formData: IClientAdd) {
   

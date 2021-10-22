@@ -133,7 +133,7 @@
             <div class="row">
               <div class="col-md-4">
                 <div class="form-group">
-                  <label>Account<small class="starmark">*</small> </label>
+                  <label>Account<small class="starmark" *ngIf="isAddMode">*</small> </label>
                   <select #focusElem formControlName="clientId" class="form-control" (change)="getContractIDs($event.target.value)" [ngClass]="{ 'is-invalid': submitted && f.clientId.errors }">
                     <option *ngFor="let client of activeClients" [value]="client.clientId">
                       {{client.clientName}}
@@ -144,7 +144,7 @@
               </div>
               <div class="col-md-4">
                 <div class="form-group">
-                  <label>Contract<small class="starmark">*</small></label>
+                  <label>Contract<small class="starmark" *ngIf="isAddMode">*</small></label>
                   <div *ngIf="isAddMode">
                   <select class="form-control" formControlName="contractId" (change)="checkDuplicateContract($event.target.value)" [ngClass]="{ 'is-invalid': submitted && f.contractId.errors || duplicateContractErr.flag}">
                     <option value='' *ngIf="isAddMode"></option>
@@ -391,7 +391,7 @@
             
             <fieldset class="product-fieldset" *ngIf="isContractPeriod2Visible">
               <legend>
-                  <input type="checkbox" class="success" id="y2" formControlName="isMultiContractPeriod" (change)="checkYear2Selected()"> 
+                  <input type="checkbox" class="success" id="y2" *ngIf="!isViewModal" formControlName="isMultiContractPeriod" (change)="checkYear2Selected()"> 
                   <label for="y2">Contract Period 2 </label>
                   <input type="text" formControlName="contractPeriod" style="visibility:hidden">
                 </legend>
@@ -770,6 +770,25 @@
         </div>
       </div>
     </div>
+    <div class="audit-table-area" *ngIf="!isAddMode">
+      <table class="table table-bordered table-striped table-hover">
+        <thead>
+          <tr>
+            <th>Updated by</th>
+            <th>Updated On</th>
+            <th>Action</th>
+          </tr>                 
+        </thead>
+        <tbody>
+          <tr *ngFor="let obj of productAudits">
+            <td>{{obj.userId}}</td>
+            <td>{{obj.sysDate}}</td>
+            <td *ngIf="obj.actionType=='U'">Update</td>
+            <td *ngIf="obj.actionType=='I'">Add</td>
+          </tr>
+        </tbody>
+      </table>
+  </div>
 </div>   
       </div>
       <div class="modal-footer">

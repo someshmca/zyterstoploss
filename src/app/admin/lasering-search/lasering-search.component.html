@@ -480,6 +480,25 @@
                </div>
            </div>                    
           </div>
+          <div class="audit-table-area" *ngIf="!isAddMode">
+            <table class="table table-bordered table-striped table-hover">
+              <thead>
+                <tr>
+                  <th>Updated by</th>
+                  <th>Updated On</th>
+                  <th>Action</th>
+                </tr>                 
+              </thead>
+              <tbody>
+                <tr *ngFor="let obj of memberAudits">
+                  <td>{{obj.userId}}</td>
+                  <td>{{obj.sysDate}}</td>
+                  <td *ngIf="obj.actionType=='U'">Update</td>
+                  <td *ngIf="obj.actionType=='I'">Add</td>
+                </tr>
+              </tbody>
+            </table>
+         </div>
      </div>      
    </div>
  </div> 

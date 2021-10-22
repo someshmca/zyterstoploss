@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, AfterViewInit, ElementRef } from '@angular/core';
-import { IMemberSearch, IMemberSearchResponse, IMemberAdd } from '../models/member-model';
+import { IMemberSearch, IMemberSearchResponse, IMemberAdd, IMemberAudit } from '../models/member-model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IActiveClient } from '../models/clients-model';
 import { IContract } from '../models/contracts-model';
@@ -70,6 +70,8 @@ export class MemberComponent implements OnInit {
   activeContracts: IContract[] = [];
   plans: IPlanAll[] = [];
   tires: ITire[] = [];
+  memberAudits: IMemberAudit[]=[];
+
   show: boolean = true;
   memberSearchErr: any;
   memIdErr = { isValid: false, errMsg: '' };
@@ -89,7 +91,8 @@ export class MemberComponent implements OnInit {
 
   isSearchDataThere: boolean = false;
   noSearchResultsFound: boolean = false;
-  uMemberId: any;
+  uMemberHRId: any;
+  updateMemberID: any;
   isDisabled: boolean = false;
   isViewModal: boolean = false;
   isAdmin: boolean;
@@ -606,12 +609,15 @@ export class MemberComponent implements OnInit {
       if (id != null) {
         console.log(id);
 
-        this.uMemberId = id.memberHrid;
+        this.uMemberHRId = id.memberHrid;
+
+        
         setTimeout(() => {
           this.uClientId = id.clientId;
           this.uContractId = id.contractId;
           this.uPlanId = id.planId;
           this.uTierId = id.tierId;
+          this.updateMemberID = id.memberId;
 
           this.memberForm.patchValue({
             memberId: id.memberHrid,
@@ -639,6 +645,7 @@ export class MemberComponent implements OnInit {
             dateOfBirth: this.datePipe.transform(id.dateOfBirth, 'yyyy-MM-dd'),
             exclusion:(id.exclusion == null || id.exclusion =='N')?false : true,
           });
+          this.getMemberAudits(this.updateMemberID);
 
         }, 900);
         console.log(id.isUnlimited);
@@ -652,7 +659,6 @@ export class MemberComponent implements OnInit {
         this.f.exclusion.enable();
         // this.f.isUnlimited.enable(); 
         //this.isUnlimitedChecked();
-
         if (this.isViewModal == true) {
           this.memberForm.disable();
           //this.f.isUnlimited.disable(); 
@@ -733,7 +739,12 @@ export class MemberComponent implements OnInit {
     console.log(inputValue);
     return inputValue;
   }
-
+  getMemberAudits(memberId: number){
+    
+    this.memberService.getMemberAudits(memberId).subscribe((res)=>{
+      this.memberAudits = res;
+    })
+  }
   private addMember() {
     this.isDisabled = true;
     let addMembObj = {
@@ -777,7 +788,7 @@ export class MemberComponent implements OnInit {
     this.isDisabled = true;
     let updateMemberObj = {
       laserType: "Member",
-      laserTypeId: String(this.uMemberId),
+      laserTypeId: String(this.uMemberHRId),
       laserValue: this.decimalValue((this.f.laserValue.value)), //PV 08-05-2021
       isUnlimited: this.f.isUnlimited.value == true ? 'Y' : 'N',
       status: 1,
@@ -787,6 +798,7 @@ export class MemberComponent implements OnInit {
       updatedOn: null,
       exclusion: this.f.exclusion.value == true ? 'Y' : 'N',
       contractId: this.f.contractId.value,
+      memberId: this.updateMemberID,
       memberStartDate: this.datePipe.transform(this.f.memberStartDate.value, 'yyyy-MM-dd'),
       memberEndDate: this.datePipe.transform(this.f.memberEndDate.value, 'yyyy-MM-dd')
     }
@@ -804,6 +816,7 @@ export class MemberComponent implements OnInit {
           this.alertService.success('Member updated', {
             keepAfterRouteChange: true
           });
+          this.getMemberAudits(this.updateMemberID);
           // this.router.navigate(['../../'], { relativeTo: this.route });                    
         },
         error: error => {

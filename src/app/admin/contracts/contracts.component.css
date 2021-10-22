@@ -66,3 +66,39 @@
 .mandate-fields{
     padding: 10px 15px;
 }
+
+.mat-column-clientName
+
+{
+
+    position: relative;
+
+    max-width: 10vh;
+
+}
+
+.mat-column-contractId
+
+{  position: relative;
+
+    max-width: 10vh;
+
+}
+
+.mat-column-startDate
+
+{
+
+    position: relative;
+
+    max-width: 10vh;
+
+}
+
+.mat-column-endDate
+
+{ position: relative;
+
+    max-width: 10vh;
+
+}

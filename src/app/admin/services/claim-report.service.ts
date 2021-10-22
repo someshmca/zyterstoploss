@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import {IClaimReportsModel, IClaimUpdate, IClaimUpdateResponse} from '../models/claim-reports.model';
+import {IClaimAudit, IClaimReportsModel, IClaimUpdate, IClaimUpdateResponse} from '../models/claim-reports.model';
 import {IClaimSearch} from '../models/claim-search.model';
 import { Observable, throwError, BehaviorSubject } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -27,6 +27,7 @@ export class ClaimReportService {
   constructor(private http: HttpClient) {
 
    }
+
    getClaimReport(formData: IClaimSearch): Observable<IClaimReportsModel[]> {
      
     const body = JSON.stringify(formData);
@@ -35,11 +36,14 @@ export class ClaimReportService {
            headers: headerOptions
     }).pipe(catchError(this.handleError.bind(this)));
  }
- claimUpdate(claimId:string, exclusion:string){
+ claimUpdate(claimId:string, exclusion:string, userId:string){
    
-   return this.http.put<IClaimUpdateResponse>(Paths.claimUpdate+'claimId='+claimId+'&exclusion='+exclusion,'').pipe(catchError(this.handleError.bind(this)));
+   return this.http.put<IClaimUpdateResponse>(Paths.claimUpdate+'claimId='+claimId+'&exclusion='+exclusion+'&userId='+userId,'').pipe(catchError(this.handleError.bind(this)));
  }
-
+ getClaimAudits(claimId: string){
+  console.log(Paths.claimAudits+claimId);
+  return this.http.get<IClaimAudit[]>(Paths.claimAudits+claimId);
+}
   handleError(errorResponse: HttpErrorResponse) {
     if (errorResponse.error instanceof ErrorEvent) {
       console.error('Client Side Error :', errorResponse.error.message);

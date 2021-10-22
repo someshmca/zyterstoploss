@@ -4,7 +4,7 @@ a, a:hover{
 }
 
 .login-container{
-    background: url("../../../assets/images/login/loginbg.png") 0 0 no-repeat;
+    /* background: url("../../../assets/images/login/loginbg.png") 0 0 no-repeat; */
     background-size: cover;
     height: calc(100vh - 96px);
     width: 100%;
@@ -27,7 +27,9 @@ a, a:hover{
 	width: 400px;
 	max-height: 400px;
 	background: #ffffff;
-	border-radius: 10px;
+	border-radius: 10px;	
+    border: 1px solid #b8c6ff;
+    box-shadow: 0 0 5px 2px #b8c6ff;
 }
 .login-form-area .form-group{
 	padding:0 15px;
@@ -39,9 +41,9 @@ a, a:hover{
 	justify-content: center;
 	position: relative;
 	flex-direction: column;
-	top: -30px;
+	top: 0;
 	text-align: center;
-	margin-bottom: -30px;
+	margin-bottom: 0;
 }
 .avatar-icon-area{
 	width: 60px;
@@ -56,8 +58,8 @@ a, a:hover{
 }
 .login-user-avatar-area h3{
 	font-size: 1.7rem;
-	color: #777777;
-	font-family: "comic sans ms";
+	color: #030100;
+	font-family: ms sans serif;
 }
 .login-form-area .btn{
 	width: 100%;
@@ -82,4 +84,20 @@ a, a:hover{
 .login-invalid span{
 	color: #ff0000;
 	font-size: 14px;
+}
+.login-form-area .form-control{
+	background: #ffffff;
+	background-color: #ffffff;
+}
+.login-form-area .login-btn-area{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.login-form-area .btn.btn-success{
+	background-color: #354f81;
+	border-color: #354f81;
+	margin: 0 auto;
+	width: 90px;
+	border-radius: 9px;
 }

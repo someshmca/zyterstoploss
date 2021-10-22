@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
-import {IMemberSearch, IMemberSearchResponse, IMemberAdd, IMemberUpdate} from '../models/member-model';
+import {IMemberSearch, IMemberSearchResponse, IMemberAdd, IMemberUpdate, IMemberAudit} from '../models/member-model';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
@@ -19,6 +19,10 @@ export class LaseringService {
   }
   getMember(clientId){
     return this.http.get(Paths.member+clientId).pipe(catchError(this.handleError.bind(this)));
+  }
+  getMemberAudits(memberId: number){
+    console.log(Paths.memberAudits+memberId);
+    return this.http.get<IMemberAudit[]>(Paths.memberAudits+memberId);
   }
   addMember(formData) {  
     const body = JSON.stringify(formData);

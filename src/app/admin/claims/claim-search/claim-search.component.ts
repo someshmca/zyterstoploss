@@ -2,7 +2,7 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import {Router} from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {IClaimSearch} from '../../models/claim-search.model';
-import {IClaimReportsModel} from '../../models/claim-reports.model';
+import {IClaimAudit, IClaimReportsModel} from '../../models/claim-reports.model';
 import {ClaimReportService} from '../../services/claim-report.service';
 import {ClaimService} from '../../services/claim.service';
 import { ICoveredClaims } from '../../models/product-model';
@@ -56,6 +56,8 @@ export class ClaimSearchComponent implements OnInit {
   coveredClaims: ICoveredClaims[] = [];
 
   claimResults: IClaimReportsModel[] = [];
+  
+  claimAudits: IClaimAudit[]=[];
   displayedColumns: any[] = ['claimId','sequenceNumber', 'clientName', 'memberId', 'firstName', 'lastName', 'minPaidAmount', 'climReceivedOn','paidFromDate','dateOfBirth','serviceStartDate','serviceEndDate','diagnosisCode','claimSource','claimType','subscriberFirstName','subscriberLastName','alternateId','paidToDate'];
   dataSource: any;
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -299,10 +301,11 @@ openCustomModal(open: boolean, id:any) {
             subscriberFirstName:id.subscriberFirstName,
             subscriberLastName:  id.subscriberLastName,
             exclusion:(id.exclusion == null || id.exclusion =='N')?false : true,
+            userId: this.loginService.currentUserValue.name
           });
 
 
-
+        this.getClaimAudits(this.uClaimId);
         if(this.isViewModal) this.claimForm.disable();
         else{
           this.claimForm.disable();
@@ -313,14 +316,23 @@ openCustomModal(open: boolean, id:any) {
         
 }
 }
+
+getClaimAudits(claimId: string){
+    
+  this._claimReportService.getClaimAudits(claimId).subscribe((res)=>{
+    this.claimAudits = res;
+    
+  })
+}
 updateClaim(claimId:string,  exclusion:string ){
   let updateClaimObj = {
     claimId : claimId,
-    exclusion: (exclusion==null || exclusion == 'N') ? false : true
+    exclusion: (exclusion==null || exclusion == 'N') ? false : true,
   }
+   let userId = this.loginService.currentUserValue.name;
   //this.claimForm.patchValue({exclusion: updateClaimObj.exclusion});
-  
-      this._claimReportService.claimUpdate(claimId, exclusion).pipe(first())
+    
+      this._claimReportService.claimUpdate(claimId, exclusion, userId).pipe(first())
       .subscribe({
         next: () => {
           
@@ -334,6 +346,7 @@ updateClaim(claimId:string,  exclusion:string ){
           this.alertService.success('Claim updated', {
             keepAfterRouteChange: true
           });          
+          this.getClaimAudits(this.uClaimId);
 
         },
         error: error => {

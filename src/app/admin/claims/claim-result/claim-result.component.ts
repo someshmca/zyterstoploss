@@ -1,6 +1,6 @@
 import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { ClaimReportService } from '../../services/claim-report.service';
-import {IClaimReportsModel} from '../../models/claim-reports.model';
+import {IClaimAudit, IClaimReportsModel} from '../../models/claim-reports.model';
 import { ClaimService } from '../../services/claim.service';
 import {Router} from '@angular/router'
 import { Route } from '@angular/compiler/src/core';
@@ -38,5 +38,4 @@ export class ClaimResultComponent implements OnInit, AfterViewInit  {
       }
     );
   }
-  
 }

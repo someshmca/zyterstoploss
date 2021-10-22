@@ -1,5 +1,5 @@
 import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
-import {IClient, IClientIDRequest, IClientAdd, IClientAddSuccess, IClientUpdate, IClientUpdateSuccess, IActiveClient, IParentClient} from '../models/clients-model';
+import {IClient, IClientIDRequest, IClientAdd, IClientAddSuccess, IClientUpdate, IClientUpdateSuccess, IActiveClient, IParentClient, IAccountAudit} from '../models/clients-model';
 import {IContract} from '../models/contracts-model';
 import {ClientsService} from '../services/clients.service';
 import {ContractService} from '../services/contract.service';
@@ -41,6 +41,7 @@ export class ClientComponent implements OnInit {
   client: IClientIDRequest;
   singleClient: IClient[] = [];
   activeClients: IActiveClient[] = [];
+  accountAudits: IAccountAudit[] = [];
 
   contractIDs: IContract[];
   clientForm: FormGroup;
@@ -428,7 +429,8 @@ openViewModal(bool, id:any){
           this.uAccountName = x[0].clientName;
           this.navService.setClientObj(x[0].clientId, x[0].clientName, false, true);          
           this.fetchAccDetailsOld = this.clientForm.value;
-          debugger;
+          
+          this.getAccountAudits(x[0].clientId);
         });
         if(this.isViewModal==true){
           
@@ -471,7 +473,7 @@ openViewModal(bool, id:any){
     gotoAddContract(){
       
       if(this.isAdded){
-        debugger;
+        
         this.clientService.getClient(this.f.clientId.value).subscribe(
           (data:IClient[])=>{
           if(data.length>0)
@@ -690,7 +692,13 @@ openViewModal(bool, id:any){
 
       }
   }
-
+  getAccountAudits(clientId: string){
+    
+    this.clientService.getAccountAudits(clientId).subscribe((res)=>{
+      this.accountAudits = res;
+      
+    })
+  }
   private addClient() {
     this.clientForm.patchValue({
       userId:this.loginService.currentUserValue.name,
@@ -748,6 +756,7 @@ openViewModal(bool, id:any){
             .pipe(first())
             .subscribe({
                 next: () => {
+                  this.getAccountAudits(this.f.clientId.value);
                     this.getAllClients();
 
                     this.uAccountName='';

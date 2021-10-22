@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import {
-  ITire, IPlanAll, IPlanAdd, IPlanUpdate, IActiveClient,IContracts, IPlanTierChild, ITierObj
+  ITire, IPlanAll, IPlanAdd, IPlanUpdate, IActiveClient,IContracts, IPlanTierChild, ITierObj, IPlanAudit
 } from '../models/health-plan.model';
 import { HealthPlanService } from '../services/health-plan.service';
 import { FormBuilder, FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
@@ -32,6 +32,7 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
   tires: ITire[] = [];
   locTires: ITire[] = [];
   activeClients: IActiveClient[]=[];
+  planAudits: IPlanAudit[] = [];
   rowData: any;
   isCustomModalOpen: boolean = false;
   planForm: FormGroup;
@@ -277,6 +278,7 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
     this.planService.getTires().subscribe(
     (data)=>{
       this.tires=data;
+      
     //  this.locTires=this.tires;
       
        for(let i=0;i<this.tires.length;i++){
@@ -536,6 +538,7 @@ dateValue(dateVal){
       console.log(this.planForm.value);
       console.log(this.t);
       
+      this.getPlanAudits(this.updatePlanID);
       if(this.isViewModal==true){
         this.planForm.disable();
       }
@@ -1468,7 +1471,15 @@ validateTierIDs(){
         }
        }
   
-      
+  
+getPlanAudits(planId: number){
+  
+  this.planService.getPlanAudits(planId).subscribe((res)=>{
+    
+    this.planAudits = res;
+  })
+}
+
   private addPlan() {
     this.isAddTier=false;
     this.isPatchInputValue=false;
@@ -1610,7 +1621,6 @@ validateTierIDs(){
                     console.log(this.updatePlanObj);
                     console.log(this.t.value);
                     this.t.patchValue(this.t.value);
-                    
                   this.isPatchInputValue=true;
                     
                     for (let i = 0; i < this.t.length; i++) {
@@ -1625,9 +1635,11 @@ validateTierIDs(){
                     this.getAllPlans();
                     this.tiersLimitExceeded.flag=false;
                     this.tiersLimitExceeded.value='';
+                    
                   this.alertService.success('Plan & Tier updated', {
                     keepAfterRouteChange: true });
 
+                    this.getPlanAudits(this.updatePlanID);
                    // this.uPlanName=''; //(V.E 27-Jul-2021 )
                    // this.uplanId=''//(V.E 27-Jul-2021 )
                     //this.openCustomModal(false,null);

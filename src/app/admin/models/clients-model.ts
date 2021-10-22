@@ -79,3 +79,10 @@ export interface IClientUpdateSuccess{
   clientID: string;
   message: string;
 }
+
+export interface IAccountAudit{
+  clientId: string,
+  userId: string,
+  sysDate: Date,
+  actionType: string
+}

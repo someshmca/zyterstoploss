@@ -3,7 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { AlertService } from '../services/alert.service';
 import {DecimalPipe} from '@angular/common';
 import { IProductAll, IProductAdd,
-  IProductUpdate,IActiveClient, ICoveredClaims, IListContractClaims, IContracts
+  IProductUpdate,IActiveClient, ICoveredClaims, IListContractClaims, IContracts, IProductAudit
   } from '../models/product-model';
 import {ProductService} from '../services/product.service';
 import { first } from 'rxjs/operators';
@@ -40,6 +40,7 @@ export class ProductComponent implements OnInit {
   products:IProductAll[] = [];
   activeClients: IActiveClient[]=[];
   contractsByClientId: IContractsByClient[] = [];
+  productAudits: IProductAudit[] = [];
   displayedColumns: string[] = ['clientName','contractId', 'claimBasis','productId'];
   dataSource: any;
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -356,7 +357,8 @@ export class ProductComponent implements OnInit {
       this.tempProductObj=data;
       
       if(data.isAdd && !this.planObj.isAdd){
-        this.getContractIDs(data.clientId);        
+        this.getContractIDs(data.clientId);     
+           
         this.productForm.patchValue({
           clientId: data.clientId,
           contractId: this.sharedContractID
@@ -365,6 +367,7 @@ export class ProductComponent implements OnInit {
       }
       else if(data.isAdd && this.planObj.isAdd){
         this.searchInputValue=data.clientName;
+        
         setTimeout(()=>{this.filterSearchInput.nativeElement.blur()},500);
         setTimeout(()=>{this.filterSearchInput.nativeElement.focus()},1000);
       }
@@ -974,7 +977,7 @@ openViewModal(bool, id:any){
       this.f.clientId.disable();
       this.f.contractId.disable();
       this.getAllProducts();
-
+      this.getProductAudits(this.uContractId);
       if(this.isAddMode){
         
         this.productForm.enable();
@@ -1495,7 +1498,7 @@ fetchProduct(x){
     this.uContractId = x.contractId;
     
 
-    this.getContractIDs(x.clientId);
+    //this.getContractIDs(x.clientId);
 
     console.log(x.listContractClaims);
     
@@ -1691,6 +1694,12 @@ fetchYear2SSL(x){
 //   console.log(this.productForm.value);  
 //   
 // }
+getProductAudits(contractId: number){
+  
+  this.productService.getProductAudits(contractId).subscribe((res)=>{
+    this.productAudits = res;
+  })
+}
 private addProduct() {   
   this.addObj=[];
   
@@ -1750,6 +1759,7 @@ private addProduct() {
               next: () => {
                 
                   this.getAllProducts();
+                  this.getProductAudits(this.uContractId);
                 //  this.productForm.setValue(this.productForm.value);
                   
                  // this.openCustomModal(false,null);                     

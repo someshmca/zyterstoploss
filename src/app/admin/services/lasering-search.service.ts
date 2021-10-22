@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
-import {IMemberSearch, IMemberSearchResponse, IMemberAdd, IMemberUpdate} from '../models/member-model';
+import {IMemberSearch, IMemberSearchResponse, IMemberAdd, IMemberUpdate, IMemberAudit} from '../models/member-model';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
@@ -19,6 +19,10 @@ export class LaseringSearchService {
     params=params.set('MemberId',memId).set('Fname',fname).set('Mname',mname).set('Lname',lname).set('SubscriberId',subscriberId).set('DateOfBirth',dob).set('Gender',gender).set('MemberStartDate', memberStartDate).set('MemberEndDate', memberEndDate).set('benefitPlanId',benefitPlanId).set('clientId',clientId).set('tier',tier).set('alternateId',alternateId); // (VE 30-Jul-2021
     console.log(params.toString());
     return this.http.get<IMemberSearchResponse[]>(Paths.memberSearch,{params}).pipe(catchError(this.handleError.bind(this)));
+ }
+ getMemberAudits(memberId: number){
+   console.log(Paths.memberAudits+memberId);
+   return this.http.get<IMemberAudit[]>(Paths.memberAudits+memberId);
  }
  addMember(formData) {
   
