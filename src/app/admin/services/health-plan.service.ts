@@ -74,8 +74,8 @@ getPlanAudits(planId: number){
   
     return this.http.get(Paths.duplicatePlanName+PName).pipe(catchError(this.handleError.bind(this)));
   }
-  deletePlan(PlanId:number, TierId:number, StopLossTierStartDate:string, StopLossTierEndDate: string, IsTerminalExtCoverage: string){
-    return this.http.delete(Paths.deletePlan+"PlanId="+PlanId+"&TierId="+TierId+"&StopLossTierStartDate="+StopLossTierStartDate+"&StopLossTierEndDate="+StopLossTierEndDate+"&IsTerminalExtCoverage="+IsTerminalExtCoverage);
+  deletePlan(PlanId:number, TierName:string, StopLossTierStartDate:string, StopLossTierEndDate: string, IsTerminalExtCoverage: string){
+    return this.http.delete(Paths.deletePlan+"PlanId="+PlanId+"&TierName="+TierName+"&StopLossTierStartDate="+StopLossTierStartDate+"&StopLossTierEndDate="+StopLossTierEndDate+"&IsTerminalExtCoverage="+IsTerminalExtCoverage);
   }
   handleError(errorResponse: HttpErrorResponse) {
     if (errorResponse.error instanceof ErrorEvent) {

@@ -108,7 +108,7 @@
                <div *ngIf="planIdErr.isDuplicate">{{planIdErr.errMsg}}</div>
                <div *ngIf="planNameErr.isDuplicate">{{planNameErr.errMsg}}</div>
                <div *ngIf="duplicatePlanTierErr.flag">{{duplicatePlanTierErr.message}}</div>
-               <div *ngIf="tierIdRequiredErr.flag">{{this.tierIdRequiredErr.msg}}</div>
+               <div *ngIf="tierNameRequiredErr.flag">{{this.tierNameRequiredErr.msg}}</div>
                <div *ngIf="slTierSDateErr.isDateErr">{{slTierSDateErr.dateErrMsg}}</div>
                <div *ngIf="slTierEDateErr.isDateErr">{{slTierEDateErr.dateErrMsg}}</div>
                <div *ngIf="tierDateErr.flag">{{tierDateErr.msg}}</div>
@@ -192,21 +192,16 @@
                               <tr [formGroup]="tier">
                                 <td>
                                     <!-- <select class="form-control" formControlName="tierId" [ngClass]="{'is-invalid':tierIdRequiredErr.flag}">
-                                      <option value="1">Single</option>
-                                      <option value="2">Dual</option>
-                                      <option value="3">Family</option>
-                                      <option value="4">Others</option>
-                                    </select> -->
-                                    <select class="form-control" formControlName="tierId" [ngClass]="{'is-invalid':tierIdRequiredErr.flag}">
                                       <ng-container *ngFor="let tier of tires">                                        
                                           <option [value]="tier.tierId">
                                             {{tier.tierName}}
                                           </option>
                                       </ng-container>
-                                    </select> 
+                                    </select>  -->
+                                    <input class="form-control" formControlName="tierName" [value]="tierName" [ngClass]="{'is-invalid':tierNameRequiredErr.flag}">
                                 </td>
                                 <td>
-                                    <input type="number" formControlName="tierAmount" class="form-control" [ngClass]="{ 'is-invalid': isTierAmountInvalid}" />
+                                    <input type="number" formControlName="tierAmount" [value]="tierAmount" class="form-control" [ngClass]="{ 'is-invalid': isTierAmountInvalid}" />
                                 </td>
                                 <td>
                                   <input type="number" formControlName="expectedClaimsRate" class="form-control" [ngClass]="{ 'is-invalid': isExpectedClaimsRateInvalid}" />

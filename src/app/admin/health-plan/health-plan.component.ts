@@ -62,7 +62,7 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
   deleteTierArr = [
     {
       PlanId: 0,
-      TierId: 0, 
+      TierName: '',
       StopLossTierStartDate: '',
       StopLossTierEndDate: '',
       IsTerminalExtCoverage: ''
@@ -106,7 +106,7 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
     othersFlag:false,
     othersMsg:''
   };
-  tierIdRequiredErr={flag:false, msg:''};
+  tierNameRequiredErr={flag:false, msg:''};
   tierDateErr={flag:false, msg:''};
 
   // Tier Variables declaration start 
@@ -178,6 +178,7 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
           return this.t.push(this.formBuilder.group({
             planId: 0,
             tierId: [''],
+            tierName: [''],
             tierAmount: [''],
             expectedClaimsRate: [''],
             isTerminalExtCoverage: [false],
@@ -201,6 +202,7 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
                     this.t.push(this.formBuilder.group({
                       planId:0,
                       tierId: [''],
+                      tierName: [''],
                       tierAmount: [''],
                       expectedClaimsRate: [''],
                       isTerminalExtCoverage: [false],
@@ -212,6 +214,7 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
                     this.t.push(this.formBuilder.group({
                       planId:this.updatePlanID,
                       tierId: [''],
+                      tierName: [''],
                       tierAmount: [''],
                       expectedClaimsRate: [''],
                       isTerminalExtCoverage: [false],
@@ -387,7 +390,7 @@ clearErrorMessages(){
     othersFlag:false,
     othersMsg:''
   };  
-  this.tierIdRequiredErr={flag:false, msg:''};
+  this.tierNameRequiredErr={flag:false, msg:''};
   this.duplicatePlanTierErr.flag=false;
   this.duplicatePlanTierErr.message='';
   this.slTierSDateErr.isDateErr=false;
@@ -488,6 +491,7 @@ dateValue(dateVal){
       this.uPlanCode = elem.planCode;
       this.uContractId = Number(elem.contractId);
       this.uClientId=elem.clientId;
+      this.deleteTierArr = [];
       
       console.log(elem.lstTblPlanTier.length);
       
@@ -498,6 +502,7 @@ dateValue(dateVal){
       // this.t.setValue(elem.lstTblPlanTier);
       // console.log(this.t)
       
+      
 
       if(elem.lstTblPlanTier.length>0){
         //this.t.setValue(elem.lstTblPlanTier);
@@ -506,7 +511,8 @@ dateValue(dateVal){
         for (let i = 0; i < elem.lstTblPlanTier.length; i++) {
           this.t.push(this.formBuilder.group({
               planId:elem.lstTblPlanTier[i].planId,
-              tierId: elem.lstTblPlanTier[i].tierId,
+             // tierId: elem.lstTblPlanTier[i].tierId,
+              tierName: elem.lstTblPlanTier[i].tierName=='Individual'?'Single':elem.lstTblPlanTier[i].tierName,
               tierAmount: elem.lstTblPlanTier[i].tierAmount==0?'':this.decimalValue(elem.lstTblPlanTier[i].tierAmount),
               expectedClaimsRate: elem.lstTblPlanTier[i].expectedClaimsRate==0?'':this.decimalValue(elem.lstTblPlanTier[i].expectedClaimsRate),
               isTerminalExtCoverage: elem.lstTblPlanTier[i].isTerminalExtCoverage=='Y'?true:false,
@@ -661,16 +667,18 @@ dateValue(dateVal){
 // }
 deleteRow(tier, i){
  // this.t.removeAt(i);
- if(tier.value.tierId=='' && tier.value.stopLossTierEndDate==null && tier.value.stopLossTierEndDate==null) this.t.removeAt(i);
+ debugger;
+ if(tier.value.TierName=='' && tier.value.stopLossTierEndDate==null && tier.value.stopLossTierEndDate==null) this.t.removeAt(i);
  else{
   let extn = tier.value.isTerminalExtCoverage==true?'Y':'N';
   this.deleteTierArr.push({
     PlanId: tier.value.planId,
-    TierId: tier.value.tierId, 
+    TierName: tier.value.tierName=='Single'?'Individual':tier.value.tierName, 
     StopLossTierStartDate: tier.value.stopLossTierStartDate,
     StopLossTierEndDate: tier.value.stopLossTierEndDate,
     IsTerminalExtCoverage: extn
   });
+  
   this.t.removeAt(i);
   // let extn = tier.value.isTerminalExtCoverage==true?'Y':'N'
   //  this.planService.deletePlan(tier.value.planId, tier.value.tierId, tier.value.stopLossTierStartDate, tier.value.stopLossTierEndDate, extn).subscribe((res)=>{
@@ -690,13 +698,14 @@ validateTierIDs(){
     console.log(this.t.value[i].tierId);
     console.log(this.t.value[i].tierAmount);   
     let tId= this.t.value[i].tierId;
+    let tName=this.t.value[i].tierName;
     let tAmount=this.t.value[i].tierAmount;
     let tExpectedClaims = this.t.value[i].expectedClaimsRate;
     let tSLStartDate=this.t.value[i].stopLossTierStartDate;
     let tSLEndDate=this.t.value[i].stopLossTierEndDate;
     let tTerminalExtCov=this.t.value[i].isTerminalExtCoverage;
     if(i>0){
-      if((tId=='' || tId==null) && 
+      if((tName=='' || tName==null) && 
         (tAmount=='' || tAmount==null) && 
         (tExpectedClaims=='' || tExpectedClaims==null) && 
         (tSLStartDate=='' || tSLStartDate==null) && 
@@ -751,11 +760,11 @@ validateTierIDs(){
       }
       this.others++;    
     }
-      if(tId=='' || tId==null){
-        this.tierDateErr.flag=true;
-        this.tierDateErr.msg="Tier ID is required for the row number "+(i+1);
-        return;
-      }
+      // if(tId=='' || tId==null){
+      //   this.tierDateErr.flag=true;
+      //   this.tierDateErr.msg="Tier ID is required for the row number "+(i+1);
+      //   return;
+      // }
       else if(tAmount=='' || tAmount==null){
         this.tierDateErr.flag=true;
         this.tierDateErr.msg="Tier Amount is required for the row number "+(i+1);
@@ -1356,7 +1365,7 @@ validateTierIDs(){
       if(this.tierIdExists.dualFlag) return;
       if(this.tierIdExists.familyFlag) return;
       if(this.tierIdExists.othersFlag) return;
-      if(this.tierIdRequiredErr.flag) return;
+      if(this.tierNameRequiredErr.flag) return;
       if(this.tierDateErr.flag) return;
        //(V.E 27-Jul-2021 starts )
       if(this.planForm.valid){
@@ -1497,13 +1506,14 @@ getPlanAudits(planId: number){
         for (let i = 0; i < this.t.value.length;) {
             this.t.value[i].planId=0;
             this.t.value[i].tierId=Number(this.t.value[i].tierId);
+            this.t.value[i].tierName=this.t.value[i].tierName;
             this.t.value[i].tierAmount=this.t.value[i].tierAmount==''?0:this.decimalValue(this.t.value[i].tierAmount),
             this.t.value[i].expectedClaimsRate=this.t.value[i].expectedClaimsRate==('' || null)?0:this.decimalValue(this.t.value[i].expectedClaimsRate),
             this.t.value[i].isTerminalExtCoverage=this.t.value[i].isTerminalExtCoverage==true?'Y':'N';    
             this.t.value[i].stopLossTierStartDate=this.dateValue(this.t.value[i].stopLossTierStartDate),
             this.t.value[i].stopLossTierEndDate=this.dateValue(this.t.value[i].stopLossTierEndDate),
-            this.tierIdRequiredErr.flag=false;
-            this.tierIdRequiredErr.msg='';        
+            this.tierNameRequiredErr.flag=false;
+            this.tierNameRequiredErr.msg='';        
             i++;
         }
         //this.planForm.patchValue(this.planForm.value);
@@ -1571,15 +1581,16 @@ getPlanAudits(planId: number){
     //this.planForm.patchValue(this.planForm.value);
     
     for(let i=0; i<this.deleteTierArr.length; i++){
-        this.planService.deletePlan(this.deleteTierArr[i].PlanId, this.deleteTierArr[i].TierId, this.deleteTierArr[i].StopLossTierStartDate, this.deleteTierArr[i].StopLossTierEndDate, this.deleteTierArr[i].IsTerminalExtCoverage).subscribe((res)=>{
-          //if(res == this.deleteTierArr[i].PlanId) this.deleteTierArr.splice(0,1)
-          //
+      
+        this.planService.deletePlan(this.deleteTierArr[i].PlanId, this.deleteTierArr[i].TierName, this.deleteTierArr[i].StopLossTierStartDate, this.deleteTierArr[i].StopLossTierEndDate, this.deleteTierArr[i].IsTerminalExtCoverage).subscribe((res)=>{
+          
         });
     }
     console.log(this.deleteTierArr.length);
     for (let i = 0; i < this.t.value.length;) {
       this.t.value[i].planId=this.updatePlanID;
       this.t.value[i].tierId=Number(this.t.value[i].tierId);
+      this.t.value[i].tierName=this.t.value[i].tierName=='Single'?'Individual':this.t.value[i].tierName;
       this.t.value[i].tierAmount=this.t.value[i].tierAmount==''?0:Number(this.decimalValue(this.t.value[i].tierAmount));
       this.t.value[i].expectedClaimsRate=this.t.value[i].expectedClaimsRate==('' || null)?0:Number(this.decimalValue(this.t.value[i].expectedClaimsRate));
       
@@ -1590,6 +1601,7 @@ getPlanAudits(planId: number){
       console.log(this.t.value);
     
   }
+
     this.t.patchValue(this.t.value);
     
     
@@ -1611,7 +1623,7 @@ getPlanAudits(planId: number){
     
       console.log(this.updatePlanObj);
       
-    
+    debugger;
       this.planService.updatePlan(this.updatePlanObj)
           .pipe(first())
           .subscribe({
