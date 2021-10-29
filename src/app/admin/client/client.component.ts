@@ -266,53 +266,8 @@ clearErrorMessages(){
 
   this.updateNoChange= {flag: false, message: ''};
 }
-checkDuplicateAccountName(aname){
-  return this.clientService.checkDuplicateAccountName(aname).toPromise();
-  // promise.then((data)=>{
-  //     //this.accNameStatus = data;
-  //
-  //     if(data>0){
-  //       this.accNameErr.isDuplicate=true;
-  //       this.accNameErr.errMsg='The account name '+this.f.clientName.value+' already exists. Please enter different Account Name';
-
-  //      // return;
-  //     }
-  //   }
-  // ).catch((error)=>{
-  //   console.log("Promise rejected with " + JSON.stringify(error));
-  // });
-}
-// async fetchData(){
-//   const data = await this.httpClient.get(this.apiUrl).toPromise();
-//   console.log("Data: " + JSON.stringify(data));
-// }
-async checkDuplicateAccountId(aid){
-  const promise = this.clientService.checkDuplicateAccountId(aid).toPromise();
-  promise.then((data)=>{
-    console.log("Promise resolved with: " + data);
-    this.accIdStatus = data;
-      if(this.accIdStatus>0){
-        this.accIdErr.isDuplicate=true;
-        this.accIdErr.errMsg='The account Id '+this.f.clientId.value+' already exists. Please enter different Account Id';
-        return;
-      }
-
-  }).catch((error)=>{
-    console.log("Promise rejected with " + JSON.stringify(error));
-  });
 
 
-  // (
-  //   (data)=>{
-  //     this.accIdStatus = data;
-  //     if(this.accIdStatus>0){
-  //       this.accIdErr.isDuplicate=true;
-  //       this.accIdErr.errMsg='The account Id '+this.f.clientId.value+' already exists. Please enter different Account Id';
-  //       return;
-  //     }
-  //   }
-  // );
-}
 checkYear(event:any, fieldName:string){
   if(fieldName=='startDate'){
     let dateVal:Date=new Date(event.target.value);
@@ -496,13 +451,18 @@ openViewModal(bool, id:any){
           this.route.navigate(['/contracts']);   
         });   
     }
-    // gotoViewContract(){
-    //   this.clientService.getClient(this.v.clientId.value).subscribe(
-    //     (data: IClient[]) => {                  
-    //       this.navService.setContractObj(data[0].clientId, data[0].clientName, false, true);
-    //       this.route.navigate(['/contracts']);   
-    //     });   
-    // }
+
+    checkDuplicateAccount(clientId: string, subAccountId:string, subSubAccountId:string){
+      debugger;
+      this.clientService.checkDuplicateAccount(clientId, subAccountId, subSubAccountId).subscribe((res)=>{
+        debugger;
+        if(res>0){
+          this.accIdErr.isDuplicate=true;
+          this.accIdErr.errMsg = "AccountID, Sub AccID and SUb Sub AccID combination already exists. Try another combination";
+        }
+      })
+        
+    }
     onSubmit() {
       this.submitted = true;
 
@@ -526,14 +486,16 @@ openViewModal(bool, id:any){
       console.log(checkAccountName.test(this.f.clientName.value));
       let AccountNameCheck=checkAccountName.test(this.f.clientName.value); // end by Venkatesh Enigonda
       
-
       //let subid = this.f.subAccountid.value;
+      let accountId = this.f.clientId.value;
+      let subAccId = this.f.subAccountid.value;
       let subSubid = this.f.subSubAccountid.value;
   
       let subSubId: any;// Modified by Venkatesh Enigonda
       let startDateValue = this.f.startDate.value;
       let endDateValue = this.f.endDate.value;
-
+      this.checkDuplicateAccount(accountId, subAccId, subSubid);
+      if(this.accIdErr.isDuplicate) return;
       if(!accountIdTest && this.f.clientId.value!=''){ 
         this.accountIdErr.isValid=true;
         this.accountIdErr.errMsg='Invalid Account ID. Special Characters not Allowed';
@@ -616,28 +578,6 @@ openViewModal(bool, id:any){
      //Ends Here
       if(this.clientForm.valid){
         if(this.isAddMode){
-          const cid= this.clientService.checkDuplicateAccountId(this.f.clientId.value);
-          const cname = this.clientService.checkDuplicateAccountName(this.f.clientName.value);
-          const connectStream = combineLatest([cid, cname]);
-          connectStream.subscribe(
-            ([id,name]) => {
-              console.log('client Id : '+id);
-              console.log('client Namem : '+name);
-              if(id>0){
-                this.accIdErr.isDuplicate=true;
-                this.accIdErr.errMsg="Account ID already exists";
-                return;
-              }
-              else if(name>0){
-                this.accNameErr.isDuplicate=true;
-                this.accNameErr.errMsg="Accound Name already exists";
-                return;
-              }
-              else if(id>0 && name>0){
-                this.accNameErr.isDuplicate=true;
-                this.accNameErr.errMsg="Accound Name and Account ID already exists";
-                return;
-              }
               if(startDateValue!=null && endDateValue!=null && startDateValue!='' && endDateValue!=''){
                 if(startDateValue > endDateValue){
                   this.startDateErr.isDateErr=true;
@@ -660,7 +600,6 @@ openViewModal(bool, id:any){
             }
               this.addClient();
 
-            });
         }
 
       }
@@ -674,21 +613,7 @@ openViewModal(bool, id:any){
           this.updateNoChange.message="No new values are updated. Update atleast one field to update";
         }        
         if(this.updateNoChange.flag) return;
-        if(this.uAccountName.toLowerCase() !== this.f.clientName.value.toLowerCase()){
-          this.checkDuplicateAccountName(this.f.clientName.value).then(data => {
-            if(data>0) {
-              this.accNameErr.isDuplicate=true;
-              this.accNameErr.errMsg='The account name '+this.f.clientName.value+' already exists. Please enter different Account Name';
-              return;
-            }
-            else{
-
-              this.updateClient();
-            }
-          });
-        } else  {
           this.updateClient();
-        }
 
       }
   }

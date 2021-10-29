@@ -40,15 +40,19 @@ export class ClientsService {
   return this.http.get<IActiveClient[]>(Paths.activeClients);
 }
 
-checkDuplicateAccountId(accId: string){
+// checkDuplicateAccountId(accId: string){
   
-  return this.http.get(Paths.duplicateClientId+accId).pipe(catchError(this.handleError.bind(this)));
-}
+//   return this.http.get(Paths.duplicateClientId+accId).pipe(catchError(this.handleError.bind(this)));
+// }
 getClientDetails(clientId: string){
   return this.http.get(Paths.getClientDetails+clientId).pipe(catchError(this.handleError.bind(this)));
 }
-checkDuplicateAccountName(name: string){
-  return this.http.get(Paths.duplicateClientName+name).pipe(catchError(this.handleError.bind(this)));
+// checkDuplicateAccountName(name: string){
+//   return this.http.get(Paths.duplicateClientName+name).pipe(catchError(this.handleError.bind(this)));
+// }
+checkDuplicateAccount(clientId: string, subAccountId:string, subSubAccountId:string){
+  
+  return this.http.get(Paths.duplicateAccount+"clientId="+clientId+"&subAccountId="+subAccountId+"&subSubAccountId="+subSubAccountId).pipe(catchError(this.handleError.bind(this)));
 }
 getParentClient(){
   return this.http.get<IParentClient[]>(Paths.parentClient);

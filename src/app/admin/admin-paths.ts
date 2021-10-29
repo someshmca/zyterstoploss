@@ -44,8 +44,9 @@ export const Paths = {
   getClientDetails: apiPath+"Clients/GetClientDetails/",
   activeClients:apiPath+"Clients/GetActiveClients",
   parentClient:apiPath+"Clients/GetParentClient",
-  duplicateClientId: apiPath+"Clients/DuplicateClientID?clientId=",
-  duplicateClientName: apiPath+"Clients/DuplicateClient?client=",
+  // duplicateClientId: apiPath+"Clients/DuplicateClientID?clientId=",
+  // duplicateClientName: apiPath+"Clients/DuplicateClient?client=",
+  duplicateAccount: apiPath+"Clients/DuplicateClientID?",
   accountAudits: apiPath+"Clients/GetTblClientAudits?ClientId=",
 
   roles: apiPath+"Roles/GetAllRoles",
