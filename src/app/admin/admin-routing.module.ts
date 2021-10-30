@@ -22,6 +22,7 @@ import { MAXLiabilityReportComponent } from '../reports/max-liability-report/max
 import { ExcelUploadComponent } from '../admin/excel-upload/excel-uplaod.component';
 import { LaseringComponent } from './lasering/lasering.component';
 import {LaseringSearchComponent} from './lasering-search/lasering-search.component';
+import { ReimbursementComponent } from './reimbursement/reimbursement.component';
 const routes: Routes = [
   {path: 'claim-search', component: ClaimSearchComponent, canActivate: [AuthGuard] },
   {path: 'claim-result', component: ClaimResultComponent, canActivate: [AuthGuard] },
@@ -43,7 +44,8 @@ const routes: Routes = [
   {path: 'excel-upload', component: ExcelUploadComponent, canActivate: [AuthGuard]},
   {path: 'specific-stoploss-report', component: SSLReportComponent},
   {path: 'aggregate-stoploss-report', component: ASLReportComponent, canActivate: [AuthGuard]},
-  {path: 'max-liability-report', component: MAXLiabilityReportComponent, canActivate: [AuthGuard]}
+  {path: 'max-liability-report', component: MAXLiabilityReportComponent, canActivate: [AuthGuard]},
+  {path: 'reimbursement', component: ReimbursementComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({

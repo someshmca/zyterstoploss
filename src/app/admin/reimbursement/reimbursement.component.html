@@ -1,0 +1,340 @@
+
+
+<div class="page-content">
+
+    <form [formGroup]="reimbursementSearchForm" (ngSubmit)="searchReimbursement(reimbursementSearchForm)">
+        <div class="card custom-card reimbursement-search">
+            <div class="card-header">
+                Reimbursement Search
+            </div>
+            <div *ngIf="loaderService.isLoading | async">
+              <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+             </div>
+            <div class="card-body">
+                <div class="mandate-fields">
+                </div> 
+                <div class="form-row">
+                  <div class="form-field">
+                      <label class="form-field-label">Medica Account ID </label>
+                      <div class="form-field-input">
+                          <input type="text"  #focusElem class="form-control field-input-text" formControlName="slGrpId" [ngClass]="{ 'is-invalid': isAccountIDInvalid }" />                        
+                      </div>
+                   </div>
+                    <div class="form-field" >
+                        <label class="form-field-label">Reimbursement ID</label>
+                        <div class="form-field-input">
+                            <input type="number" class="form-control field-input-text" formControlName="slReimbursementId"  />                       
+                        </div>
+                    </div>
+                    <div class="form-field">
+                        <label class="form-field-label">Reimbursement Sequence</label>
+                      <div class="form-field-input">
+                            <input type="text" class="form-control field-input-text" formControlName="slReimbursementSeqId" />                        
+                        </div>
+                        </div>
+                        <div class="form-field">
+                            <label class="form-field-label">Reimbursement Start Date </label>
+                          <div class="form-field-input">
+                            <input type="date" class="form-control field-input-text" value="MM/DD/YYYY" formControlName="requestStartDate"  >                       
+                            </div>
+                            </div>
+                            <div class="form-field">
+                                <label class="form-field-label">Reimbursement End Date</label>
+                              <div class="form-field-input">
+                                <input type="date" class="form-control field-input-text" value="MM/DD/YYYY" formControlName="requestEndDate"  >
+                                                            
+                                </div>
+                                </div>
+                           
+                                
+                                    <div class="form-field">
+                                      <label class="form-field-label">Category/Report </label>
+                                      <div class="form-field-input">
+                                      <!-- <input class="form-control" formControlName="claimType" type="text"> -->
+                                      <select class="form-control" formControlName="slCategoryReport">
+                                        <option value=''>Select</option>
+                                        <option value="SPECIFIC">Specific</option>
+                                        <option value="AGRREGATE">Aggregate</option>
+                                        <option value="MAXLIABILITY">MaxLiability</option>
+                                        <option value="CUSTOM">custom</option>
+                                      </select> 
+                                  </div>
+                                  </div>
+                                  <div class="form-field">
+                                    <label class="form-field-label">Frequency</label>
+                                    <div class="form-field-input">
+                                    <!-- <input class="form-control" formControlName="claimType" type="text"> -->
+                                    <select class="form-control" formControlName="slFrequencyType">
+                                      <option value=''>Select</option>
+                                      <option value="WEEKLY">Weekly</option>
+                                      <option value="MONTHLY">Monthly</option>
+                                      <option value="ONETIME">One Time</option>
+                                      <option value="FINALRECON">Final RECON</option>
+                                    </select> 
+                                </div>
+                                </div>
+                <div class="form-field">
+                    <label class="form-field-label">
+                      Reimbursement Min Amount</label>
+                        <div class="form-field-input">
+                            <input type="text" class="form-control field-input-text" formControlName="slReimbursementMinAmt" /><!--Modified by Venkatesh Enigonda-->
+                        </div>
+                </div>
+                <div class="form-field">
+                    <label class="form-field-label">Reimbursement Max Amount</label>
+                  <div class="form-field-input">
+                        <input type="text" class="form-control field-input-text" formControlName="slReimbursementMaxAmt" />                        
+                    </div>
+                    </div>
+                      <div class="form-field">
+                        <label class="form-field-label"> Approval Indicator</label>
+                        <div class="form-field-input">
+                        <!-- <input class="form-control" formControlName="claimType" type="text"> -->
+                        <select class="form-control" formControlName="slApprovalInd">
+                          <option value=''>Select</option>
+                          <option value="Y">Yes</option>
+                          <option value="N">No</option>
+                        </select> 
+                    </div>
+                    </div>
+                   
+                  
+                
+                
+            </div>
+            </div>
+            <div class="card-footer">        
+                <div class="reimbursement-search-btns-area">
+  
+                  <div class="range-area">
+                    <span>Limit &nbsp;</span>
+                    <input type ="number" class="form-control" formControlName="maxPage" (keyup)="limit($event.target.value)" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))">
+                </div>
+                    <button class="btn btn-outline-primary" type="button" (click)="resetReimbursementSearch()">Reset</button>
+                    <button class="btn btn-primary">Search</button>                  
+                </div>
+            </div>
+        </div>
+        </form>
+  </div>
+  
+  
+  <div *ngIf="isReimbursementResult" class="reimbursement-results-area">     
+    <div class="card reimbursement-results-card">   
+        <div class="card-header">Reimbursement Search Results
+          <div class="col2">
+            <div><alert></alert></div>
+            <div class="fa fa-download" title="Export to Excel" (click)="exportAsXLSX()"></div> 
+          </div>
+          
+        </div>
+        <div class="card-body">
+        <div class="card-table-area">
+            <div class="cust-add-area">
+                <span class="fa fa-plus-circle" (click)="openCustomModal(true, null)" *ngIf="isAdmin"></span>
+            </div>    
+            <div class="card-table">        
+              <div>
+                <div class="reimbursement-results-grid-wrap">
+                    <table mat-table matSort #reimbursementResultTable [dataSource]="dataSource" class="table table-bordered table-striped card-table">            
+                        <ng-container matColumnDef="slGrpId">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Medica Account ID </th>
+                        <td mat-cell *matCellDef="let element"> 
+                            {{element.slGrpId}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="slReimbursementId">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header >Stop Loss Reimbursement ID</th>
+                          <td mat-cell *matCellDef="let element"> {{element.slReimbursementId}} </td>
+                          </ng-container>
+                        <ng-container matColumnDef="slReimbursementSeqId">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Stop Loss Reimbursement Sequence </th>
+                        <td mat-cell *matCellDef="let element"> 
+                            {{element.slReimbursementSeqId}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="slFundingRequestDate">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Reimburesement Requested Date</th>
+                        <td mat-cell *matCellDef="let element"> 
+                            {{element.slFundingRequestDate}} </td>
+                        </ng-container>
+                       
+                        <ng-container matColumnDef="slDwPullTs">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header > Datawarehouse Pull Timestamp</th>
+                          <td mat-cell *matCellDef="let element"> {{element.slDwPullTs}} </td>
+                          </ng-container>
+                       
+                        <ng-container matColumnDef="slCategoryReport">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header >Category_Report </th>
+                        <td mat-cell *matCellDef="let element"> {{element.slCategoryReport}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="slFrequencyType">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header >Frequency </th>
+                            <td mat-cell *matCellDef="let element"> {{element.slFrequencyType}} </td>
+                            </ng-container>
+                        
+                        <ng-container matColumnDef="slReimbursementAmt">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header >Reimbursement Amount</th>
+                            <td mat-cell *matCellDef="let element" style="text-align: left; "> 
+                                {{element.slReimbursementAmt | number:'2.2-2'}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="slApprovalInd">
+                              <th mat-header-cell *matHeaderCellDef mat-sort-header >Approval Indicator</th>
+                              <td mat-cell *matCellDef="let element"> {{element.slApprovalInd}} </td>
+                              </ng-container>
+                              
+                         <ng-container matColumnDef="requestEndDate" stickyEnd> 
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Action</th>
+                            <td mat-cell *matCellDef="let element" class="action-link"> 
+                              <span class="view-icon" 
+                                    (click)="openViewModal(true, element)" title="View"></span>
+                              <span class="fa fa-edit" 
+                              (click)="openCustomModal(true, element)" *ngIf="isAdmin"></span>
+                            </td>
+                         </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                    </table>
+                </div>
+                <mat-paginator [pageSizeOptions]="[100, 500, 999]" showFirstLastButtons> </mat-paginator>
+            </div>
+            </div>
+            </div>
+            </div>
+    </div>
+  </div>
+  <div class="no-grid-results" *ngIf="reimbursementSearchNotFound">
+    <h3>Could not find the Search Results. Please try again</h3>
+  </div>
+  
+  <div class="modal fade custom-modal" role="dialog" [ngClass]="{'view-modal':isViewModal}" [ngStyle]="{'display': isCustomModalOpen ? 'block' : 'none', 'opacity': 1}">
+  
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 750px; top: 7vh;">
+      <div class="modal-content">   
+        <div class="modal-header">
+            <h4 class="modal-title" *ngIf="!isViewModal">
+                <span *ngIf="isAddMode">Add Reimbursement</span>
+                <span *ngIf="!isAddMode">Update Reimbursement</span>
+            </h4>
+            <h4 class="modal-title" *ngIf="isViewModal">
+                <span>Reimbursement</span>
+            </h4>
+            <a class="fa fa-2x fa-times-circle" (click)="openCustomModal(false, null)">
+            </a>
+        </div> 
+   <form [formGroup]="reimbursementForm" (ngSubmit)="onSubmit()"> 
+        <div class="modal-body"> 
+         <div class="reimbursement-results-form-wrap">
+            
+         <div class="reimbursement-form-wrap">
+             <div class="row">                
+               <div class="col-md-4">
+                 <div class="form-group">
+                   <label>Stop Loss Reimbursement ID</label>
+                   <input type="text" formControlName="slReimbursementId" class="form-control" [readOnly]="isAddMode"/>
+                 </div>
+               </div>            
+              
+               <div class="col-md-4">                 
+                 <div class="form-group">
+                   <label>Medica Account ID</label>
+                   <input type="text" formControlName="slGrpId" class="form-control" [readOnly]="isAddMode"/>
+                 </div>
+               </div>   
+               
+               <div class="col-md-4">                 
+                <div class="form-group">
+                  <label>Stop Loss Reimbursement Sequence</label>
+                  <input type="text" formControlName="slReimbursementSeqId" class="form-control" [readOnly]="isAddMode"/>
+                </div>
+              </div> 
+              
+             </div>
+             <div class="row">   
+              <div class="col-md-4">              
+                 <div class="form-group">
+                   <label>Frequency</label>
+                   <input type="text" formControlName="slFrequencyType" class="form-control" *ngIf="!isAddMode"/>                   
+                   <select class="form-control" formControlName="slFrequencyType" *ngIf="isAddMode">
+                    <option value=''>Select</option>
+                    <option value="WEEKLY">Weekly</option>
+                    <option value="MONTHLY">Monthly</option>
+                    <option value="ONETIME">One Time</option>
+                    <option value="FINALRECON">Final RECON</option>
+                  </select> 
+                   
+                 </div>
+               </div>
+               <div class="col-md-4">              
+                <div class="form-group">
+                  <label>Category/Report</label>
+                  <input type="text" formControlName="slCategoryReport" class="form-control" *ngIf="!isAddMode"/>
+                  
+                  <select class="form-control" formControlName="slCategoryReport" *ngIf="isAddMode">
+                    <option value=''>Select</option>
+                    <option value="SPECIFIC">Specific</option>
+                    <option value="AGRREGATE">Aggregate</option>
+                    <option value="MAXLIABILITY">MaxLiability</option>
+                    <option value="CUSTOM">custom</option>
+                  </select> 
+                 
+                </div>
+              </div>
+               <div class="col-md-4">              
+                 <div class="form-group">
+                   <label>Reimbursement Requested Date</label>
+                   <input type="date" value="MM/dd/yyyy" formControlName="slFundingRequestDate" class="form-control"/>
+                 </div>
+                </div>         
+                                        
+           </div>
+            
+           
+            
+           
+           <div class="row">
+            <div class="col-md-4">              
+                <div class="form-group">
+                  <label>Reimbursement Amount
+                  </label>
+                  <input type="text" formControlName="slReimbursementAmt" class="form-control"/>
+                </div>
+              </div>     
+              <div class="col-md-4">
+                <label> </label>
+                <div class="form-group switch-group">
+                    Approval Indicator
+                      <label class="switch">
+                        <input type="checkbox" class="success" formControlName="slApprovalInd">
+                        <span class="slider round"></span>
+                      </label>                  
+                </div>
+            </div>  
+             
+           </div>
+           <div class="row">
+           <div class="col-md-4">              
+            <div class="form-group">
+              <label>Reason Text
+              </label>
+              <input type="text" formControlName="slReasonText" class="form-control"/>
+            </div>
+          </div> 
+        </div>  
+           
+         </div>      
+       </div>
+     </div> 
+     <div class="modal-footer">
+          <div class="modal-footer-btns">
+           <div class="col_1"> </div>
+           <div class="col_2">
+            <button type="button" class="btn btn-outline-primary" (click)="openCustomModal(false, null)">Cancel</button>
+            <button type="submit" class="btn btn-primary" *ngIf="isAddMode && !isViewModal">Add</button>
+            <button type="submit" class="btn btn-primary" *ngIf="!isAddMode && !isViewModal">Update</button>
+           
+           </div>
+          </div>
+       </div>
+     </form> 
+        </div>           
+        </div>
+      </div>

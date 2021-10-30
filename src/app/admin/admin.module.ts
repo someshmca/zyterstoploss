@@ -47,10 +47,11 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import{InterceptorService} from'./services/interceptor.service';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { PlanFactorComponent } from './health-plan/plan-factor/plan-factor.component';
+import { ReimbursementComponent } from './reimbursement/reimbursement.component';
 
 
 @NgModule({
-  declarations: [BatchSettingsComponent, ClaimSearchComponent, ClaimResultComponent, ClaimComponent, BenefitsComponent, ProgramsComponent, ContractsComponent, RoleComponent, RulesComponent, ClientComponent, AttributesComponent, UsersSecurityComponent, MemberComponent, AlertComponent, HealthPlanComponent, ProductComponent, ExcelUploadComponent, Nl2brPipe, LaseringComponent, PlanFactorComponent, LaseringSearchComponent],
+  declarations: [BatchSettingsComponent, ClaimSearchComponent, ClaimResultComponent, ClaimComponent, BenefitsComponent, ProgramsComponent, ContractsComponent, RoleComponent, RulesComponent, ClientComponent, AttributesComponent, UsersSecurityComponent, MemberComponent, AlertComponent, HealthPlanComponent, ProductComponent, ExcelUploadComponent, Nl2brPipe, LaseringComponent, PlanFactorComponent, LaseringSearchComponent, ReimbursementComponent],
   imports: [
     CommonModule,
     FormsModule,

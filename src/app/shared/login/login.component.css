@@ -11,7 +11,7 @@ a, a:hover{
 	display: flex;  
 	align-items: center;
 	justify-content: center;
-	height: calc(100vh - 70px);
+	height: calc(100vh - 75px);
 }
 .login-container a{
     color: #0078D3;

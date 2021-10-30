@@ -511,7 +511,7 @@ dateValue(dateVal){
         for (let i = 0; i < elem.lstTblPlanTier.length; i++) {
           this.t.push(this.formBuilder.group({
               planId:elem.lstTblPlanTier[i].planId,
-             // tierId: elem.lstTblPlanTier[i].tierId,
+              tierId: elem.lstTblPlanTier[i].tierId,
               tierName: elem.lstTblPlanTier[i].tierName=='Individual'?'Single':elem.lstTblPlanTier[i].tierName,
               tierAmount: elem.lstTblPlanTier[i].tierAmount==0?'':this.decimalValue(elem.lstTblPlanTier[i].tierAmount),
               expectedClaimsRate: elem.lstTblPlanTier[i].expectedClaimsRate==0?'':this.decimalValue(elem.lstTblPlanTier[i].expectedClaimsRate),
@@ -667,7 +667,7 @@ dateValue(dateVal){
 // }
 deleteRow(tier, i){
  // this.t.removeAt(i);
- debugger;
+ 
  if(tier.value.TierName=='' && tier.value.stopLossTierEndDate==null && tier.value.stopLossTierEndDate==null) this.t.removeAt(i);
  else{
   let extn = tier.value.isTerminalExtCoverage==true?'Y':'N';
@@ -1623,7 +1623,7 @@ getPlanAudits(planId: number){
     
       console.log(this.updatePlanObj);
       
-    debugger;
+    
       this.planService.updatePlan(this.updatePlanObj)
           .pipe(first())
           .subscribe({
