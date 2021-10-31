@@ -7,6 +7,7 @@ import {ReimbursementService} from '../services/reimbursement.service';
 import { Observable } from 'rxjs';
 import { AlertService } from '../services/alert.service';
 import { DatePipe } from '@angular/common';
+import { ClientsService } from '../services/clients.service';
 
 import {MatPaginator} from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
@@ -17,6 +18,7 @@ import {ExcelService} from '../services/excel.service';
 import {DecimalPipe} from '@angular/common'; 
 import { LoaderService } from '../services/loader.service';
 import { first } from 'rxjs/operators';
+import { IActiveClient } from '../models/contracts-model';
 @Component({
   selector: 'app-reimbursement',
   templateUrl: './reimbursement.component.html',
@@ -59,6 +61,7 @@ export class ReimbursementComponent implements OnInit {
   isViewModal: boolean=false;
   isAdmin: boolean;
   reimbursementResults:any=[];
+  activeClients: IActiveClient[]=[];
   isDisabled: boolean=false;
  // isMinAmountInvalid: boolean=false;
   isAccountIDInvalid: boolean=false;
@@ -75,6 +78,7 @@ export class ReimbursementComponent implements OnInit {
   format = '2.2-2'; //PV 08-05-2021
 
   constructor(
+    private clientService: ClientsService,
     private fb: FormBuilder,
     public loaderService: LoaderService,
     private excelService:ExcelService,
@@ -87,6 +91,7 @@ export class ReimbursementComponent implements OnInit {
 
   ngOnInit(): void {
     this.initReimbursementSearchForm();
+    this.getActiveClients();
     this.maxDate= this.datePipe.transform(new Date('9999-12-31'),"yyyy-MM-dd");
     console.log(this.maxDate);
 
@@ -106,17 +111,17 @@ export class ReimbursementComponent implements OnInit {
   }
   initReimbursementSearchForm(){
     this.reimbursementSearchForm = this.fb.group({
-      slReimbursementId: 0,
-      slReimbursementAmt:0,
+      slReimbursementId: [''],
+      slReimbursementAmt:  [''],
   requestStartDate:[null],
   slGrpId: [''],
   requestEndDate: [null],
   slCategoryReport: [''],
   slFrequencyType:[''],
-  slReimbursementMinAmt:0 ,
-  slReimbursementMaxAmt: 0,
+  slReimbursementMinAmt: [''],
+  slReimbursementMaxAmt:  [''],
   slApprovalInd: [''],
-  slReimbursementSeqId: 0,
+  slReimbursementSeqId:  [''],
   slFundingRequestDate:[null],
   slReasonText:[''],
   maxPage:null,
@@ -167,7 +172,13 @@ export class ReimbursementComponent implements OnInit {
       slReimbursementSeqId: 0,
       slDwPullTs:null,
       slReasonText:[''],
-      slApprovalInd:false
+      slApprovalInd:false,
+      insertUser:[''],
+      updateUser:[''],
+      insertTs:[null],
+      updateTs:[null]
+
+
     
     });
   }
@@ -204,6 +215,7 @@ export class ReimbursementComponent implements OnInit {
     if(id!=null && open){
   
       this.isAddMode = false;
+      
         console.log(id);
             this.uslReimbursementId= id.slReimbursementId;
             //this.uslApprovalInd = id.slApprovalInd;
@@ -225,7 +237,7 @@ export class ReimbursementComponent implements OnInit {
               slFrequencyType:id.slFrequencyType,
               slCategoryReport:id.slCategoryReport,
               slReimbursementAmt:id.slReimbursementAmt,
-              slReasonText:id.slReasonText,
+              slReasonText:id.slReasonText==null?'':id.slReasonText,
               slApprovalInd:id.slApprovalInd == 'N' ?false : true,
 
               userId: this.loginService.currentUserValue.name
@@ -278,6 +290,15 @@ export class ReimbursementComponent implements OnInit {
     
     
   }
+  getActiveClients(){
+    
+    this._reimbursementService.getAllClients().subscribe(
+      (data)=>{
+        data.sort((a, b) => (a.clientName > b.clientName) ? 1 : -1);
+        this.activeClients = data;
+        
+      })
+  }
   
   onSubmit() {
 
@@ -294,9 +315,72 @@ export class ReimbursementComponent implements OnInit {
     this.loading = true;
   
     if (this.isAddMode) {
+      this.addReimbursement()
     } else {
       this.updateReimbursement();
     }
+  }
+  addReimbursement()
+  {
+
+
+    let addObj = {
+      slReimbursementId: 0,
+      slReimbursementSeqId:0,
+      slFundingRequestDate: this.datePipe.transform(this.c.slFundingRequestDate.value, 'yyyy-MM-dd'),
+      slCategoryReport:this.c.slCategoryReport.value,
+      slFrequencyType:this.c.slFrequencyType.value,
+      slReimbursementAmt:this.c.slReimbursementAmt.value,
+      slApprovalInd: this.c.slApprovalInd.value == true ? '1' : '0',
+      insertUser:this.loginService.currentUserValue.name,
+      updateUser:this.loginService.currentUserValue.name,
+      insertTs:null,
+      updateTs:null,
+      slReasonText:this.c.slReasonText.value,
+      slDwPullTs:null,
+      slGrpId:this.c.slGrpId.value
+
+
+
+     
+    }
+    
+    console.log(addObj);
+    
+    this._reimbursementService.addReimbursement(addObj)
+        .pipe(first())
+        .subscribe({
+            next: (data) => {
+                console.log(data);
+                this.openCustomModal(false, null);
+                this.reimbursementForm.reset();
+              
+              //this.navService.setContractID(data.id);
+              //this.openCustomModal(false, null);
+             // this.getAllContracts();
+              //this.contractForm.reset();                   
+              //this.clientService.passClientId(this.f.clientId.value);   
+              this.alertService.success('New Reimbursement added', { keepAfterRouteChange: true });  
+              //this.productService.setProductAddStatus(true);  
+             
+             // this.isAdded = true;
+              
+            },
+            error: error => {
+                this.alertService.error(error);
+                this.loading = false;
+            }
+        });
+
+
+
+
+
+
+
+
+
+    
   }
 
   updateReimbursement()
@@ -316,7 +400,7 @@ export class ReimbursementComponent implements OnInit {
         this.reimbursementForm.patchValue({          
           slReimbursementId:uReimbursementObj.reimbursementId,      
           slApprovalInd: uReimbursementObj.indicator=='1'?true:false,
-          slReasonText:uReimbursementObj.reasonText,
+          slReasonText:uReimbursementObj.reasonText==null?'':uReimbursementObj.reasonText,
           userId: uReimbursementObj.userId
         });
         this.openCustomModal(false, null);
@@ -343,10 +427,12 @@ export class ReimbursementComponent implements OnInit {
     this.names.length=0;  
      this.clearErrorMessages();
      this.isReimbursementSearchFormInvalid=false;
-     if(this.f.slReimbursementId.value=='' && this.f.slReimbursementSeqId.value=='' &&this.f.slGrpId.value=='' && this.f.requestStartDate.value==null && this.f.requestEndDate.value==null &&  this.f.slReimbursementMaxAmt.value=='' && this.f.slReimbursementMinAmt.value==''  && this.f.slCategoryReport.value=='' && this.f.slFrequencyType.value==''){
+     if(this.f.slReimbursementId.value=='' && this.f.slReimbursementSeqId.value=='' && this.f.slGrpId.value=='' && this.f.requestStartDate.value==null && this.f.requestEndDate.value==null &&  this.f.slReimbursementMaxAmt.value=='' && this.f.slReimbursementMinAmt.value==''  && this.f.slCategoryReport.value=='' && this.f.slFrequencyType.value=='' && this.f.slApprovalInd.value==''){
+       
        this.isReimbursementSearchErr = true;
        return;
      }
+
      console.log(this.reimbursementSearchForm.value);
  
      if(this.reimbursementSearchForm.invalid){
@@ -375,9 +461,10 @@ export class ReimbursementComponent implements OnInit {
    let requestStartDate = this.reimbursementSearchForm.get("requestStartDate").value;
    let requestEndDate = this.reimbursementSearchForm.get("requestEndDate").value;
 
-
-
-
+   slReimbursementId = slReimbursementId==''?0:Number(slReimbursementId);
+   slReimbursementSeqId = slReimbursementSeqId==''?0:Number(slReimbursementSeqId);
+   slReimbursementMinAmt = slReimbursementMinAmt==''?0:Number(slReimbursementMinAmt);
+   slReimbursementMaxAmt = slReimbursementMaxAmt==''?0:Number(slReimbursementMaxAmt);
 
     
    if(!this.isReimbursementSearchFormInvalid){
@@ -439,7 +526,7 @@ export class ReimbursementComponent implements OnInit {
 
 
   exportAsXLSX():void {
-    this.excelService.exportAsExcelFileClaim(this.excel1,"Claim_Search_Report")
+    this.excelService.exportAsExcelFileReimbursement(this.excel1,"Reimbursement_Search_Report")
   
     console.log("working");
   }

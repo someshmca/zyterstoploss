@@ -148,4 +148,60 @@ export class ExcelService {
     })
   }
 
+
+
+  public exportAsExcelFileReimbursement(json: any[], excelFileName: string): void {
+    const  headersArray = ['slGrpId','slReimbursementId','slReimbursementSeqId','slCategoryReport','slFrequencyType','slReimbursementAmt', 'slDwPullTs','slFundingRequestDate', 'slApprovalInd'];
+     const data = json;
+     const header1=['Medica Account ID','Reimbursement ID','Reimbursement Sequence ID','Category Report','Frequency','Reimbursement Amount', ' Datawarehouse Pull Timestamp', 'Funding Request Date','Approval Indicator'];
+     let workbook = new Workbook();
+     let worksheet = workbook.addWorksheet(excelFileName);
+     //Add Header Row
+     let headerRow = worksheet.addRow(header1);
+     // Cell Style : Fill and Border
+     let color = 'FF9999';
+     headerRow.eachCell((cell, number) => {
+       cell.fill = {
+         type: 'pattern',
+         pattern: 'solid',
+         fgColor: { argb:'000099'},
+         bgColor: { argb: '000099' }
+       }
+       cell.border = { top: { style: 'thin' }, left: { style: 'thin' }, bottom: { style: 'thin' }, right: { style: 'thin' } }
+       cell.font={color:{argb:'FFFFFF'}, bold: false,name: 'Calibri'}
+     })
+     let altIdx=0;
+     data.forEach((element) => {
+       let eachRow = [];
+       headersArray.forEach((headers) => {
+         eachRow.push(element[headers])   
+       })
+     
+       if (element.isDeleted === "Y") {
+         let deletedRow = worksheet.addRow(eachRow);
+         deletedRow.eachCell((cell, number) => {
+           cell.font = { name: 'Calibri', family: 4, size: 11, bold: false, strike: true };
+         })
+       } else {
+         worksheet.addRow(eachRow);
+       }
+     })
+     worksheet.getColumn(1).width = 20;
+     worksheet.getColumn(2).width = 20;
+     worksheet.getColumn(3).width = 30;
+     worksheet.getColumn(4).width = 20;
+     worksheet.getColumn(5).width = 20;
+     worksheet.getColumn(6).width = 25;
+     worksheet.getColumn(7).width = 30;
+     worksheet.getColumn(8).width = 20;
+     worksheet.getColumn(9).width = 25;
+     
+     worksheet.addRow([]);
+     workbook.xlsx.writeBuffer().then((data) => {
+       let blob = new Blob([data], { type: EXCEL_TYPE });
+       fs.saveAs(blob, excelFileName + '_export_' + new Date().getTime() + EXCEL_EXTENSION);
+     })
+   }
+
+
 }

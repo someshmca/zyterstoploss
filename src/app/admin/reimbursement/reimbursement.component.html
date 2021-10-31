@@ -14,32 +14,32 @@
                 <div class="mandate-fields">
                 </div> 
                 <div class="form-row">
+                  <div class="form-field" >
+                      <label class="form-field-label">StopLoss Reimbursement ID</label>
+                      <div class="form-field-input">
+                          <input type="number" class="form-control field-input-text" formControlName="slReimbursementId"  />                       
+                      </div>
+                  </div>
+                  <div class="form-field">
+                      <label class="form-field-label">StopLoss Reimbursement Sequence</label>
+                    <div class="form-field-input">
+                          <input type="text" class="form-control field-input-text" formControlName="slReimbursementSeqId" />                        
+                      </div>
+                      </div>
                   <div class="form-field">
                       <label class="form-field-label">Medica Account ID </label>
                       <div class="form-field-input">
-                          <input type="text"  #focusElem class="form-control field-input-text" formControlName="slGrpId" [ngClass]="{ 'is-invalid': isAccountIDInvalid }" />                        
+                          <input type="text"  #focusElem class="form-control field-input-text" formControlName="slGrpId" />                        
                       </div>
                    </div>
-                    <div class="form-field" >
-                        <label class="form-field-label">Reimbursement ID</label>
-                        <div class="form-field-input">
-                            <input type="number" class="form-control field-input-text" formControlName="slReimbursementId"  />                       
-                        </div>
-                    </div>
-                    <div class="form-field">
-                        <label class="form-field-label">Reimbursement Sequence</label>
-                      <div class="form-field-input">
-                            <input type="text" class="form-control field-input-text" formControlName="slReimbursementSeqId" />                        
-                        </div>
-                        </div>
                         <div class="form-field">
-                            <label class="form-field-label">Reimbursement Start Date </label>
+                            <label class="form-field-label">Reimbursement Requested Start Date </label>
                           <div class="form-field-input">
                             <input type="date" class="form-control field-input-text" value="MM/DD/YYYY" formControlName="requestStartDate"  >                       
                             </div>
                             </div>
                             <div class="form-field">
-                                <label class="form-field-label">Reimbursement End Date</label>
+                                <label class="form-field-label">Reimbursement Requested End Date</label>
                               <div class="form-field-input">
                                 <input type="date" class="form-control field-input-text" value="MM/DD/YYYY" formControlName="requestEndDate"  >
                                                             
@@ -55,8 +55,8 @@
                                         <option value=''>Select</option>
                                         <option value="SPECIFIC">Specific</option>
                                         <option value="AGRREGATE">Aggregate</option>
-                                        <option value="MAXLIABILITY">MaxLiability</option>
-                                        <option value="CUSTOM">custom</option>
+                                        <option value="MAXLIABILITY">Max Liability</option>
+                                        <option value="CUSTOM">Custom</option>
                                       </select> 
                                   </div>
                                   </div>
@@ -69,7 +69,7 @@
                                       <option value="WEEKLY">Weekly</option>
                                       <option value="MONTHLY">Monthly</option>
                                       <option value="ONETIME">One Time</option>
-                                      <option value="FINALRECON">Final RECON</option>
+                                      <option value="FINALRECON">Final Recon</option>
                                     </select> 
                                 </div>
                                 </div>
@@ -88,8 +88,7 @@
                     </div>
                       <div class="form-field">
                         <label class="form-field-label"> Approval Indicator</label>
-                        <div class="form-field-input">
-                        <!-- <input class="form-control" formControlName="claimType" type="text"> -->
+                        <div class="form-field-input">                        
                         <select class="form-control" formControlName="slApprovalInd">
                           <option value=''>Select</option>
                           <option value="Y">Yes</option>
@@ -236,7 +235,14 @@
                <div class="col-md-4">                 
                  <div class="form-group">
                    <label>Medica Account ID</label>
-                   <input type="text" formControlName="slGrpId" class="form-control" [readOnly]="isAddMode"/>
+                   <input type="text" formControlName="slGrpId" class="form-control" *ngIf="!isAddMode">
+
+                   <select  formControlName="slGrpId" class="form-control" *ngIf="isAddMode" >
+                    <option *ngFor="let client of activeClients" [value]="client.clientId">
+                       {{client.clientId}}
+                    </option>
+                 </select> 
+
                  </div>
                </div>   
                
@@ -254,11 +260,11 @@
                    <label>Frequency</label>
                    <input type="text" formControlName="slFrequencyType" class="form-control" *ngIf="!isAddMode"/>                   
                    <select class="form-control" formControlName="slFrequencyType" *ngIf="isAddMode">
-                    <option value=''>Select</option>
-                    <option value="WEEKLY">Weekly</option>
-                    <option value="MONTHLY">Monthly</option>
+                   <option value=''>Select</option>
+                     <!-- <option value="WEEKLY">Weekly</option>
+                    <option value="MONTHLY">Monthly</option> -->
                     <option value="ONETIME">One Time</option>
-                    <option value="FINALRECON">Final RECON</option>
+                    <!-- <option value="FINALRECON">Final RECON</option> -->
                   </select> 
                    
                  </div>
@@ -270,10 +276,10 @@
                   
                   <select class="form-control" formControlName="slCategoryReport" *ngIf="isAddMode">
                     <option value=''>Select</option>
-                    <option value="SPECIFIC">Specific</option>
+                    <!-- <option value="SPECIFIC">Specific</option>
                     <option value="AGRREGATE">Aggregate</option>
-                    <option value="MAXLIABILITY">MaxLiability</option>
-                    <option value="CUSTOM">custom</option>
+                    <option value="MAXLIABILITY">MaxLiability</option> -->
+                    <option value="CUSTOM">Custom</option>
                   </select> 
                  
                 </div>
@@ -295,7 +301,7 @@
                 <div class="form-group">
                   <label>Reimbursement Amount
                   </label>
-                  <input type="text" formControlName="slReimbursementAmt" class="form-control"/>
+                  <input type="number" formControlName="slReimbursementAmt" class="form-control"/>
                 </div>
               </div>     
               <div class="col-md-4">

@@ -52,3 +52,22 @@ export interface IReimbursementUpdate{
 
 
 }
+
+
+export interface IReimbursementAdd{
+
+slReimbursementId: number,
+  slGrpId: string,
+  slFundingRequestDate: String,
+  slCategoryReport: string,
+  slFrequencyType: string,
+  slReimbursementAmt: number,
+  slApprovalInd: string,
+  insertUser: string,
+  updateUser: string,
+  insertTs: String,
+  updateTs: String,
+  slReimbursementSeqId: number,
+  slReasonText: string,
+  slDwPullTs: String
+}

@@ -72,6 +72,7 @@ export const Paths = {
   
   GetReimbursementdetail:apiPath+"Reimbursement/GetReimbursementdetail?",
   updateReimbursement:apiPath+"Reimbursement/UpdateReimbursement",
+  ReimbursementAdd:apiPath+"Reimbursement/AddReimbursement",
  
   BatchStatusPath:apiPath+"BatchProcess/GetBatchStatus",
   BatchProcessPath:apiPath+"BatchProcess/GetBatchProcessDetail/",
