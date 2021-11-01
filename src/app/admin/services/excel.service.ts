@@ -151,15 +151,16 @@ export class ExcelService {
 
 
   public exportAsExcelFileReimbursement(json: any[], excelFileName: string): void {
-    const  headersArray = ['slGrpId','slReimbursementId','slReimbursementSeqId','slCategoryReport','slFrequencyType','slReimbursementAmt', 'slDwPullTs','slFundingRequestDate', 'slApprovalInd'];
+    const  headersArray = ['slReimbursementId','slGrpId','slFundingRequestDate','slCategoryReport','slFrequencyType','slReimbursementAmt','slApprovalInd','slReimbursementSeqId','slDwPullTs','slReasonText'];
      const data = json;
-     const header1=['Medica Account ID','Reimbursement ID','Reimbursement Sequence ID','Category Report','Frequency','Reimbursement Amount', ' Datawarehouse Pull Timestamp', 'Funding Request Date','Approval Indicator'];
+     const header1=['Stop Loss Reimbursement ID',"Medica Account ID",'Funding Request Date','Category Report','Frequency','Amount','Approval Indicator','Stop Loss Reimbursement Sequence ID','Datawarehouse Pull Timestamp','Reason Text'];
      let workbook = new Workbook();
      let worksheet = workbook.addWorksheet(excelFileName);
      //Add Header Row
      let headerRow = worksheet.addRow(header1);
      // Cell Style : Fill and Border
      let color = 'FF9999';
+     
      headerRow.eachCell((cell, number) => {
        cell.fill = {
          type: 'pattern',
@@ -167,8 +168,9 @@ export class ExcelService {
          fgColor: { argb:'000099'},
          bgColor: { argb: '000099' }
        }
-       cell.border = { top: { style: 'thin' }, left: { style: 'thin' }, bottom: { style: 'thin' }, right: { style: 'thin' } }
+             cell.border = { top: { style: 'thin' }, left: { style: 'thin' }, bottom: { style: 'thin' }, right: { style: 'thin' } }
        cell.font={color:{argb:'FFFFFF'}, bold: false,name: 'Calibri'}
+       
      })
      let altIdx=0;
      data.forEach((element) => {
@@ -186,15 +188,20 @@ export class ExcelService {
          worksheet.addRow(eachRow);
        }
      })
-     worksheet.getColumn(1).width = 20;
-     worksheet.getColumn(2).width = 20;
+     
+
+     worksheet.getColumn(1).width = 30;
+     worksheet.getColumn(2).width = 30;
      worksheet.getColumn(3).width = 30;
      worksheet.getColumn(4).width = 20;
      worksheet.getColumn(5).width = 20;
      worksheet.getColumn(6).width = 25;
      worksheet.getColumn(7).width = 30;
-     worksheet.getColumn(8).width = 20;
-     worksheet.getColumn(9).width = 25;
+     worksheet.getColumn(8).width = 35;
+     worksheet.getColumn(10).width = 260;
+     worksheet.getColumn(9).width = 30;
+     
+
      
      worksheet.addRow([]);
      workbook.xlsx.writeBuffer().then((data) => {

@@ -34,7 +34,7 @@ export class ReimbursementComponent implements OnInit {
   isReimbursementSearchErr: boolean = false;
   isCustomModalOpen: boolean=false;
 
-  memMaxMinErr={isValid: false, errMsg: ''};
+  reimMaxMinErr={isValid: false, errMsg: ''};
   dateErr = {
     fromDateErr: false,
     fromDateInvalid: false,
@@ -46,7 +46,7 @@ export class ReimbursementComponent implements OnInit {
   isReimbursementSearchFormInvalid:boolean=false;
   reimbursemenResults: IReimbursementReportsModel[] = [];
 
-  displayedColumns: any[] = ['slReimbursementId', 'slReimbursementSeqId','slGrpId', 'slFundingRequestDate' ,'slCategoryReport', 'slFrequencyType','slReimbursementAmt','slDwPullTs','slApprovalInd','requestEndDate'];
+  displayedColumns: any[] = ['slReimbursementId', 'slReimbursementSeqId','slGrpId', 'slFundingRequestDate' ,'slCategoryReport', 'slFrequencyType','slReimbursementAmt','slDwPullTs','slApprovalInd','insertUser','updateUser','insertTs','updateTs','requestEndDate'];
   dataSource: any;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -56,6 +56,7 @@ export class ReimbursementComponent implements OnInit {
 
   isAddMode: boolean = false;
   loading = false;
+  isLoading:boolean=true;
   reimSearchSubmitted = false;
   submitted:boolean = false;
   isViewModal: boolean=false;
@@ -76,6 +77,8 @@ export class ReimbursementComponent implements OnInit {
   countMaxMin=0;
   pageCount;
   format = '2.2-2'; //PV 08-05-2021
+
+  AddEmptyErr={isValid: false, errMsg:''};
 
   constructor(
     private clientService: ClientsService,
@@ -130,6 +133,12 @@ export class ReimbursementComponent implements OnInit {
     },{validator: this.dateLessThan('fromDate', 'toDate')});
   }
   clearErrorMessages(){
+
+    this.AddEmptyErr.isValid=false;
+    this.AddEmptyErr.errMsg='';
+    this.reimMaxMinErr.isValid=false;
+   this.reimMaxMinErr.errMsg='';
+   this.isReimbursementSearchErr=false;
    
     
   
@@ -160,16 +169,16 @@ export class ReimbursementComponent implements OnInit {
   initReimbursementForm(){
 
     this.reimbursementForm = this.fb.group({
-      slReimbursementId: 0,
+      slReimbursementId: [''],
       requestStartDate:[null],
       slGrpId: [''],
       requestEndDate: [null],
       slFundingRequestDate:[null],
-      slCategoryReport: [''],
-      slFrequencyType:[ ''],
-      slReimbursementAmt:0,
+      slCategoryReport:"CUSTOM",
+      slFrequencyType:"ONETIME",
+      slReimbursementAmt:[''],
  
-      slReimbursementSeqId: 0,
+      slReimbursementSeqId: [''],
       slDwPullTs:null,
       slReasonText:[''],
       slApprovalInd:false,
@@ -187,6 +196,8 @@ export class ReimbursementComponent implements OnInit {
     this.openCustomModal(bool, id);
   }
   openCustomModal(open: boolean, id:any) {
+    this.isLoading=true;
+    this.clearErrorMessages();
     this.isDisabled=false;
     setTimeout(()=>{
       this.focusTag.nativeElement.focus()
@@ -195,21 +206,40 @@ export class ReimbursementComponent implements OnInit {
     this.submitted = false;
     if(open && id==null){
       this.isAddMode = true;
+      //  this.initReimbursementForm();
+      this.reimbursementForm.patchValue({
+        slFrequencyType:'ONETIME',
+              slCategoryReport:'CUSTOM',
+
+      })
+
+      
     }
     if (!open && id==null) {
-      this.reimbursementForm.reset();
+       this.reimbursementForm.reset();
       this.isAddMode = false;
       this.isViewModal=false;
     }
     console.log("id inside modal: "+id);
   
-    if(this.isAddMode && !this.isViewModal) this.reimbursementForm.enable();
+    if(this.isAddMode &&!this.isViewModal ) 
+    
+    {
+      this.reimbursementForm.enable();
+    this.c.slReimbursementId.disable();
+    this.c.slReimbursementSeqId.disable();
+    // this.c.slCategoryReport.disable();
+    // this.c.slFrequencyType.disable();
+    
+    }
+   
     else if(!this.isAddMode && !this.isViewModal){
+     
       this.reimbursementForm.disable();
       this.c.slApprovalInd.enable();
       this.c.slReasonText.enable();
     } 
-    else{
+    else if(this.isViewModal){
       this.reimbursementForm.disable();
     }
     if(id!=null && open){
@@ -282,8 +312,8 @@ export class ReimbursementComponent implements OnInit {
     console.log(this.countMaxMin);
      if(this.pageCount > this.countMaxMin && this.countMaxMin!=0)
     {
-     this.memMaxMinErr.isValid = true;
-       this.memMaxMinErr.errMsg = "Limit  should not be greater than " +this.countMaxMin + ".";
+     this.reimMaxMinErr.isValid = true;
+       this.reimMaxMinErr.errMsg = "Limit  should not be greater than " +this.countMaxMin + ".";
       return;
  
     }
@@ -300,6 +330,44 @@ export class ReimbursementComponent implements OnInit {
       })
   }
   
+  decimalValueString(inputValue){
+    let a;
+    if(inputValue==0 || inputValue==null) a='';
+    else a= this.decimalPipe.transform(inputValue,this.format).replace(/,/g, ""); 
+    console.log(a);      
+    return a;
+  }
+  decimalValue(inputValue:number){      
+    if(inputValue==0 || inputValue==null) inputValue=0;
+    else{
+       let kk=this.decimalPipe.transform(inputValue,this.format);        
+      inputValue= Number(this.decimalPipe.transform(inputValue,this.format).replace(/,/g, ""));        
+      //inputValue= Number(this.decimalPipe.transform(inputValue,this.format).replace(',', "")); 
+      //inputValue= Number(this.decimalPipe.transform(inputValue, this.format).replace(/\D,/g, ""));
+    }
+    console.log(inputValue);      
+    return inputValue;
+  }     
+
+  numberValueString(numValue){
+    if(numValue==null || numValue==0){
+      numValue='';    
+    }
+    else{
+      numValue=this.decimalValueString(numValue);
+    }
+    return numValue;
+  }
+  numberValue(numValue){
+    if(numValue==null || numValue==''){
+      numValue=0;    
+    }
+    else{
+      numValue=this.decimalValue(numValue);
+    }
+    return numValue;
+  }
+  
   onSubmit() {
 
     this.submitted = true;
@@ -311,6 +379,40 @@ export class ReimbursementComponent implements OnInit {
     if (this.reimbursementForm.invalid) {
         return;
     }
+    console.log(this.c.slCategoryReport.value);
+    console.log(this.c.slFrequencyType.value);
+    
+
+if(this.isAddMode)
+{
+  
+  
+  
+if((this.c.slApprovalInd.value=="0"||this.c.slApprovalInd.value==null ) && (this.c.slCategoryReport.value == "CUSTOM" || this.c.slCategoryReport.value == null)&& (this.c.slFrequencyType.value == "ONETIME" || this.c.slFrequencyType.value == null) &&
+this.c.slFundingRequestDate.value == null && (this.c.slReasonText.value == "" || this.c.slReasonText.value == null) && (this.c.slGrpId.value == "" || this.c.slGrpId.value == null)&&(this.c.slReimbursementAmt.value== 0 || this.c.slReimbursementAmt.value== null)&&
+(this.c.slReimbursementId.value == null || this.c.slReimbursementId.value == 0)&& (this.c.slReimbursementSeqId.value == null || this.c.slReimbursementSeqId.value == 0))
+{
+  console.log("yes 1");
+  this.AddEmptyErr.isValid=true;
+    this.AddEmptyErr.errMsg='Please enter the details';
+    return;
+
+}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
   
     this.loading = true;
   
@@ -325,12 +427,13 @@ export class ReimbursementComponent implements OnInit {
 
 
     let addObj = {
-      slReimbursementId: 0,
-      slReimbursementSeqId:0,
+      slReimbursementId : this.c.slReimbursementId.value==''?0:Number(this.c.slReimbursementId.value),
+      slReimbursementSeqId : this.c.slReimbursementSeqId.value==''?0:Number(this.c.slReimbursementSeqId.value),
       slFundingRequestDate: this.datePipe.transform(this.c.slFundingRequestDate.value, 'yyyy-MM-dd'),
       slCategoryReport:this.c.slCategoryReport.value,
       slFrequencyType:this.c.slFrequencyType.value,
-      slReimbursementAmt:this.c.slReimbursementAmt.value,
+      slReimbursementAmt : this.c.slReimbursementAmt.value==''?0:Number(this.c.slReimbursementAmt.value),
+      
       slApprovalInd: this.c.slApprovalInd.value == true ? '1' : '0',
       insertUser:this.loginService.currentUserValue.name,
       updateUser:this.loginService.currentUserValue.name,
@@ -345,8 +448,12 @@ export class ReimbursementComponent implements OnInit {
      
     }
     
-    console.log(addObj);
+
+    this.isDisabled=true;
+    this.isLoading=false;
     
+    console.log(addObj);
+   
     this._reimbursementService.addReimbursement(addObj)
         .pipe(first())
         .subscribe({
@@ -392,6 +499,8 @@ export class ReimbursementComponent implements OnInit {
       userId:this.loginService.currentUserValue.name
     }
     
+    this.isDisabled=true;
+    this.isLoading=false;
     this._reimbursementService.updateReimbursement(uReimbursementObj.reimbursementId, uReimbursementObj.indicator, uReimbursementObj.reasonText, uReimbursementObj.userId)
     .pipe(first())
     .subscribe({
@@ -487,8 +596,8 @@ export class ReimbursementComponent implements OnInit {
       
        if(maxPage > this.countMaxMin )
       {
-        this.memMaxMinErr.isValid=true;
-        this.memMaxMinErr.errMsg="Range should not be greater than "+this.countMaxMin+"."; 
+        this.reimMaxMinErr.isValid=true;
+        this.reimMaxMinErr.errMsg="Range should not be greater than "+this.countMaxMin+"."; 
         return; 
       }
      
