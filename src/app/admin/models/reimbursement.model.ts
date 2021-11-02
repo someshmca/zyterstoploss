@@ -71,3 +71,20 @@ slReimbursementId: number,
   slReasonText: string,
   slDwPullTs: String
 }
+
+
+export interface IReimbursementAudit{
+  memberId: number,
+  fname: string,
+  lname: string,
+  dateOfBirth: Date,
+  claimId: string,
+  subsriptionId: string,
+  memberStartDate: Date,
+  gender: string,
+  status: null,
+  mname: string,
+  userId: string,
+  sysDate: Date,
+  actionType: string
+}

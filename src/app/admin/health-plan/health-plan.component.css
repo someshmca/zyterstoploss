@@ -118,3 +118,6 @@
     overflow-y: auto;
     overflow-x: hidden;
 }
+.tier-table-wrap tr td input[type='date'].form-control{
+    padding-right: 3px;
+}

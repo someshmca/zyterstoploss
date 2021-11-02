@@ -151,9 +151,9 @@ export class ExcelService {
 
 
   public exportAsExcelFileReimbursement(json: any[], excelFileName: string): void {
-    const  headersArray = ['slReimbursementId','slGrpId','slFundingRequestDate','slCategoryReport','slFrequencyType','slReimbursementAmt','slApprovalInd','slReimbursementSeqId','slDwPullTs','slReasonText'];
+    const  headersArray = ['slReimbursementId','slGrpId','slFundingRequestDate','slCategoryReport','slFrequencyType','slReimbursementAmt','slApprovalInd','slReimbursementSeqId','slDwPullTs','insertUser','updateUser','insertTs','updateTs','slReasonText'];
      const data = json;
-     const header1=['Stop Loss Reimbursement ID',"Medica Account ID",'Funding Request Date','Category Report','Frequency','Amount','Approval Indicator','Stop Loss Reimbursement Sequence ID','Datawarehouse Pull Timestamp','Reason Text'];
+     const header1=['Stop Loss Reimbursement ID',"Medica Account ID",'Funding Request Date','Category Report','Frequency','Amount','Approval Indicator','Stop Loss Reimbursement Sequence ID','Datawarehouse Pull Timestamp','Inserted User Name','Updated User Name','Inserted TimeStamp','Updated TimeStamp','Reason Text'];
      let workbook = new Workbook();
      let worksheet = workbook.addWorksheet(excelFileName);
      //Add Header Row
@@ -198,8 +198,12 @@ export class ExcelService {
      worksheet.getColumn(6).width = 25;
      worksheet.getColumn(7).width = 30;
      worksheet.getColumn(8).width = 35;
-     worksheet.getColumn(10).width = 260;
      worksheet.getColumn(9).width = 30;
+     worksheet.getColumn(10).width = 30;
+     worksheet.getColumn(11).width = 30;
+     worksheet.getColumn(12).width = 30;
+     worksheet.getColumn(13).width = 30;
+     worksheet.getColumn(14).width = 260;
      
 
      

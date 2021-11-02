@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 
-import {IReimbursement} from '../models/reimbursement.model';
+import {IReimbursement, IReimbursementAudit} from '../models/reimbursement.model';
 import {IReimbursementSearch,IReimbursementReportsModel,IReimbursementUpdate,IReimbursementAdd} from '../models/reimbursement.model';
 import {IContract, IContractIDRequest, IContractsByClient, IContractAdd, IAddContractSuccess, IContractUpdate, IUpdateContractSuccess, IActiveClient, IContractAudit} from '../models/contracts-model';
 import { Observable, throwError } from 'rxjs';
@@ -68,7 +68,7 @@ export class ReimbursementService {
   }
   addReimbursement(formData){
 
-    debugger
+    
     const body = JSON.stringify(formData);
     
     
@@ -79,6 +79,11 @@ export class ReimbursementService {
      return this.http.post(Paths.ReimbursementAdd, body,{headers: headerOptions} ).pipe(catchError(this.handleError.bind(this)));
   
     }
+    getReimbursementAudits(reimbursementId: number){
+      console.log(Paths.reimbursementAudits);
+      return this.http.get<IReimbursementAudit[]>(Paths.reimbursementAudits+reimbursementId);
+    }
+
 
 
 

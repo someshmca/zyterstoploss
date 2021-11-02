@@ -207,10 +207,10 @@
                                   <input type="number" formControlName="expectedClaimsRate" class="form-control" [ngClass]="{ 'is-invalid': isExpectedClaimsRateInvalid}" />
                                 </td>
                                 <td>
-                                  <input type="date" formControlName="stopLossTierStartDate" class="form-control"/>
+                                  <input type="date" max="2999-12-31" formControlName="stopLossTierStartDate" class="form-control"/>
                                 </td>
                                 <td>
-                                  <input type="date" formControlName="stopLossTierEndDate" class="form-control"/>
+                                  <input type="date" max="2999-12-31" formControlName="stopLossTierEndDate" class="form-control"/>
                                 </td>
                                 <td>
                                   <div class="form-group switch-group">

@@ -16,6 +16,10 @@
                 <div class="mandate-fields">
                   <span *ngIf="isReimbursementSearchErr">Please enter atleast one field</span>
                   <span *ngIf="reimMaxMinErr.isValid">{{reimMaxMinErr.errMsg}}</span>
+                  <span *ngIf="accountIdErr.isValid">{{accountIdErr.errMsg}}</span>
+                  <span *ngIf="reimIdErr.isValid">{{reimIdErr.errMsg}}</span>
+                  <span *ngIf="reimSeqErr.isValid">{{reimSeqErr.errMsg}}</span>
+
 
                  
                 </div> 
@@ -23,31 +27,31 @@
                   <div class="form-field" >
                       <label class="form-field-label">StopLoss Reimbursement ID</label>
                       <div class="form-field-input">
-                          <input type="number" class="form-control field-input-text" formControlName="slReimbursementId"  />                       
+                          <input type="text" class="form-control field-input-text" formControlName="slReimbursementId"  [ngClass]="{ 'is-invalid': reimIdErr.isValid }" />                       
                       </div>
                   </div>
                   <div class="form-field">
                       <label class="form-field-label">StopLoss Reimbursement Sequence</label>
                     <div class="form-field-input">
-                          <input type="text" class="form-control field-input-text" formControlName="slReimbursementSeqId" />                        
+                          <input type="text" class="form-control field-input-text" formControlName="slReimbursementSeqId"  [ngClass]="{ 'is-invalid': reimSeqErr.isValid }" />                        
                       </div>
                       </div>
                   <div class="form-field">
                       <label class="form-field-label">Medica Account ID </label>
                       <div class="form-field-input">
-                          <input type="text"  #focusElem class="form-control field-input-text" formControlName="slGrpId" />                        
+                          <input type="text"  #focusElem class="form-control field-input-text" formControlName="slGrpId"  [ngClass]="{ 'is-invalid': accountIdErr.isValid }" />                        
                       </div>
                    </div>
                         <div class="form-field">
                             <label class="form-field-label">Reimbursement Requested Start Date </label>
                           <div class="form-field-input">
-                            <input type="date" class="form-control field-input-text" value="MM/DD/YYYY" formControlName="requestStartDate"  >                       
+                            <input type="date" class="form-control field-input-text" max="2999-12-31"  value="MM/DD/YYYY" formControlName="requestStartDate"  >                       
                             </div>
                             </div>
                             <div class="form-field">
                                 <label class="form-field-label">Reimbursement Requested End Date</label>
                               <div class="form-field-input">
-                                <input type="date" class="form-control field-input-text" value="MM/DD/YYYY" formControlName="requestEndDate"  >
+                                <input type="date" class="form-control field-input-text" max="2999-12-31" value="MM/DD/YYYY" formControlName="requestEndDate"  >
                                                             
                                 </div>
                                 </div>
@@ -81,15 +85,15 @@
                                 </div>
                 <div class="form-field">
                     <label class="form-field-label">
-                      Reimbursement Min Amount</label>
+                     Minimum Amount</label>
                         <div class="form-field-input">
-                            <input type="text" class="form-control field-input-text" formControlName="slReimbursementMinAmt" /><!--Modified by Venkatesh Enigonda-->
+                            <input type="number" class="form-control field-input-text" formControlName="slReimbursementMinAmt" /><!--Modified by Venkatesh Enigonda-->
                         </div>
                 </div>
                 <div class="form-field">
-                    <label class="form-field-label">Reimbursement Max Amount</label>
+                    <label class="form-field-label">Maximum Amount</label>
                   <div class="form-field-input">
-                        <input type="text" class="form-control field-input-text" formControlName="slReimbursementMaxAmt" />                        
+                        <input type="number" class="form-control field-input-text" formControlName="slReimbursementMaxAmt" />                        
                     </div>
                     </div>
                       <div class="form-field">
@@ -325,7 +329,7 @@
                <div class="col-md-4">              
                  <div class="form-group">
                    <label>Reimbursement Requested Date</label>
-                   <input type="date" value="MM/dd/yyyy" formControlName="slFundingRequestDate" class="form-control"/>
+                   <input type="date" value="MM/dd/yyyy" max="2999-12-31" formControlName="slFundingRequestDate" class="form-control"/>
                  </div>
                 </div>         
                                         
@@ -359,12 +363,31 @@
             <div class="form-group">
               <label>Reason Text
               </label>
-              <input type="text" formControlName="slReasonText" class="form-control"/>
+              <input type="text" formControlName="slReasonText" class="form-control" [readOnly]="isDWthere"/>
             </div>
           </div> 
         </div>  
            
-         </div>      
+         </div>    
+         <div class="audit-table-area" *ngIf="!isAddMode">
+          <table class="table table-bordered table-striped table-hover">
+            <thead>
+              <tr>
+                <th>Updated by</th>
+                <th>Updated On</th>
+                <th>Action</th>
+              </tr>                 
+            </thead>
+            <tbody>
+              <tr *ngFor="let obj of reimbursementAudits">
+                <td>{{obj.userId}}</td>
+                <td>{{obj.sysDate}}</td>
+                <td *ngIf="obj.actionType=='U'">Update</td>
+                <td *ngIf="obj.actionType=='I'">Add</td>
+              </tr>
+            </tbody>
+          </table>
+       </div>  
        </div>
      </div> 
      <div class="modal-footer">

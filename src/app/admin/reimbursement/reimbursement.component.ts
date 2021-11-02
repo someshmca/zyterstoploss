@@ -2,7 +2,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import {Router} from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import {IReimbursementReportsModel, IReimbursementSearch} from '../models/reimbursement.model';
+import {IReimbursementAudit, IReimbursementReportsModel, IReimbursementSearch} from '../models/reimbursement.model';
 import {ReimbursementService} from '../services/reimbursement.service';
 import { Observable } from 'rxjs';
 import { AlertService } from '../services/alert.service';
@@ -63,6 +63,7 @@ export class ReimbursementComponent implements OnInit {
   isAdmin: boolean;
   reimbursementResults:any=[];
   activeClients: IActiveClient[]=[];
+  reimbursementAudits: IReimbursementAudit[]=[];
   isDisabled: boolean=false;
  // isMinAmountInvalid: boolean=false;
   isAccountIDInvalid: boolean=false;
@@ -79,6 +80,11 @@ export class ReimbursementComponent implements OnInit {
   format = '2.2-2'; //PV 08-05-2021
 
   AddEmptyErr={isValid: false, errMsg:''};
+  reimIdErr={isValid:false,errMsg:''};
+  reimSeqErr={isValid:false,errMsg:''};
+  accountIdErr={isValid:false,errMsg:''};
+  startDateErr={isDateErr:false,dateErrMsg:''};
+  isDWthere: boolean = false;
 
   constructor(
     private clientService: ClientsService,
@@ -134,11 +140,22 @@ export class ReimbursementComponent implements OnInit {
   }
   clearErrorMessages(){
 
+    this.isReimbursementSearchFormInvalid=false;
     this.AddEmptyErr.isValid=false;
     this.AddEmptyErr.errMsg='';
     this.reimMaxMinErr.isValid=false;
    this.reimMaxMinErr.errMsg='';
    this.isReimbursementSearchErr=false;
+   this.accountIdErr.isValid=false;
+   this.accountIdErr.errMsg='';
+   this.reimSeqErr.isValid=false;
+   this.reimSeqErr.errMsg='';
+   this.reimIdErr.isValid=false;
+   this.reimIdErr.errMsg='';
+   this.startDateErr.isDateErr=false;
+   this.startDateErr.dateErrMsg='';
+
+   this.isDWthere=false;
    
     
   
@@ -195,6 +212,13 @@ export class ReimbursementComponent implements OnInit {
     this.isViewModal = true;
     this.openCustomModal(bool, id);
   }
+  
+  getReimbursementAudits(reimbursementId: number){
+    
+    this._reimbursementService.getReimbursementAudits(reimbursementId).subscribe((res)=>{
+      this.reimbursementAudits = res;
+    })
+  }
   openCustomModal(open: boolean, id:any) {
     this.isLoading=true;
     this.clearErrorMessages();
@@ -209,7 +233,8 @@ export class ReimbursementComponent implements OnInit {
       //  this.initReimbursementForm();
       this.reimbursementForm.patchValue({
         slFrequencyType:'ONETIME',
-              slCategoryReport:'CUSTOM',
+        slCategoryReport:'CUSTOM',
+        slApprovalInd: true
 
       })
 
@@ -266,13 +291,22 @@ export class ReimbursementComponent implements OnInit {
               slReimbursementSeqId: id.slReimbursementSeqId,
               slFrequencyType:id.slFrequencyType,
               slCategoryReport:id.slCategoryReport,
-              slReimbursementAmt:id.slReimbursementAmt,
+              
+              slReimbursementAmt:id.slReimbursementAmt== 0 ? '' : this.decimalValueString(id.slReimbursementAmt),
               slReasonText:id.slReasonText==null?'':id.slReasonText,
               slApprovalInd:id.slApprovalInd == 'N' ?false : true,
 
               userId: this.loginService.currentUserValue.name
             });
-  
+            if(id.slDwPullTs!=null ){
+              this.isDWthere = true;
+              this.c.slApprovalInd.disable();
+            }
+            else if(!this.isViewModal){
+              this.isDWthere = false;              
+              this.c.slApprovalInd.enable();
+            } 
+            this.getReimbursementAudits(this.c.slReimbursementId.value);
   
           
            
@@ -280,6 +314,69 @@ export class ReimbursementComponent implements OnInit {
           
           
   }
+  }
+  
+  validateInputAlphaNumIds(labelName, fieldValue)
+  {
+    
+    let alphaNum= /^([A-Za-z0-9]+)$/;
+    if(fieldValue.length>0){
+      let checkInputAlphaNum = alphaNum.test(fieldValue);
+      if(!checkInputAlphaNum )
+      {
+        if(labelName=='Medica Account ID'){
+          this.accountIdErr.isValid= true;
+          this.accountIdErr.errMsg = 'Invalid '+labelName;
+          this.isReimbursementSearchFormInvalid=true;
+        }
+        else
+        this.isReimbursementSearchFormInvalid=false;
+      }
+    
+    }
+
+  }
+  validateInputIDs(labelName, fieldValue){
+
+
+    let Num = /^([0-9]+)$/;
+
+    let isValidInputID: boolean=true;
+    if(fieldValue.length>0){
+      let checkInputString = Num.test(fieldValue);
+      if(!checkInputString){
+        if(labelName=='StopLoss Reimbursement ID'){
+          this.reimIdErr.isValid=true;
+          this.reimIdErr.errMsg='Invalid '+labelName;
+          this.isReimbursementSearchFormInvalid=true;
+        }
+        else if(labelName=="StopLoss Reimbursement Sequence"){
+          this.reimSeqErr.isValid=true;
+          this.reimSeqErr.errMsg='Invalid '+labelName;
+          this.isReimbursementSearchFormInvalid=true;
+        }
+       
+      
+        else{
+          this.isReimbursementSearchFormInvalid=true;
+        }
+      }
+    }
+
+  }
+  validateDate(labelName, fieldValue){
+    if(labelName=="Start Date"){
+      if(fieldValue==null){
+        this.reimbursementForm.patchValue({dateOfBirth:null});
+      }
+    }
+    if(labelName=="End Date"){
+      if(fieldValue==null){
+        this.reimbursementForm.patchValue({fromDate:null});
+      }
+    }
+    
+    
   }
  
   limit(page)
@@ -516,6 +613,7 @@ this.c.slFundingRequestDate.value == null && (this.c.slReasonText.value == "" ||
         this.alertService.success('Reimbursement updated', {
           keepAfterRouteChange: true
         });
+        this.getReimbursementAudits(this.c.slReimbursementId.value);
 
        this.searchReimbursement(this.reimbursementSearchForm);
         this.reimbursementForm.reset();
@@ -532,6 +630,50 @@ this.c.slFundingRequestDate.value == null && (this.c.slReasonText.value == "" ||
 
 
   searchReimbursement(form: FormGroup) {
+    let alphaNum = /^([a-zA-Z0-9]+)$/;
+    let validateId=/^([0-9]+)$/;     
+
+      console.log(alphaNum.test(this.f.slGrpId.value));
+      let accountIdTest=alphaNum.test(this.f.slGrpId.value);
+      if(!accountIdTest && this.f.slGrpId.value!=''){
+        this.accountIdErr.isValid=true;
+        this.accountIdErr.errMsg='Invalid Medica Account ID';
+        return;
+      }
+      let reimId=validateId.test(this.f.slReimbursementId.value);
+      if(!reimId && this.f.slReimbursementId.value!=''){
+        this.reimIdErr.isValid=true;
+        this.reimIdErr.errMsg='Invalid StopLoss Reimbursement ID';
+        return;
+      }
+    this.validateInputIDs("StopLoss Reimbursement ID",this.f.slReimbursementId.value);
+    this.validateInputIDs("StopLoss Reimbursement Sequence",this.f.slReimbursementSeqId.value);
+    this.validateDate("Start Date",this.f.requestStartDate.value);
+    this.validateDate("End Date",this.f.requestEndDate.value);
+    this.validateInputAlphaNumIds("Medica Account ID", this.f.slGrpId.value);
+    let reimSeq=validateId.test(this.f.slReimbursementSeqId.value);
+      if(!reimSeq && this.f.slReimbursementSeqId.value!=''){
+        this.reimSeqErr.isValid=true;
+        this.reimSeqErr.errMsg='Invalid StopLoss Reimbursement Sequence';
+        return;
+      }
+    // let StartDate = this.datePipe.transform(this.reimbursementForm.get('requestStartDate').value, 'yyyy-MM-dd');
+    //    let EndDate = this.datePipe.transform(this.reimbursementForm.get('requestEndDate').value, 'yyyy-MM-dd');
+ 
+ 
+    //    if(StartDate!=null && StartDate!='' && EndDate!=null && EndDate!=''){
+    //      if(StartDate>EndDate){
+    //        this.startDateErr.isDateErr=true;
+    //        this.startDateErr.dateErrMsg = 'Requested Start date should not be greater than Requested End date'
+    //      return;
+    //      }
+    
+    //    }
+
+
+
+
+
     
     this.names.length=0;  
      this.clearErrorMessages();
@@ -551,10 +693,10 @@ this.c.slFundingRequestDate.value == null && (this.c.slReasonText.value == "" ||
      if(this.isReimbursementSearchFormInvalid){
        return;
      }
-     if(!this.isReimbursementSearchFormInvalid){
+     
        
         this.getClaimSearchResultsGrid();
-     }
+     
  
    }
    getClaimSearchResultsGrid(){
