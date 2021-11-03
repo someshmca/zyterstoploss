@@ -258,6 +258,7 @@
 
     <div class="mandate-fields">
       <span *ngIf="AddEmptyErr.isValid">{{AddEmptyErr.errMsg}}</span>
+      <div *ngIf="updateNoChange.flag">{{updateNoChange.message}}</div>
     </div>  
         <div class="modal-body"> 
          
@@ -274,10 +275,10 @@
               
                <div class="col-md-4">                 
                  <div class="form-group">
-                   <label>Medica Account ID</label>
+                   <label>Medica Account ID<small *ngIf="isAddMode" class="starmark">*</small></label>
                    <input type="text" formControlName="slGrpId" class="form-control" *ngIf="!isAddMode">
 
-                   <select  formControlName="slGrpId" class="form-control" *ngIf="isAddMode" >
+                   <select  formControlName="slGrpId" class="form-control" *ngIf="isAddMode"  [ngClass]="{ 'is-invalid': submitted && c.slGrpId.errors}">
                     <option *ngFor="let client of activeClients" [value]="client.clientId">
                        {{client.clientId}}
                     </option>
@@ -289,7 +290,7 @@
                <div class="col-md-4">                 
                 <div class="form-group">
                   <label>Stop Loss Reimbursement Sequence</label>
-                  <input type="text" formControlName="slReimbursementSeqId" class="form-control" />
+                  <input type="text" formControlName="slReimbursementSeqId" class="form-control" [ngClass]="{ 'is-invalid': submitted && c.slReimbursementSeqId.errors}"/>
                 </div>
               </div> 
               
@@ -297,11 +298,11 @@
              <div class="row">   
               <div class="col-md-4">              
                  <div class="form-group">
-                   <label>Frequency</label>
+                   <label>Frequency<small *ngIf="isAddMode" class="starmark">*</small></label>
                    <input type="text" formControlName="slFrequencyType" class="form-control"  *ngIf="!isAddMode"/>
                    <!-- 
                      <input type="text"  class="form-control" [value]="c.slFrequencyType.value"[readOnly]="isAddMode" *ngIf="isAddMode"/>                    -->
-                   <select class="form-control" formControlName="slFrequencyType" *ngIf="isAddMode">
+                   <select class="form-control" formControlName="slFrequencyType" *ngIf="isAddMode" [ngClass]="{ 'is-invalid': submitted && c.slFrequencyType.errors}">
                    <option value=''>Select</option>
                      <option value="WEEKLY">Weekly</option>
                     <option value="MONTHLY">Monthly</option> 
@@ -313,10 +314,10 @@
                </div>
                <div class="col-md-4">              
                 <div class="form-group">
-                  <label>Category/Report</label>
+                  <label>Category/Report<small *ngIf="isAddMode" class="starmark">*</small></label>
                   <input type="text" formControlName="slCategoryReport"  class="form-control" *ngIf="!isAddMode"/>
                   <!-- <input type="text"  class="form-control" [value]="c.slCategoryReport.value" [readOnly]="isAddMode" *ngIf="isAddMode"/> -->                  
-                   <select class="form-control" formControlName="slCategoryReport" *ngIf="isAddMode">
+                   <select class="form-control" formControlName="slCategoryReport" *ngIf="isAddMode" [ngClass]="{ 'is-invalid': submitted && c.slCategoryReport.errors}">
                     <option value=''>Select</option> 
                      <option value="SPECIFIC">Specific</option>
                     <option value="AGRREGATE">Aggregate</option>
@@ -328,8 +329,8 @@
               </div>
                <div class="col-md-4">              
                  <div class="form-group">
-                   <label>Reimbursement Requested Date</label>
-                   <input type="date" value="MM/dd/yyyy" max="2999-12-31" formControlName="slFundingRequestDate" class="form-control"/>
+                   <label>Reimbursement Requested Date<small *ngIf="isAddMode" class="starmark">*</small></label>
+                   <input type="date" value="MM/dd/yyyy" max="2999-12-31" formControlName="slFundingRequestDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && c.slFundingRequestDate.errors}"/>
                  </div>
                 </div>         
                                         
@@ -341,9 +342,9 @@
            <div class="row">
             <div class="col-md-4">              
                 <div class="form-group">
-                  <label>Amount
+                  <label>Amount<small *ngIf="isAddMode" class="starmark">*</small>
                   </label>
-                  <input type="number" formControlName="slReimbursementAmt" class="form-control"/>
+                  <input type="number" formControlName="slReimbursementAmt" class="form-control" [ngClass]="{ 'is-invalid': submitted && c.slReimbursementAmt.errors}"/>
                 </div>
               </div>     
               <div class="col-md-4">

@@ -85,7 +85,11 @@ export class ReimbursementComponent implements OnInit {
   accountIdErr={isValid:false,errMsg:''};
   startDateErr={isDateErr:false,dateErrMsg:''};
   isDWthere: boolean = false;
+  updateNoChange= {flag: false, message: ''}
 
+  fetchReimbursementDetailsOld: any;
+  fetchReimbursementDetailsNew: any;
+  
   constructor(
     private clientService: ClientsService,
     private fb: FormBuilder,
@@ -154,6 +158,7 @@ export class ReimbursementComponent implements OnInit {
    this.reimIdErr.errMsg='';
    this.startDateErr.isDateErr=false;
    this.startDateErr.dateErrMsg='';
+   this.updateNoChange= {flag: false, message: ''};
 
    this.isDWthere=false;
    
@@ -188,12 +193,12 @@ export class ReimbursementComponent implements OnInit {
     this.reimbursementForm = this.fb.group({
       slReimbursementId: [''],
       requestStartDate:[null],
-      slGrpId: [''],
+      slGrpId: ['', Validators.required],
       requestEndDate: [null],
-      slFundingRequestDate:[null],
-      slCategoryReport:"",
-      slFrequencyType:"",
-      slReimbursementAmt:[''],
+      slFundingRequestDate:[null, Validators.required],
+      slCategoryReport:['', Validators.required],
+      slFrequencyType: ['', Validators.required],
+      slReimbursementAmt:['', Validators.required],
  
       slReimbursementSeqId: [''],
       slDwPullTs:null,
@@ -295,6 +300,9 @@ export class ReimbursementComponent implements OnInit {
 
               userId: this.loginService.currentUserValue.name
             });
+            
+            this.fetchReimbursementDetailsOld=this.reimbursementForm.value;
+            debugger;
             if(id.slDwPullTs!=null ){
               this.isDWthere = true;
               this.c.slApprovalInd.disable();
@@ -463,7 +471,7 @@ export class ReimbursementComponent implements OnInit {
   }
   
   onSubmit() {
-
+    this.clearErrorMessages();
     this.submitted = true;
   
     // reset alerts on submit
@@ -480,36 +488,20 @@ export class ReimbursementComponent implements OnInit {
 if(this.isAddMode)
 {
   
-  
-  
-if((this.c.slApprovalInd.value=="0"||this.c.slApprovalInd.value==null ) && (this.c.slCategoryReport.value == "CUSTOM" || this.c.slCategoryReport.value == null)&& (this.c.slFrequencyType.value == "ONETIME" || this.c.slFrequencyType.value == null) &&
-this.c.slFundingRequestDate.value == null && (this.c.slReasonText.value == "" || this.c.slReasonText.value == null) && (this.c.slGrpId.value == "" || this.c.slGrpId.value == null)&&(this.c.slReimbursementAmt.value== 0 || this.c.slReimbursementAmt.value== null)&&
-(this.c.slReimbursementId.value == null || this.c.slReimbursementId.value == 0)&& (this.c.slReimbursementSeqId.value == null || this.c.slReimbursementSeqId.value == 0))
-{
-  console.log("yes 1");
-  this.AddEmptyErr.isValid=true;
-    this.AddEmptyErr.errMsg='Please enter the details';
+  console.log(this.reimbursementForm.value);
+  debugger;
+  if((this.c.slApprovalInd.value=="1"||this.c.slApprovalInd.value==null ) && (this.c.slCategoryReport.value == "" || this.c.slCategoryReport.value == null)&& (this.c.slFrequencyType.value == "" || this.c.slFrequencyType.value == null) &&this.c.slFundingRequestDate.value == null && (this.c.slReasonText.value == "" || this.c.slReasonText.value == null) && (this.c.slGrpId.value == "" || this.c.slGrpId.value == null)&&(this.c.slReimbursementAmt.value== 0 || this.c.slReimbursementAmt.value== null)&&(this.c.slReimbursementId.value == null || this.c.slReimbursementId.value == 0)&& (this.c.slReimbursementSeqId.value == null || this.c.slReimbursementSeqId.value == '')){  
+
+    this.AddEmptyErr.isValid=true;    
+    this.AddEmptyErr.errMsg='Please enter the details';    
     return;
-
+  }
+    
+    
 }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
   
     this.loading = true;
-  
+    if(this.updateNoChange.flag) return;
     if (this.isAddMode) {
       this.addReimbursement()
     } else {
@@ -522,7 +514,7 @@ this.c.slFundingRequestDate.value == null && (this.c.slReasonText.value == "" ||
 
     let addObj = {
       slReimbursementId : this.c.slReimbursementId.value==''?0:Number(this.c.slReimbursementId.value),
-      slReimbursementSeqId : this.c.slReimbursementSeqId.value==''?0:Number(this.c.slReimbursementSeqId.value),
+      slReimbursementSeqId : this.c.slReimbursementSeqId.value,
       slFundingRequestDate: this.datePipe.transform(this.c.slFundingRequestDate.value, 'yyyy-MM-dd'),
       slCategoryReport:this.c.slCategoryReport.value,
       slFrequencyType:this.c.slFrequencyType.value,
@@ -543,7 +535,6 @@ this.c.slFundingRequestDate.value == null && (this.c.slReasonText.value == "" ||
     }
     
 
-    this.isDisabled=true;
     this.isLoading=false;
     
     console.log(addObj);
@@ -562,7 +553,8 @@ this.c.slFundingRequestDate.value == null && (this.c.slReasonText.value == "" ||
               //this.contractForm.reset();                   
               //this.clientService.passClientId(this.f.clientId.value);   
               this.alertService.success('New Reimbursement added', { keepAfterRouteChange: true });  
-              //this.productService.setProductAddStatus(true);  
+              this.isDisabled=true;
+              //this.productService.setProductAddStatus(true);  \
              
              // this.isAdded = true;
               
@@ -590,12 +582,20 @@ this.c.slFundingRequestDate.value == null && (this.c.slReasonText.value == "" ||
       reimbursementId:this.uslReimbursementId,      
       indicator: this.c.slApprovalInd.value == true ? '1' : '0',
       reasonText:this.c.slReasonText.value,
-      userId:this.loginService.currentUserValue.name
+      userId:this.loginService.currentUserValue.name,
+      sequenceId: this.c.slReimbursementSeqId.value
     }
     
-    this.isDisabled=true;
     this.isLoading=false;
-    this._reimbursementService.updateReimbursement(uReimbursementObj.reimbursementId, uReimbursementObj.indicator, uReimbursementObj.reasonText, uReimbursementObj.userId)
+    
+    this.fetchReimbursementDetailsNew = this.reimbursementForm.value;
+    if(JSON.stringify(this.fetchReimbursementDetailsOld) == JSON.stringify(this.fetchReimbursementDetailsNew) ){
+      
+      this.updateNoChange.flag=true;
+      this.updateNoChange.message="No Values updated. Update atleast one value to update";
+      return;
+    }
+    this._reimbursementService.updateReimbursement(uReimbursementObj.reimbursementId, uReimbursementObj.indicator, uReimbursementObj.reasonText, uReimbursementObj.userId, uReimbursementObj.sequenceId)
     .pipe(first())
     .subscribe({
       next: () => {
@@ -604,12 +604,16 @@ this.c.slFundingRequestDate.value == null && (this.c.slReasonText.value == "" ||
           slReimbursementId:uReimbursementObj.reimbursementId,      
           slApprovalInd: uReimbursementObj.indicator=='1'?true:false,
           slReasonText:uReimbursementObj.reasonText==null?'':uReimbursementObj.reasonText,
-          userId: uReimbursementObj.userId
+          userId: uReimbursementObj.userId,
+          slReimbursementSeqId: uReimbursementObj.sequenceId
         });
         this.openCustomModal(false, null);
+        this.updateNoChange.flag=false;
+        this.updateNoChange.message="";
         this.alertService.success('Reimbursement updated', {
           keepAfterRouteChange: true
         });
+        this.isDisabled=true;
         this.getReimbursementAudits(this.c.slReimbursementId.value);
 
        this.searchReimbursement(this.reimbursementSearchForm);
@@ -710,7 +714,7 @@ this.c.slFundingRequestDate.value == null && (this.c.slReasonText.value == "" ||
    let requestEndDate = this.reimbursementSearchForm.get("requestEndDate").value;
 
    slReimbursementId = slReimbursementId==''?0:Number(slReimbursementId);
-   slReimbursementSeqId = slReimbursementSeqId==''?0:Number(slReimbursementSeqId);
+   //slReimbursementSeqId = slReimbursementSeqId==''?0:Number(slReimbursementSeqId);
    slReimbursementMinAmt = slReimbursementMinAmt==''?0:Number(slReimbursementMinAmt);
    slReimbursementMaxAmt = slReimbursementMaxAmt==''?0:Number(slReimbursementMaxAmt);
 

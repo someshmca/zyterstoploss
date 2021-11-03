@@ -58,14 +58,13 @@ export class ReimbursementService {
     return this.http.get<IReimbursementReportsModel[]>(Paths.GetReimbursementdetail,{params}).pipe(catchError(this.handleError.bind(this)));
  }
 
- updateReimbursement(rid, indicator, reasonText, userId) {
- // const body = JSON.stringify(formData);
-  const headerOptions = new HttpHeaders({ 'Content-Type': 'application/json' });
-  let updateUrl = Paths.updateReimbursement+"?reimbursementId="+rid+"&indicator="+indicator+"&reasonText="+reasonText+"&userId="+userId;
-  
-  return this.http.put(updateUrl,{headers: headerOptions} ).pipe(catchError(this.handleError.bind(this)));
-  
-  }
+ updateReimbursement(rid, indicator, reasonText, userId, sequenceId)  {
+  // const body = JSON.stringify(formData); 
+   const headerOptions = new HttpHeaders({ 'Content-Type': 'application/json' }); 
+   let updateUrl = Paths.updateReimbursement+"?reimbursementId="+rid+"&indicator="+indicator+"&reasonText="+reasonText+"&userId="+userId+"&sequenceId="+sequenceId;
+   return this.http.put(updateUrl,{headers: headerOptions} ).pipe(catchError(this.handleError.bind(this)));
+   }
+   
   addReimbursement(formData){
 
     

@@ -9,7 +9,7 @@ export interface IReimbursement
   slReimbursementMinAmt: number,
   slReimbursementMaxAmt: number,
   slApprovalInd: string,
-  slReimbursementSeqId: number,
+  slReimbursementSeqId: string,
   slFundingRequestDate:string
 
 }
@@ -24,7 +24,7 @@ export interface IReimbursementSearch
   slReimbursementMinAmt: number,
   slReimbursementMaxAmt: number,
   slApprovalInd: string,
-  slReimbursementSeqId: number,
+  slReimbursementSeqId: string,
   slFundingRequestDate:string
 
 }
@@ -38,7 +38,7 @@ export interface IReimbursementReportsModel{
   slReimbursementMinAmt: number,
   slReimbursementMaxAmt: number,
   slApprovalInd: string,
-  slReimbursementSeqId: number,
+  slReimbursementSeqId: string,
   slFundingRequestDate:string,
 
 
@@ -67,7 +67,7 @@ slReimbursementId: number,
   updateUser: string,
   insertTs: String,
   updateTs: String,
-  slReimbursementSeqId: number,
+  slReimbursementSeqId: string,
   slReasonText: string,
   slDwPullTs: String
 }
