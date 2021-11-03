@@ -298,31 +298,31 @@
               <div class="col-md-4">              
                  <div class="form-group">
                    <label>Frequency</label>
-                   <input type="text" formControlName="slFrequencyType" value="ONETIME"  class="form-control"  *ngIf="!isAddMode"/>
-                   <input type="text"  class="form-control" [value]="c.slFrequencyType.value"[readOnly]="isAddMode" *ngIf="isAddMode"/>                   
-                   <!-- <select class="form-control" formControlName="slFrequencyType" *ngIf="isAddMode">
-                   <option value=''>Select</option> -->
-                     <!-- <option value="WEEKLY">Weekly</option>
-                    <option value="MONTHLY">Monthly</option> -->
-                    <!-- <option value="ONETIME">One Time</option> -->
-                    <!-- <option value="FINALRECON">Final RECON</option> -->
-                  <!-- </select>  -->
+                   <input type="text" formControlName="slFrequencyType" class="form-control"  *ngIf="!isAddMode"/>
+                   <!-- 
+                     <input type="text"  class="form-control" [value]="c.slFrequencyType.value"[readOnly]="isAddMode" *ngIf="isAddMode"/>                    -->
+                   <select class="form-control" formControlName="slFrequencyType" *ngIf="isAddMode">
+                   <option value=''>Select</option>
+                     <option value="WEEKLY">Weekly</option>
+                    <option value="MONTHLY">Monthly</option> 
+                    <option value="ONETIME">One Time</option>
+                    <option value="FINALRECON">Final RECON</option>
+                  </select> 
                    
                  </div>
                </div>
                <div class="col-md-4">              
                 <div class="form-group">
                   <label>Category/Report</label>
-                  <input type="text" formControlName="slCategoryReport" value="CUSTOM"class="form-control" *ngIf="!isAddMode"/>
-                  <input type="text"  class="form-control" [value]="c.slCategoryReport.value" [readOnly]="isAddMode" *ngIf="isAddMode"/>
-                  
-                  <!-- <select class="form-control" formControlName="slCategoryReport" *ngIf="isAddMode">
-                    <option value=''>Select</option> -->
-                    <!-- <option value="SPECIFIC">Specific</option>
+                  <input type="text" formControlName="slCategoryReport"  class="form-control" *ngIf="!isAddMode"/>
+                  <!-- <input type="text"  class="form-control" [value]="c.slCategoryReport.value" [readOnly]="isAddMode" *ngIf="isAddMode"/> -->                  
+                   <select class="form-control" formControlName="slCategoryReport" *ngIf="isAddMode">
+                    <option value=''>Select</option> 
+                     <option value="SPECIFIC">Specific</option>
                     <option value="AGRREGATE">Aggregate</option>
-                    <option value="MAXLIABILITY">MaxLiability</option> -->
-                    <!-- <option value="CUSTOM">Custom</option>
-                  </select>  -->
+                    <option value="MAXLIABILITY">MaxLiability</option>
+                    <option value="CUSTOM">Custom</option>
+                  </select> 
                  
                 </div>
               </div>

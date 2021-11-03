@@ -191,8 +191,8 @@ export class ReimbursementComponent implements OnInit {
       slGrpId: [''],
       requestEndDate: [null],
       slFundingRequestDate:[null],
-      slCategoryReport:"CUSTOM",
-      slFrequencyType:"ONETIME",
+      slCategoryReport:"",
+      slFrequencyType:"",
       slReimbursementAmt:[''],
  
       slReimbursementSeqId: [''],
@@ -232,10 +232,7 @@ export class ReimbursementComponent implements OnInit {
       this.isAddMode = true;
       //  this.initReimbursementForm();
       this.reimbursementForm.patchValue({
-        slFrequencyType:'ONETIME',
-        slCategoryReport:'CUSTOM',
         slApprovalInd: true
-
       })
 
       
