@@ -91,6 +91,10 @@ export class ClientComponent implements OnInit {
   fetchAccDetailsOld: any;
   fetchAccDetailsNew: any;
   updateNoChange= {flag: false, message: ''};
+  oldAccID: string= '';
+  oldSubAccID: string='';
+  oldSubSubAccID: string='';
+
   ngOnInit() {
     this.getAllClients();
     this.getAllContracts();
@@ -384,6 +388,10 @@ openViewModal(bool, id:any){
           this.uAccountName = x[0].clientName;
           this.navService.setClientObj(x[0].clientId, x[0].clientName, false, true);          
           this.fetchAccDetailsOld = this.clientForm.value;
+
+          this.oldAccID = x[0].clientId;
+          this.oldSubAccID = x[0].subAccountid;
+          this.oldSubSubAccID = x[0].subSubAccountid;
           
           this.getAccountAudits(x[0].clientId);
         });
@@ -452,17 +460,6 @@ openViewModal(bool, id:any){
         });   
     }
 
-    checkDuplicateAccount(clientId: string, subAccountId:string, subSubAccountId:string){
-      debugger;
-      this.clientService.checkDuplicateAccount(clientId, subAccountId, subSubAccountId).subscribe((res)=>{
-        debugger;
-        if(res>0){
-          this.accIdErr.isDuplicate=true;
-          this.accIdErr.errMsg = "AccountID, Sub AccID and SUb Sub AccID combination already exists. Try another combination";
-        }
-      })
-        
-    }
     onSubmit() {
       this.submitted = true;
 
@@ -491,10 +488,9 @@ openViewModal(bool, id:any){
       let subAccId = this.f.subAccountid.value;
       let subSubid = this.f.subSubAccountid.value;
   
-      let subSubId: any;// Modified by Venkatesh Enigonda
       let startDateValue = this.f.startDate.value;
       let endDateValue = this.f.endDate.value;
-      this.checkDuplicateAccount(accountId, subAccId, subSubid);
+
       if(this.accIdErr.isDuplicate) return;
       if(!accountIdTest && this.f.clientId.value!=''){ 
         this.accountIdErr.isValid=true;
@@ -526,23 +522,23 @@ openViewModal(bool, id:any){
         return;
       }
   
-      if (this.f.subAccountid.value !== null)// Modified by Venkatesh Enigonda
-      {
-        subSubId = this.f.subAccountid.value.length;
-      }
-      else {
-        subSubId = 0;
-      }
-      console.log(subSubid);// Modified by Venkatesh Enigonda
-      if (subSubid == null) {
-        console.log(subSubid);
-      }
-      else if (subSubid != '' && subSubId == 0) {
-        console.log(subSubId);
-        this.subSubIdAcErr.isValid = true;
-        this.subSubIdAcErr.errMsg = ' Sub-Account ID Required*';//// Modified by Venkatesh Enigonda
-        return;
-      }
+      // if (this.f.subAccountid.value !== null)// Modified by Venkatesh Enigonda
+      // {
+      //   subSubId = this.f.subAccountid.value.length;
+      // }
+      // else {
+      //   subSubId = 0;
+      // }
+      // console.log(subSubid);// Modified by Venkatesh Enigonda
+      // if (subSubid == null) {
+      //   console.log(subSubid);
+      // }
+      // else if (subSubid != '' && subSubId == 0) {
+      //   console.log(subSubId);
+      //   this.subSubIdAcErr.isValid = true;
+      //   this.subSubIdAcErr.errMsg = ' Sub-Account ID Required*';//// Modified by Venkatesh Enigonda
+      //   return;
+      // }
        // starts here added by Venkatesh Enigonda
        let StartDate = this.datePipe.transform(this.clientForm.get('startDate').value, 'yyyy-MM-dd');
        let EndDate = this.datePipe.transform(this.clientForm.get('endDate').value, 'yyyy-MM-dd');
@@ -598,7 +594,17 @@ openViewModal(bool, id:any){
     
               return;
             }
-              this.addClient();
+            
+            this.clientService.checkDuplicateAccount(accountId, subAccId, subSubid).subscribe((res)=>{
+              
+              if(res>0){
+                this.accIdErr.isDuplicate=true;
+                this.accIdErr.errMsg = "AccountID, Sub AccID and SUb Sub AccID combination already exists. Try another combination";
+              }
+              else{
+                this.addClient();
+              }
+            });
 
         }
 
@@ -606,14 +612,27 @@ openViewModal(bool, id:any){
 
       this.loading = true;
       if (!this.isAddMode) {
-        this.fetchAccDetailsNew = this.clientForm.value
+        this.fetchAccDetailsNew = this.clientForm.value;
 
         if(JSON.stringify(this.fetchAccDetailsOld) == JSON.stringify(this.fetchAccDetailsNew)){
           this.updateNoChange.flag=true;
           this.updateNoChange.message="No new values are updated. Update atleast one field to update";
         }        
         if(this.updateNoChange.flag) return;
-          this.updateClient();
+        if(this.oldAccID == accountId && this.oldSubAccID == subAccId && this.oldSubSubAccID == subSubid){
+
+        }
+        else{
+          this.clientService.checkDuplicateAccount(accountId, subAccId, subSubid).subscribe((res)=>{
+            if(res>0){
+              this.accIdErr.isDuplicate=true;
+              this.accIdErr.errMsg = "AccountID, Sub AccID and SUb Sub AccID combination already exists. Try another combination";
+            }
+            else{
+              this.updateClient();
+            }
+          });
+        }
 
       }
   }
