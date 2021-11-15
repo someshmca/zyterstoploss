@@ -9,6 +9,11 @@
            </div>           
      </div>
      <div class="card-body">
+        <div *ngIf="isLoading">
+          <div *ngIf="loaderService.isLoading | async">
+            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+          </div>
+        </div>
          <div class="select-grid-wrap">
              <div class="select-grid-header">
                <div>
@@ -65,7 +70,7 @@
                    <a class="text-primary" routerLinkActive="active" (click)="goBackPreviousNoFilter()">Back</a>
                  </div>
                  <div class="col_2">
-                   <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
+                   <mat-paginator [pageSizeOptions]="[100, 500, 999]" showFirstLastButtons></mat-paginator>
                  </div>
                </div>
              </div>
@@ -95,6 +100,9 @@
             </div>
         </div>
         <form [formGroup]="planForm" (ngSubmit)="onSubmit()">
+          <div *ngIf="loaderService.isLoading | async" class="loader-container">
+            <mat-spinner  [diameter]="75" style="top:35%;left:42%"></mat-spinner>
+           </div>
         <!-- Modal body -->
         <div class="modal-body"> 
              <div class="mandate-fields">

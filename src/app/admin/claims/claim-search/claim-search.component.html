@@ -2,13 +2,16 @@
 <div class="page-content">
 
     <form [formGroup]="claimSearchForm" (ngSubmit)="searchClaim(claimSearchForm)">
+      
         <div class="card custom-card claim-search">
             <div class="card-header">
                 Claim Search
             </div>
-            <div *ngIf="loaderService.isLoading | async">
-              <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-             </div>
+            <div *ngIf="isLoading">
+              <div *ngIf="loaderService.isLoading | async">
+                <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+              </div>
+              </div>
             <div class="card-body">
                 <div class="mandate-fields">
                   <!-- <span *ngIf="submitted && !claimSearchForm.valid"></span> -->
@@ -323,6 +326,9 @@
         </div> 
         <!-- Modal body -->
     <form [formGroup]="claimForm" (ngSubmit)="onSubmit()">
+      <div *ngIf="loaderService.isLoading | async" class="loader-container">
+        <mat-spinner  [diameter]="75" style="top:35%;left:42%"></mat-spinner>
+       </div><!--Ends Here-->
         <div class="modal-body"> 
          <div class="claim-results-form-wrap">
              <!-- <div class="mandate-fields">

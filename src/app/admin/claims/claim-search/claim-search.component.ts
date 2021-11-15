@@ -88,6 +88,8 @@ export class ClaimSearchComponent implements OnInit {
   pageCount;
    //(VE 11/8/2021 ends)
   format = '2.2-2'; //PV 08-05-2021
+  isLoading: boolean= true;
+
   constructor(private fb: FormBuilder,
     public loaderService: LoaderService,
     private _claimReportService: ClaimReportService,  private excelService:ExcelService,
@@ -258,6 +260,7 @@ openViewModal(bool, id:any){
   this.openCustomModal(bool, id);
 }
 openCustomModal(open: boolean, id:any) {
+  this.isLoading=true;
   this.isDisabled=false;
   setTimeout(()=>{
     this.focusTag.nativeElement.focus()
@@ -325,6 +328,7 @@ getClaimAudits(claimId: string){
   })
 }
 updateClaim(claimId:string,  exclusion:string ){
+  this.isLoading=false;
   let updateClaimObj = {
     claimId : claimId,
     exclusion: (exclusion==null || exclusion == 'N') ? false : true,

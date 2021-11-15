@@ -134,15 +134,15 @@
           <div class="col2">
             <div><alert></alert></div>
             <div class="fa fa-download" title="Export to Excel" (click)="exportAsXLSX()"></div> 
-          </div>
-          
+          </div>          
         </div>
         <div class="card-body">
         <div class="card-table-area">
             <div class="cust-add-area">
                 <span class="fa fa-plus-circle" (click)="openCustomModal(true, null)" *ngIf="isAdmin"></span>
             </div>    
-            <div class="card-table">        
+            <div class="card-table">     
+              <div *ngIf="maxSequenceObj.flag" class="text-danger">{{maxSequenceObj.message}}</div>   
               <div>
                 <div class="reimbursement-results-grid-wrap">
                     <table mat-table matSort #reimbursementResultTable [dataSource]="dataSource" class="table table-bordered table-striped card-table">            
@@ -213,7 +213,7 @@
                               <span class="view-icon" 
                                     (click)="openViewModal(true, element)" title="View"></span>
                               <span class="fa fa-edit" 
-                              (click)="openCustomModal(true, element)" *ngIf="isAdmin"></span>
+                              (click)="checkMaxSequenceNo(element)" *ngIf="isAdmin"></span>
                             </td>
                          </ng-container>
                         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -247,9 +247,9 @@
             </a>
         </div> 
    <form [formGroup]="reimbursementForm" (ngSubmit)="onSubmit()">
-    <div *ngIf="loaderService.isLoading | async" class="loader-container"><!--added by venkatesh Enigonda-->
+    <div *ngIf="loaderService.isLoading | async" class="loader-container">
       <mat-spinner  [diameter]="75" style="top:35%;left:42%"></mat-spinner>
-     </div><!--Ends Here-->
+     </div>
  
      
 
@@ -259,6 +259,7 @@
     <div class="mandate-fields">
       <span *ngIf="AddEmptyErr.isValid">{{AddEmptyErr.errMsg}}</span>
       <div *ngIf="updateNoChange.flag">{{updateNoChange.message}}</div>
+      <!-- <div *ngIf="reasonTexterr.flag">{{reasonTextErr.msg}}</div> -->
     </div>  
         <div class="modal-body"> 
          
@@ -321,7 +322,7 @@
                     <option value=''>Select</option> 
                      <option value="SPECIFIC">Specific</option>
                     <option value="AGRREGATE">Aggregate</option>
-                    <option value="MAXL IABILITY">MaxLiability</option>
+                    <option value="MAX LIABILITY">Max Liability</option>
                     <option value="CUSTOM">Custom</option>
                   </select> 
                  
@@ -364,7 +365,7 @@
             <div class="form-group">
               <label>Reason Text
               </label>
-              <input type="text" formControlName="slReasonText" maxlength="255" class="form-control" [readOnly]="isDWthere"/>
+              <input type="text" maxlength="255" formControlName="slReasonText" class="form-control" [readOnly]="isDWthere"/>
             </div>
           </div> 
         </div>  

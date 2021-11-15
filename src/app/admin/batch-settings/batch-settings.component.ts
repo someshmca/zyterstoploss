@@ -81,7 +81,7 @@ export class BatchSettingsComponent implements OnInit {
   selectedRow : Number; 
   isViewModal: boolean;
   isAdmin: boolean;
-  
+  isLoading: boolean=true;
   //setClickedRow : Function;
   constructor(private batchSettingService: BatchSettingService,public loaderService: LoaderService, private fb: FormBuilder, private alertService: AlertService, private datePipe: DatePipe, private loginService: LoginService) { 
     
@@ -229,7 +229,7 @@ export class BatchSettingsComponent implements OnInit {
     this.openCustomModal(bool, id);
   }
   openCustomModal(open: boolean, id:string) {
-
+    this.isLoading=true;
    setTimeout(()=>{
      this.focusTag.nativeElement.focus()
    }, 100);
@@ -367,6 +367,7 @@ export class BatchSettingsComponent implements OnInit {
 //(V.E 27-Jul-2021 Ends )
 private addBatchProcess() {
   this.isDisabled=true;
+  this.isLoading=false;
   this.isHistoryPresent = false; // Modified by Venkatesh Enigonda
   this.isHistoryNotPresent=false; // Modified by Venkatesh Enigonda
   
@@ -413,6 +414,7 @@ private addBatchProcess() {
 
   private updateBatchProcess() {
     this.isDisabled=true;
+    this.isLoading=false;
     this.isHistoryPresent = false; // Modified by Venkatesh Enigonda
     this.isHistoryNotPresent=false; // Modified by Venkatesh Enigonda
     

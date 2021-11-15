@@ -25,6 +25,7 @@ import { DecimalPipe } from '@angular/common'; //PV 08-05-2021
 import { exit } from 'process';
 import { LiteralPrimitive } from '@angular/compiler';
 
+
 @Component({
   selector: 'app-member',
   templateUrl: './member.component.html',
@@ -97,7 +98,7 @@ export class MemberComponent implements OnInit {
   isViewModal: boolean = false;
   isAdmin: boolean;
   isMemCount: boolean;
-
+  isLoading: boolean = true;
   constructor(public loaderService: LoaderService, private excelService: ExcelService, private mb: FormBuilder, private fb: FormBuilder, private memberService: MemberService, private alertService: AlertService, private datePipe: DatePipe, private loginService: LoginService, private clientService: ClientsService, private contractService: ContractService, private planService: HealthPlanService, private navService: NavPopupService, private decimalPipe: DecimalPipe) { }
 
   ngOnInit() {
@@ -585,6 +586,7 @@ export class MemberComponent implements OnInit {
     this.openCustomModal(bool, id);
   }
   openCustomModal(open: boolean, id: any) {
+    this.isLoading=true;
     this.isDisabled = false;
     setTimeout(() => {
       this.focusTag.nativeElement.focus()
@@ -634,7 +636,7 @@ export class MemberComponent implements OnInit {
             subscriberId: id.subscriberId,
             subscriberFname: id.subscriberFname,
             subscriberLname: id.subscriberLname,
-            gender: id.gender,
+            gender: id.gender=='M'?'Male':'Female',
             status: id.status,
 
             laserValue: this.decimalValueString(id.laserValue) == 0 ? '' : this.decimalValueString(id.laserValue),
@@ -747,6 +749,7 @@ export class MemberComponent implements OnInit {
   }
   private addMember() {
     this.isDisabled = true;
+    this.isLoading=false;
     let addMembObj = {
       memberId: this.f.memberHrid.value,
       memberHrid: this.f.memberHrid.value,
@@ -786,6 +789,7 @@ export class MemberComponent implements OnInit {
 
   private updateMember() {
     this.isDisabled = true;
+    this.isLoading=false;
     let updateMemberObj = {
       laserType: "Member",
       laserTypeId: String(this.uMemberHRId),

@@ -14,9 +14,11 @@
       </div>
       <alert></alert>
     </div>
-    <div *ngIf="loaderService.isLoading | async"><!--added by venkatesh Enigonda-->
-      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-     </div><!--Ends Here-->
+    <div *ngIf="isLoading">
+      <div *ngIf="loaderService.isLoading | async">
+        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+      </div><!--Ends Here-->
+     </div>
     <div class="card-body">   
           <div class="card-table-area batch-process-table-area">
           <div class="table-responsive"> 
@@ -69,13 +71,8 @@
                 <ng-container matColumnDef="createId">
                   <th mat-header-cell *matHeaderCellDef class="c-action"> Start </th>
                   <td mat-cell *matCellDef="let element" class="action-link c-action"> 
-                    <button [ngClass]="element.frequency!='Demand'?'btn btn-secondary':'btn btn-primary'" [disabled]="element.frequency!='Demand'" (click)="startDemand(element, element.batchType); $event.stopPropagation();">Start</button>  
-                    <!-- <button *ngIf="element.frequency=='Demand' || element.frequency=='On Demand'" class="btn btn-primary" (click)="startDemand()">
-                      Start
-                    </button>
-                    <button *ngIf="element.frequency!='Demand'" class="btn btn-secondary" disabled>
-                      Start
-                    </button> -->
+                    <!-- <button [ngClass]="element.frequency!='Demand'?'btn btn-secondary':'btn btn-primary'" [disabled]="element.frequency!='Demand'" (click)="startDemand(element, element.batchType); $event.stopPropagation();">Start</button>   -->
+                    <button [ngClass]="element.frequency!='Demand'?'btn btn-secondary':'btn btn-primary'" [disabled]="true" (click)="startDemand(element, element.batchType); $event.stopPropagation();">Start</button>  
                   </td>
                 </ng-container>
                 <!-- Action Column -->
@@ -94,7 +91,7 @@
               <div *ngIf="noRecsFoundBatchDetails" class="batch-details-not-found">
                 <h3>No Records found for the selected Status <strong>{{selectedStatus}}</strong></h3>
               </div>
-              <mat-paginator #BatchProcessPaginator="matPaginator" [pageSizeOptions]="[5, 10, 15, 30, 50]" showFirstLastButtons></mat-paginator>
+              <mat-paginator #BatchProcessPaginator="matPaginator" [pageSizeOptions]="[100, 500, 999]" showFirstLastButtons></mat-paginator>
             </div> 
         </div>
     </div>
@@ -178,6 +175,9 @@
           </a>
       </div>
       <form [formGroup]="batchProcessForm" (ngSubmit)="onSubmit()"  autocomplete="off">
+        <div *ngIf="loaderService.isLoading | async" class="loader-container">
+          <mat-spinner  [diameter]="75" style="top:35%;left:42%"></mat-spinner>
+         </div><!--Ends Here-->
       <!-- Modal body -->
       <div class="modal-body">   
     <div class="mandate-fields">

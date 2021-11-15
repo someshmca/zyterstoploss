@@ -7,6 +7,7 @@ import { ChartsModule } from 'ng2-charts';
 import { MDBBootstrapModule } from 'angular-bootstrap-md';
 import { RouterModule } from '@angular/router';
 
+import {WinAuthInterceptor} from '../app/shared/helpers/winauth-interceptor';
 import { AppRoutingModule } from './app-routing.module';
 import {AdminModule} from './admin/admin.module';
 import {SharedModule} from './shared/shared.module';
@@ -52,6 +53,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar'; //added b
     MatProgressBarModule
   ],
   providers: [
+   // {provide: HTTP_INTERCEPTORS,useClass: WinAuthInterceptor, multi: true},
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
   LoginService],
   bootstrap: [AppComponent]

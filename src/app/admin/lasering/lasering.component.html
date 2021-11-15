@@ -6,7 +6,11 @@
           <!-- <alert></alert> -->
           </div>
           <div class="card-body">
-            
+            <div *ngIf="isLoading">
+              <div *ngIf="loaderService.isLoading | async">
+                <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+              </div>
+            </div>            
          <div class="select-grid-wrap">
             <div class="select-grid-header">
               <div>
@@ -69,7 +73,7 @@
                           <a class="text-primary" routerLinkActive="active" (click)="goBackPreviousNoFilter()">Back</a>
                         </div>
                         <div class="col_2"> 
-                          <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
+                          <mat-paginator [pageSizeOptions]="[100, 500, 999]" showFirstLastButtons></mat-paginator>
                         </div>
                       </div>
                     </div>
@@ -102,6 +106,9 @@
         </div> 
         <!-- Modal body -->
     <form [formGroup]="memberForm" (ngSubmit)="onSubmit()">
+      <div *ngIf="loaderService.isLoading | async" class="loader-container">
+        <mat-spinner  [diameter]="75" style="top:35%;left:42%"></mat-spinner>
+       </div>
         <div class="modal-body"> 
          <div class="member-search-area">
              <div class="mandate-fields">
@@ -111,25 +118,27 @@
              <div class="row">                
                <div class="col-md-4">
                  <div class="form-group">
-                   <label>Account<small class="starmark">*</small></label>
-                   <select #focusElem formControlName="clientId" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.clientId.errors }">
+                   <label>Account<small class="starmark"></small></label>
+                   <!-- <select #focusElem formControlName="clientId" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.clientId.errors }">
                      <option [value]="uClientId">
                        {{uClientId}}
                      </option>
-                  </select>  
+                  </select>   --> 
+                  <input type="text" formControlName="clientId" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.clientId.errors }">
                  </div>
                </div>            
                <div class="col-md-4">
                  <div class="form-group">
-                   <label>Contract<small class="starmark">*</small></label>
-                   <select formControlName="contractId" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.contractId.errors }">
+                   <label>Contract<small class="starmark"></small></label>
+                   <!-- <select formControlName="contractId" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.contractId.errors }">
                      <option [value]="uContractId">{{uContractId}}</option>
-                   </select>
+                   </select> -->
+                 <input type="text" formControlName="contractId" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.contractId.errors }">
                  </div>
                </div>            
                <div class="col-md-4">
                  <div class="form-group">
-                   <label>Plan<small class="starmark">*</small></label>
+                   <label>Plan<small class="starmark"></small></label>
                    <select formControlName="planId" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.planId.errors }">
                      <option [value]="uPlanId">{{uPlanId}}</option>
                    </select>
@@ -139,7 +148,7 @@
              <div class="row">          
                <!-- <div class="col-md-4">
                  <div class="form-group">
-                   <label>Tier<small class="starmark">*</small></label>                    
+                   <label>Tier<small class="starmark"></small></label>                    
                    <select formControlName="tierId" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.tierId.errors }">
                      <option [value]="uTierId">{{uTierId}}</option>
                    </select>
@@ -147,7 +156,7 @@
                </div> -->
               <div class="col-md-4">
                  <div class="form-group">
-                   <label>Member ID<small class="starmark">*</small></label>
+                   <label>Member ID<small class="starmark"></small></label>
                    <input type="text" formControlName="memberId" maxlength="20"  class="form-control" [ngClass]="{ 'is-invalid': submitted && f.memberId.errors }"/>
                  </div>
                </div>
@@ -159,7 +168,7 @@
                 </div>      
              <div class="col-md-4">
                  <div class="form-group">
-                   <label>First Name<small class="starmark">*</small></label>
+                   <label>First Name<small class="starmark"></small></label>
              <input type="text" formControlName="fname" maxlength="50" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.fname.errors }" />
                  </div> 
              </div>                              
@@ -167,7 +176,7 @@
            <div class="row">
              <div class="col-md-4">
                <div class="form-group">
-                 <label>Last Name<small class="starmark">*</small></label>
+                 <label>Last Name<small class="starmark"></small></label>
            <input type="text" formControlName="lname" maxlength="50" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.lname.errors }" />
                </div>   
              </div>   
@@ -179,7 +188,7 @@
                </div>
                <div class="col-md-4">
                     <div class="form-group">
-                       <label>Date of Birth<small class="starmark">*</small></label> 
+                       <label>Date of Birth<small class="starmark"></small></label> 
                        <input type="date" value="MM/DD/YYYY" formControlName="dateOfBirth" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.dateOfBirth.errors }" max="2999-12-31" />                            
                      </div>
                </div>  
@@ -187,14 +196,14 @@
               <div class="row">
                <div class="col-md-4">
                     <div class="form-group">
-                       <label>Member Start Date<small class="starmark">*</small></label> 
+                       <label>Member Start Date<small class="starmark"></small></label> 
                        <input type="date" value="MM/DD/YYYY" formControlName="memberStartDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.memberStartDate.errors }" max="2999-12-31"/>
                        
                      </div>
                </div>
                <div class="col-md-4">
                     <div class="form-group">
-                       <label>Member End Date<small class="starmark">*</small></label> 
+                       <label>Member End Date<small class="starmark"></small></label> 
                        <input type="date" value="MM/DD/YYYY" formControlName="memberEndDate" class="form-control" max="2999-12-31"/>
                        
                      </div>
@@ -221,12 +230,13 @@
                </div>
                <div class="col-md-4">
                     <div class="form-group">
-                       <label>Gender<small class="starmark">*</small></label>  
-                       <select class="form-control" formControlName="gender" [ngClass]="{ 'is-invalid': submitted && f.gender.errors }">
+                       <label>Gender<small class="starmark"></small></label>  
+                       <!-- <select class="form-control" formControlName="gender" [ngClass]="{ 'is-invalid': submitted && f.gender.errors }">
                          <option value=''>Select Gender</option>
                          <option value="M">Male</option>
                          <option value="F">Female</option>
-                       </select>
+                       </select> -->
+                       <input type="text" formControlName="gender" [ngClass]="{ 'is-invalid': submitted && f.gender.errors }"/>
                      </div>
                </div>    
              </div>

@@ -22,6 +22,7 @@ import { Router } from '@angular/router';
 import { IClientObj } from '../models/nav-popups.model';
 import {DecimalPipe} from '@angular/common'; //PV 08-05-2021
 import { IMemberAudit } from '../models/member-model';
+import { LoaderService } from '../services/loader.service';
 
 @Component({
   selector: 'app-lasering',
@@ -77,6 +78,7 @@ export class LaseringComponent implements OnInit {
   isViewModal: boolean;
   isAdmin: boolean;
   format = '2.2-2'; //PV 08-05-2021
+  isLoading: boolean = true;
   constructor(private mb: FormBuilder, 
     private fb: FormBuilder, 
     private laseringService:LaseringService, 
@@ -88,6 +90,7 @@ export class LaseringComponent implements OnInit {
     private planService: HealthPlanService, 
     private navService: NavPopupService,
     private router: Router,
+    public loaderService: LoaderService,
     private decimalPipe: DecimalPipe ) { }
 
   ngOnInit() {
@@ -220,6 +223,7 @@ export class LaseringComponent implements OnInit {
     this.openCustomModal(bool, id);
   }
   openCustomModal(open: boolean, id:any) {
+    this.isLoading=true;
     this.isDisabled=false;
     setTimeout(()=>{
       this.focusTag.nativeElement.focus()
@@ -267,7 +271,7 @@ export class LaseringComponent implements OnInit {
               subscriberId: id.subscriberId,
               subscriberFname: id.subscriberFname,
               subscriberLname: id.subscriberLname,
-              gender: id.gender,
+              gender: id.gender=='M'?'Male':'Female',
               status: id.status,
               laserValue: this.decimalValueString(id.laserValue) == 0 ? '' : this.decimalValueString(id.laserValue),
               isUnlimited: (id.isUnlimited==null || id.isUnlimited=='N')?false:true,
@@ -445,6 +449,7 @@ getMemberAudits(memberId: number){
   }
   private updateMember() {
     this.isDisabled=true;
+    this.isLoading=false;
       let updateMemberObj = {
       laserType:"Member",
       laserTypeId: String(this.uMemberHRId),

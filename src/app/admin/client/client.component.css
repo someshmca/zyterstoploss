@@ -119,4 +119,7 @@
     max-width: 15vh;
 
 }
-
+.loader-container
+    {
+        height:90%;
+    }

@@ -19,6 +19,7 @@ import {NavPopupService} from '../services/nav-popup.service';
 import { IClientObj } from '../models/nav-popups.model';
 import { ContractService } from '../services/contract.service';
 import {DecimalPipe} from '@angular/common';
+import { LoaderService } from '../services/loader.service';
 
 @Component({
   selector: 'app-health-plan',
@@ -124,7 +125,7 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-
+  isLoading: boolean=true;
   constructor(
     private formBuilder: FormBuilder,
     private contractService: ContractService,
@@ -134,7 +135,8 @@ export class HealthPlanComponent implements OnInit, AfterViewInit {
     private datePipe: DatePipe,
     private navService:NavPopupService,
     private router:Router,
-    private decimalPipe: DecimalPipe
+    private decimalPipe: DecimalPipe,
+    public loaderService: LoaderService
   ) { }
 
   ngOnInit() {
@@ -435,6 +437,7 @@ dateValue(dateVal){
     this.openCustomModal(bool, id);
   }
   openCustomModal(open: boolean, elem:any) {
+    this.isLoading=true;
     this.alertService.clear();
     setTimeout(()=>{
       this.focusTag.nativeElement.focus()
@@ -1491,6 +1494,7 @@ getPlanAudits(planId: number){
 
   private addPlan() {
     this.isAddTier=false;
+    this.isLoading=true;
     this.isPatchInputValue=false;
     
     if(!this.isAddTier){
@@ -1572,6 +1576,7 @@ getPlanAudits(planId: number){
   private updatePlan() {
     
   this.isPatchInputValue=false;
+  this.isLoading=false;
   
   let flag=false;
   //this.patchInputValue='';

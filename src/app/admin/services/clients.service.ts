@@ -50,9 +50,9 @@ getClientDetails(clientId: string){
 // checkDuplicateAccountName(name: string){
 //   return this.http.get(Paths.duplicateClientName+name).pipe(catchError(this.handleError.bind(this)));
 // }
-checkDuplicateAccount(clientId: string, subAccountId:string, subSubAccountId:string){
+checkDuplicateAccount(clientId: string){
   
-  return this.http.get(Paths.duplicateAccount+"clientId="+clientId+"&subAccountId="+subAccountId+"&subSubAccountId="+subSubAccountId).pipe(catchError(this.handleError.bind(this)));
+  return this.http.get(Paths.duplicateAccount+"clientId="+clientId).pipe(catchError(this.handleError.bind(this)));
 }
 getParentClient(){
   return this.http.get<IParentClient[]>(Paths.parentClient);

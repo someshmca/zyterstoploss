@@ -107,3 +107,7 @@
 .range-area div:nth-child(2){
     margin-left: 10px;
 }
+.loader-container
+    {
+        height:90%;
+    }

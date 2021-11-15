@@ -48,6 +48,7 @@ import{InterceptorService} from'./services/interceptor.service';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { PlanFactorComponent } from './health-plan/plan-factor/plan-factor.component';
 import { ReimbursementComponent } from './reimbursement/reimbursement.component';
+import { JwtInterceptor } from '../shared/helpers/jwt.interceptor';
 
 
 @NgModule({
@@ -74,10 +75,11 @@ import { ReimbursementComponent } from './reimbursement/reimbursement.component'
     MatProgressSpinnerModule
   ],
   providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     ClaimReportService,
     BenefitService,
     DecimalPipe,
-    {provide:HTTP_INTERCEPTORS,useClass:InterceptorService,multi:true}
+    {provide:HTTP_INTERCEPTORS,useClass:InterceptorService,multi:true},
   ]
 })
 export class AdminModule { }

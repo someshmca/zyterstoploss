@@ -11,6 +11,7 @@ export const Paths = {
   loginPath : apiPath+"Login/UserLogin/",
   reportPath : apiPath+"Claim/GetClaimReport",
   claimPath: apiPath+"Claim/GetClaim",
+  authenticateUserPath: apiPath+"Login/UserAuthentication?userName=",
 
   attributes: apiPath+"Attribute/GetAllAttributeID",
   attribute: apiPath+"Attribute/GetAttributeDetails?attributeId=",
@@ -74,6 +75,7 @@ export const Paths = {
   updateReimbursement:apiPath+"Reimbursement/UpdateReimbursement",
   ReimbursementAdd:apiPath+"Reimbursement/AddReimbursement",
   reimbursementAudits: apiPath+"Reimbursement/GetReimbursementAudit?ReimbursementId=",
+  reimbursementMaxSeqID: apiPath+"Reimbursement/GetMaxSequenceId?ReimbursementId=",
  
   BatchStatusPath:apiPath+"BatchProcess/GetBatchStatus",
   BatchProcessPath:apiPath+"BatchProcess/GetBatchProcessDetail/",

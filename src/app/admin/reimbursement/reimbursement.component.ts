@@ -89,7 +89,13 @@ export class ReimbursementComponent implements OnInit {
 
   fetchReimbursementDetailsOld: any;
   fetchReimbursementDetailsNew: any;
-  
+  maxSequenceObj = {
+    maxSequenceId: '',
+    curSequenceId: '',
+    flag: false,
+    message: ''
+  }
+
   constructor(
     private clientService: ClientsService,
     private fb: FormBuilder,
@@ -162,6 +168,12 @@ export class ReimbursementComponent implements OnInit {
 
    this.isDWthere=false;
    
+  this.maxSequenceObj = {
+    maxSequenceId: '',
+    curSequenceId: '',
+    flag: false,
+    message: ''
+  }
     
   
   }
@@ -237,7 +249,7 @@ export class ReimbursementComponent implements OnInit {
       this.isAddMode = true;
       //  this.initReimbursementForm();
       this.reimbursementForm.patchValue({
-        slApprovalInd: true
+        slApprovalInd: false
       })
 
       
@@ -275,6 +287,8 @@ export class ReimbursementComponent implements OnInit {
       
         console.log(id);
             this.uslReimbursementId= id.slReimbursementId;
+
+            this.maxSequenceObj.curSequenceId =  id.slReimbursementSeqId;
             //this.uslApprovalInd = id.slApprovalInd;
             this.reimbursementForm.patchValue({
               // claimId: id.claimId,
@@ -302,10 +316,13 @@ export class ReimbursementComponent implements OnInit {
             });
             
             this.fetchReimbursementDetailsOld=this.reimbursementForm.value;
-            debugger;
-            if(id.slDwPullTs!=null ){
+            if(id.slDwPullTs!=null && id.slApprovalInd=='Y' ){
               this.isDWthere = true;
               this.c.slApprovalInd.disable();
+            }
+            else if(id.slDwPullTs!=null && id.slApprovalInd=='N'){
+              this.isDWthere = false;              
+              this.c.slApprovalInd.enable();              
             }
             else if(!this.isViewModal){
               this.isDWthere = false;              
@@ -489,7 +506,6 @@ if(this.isAddMode)
 {
   
   console.log(this.reimbursementForm.value);
-  debugger;
   if((this.c.slApprovalInd.value=="1"||this.c.slApprovalInd.value==null ) && (this.c.slCategoryReport.value == "" || this.c.slCategoryReport.value == null)&& (this.c.slFrequencyType.value == "" || this.c.slFrequencyType.value == null) &&this.c.slFundingRequestDate.value == null && (this.c.slReasonText.value == "" || this.c.slReasonText.value == null) && (this.c.slGrpId.value == "" || this.c.slGrpId.value == null)&&(this.c.slReimbursementAmt.value== 0 || this.c.slReimbursementAmt.value== null)&&(this.c.slReimbursementId.value == null || this.c.slReimbursementId.value == 0)&& (this.c.slReimbursementSeqId.value == null || this.c.slReimbursementSeqId.value == '')){  
 
     this.AddEmptyErr.isValid=true;    
@@ -564,18 +580,25 @@ if(this.isAddMode)
                 this.loading = false;
             }
         });
-
-
-
-
-
-
-
-
-
     
   }
-
+  checkMaxSequenceNo(rowObj){
+    this.maxSequenceObj.curSequenceId = rowObj.slReimbursementSeqId;
+    
+    this._reimbursementService.checkMaxSequenceNo(rowObj.slReimbursementId).subscribe((data)=>{
+      this.maxSequenceObj.maxSequenceId = data;
+      if(this.maxSequenceObj.curSequenceId < this.maxSequenceObj.maxSequenceId){
+        this.maxSequenceObj.flag=true;
+        this.maxSequenceObj.message = "This record cannot be editable";
+      }
+      else{
+        this.maxSequenceObj.flag=false;
+        this.maxSequenceObj.message = '';
+        this.openCustomModal(true,rowObj);
+      }
+      
+    })
+  }
   updateReimbursement()
   {
     let uReimbursementObj = {

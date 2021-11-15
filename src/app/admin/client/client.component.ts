@@ -34,7 +34,7 @@ export class ClientComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private clientService: ClientsService, private fb: FormBuilder, private contractService: ContractService, private alertService: AlertService, private datePipe: DatePipe,private loginService: LoginService, private route: Router, private navService: NavPopupService) { }
+  constructor(private clientService: ClientsService, private fb: FormBuilder, private contractService: ContractService, private alertService: AlertService, private datePipe: DatePipe,private loginService: LoginService, private route: Router, private navService: NavPopupService, public loaderService: LoaderService) { }
 
   clients:IClient[] = [];
   clientIDs: IClient[] = [];
@@ -94,6 +94,7 @@ export class ClientComponent implements OnInit {
   oldAccID: string= '';
   oldSubAccID: string='';
   oldSubSubAccID: string='';
+  isLoading:boolean=true;
 
   ngOnInit() {
     this.getAllClients();
@@ -269,6 +270,8 @@ clearErrorMessages(){
     this.subSubChkErr.errMsg = '';
 
   this.updateNoChange= {flag: false, message: ''};
+  this.isHRIdInvalid.flag=false;
+  this.isHRIdInvalid.message= '';
 }
 
 
@@ -326,6 +329,7 @@ openViewModal(bool, id:any){
   this.openCustomModal(bool, id);
 }
   openCustomModal(open: boolean, id:any) {
+    this.isLoading=true;
     setTimeout(()=>{
       this.focusTag.nativeElement.focus()
     }, 100);
@@ -595,16 +599,26 @@ openViewModal(bool, id:any){
               return;
             }
             
-            this.clientService.checkDuplicateAccount(accountId, subAccId, subSubid).subscribe((res)=>{
-              
+            this.clientService.checkDuplicateAccount(accountId).subscribe((res)=>{
+              console.log(accountId);
+            
               if(res>0){
+
                 this.accIdErr.isDuplicate=true;
-                this.accIdErr.errMsg = "AccountID, Sub AccID and SUb Sub AccID combination already exists. Try another combination";
+                this.accIdErr.errMsg = "AccountID already exists";
+                return;
               }
               else{
-                this.addClient();
+                
+                if(!this.accIdErr.isDuplicate) this.addClient();
               }
+            }, (error)=>{
+              // this.accIdErr.isDuplicate = false; 
+              // this.accIdErr.errMsg = '';
+              console.log(this.accIdErr);
+              
             });
+          //  this.addClient();
 
         }
 
@@ -619,20 +633,21 @@ openViewModal(bool, id:any){
           this.updateNoChange.message="No new values are updated. Update atleast one field to update";
         }        
         if(this.updateNoChange.flag) return;
-        if(this.oldAccID == accountId && this.oldSubAccID == subAccId && this.oldSubSubAccID == subSubid){
+        // if(this.oldAccID == accountId && this.oldSubAccID == subAccId && this.oldSubSubAccID == subSubid){
 
-        }
-        else{
-          this.clientService.checkDuplicateAccount(accountId, subAccId, subSubid).subscribe((res)=>{
-            if(res>0){
-              this.accIdErr.isDuplicate=true;
-              this.accIdErr.errMsg = "AccountID, Sub AccID and SUb Sub AccID combination already exists. Try another combination";
-            }
-            else{
-              this.updateClient();
-            }
-          });
-        }
+        // }
+        // else{
+        //   this.clientService.checkDuplicateAccount(accountId).subscribe((res)=>{
+        //     if(res>0){
+        //       this.accIdErr.isDuplicate=true;
+        //       this.accIdErr.errMsg = "AccountID already exists";
+        //     }
+        //     else{
+        //       this.updateClient();
+        //     }
+        //   });
+        // }
+        this.updateClient();
 
       }
   }
@@ -644,6 +659,7 @@ openViewModal(bool, id:any){
     })
   }
   private addClient() {
+    this.isLoading=false;
     this.clientForm.patchValue({
       userId:this.loginService.currentUserValue.name,
       status:this.clientForm.get('status').value==true?1:1,
@@ -684,6 +700,7 @@ openViewModal(bool, id:any){
     }
 
     private updateClient() {
+      this.isLoading=false;
       this.clientForm.patchValue({
         startDate: this.f.startDate.value==''?null:this.f.startDate.value,
         endDate: this.f.endDate.value==''?null:this.f.endDate.value,
@@ -700,6 +717,7 @@ openViewModal(bool, id:any){
             .pipe(first())
             .subscribe({
                 next: () => {
+                  this.isDisabled=true;
                   this.getAccountAudits(this.f.clientId.value);
                     this.getAllClients();
 
@@ -709,7 +727,6 @@ openViewModal(bool, id:any){
                     this.updateNoChange.message='';
                     this.alertService.success('Account updated', {
                       keepAfterRouteChange: true });
-                    this.isDisabled=true;
                     this.contractService.setContractAddStatus(false);  
                    // this.router.navigate(['../../'], { relativeTo: this.route });
                 },

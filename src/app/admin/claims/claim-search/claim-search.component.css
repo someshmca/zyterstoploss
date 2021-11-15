@@ -44,7 +44,7 @@
     max-width: 1064px;
 }
 .claim-results-grid-wrap table{
-    width: 2200px;
+    width: 2700px;
 }
 .claim-results-grid-wrap table tr th:last-child,
 .claim-results-grid-wrap table tr td:last-child{
@@ -105,3 +105,7 @@
     overflow-y: auto;
     overflow-x: hidden;
 }
+.loader-container
+    {
+        height:90%;
+    }

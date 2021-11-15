@@ -57,7 +57,9 @@ export class ReimbursementService {
    
     return this.http.get<IReimbursementReportsModel[]>(Paths.GetReimbursementdetail,{params}).pipe(catchError(this.handleError.bind(this)));
  }
-
+ checkMaxSequenceNo(reimbursementId: number){
+   return this.http.get<any>(Paths.reimbursementMaxSeqID+reimbursementId,{  responseType: 'text' as 'json' }).pipe(catchError(this.handleError.bind(this)));
+ }
  updateReimbursement(rid, indicator, reasonText, userId, sequenceId)  {
   // const body = JSON.stringify(formData); 
    const headerOptions = new HttpHeaders({ 'Content-Type': 'application/json' }); 
