@@ -307,6 +307,8 @@
        <div class="member-search-area">
            <div class="mandate-fields">
              <span *ngIf="submitted && !memberForm.valid">Fields marked with * are mandatory</span>
+             <div *ngIf="updateNoChange.flag">{{updateNoChange.message}}</div>
+             
            </div>
        <div class="member-form-wrap">
            <div class="row">                

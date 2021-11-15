@@ -89,6 +89,10 @@ export class ClaimSearchComponent implements OnInit {
    //(VE 11/8/2021 ends)
   format = '2.2-2'; //PV 08-05-2021
   isLoading: boolean= true;
+  fetchClaimOld:any; 
+  fetchClaimNew:any;
+
+  updateNoChange= {flag: false, message: ''};
 
   constructor(private fb: FormBuilder,
     public loaderService: LoaderService,
@@ -185,6 +189,7 @@ export class ClaimSearchComponent implements OnInit {
     this.isClaimSourceInvalid=false;
    this.memMaxMinErr.isValid=false;
    this.memMaxMinErr.errMsg='';
+   this.updateNoChange= {flag: false, message: ''};
   }
 dateLessThan(from: string, to: string) {
   return (group: FormGroup): {[key: string]: any} => {
@@ -274,6 +279,7 @@ openCustomModal(open: boolean, id:any) {
     this.claimForm.reset();
     this.isAddMode = false;
     this.isViewModal=false;
+    this.clearErrorMessages();
   }
   console.log("id inside modal: "+id);
 
@@ -314,8 +320,8 @@ openCustomModal(open: boolean, id:any) {
           this.claimForm.disable();
           this.c.exclusion.enable();
         } 
-        console.log(this.claimForm.value);
-        
+        console.log(this.claimForm.value); 
+        this.fetchClaimOld = this.claimForm.value;
         
 }
 }
@@ -335,7 +341,19 @@ updateClaim(claimId:string,  exclusion:string ){
   }
    let userId = this.loginService.currentUserValue.name;
   //this.claimForm.patchValue({exclusion: updateClaimObj.exclusion});
-    
+  this.fetchClaimNew=this.claimForm.value;
+
+  console.log(this.fetchClaimNew);
+
+  if(JSON.stringify(this.fetchClaimOld)==JSON.stringify(this.fetchClaimNew)){
+
+    this.updateNoChange.flag=true;
+
+    this.updateNoChange.message="No Values updated. Update atleast one value to update";
+
+    return;  
+
+  }
       this._claimReportService.claimUpdate(claimId, exclusion, userId).pipe(first())
       .subscribe({
         next: () => {
@@ -346,7 +364,7 @@ updateClaim(claimId:string,  exclusion:string ){
          // this.claimForm.patchValue({exclusion:exclusion=='N'?false:true});
           this.claimForm.patchValue(updateClaimObj);
 
-          
+          this.clearErrorMessages();
           this.alertService.success('Claim updated', {
             keepAfterRouteChange: true
           });          

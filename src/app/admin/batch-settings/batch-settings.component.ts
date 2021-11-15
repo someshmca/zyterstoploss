@@ -83,6 +83,11 @@ export class BatchSettingsComponent implements OnInit {
   isAdmin: boolean;
   isLoading: boolean=true;
   //setClickedRow : Function;
+  fetchBatchDetailsOld: any;
+
+  fetchBatchDetailsNew: any;
+
+  updateNoChange= {flag: false, message: ''}
   constructor(private batchSettingService: BatchSettingService,public loaderService: LoaderService, private fb: FormBuilder, private alertService: AlertService, private datePipe: DatePipe, private loginService: LoginService) { 
     
     
@@ -110,6 +115,7 @@ export class BatchSettingsComponent implements OnInit {
   clearErrorMessages(){
     this.batchIdErr.isValid=false;
     this.batchIdErr.errMsg='';
+    this.updateNoChange= {flag: false, message: ''};
   }
   showRowHistory(row, index){
     this.selectedRow = index;
@@ -255,6 +261,7 @@ export class BatchSettingsComponent implements OnInit {
       this.batchProcessForm.reset();
       this.isAddMode = false;
       this.isViewModal=false;
+      this.clearErrorMessages();
     }
     console.log("id inside modal: "+id);
     
@@ -276,7 +283,7 @@ export class BatchSettingsComponent implements OnInit {
         frequency: elem.frequency,
         batchType:elem.batchType
       });      
-      
+      this.fetchBatchDetailsOld=this.batchProcessForm.value;
       // this.batchProcessForm.patchValue({        
       //   lastRunStatus: this.f.lastRunStatus.value==''?'Completed':this.f.lastRunStatus.value,
       //   frequency: this.f.frequency.value==''?'Daily':this.f.frequency.value,
@@ -413,7 +420,6 @@ private addBatchProcess() {
   }
 
   private updateBatchProcess() {
-    this.isDisabled=true;
     this.isLoading=false;
     this.isHistoryPresent = false; // Modified by Venkatesh Enigonda
     this.isHistoryNotPresent=false; // Modified by Venkatesh Enigonda
@@ -437,7 +443,19 @@ private addBatchProcess() {
       batchType: this.f.batchType.value
     }
     console.log(this.updateBatchObj);
-    
+    this.fetchBatchDetailsNew = this.batchProcessForm.value;
+
+    if(JSON.stringify(this.fetchBatchDetailsOld) == JSON.stringify(this.fetchBatchDetailsNew) ){
+
+     
+
+      this.updateNoChange.flag=true;
+
+      this.updateNoChange.message="No Values updated. Update atleast one value to update";
+
+      return;
+
+    }
       this.batchSettingService.updateBatchProcess(this.updateBatchObj)
           .pipe(first())
           .subscribe({
@@ -448,6 +466,7 @@ private addBatchProcess() {
                   this.listBatchProcessGrid();
                   this.alertService.success('Batch Process updated', { 
                     keepAfterRouteChange: true });
+                    this.isDisabled=true;
                  // this.router.navigate(['../../'], { relativeTo: this.route });
                   
               },

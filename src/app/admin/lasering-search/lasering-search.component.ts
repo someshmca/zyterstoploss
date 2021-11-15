@@ -87,6 +87,12 @@ export class LaseringSearchComponent implements OnInit {
   altIdErr = { isValid: false, errMsg: '' };
   accountIdErr = { isValid: false, errMsg: '' };
   //(VE 13-08-2021 ends)
+  updateNoChange= {flag: false, message: ''}
+
+  fetchMemberDetailsOld: any;
+
+  fetchMemberDetailsNew: any;
+
 
   isSearchDataThere: boolean = false;
   noSearchResultsFound: boolean = false;
@@ -171,7 +177,8 @@ export class LaseringSearchComponent implements OnInit {
     this.altIdErr.errMsg = '';
     this.accountIdErr.isValid = false;
     this.accountIdErr.errMsg = '';
-     //(VE 13-08-2021 ends)
+     //(VE 13-08-2021 ends)     
+    this.updateNoChange= {flag: false, message: ''};
   }
   initMemberSearchForm() {
     this.memberSearchForm = this.mb.group({
@@ -661,6 +668,7 @@ export class LaseringSearchComponent implements OnInit {
       this.memberForm.reset();
       this.isAddMode = false;
       this.isViewModal = false;
+      this.clearErrorMessages();
       document.body.classList.remove("cdk-global-scrollblock");
     }
     console.log("id inside modal: " + id);
@@ -705,6 +713,7 @@ export class LaseringSearchComponent implements OnInit {
             memberEndDate: this.datePipe.transform(id.memberEndDate, 'yyyy-MM-dd'),
             dateOfBirth: this.datePipe.transform(id.dateOfBirth, 'yyyy-MM-dd')
           });
+          this.fetchMemberDetailsOld=this.memberForm.value;
           this.getMemberAudits(this.updateMemberID);
 
         }, 900);
@@ -866,7 +875,20 @@ export class LaseringSearchComponent implements OnInit {
       memberStartDate: this.datePipe.transform(this.f.memberStartDate.value, 'yyyy-MM-dd'),
       memberEndDate: this.datePipe.transform(this.f.memberEndDate.value, 'yyyy-MM-dd')
     }
-    //debugger;
+    this.fetchMemberDetailsNew = this.memberForm.value;
+
+    if(JSON.stringify(this.fetchMemberDetailsOld) == JSON.stringify(this.fetchMemberDetailsNew) ){
+
+     
+
+      this.updateNoChange.flag=true;
+
+      this.updateNoChange.message="No Values updated. Update atleast one value to update";
+
+      return;
+
+    }
+
     this.memberService.updateMember(updateMemberObj)
       .pipe(first())
       .subscribe({

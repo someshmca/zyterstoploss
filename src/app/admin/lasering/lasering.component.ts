@@ -68,6 +68,11 @@ export class LaseringComponent implements OnInit {
   memIdErr = {isValid: false, errMsg: ''};
   memStartDateErr = {isValid: false, errMsg: ''};
   memEndDateErr = {isValid: false, errMsg: ''};
+  updateNoChange= {flag: false, message: ''}
+
+  fetchMemberDetailsOld: any;
+
+  fetchMemberDetailsNew: any;
 
   isSearchDataThere: boolean = false;
   noSearchResultsFound: boolean = false;
@@ -185,6 +190,7 @@ export class LaseringComponent implements OnInit {
     this.memStartDateErr.errMsg='';
     this.memEndDateErr.isValid=false;
     this.memEndDateErr.errMsg='';
+    this.updateNoChange= {flag: false, message: ''};
   }
   getActiveClients(){
     this.clientService.getActiveClients().subscribe(
@@ -238,6 +244,7 @@ export class LaseringComponent implements OnInit {
       this.isAddMode = false;
       this.isViewModal=false;
       this.isAdded=false;
+      this.clearErrorMessages();
       if(!this.isFilterOn){
         this.navService.resetLaseringObj();
         this.filterSearchInput.nativeElement.value='';
@@ -280,6 +287,7 @@ export class LaseringComponent implements OnInit {
               dateOfBirth: this.datePipe.transform(id.dateOfBirth, 'yyyy-MM-dd'),
               exclusion:(id.exclusion == null || id.exclusion =='N')?false : true       
             });
+            this.fetchMemberDetailsOld=this.memberForm.value;
             this.getMemberAudits(this.updateMemberID);
 
           },900);
@@ -465,6 +473,19 @@ getMemberAudits(memberId: number){
       memberId: this.updateMemberID,
       memberStartDate: this.datePipe.transform(this.f.memberStartDate.value, 'yyyy-MM-dd'),
       memberEndDate: this.datePipe.transform(this.f.memberEndDate.value, 'yyyy-MM-dd')
+      }
+      this.fetchMemberDetailsNew = this.memberForm.value;
+  
+      if(JSON.stringify(this.fetchMemberDetailsOld) == JSON.stringify(this.fetchMemberDetailsNew) ){
+  
+       
+  
+        this.updateNoChange.flag=true;
+  
+        this.updateNoChange.message="No Values updated. Update atleast one value to update";
+  
+        return;
+  
       }
       
       this.laseringService.updateMember(updateMemberObj)

@@ -91,9 +91,9 @@
               <div *ngIf="noRecsFoundBatchDetails" class="batch-details-not-found">
                 <h3>No Records found for the selected Status <strong>{{selectedStatus}}</strong></h3>
               </div>
-              <mat-paginator #BatchProcessPaginator="matPaginator" [pageSizeOptions]="[100, 500, 999]" showFirstLastButtons></mat-paginator>
             </div> 
         </div>
+        <mat-paginator #BatchProcessPaginator="matPaginator" [pageSizeOptions]="[100, 500, 999]" showFirstLastButtons></mat-paginator>
     </div>
     </div>
  </div>
@@ -183,6 +183,7 @@
     <div class="mandate-fields">
       <span *ngIf="submitted && !batchProcessForm.valid">Fields marked with * are mandatory</span>
       <span *ngIf="batchIdErr.isValid">{{batchIdErr.errMsg}}</span> <!--(V.E 27-Jul-2021 )-->
+      <div *ngIf="updateNoChange.flag">{{updateNoChange.message}}</div>
     </div>  
     <div class="row">
       <div class="col-md-6">

@@ -89,6 +89,11 @@ export class MemberComponent implements OnInit {
   altIdErr = { isValid: false, errMsg: '' };
   accountIdErr = { isValid: false, errMsg: '' };
   //(VE 13-08-2021 ends)
+  updateNoChange= {flag: false, message: ''}
+
+  fetchMemberDetailsOld: any;
+
+  fetchMemberDetailsNew: any;
 
   isSearchDataThere: boolean = false;
   noSearchResultsFound: boolean = false;
@@ -149,7 +154,7 @@ export class MemberComponent implements OnInit {
   clearErrorMessages() {
     this.memIdErr.isValid = false;
     this.memIdErr.errMsg = '';
-    this.memSubIdErr.isValid = false; // From Line 116 to 123 Modified by Venkatesh Enigonda
+    this.memSubIdErr.isValid = false; 
     this.memSubIdErr.errMsg = '';
     this.memFnameErr.isValid = false;
     this.memFnameErr.errMsg = '';
@@ -164,7 +169,6 @@ export class MemberComponent implements OnInit {
     this.noSearchFieldEntered = false;
      this.memMaxMinErr.isValid = false;
      this.memMaxMinErr.errMsg = ''
-    //(VE 13-08-2021 starts)
     this.isMemSearchFormInvalid = false;
     this.coverageTierErr.isValid = false;
     this.coverageTierErr.errMsg = '';
@@ -172,7 +176,7 @@ export class MemberComponent implements OnInit {
     this.altIdErr.errMsg = '';
     this.accountIdErr.isValid = false;
     this.accountIdErr.errMsg = '';
-     //(VE 13-08-2021 ends)
+    this.updateNoChange= {flag: false, message: ''};
   }
   initMemberSearchForm() {
     this.memberSearchForm = this.mb.group({
@@ -599,6 +603,7 @@ export class MemberComponent implements OnInit {
     }
     if (!open && id == null) {
       this.memberForm.reset();
+      this.clearErrorMessages();
       this.isAddMode = false;
       this.isViewModal = false;
       document.body.classList.remove("cdk-global-scrollblock");
@@ -646,14 +651,13 @@ export class MemberComponent implements OnInit {
             memberEndDate: this.datePipe.transform(id.memberEndDate, 'yyyy-MM-dd'),
             dateOfBirth: this.datePipe.transform(id.dateOfBirth, 'yyyy-MM-dd'),
             exclusion:(id.exclusion == null || id.exclusion =='N')?false : true,
-          });
+          });          
+        
+          this.fetchMemberDetailsOld=this.memberForm.value;
           this.getMemberAudits(this.updateMemberID);
 
         }, 900);
         console.log(id.isUnlimited);
-
-
-
 
         console.log(this.memberForm.value);
         this.memberForm.disable();
@@ -708,6 +712,7 @@ export class MemberComponent implements OnInit {
     }
 
     this.loading = true;
+    if(this.updateNoChange.flag) return;
 
     if (this.isAddMode) {
 
@@ -806,7 +811,19 @@ export class MemberComponent implements OnInit {
       memberStartDate: this.datePipe.transform(this.f.memberStartDate.value, 'yyyy-MM-dd'),
       memberEndDate: this.datePipe.transform(this.f.memberEndDate.value, 'yyyy-MM-dd')
     }
-    
+    this.fetchMemberDetailsNew = this.memberForm.value;
+
+    if(JSON.stringify(this.fetchMemberDetailsOld) == JSON.stringify(this.fetchMemberDetailsNew) ){
+
+     
+
+      this.updateNoChange.flag=true;
+
+      this.updateNoChange.message="No Values updated. Update atleast one value to update";
+
+      return;
+
+    }
     this.memberService.updateMember(updateMemberObj)
       .pipe(first())
       .subscribe({
