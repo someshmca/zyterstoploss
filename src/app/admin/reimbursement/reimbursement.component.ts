@@ -237,6 +237,7 @@ export class ReimbursementComponent implements OnInit {
     })
   }
   openCustomModal(open: boolean, id:any) {
+    document.getElementById("reimbursementFormWrap").scrollTop=0;
     this.isLoading=true;
     this.clearErrorMessages();
     this.isDisabled=false;

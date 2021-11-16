@@ -229,6 +229,7 @@ export class LaseringComponent implements OnInit {
     this.openCustomModal(bool, id);
   }
   openCustomModal(open: boolean, id:any) {
+    document.getElementById("memberFormWrap").scrollTop=0;
     this.isLoading=true;
     this.isDisabled=false;
     setTimeout(()=>{
@@ -456,7 +457,6 @@ getMemberAudits(memberId: number){
       
   }
   private updateMember() {
-    this.isDisabled=true;
     this.isLoading=false;
       let updateMemberObj = {
       laserType:"Member",
@@ -497,6 +497,7 @@ getMemberAudits(memberId: number){
                   exclusion: updateMemberObj.exclusion=='N'?false:true
                 });
                   //this.memberForm.reset();
+                  this.isDisabled=true;
                     this.alertService.success('Member updated', { 
                     keepAfterRouteChange: true });
                     this.getMemberAudits(this.updateMemberID);

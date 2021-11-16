@@ -265,6 +265,7 @@ openViewModal(bool, id:any){
   this.openCustomModal(bool, id);
 }
 openCustomModal(open: boolean, id:any) {
+  document.getElementById("claimFormWrap").scrollTop=0;
   this.isLoading=true;
   this.isDisabled=false;
   setTimeout(()=>{

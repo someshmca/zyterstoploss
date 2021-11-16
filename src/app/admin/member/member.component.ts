@@ -590,6 +590,7 @@ export class MemberComponent implements OnInit {
     this.openCustomModal(bool, id);
   }
   openCustomModal(open: boolean, id: any) {
+    document.getElementById("memberFormWrap").scrollTop=0;
     this.isLoading=true;
     this.isDisabled = false;
     setTimeout(() => {
@@ -712,7 +713,6 @@ export class MemberComponent implements OnInit {
     }
 
     this.loading = true;
-    if(this.updateNoChange.flag) return;
 
     if (this.isAddMode) {
 
@@ -793,7 +793,6 @@ export class MemberComponent implements OnInit {
   }
 
   private updateMember() {
-    this.isDisabled = true;
     this.isLoading=false;
     let updateMemberObj = {
       laserType: "Member",
@@ -837,6 +836,7 @@ export class MemberComponent implements OnInit {
           this.alertService.success('Member updated', {
             keepAfterRouteChange: true
           });
+          this.isDisabled = true;
           this.getMemberAudits(this.updateMemberID);
           // this.router.navigate(['../../'], { relativeTo: this.route });                    
         },

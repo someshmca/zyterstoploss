@@ -653,6 +653,7 @@ export class LaseringSearchComponent implements OnInit {
     this.openCustomModal(bool, id);
   }
   openCustomModal(open: boolean, id: any) {
+    document.getElementById("memberFormWrap").scrollTop=0;
     this.isDisabled = false;
     this.isLoading = true;
     setTimeout(() => {
