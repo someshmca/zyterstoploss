@@ -122,6 +122,11 @@ export class ProductComponent implements OnInit {
   isMultiContractCheckedStatus: boolean;
   oldIbnrPercentage: number; newIbnrPercentage: number;
   oldDefferedPercentage: number; newDefferedPercentage: number;
+  fetchProductDetailsOld: any;
+
+  fetchProductDetailsNew: any;
+
+  updateNoChange= {flag: false, message: ''}
   constructor(
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
@@ -539,6 +544,7 @@ export class ProductComponent implements OnInit {
     this.y2sslExPaidStartEndDateErr.dateErrMsg='';
     this.y2sslExPaidStartDateErr.isDateErr=false;
     this.y2sslExPaidStartDateErr.dateErrMsg='';
+    this.updateNoChange= {flag: false, message: ''}
     
   }
  
@@ -1651,8 +1657,7 @@ fetchYear2SSL(x){
         isMultiContractPeriod: this.isMultiContractCheckedStatus
     });
     console.log(this.productForm.value);  
-    
-    
+    this.fetchProductDetailsOld=this.productForm.value;
   }
 }
 // patchYear2SSL(){
@@ -1736,8 +1741,8 @@ private addProduct() {
   }
 
   private updateProduct() { 
-    this.f.clientId.enable();
-    this.f.contractId.enable();
+    // this.f.clientId.enable();
+    // this.f.contractId.enable();
     this.updateObj=[];
     
     console.log(this.updateObj.length);
@@ -1751,7 +1756,21 @@ private addProduct() {
    if(this.f.isMultiContractPeriod.value) 
    this.updateObj.push(this.year2Obj);
     console.log(this.updateObj.length);
-    
+    this.fetchProductDetailsNew = this.productForm.value;
+
+    console.log(this.productForm.value);
+
+    if(JSON.stringify(this.fetchProductDetailsOld) == JSON.stringify(this.fetchProductDetailsNew) ){
+
+     
+
+      this.updateNoChange.flag=true;
+
+      this.updateNoChange.message="No Values updated. Update atleast one value to update";
+
+      return;
+
+    }
     
       this.productService.updateProduct(this.updateObj)
           .pipe(first())
