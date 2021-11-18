@@ -363,11 +363,13 @@ export class ProductComponent implements OnInit {
       
       if(data.isAdd && !this.planObj.isAdd){
         this.getContractIDs(data.clientId);     
-           
+     //      
         this.productForm.patchValue({
           clientId: data.clientId,
           contractId: this.sharedContractID
         });
+        console.log(data.clientId);
+        
         this.openCustomModal(true,null);
       }
       else if(data.isAdd && this.planObj.isAdd){
@@ -442,12 +444,14 @@ export class ProductComponent implements OnInit {
     })
   }
   getContractIDs(clientId){
+    
     this.contractService.getContractsByClientID(clientId).subscribe((data)=>{
       data.sort((x,y) => x.contractId - y.contractId);
       this.contractsByClientId = data;     
       if(this.sharedContractID>0){
         this.productForm.patchValue({
-          contractId: this.sharedContractID
+          contractId: this.sharedContractID,
+          clientId: clientId
         })
       }
     })

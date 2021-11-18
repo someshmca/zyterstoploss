@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, isDevMode } from '@angular/core';
 import {Router} from '@angular/router';
 import { Observable } from 'rxjs';
 import { NavPopupService } from './admin/services/nav-popup.service';
@@ -21,6 +21,11 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(){
+    if (isDevMode()) {
+      console.log('Development!');
+    } else {
+      console.log('Production!');
+    }
     let temp = localStorage.getItem('loginStatus');
 
     console.log(temp);
