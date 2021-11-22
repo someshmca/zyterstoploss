@@ -27,11 +27,14 @@ export class AppComponent implements OnInit, AfterViewInit {
       console.log('Production!');
     }
     let temp = localStorage.getItem('loginStatus');
-
+    
     console.log(temp);
+    
     if(temp=="true"){
       this.isLoggedIn = true;
+      
       this.loginData = JSON.parse(localStorage.getItem("loginData")); // aug 26 2021 added
+      
       this.loginService.setMenu(this.loginData.menuDetails); // aug 26 2021 added
     }
     else
@@ -41,6 +44,12 @@ export class AppComponent implements OnInit, AfterViewInit {
       this.loginService.setLoginStatus(this.isLoggedIn);  
       this.loginService.loginStatus.subscribe((d) => {
         this.isLoggedIn = d;
+        if(this.isLoggedIn){
+          this.loginService.loggedUser.subscribe(d=>{
+            this.user = d;
+            
+          })
+        }
       });
       let obj = JSON.parse(localStorage.getItem('currentUser'));
       

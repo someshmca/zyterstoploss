@@ -99,7 +99,7 @@
 
 
 <!-- The Add/Update Client Modal -->
-<div id="clientAdd" class="modal fade custom-modal" [ngClass]="{'view-modal':isViewModal}" role="dialog" [ngStyle]="{'display': isCustomModalOpen ? 'block' : 'none', 'opacity': 1}">
+<div class="modal fade custom-modal" [ngClass]="{'view-modal':isViewModal}" role="dialog" [ngStyle]="{'display': isCustomModalOpen ? 'block' : 'none', 'opacity': 1}">
 
    <!-- Add/Update Plans Modal -->
     <div class="modal-dialog modal-dialog-centered">
@@ -143,7 +143,7 @@
                <div *ngIf="isHRIdInvalid.flag">{{isHRIdInvalid.message}}</div>  
                <div *ngIf="updateNoChange.flag">{{updateNoChange.message}}</div>
             </div>
-          <div class="modal-body-wrap">
+          <div class="modal-body-wrap" id="clientModal">
              <div class="row">
               <div class="col-md-6">
                  <div class="form-group">

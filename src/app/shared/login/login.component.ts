@@ -89,7 +89,7 @@ export class LoginComponent implements OnInit {
                 localStorage.setItem("loginData",JSON.stringify(data));  // aug 26 2021 added
                 this.loginData = JSON.parse(this.loginData=localStorage.getItem("loginData")); // aug 26 2021 added
                 this.loginService.setMenu(this.loginData.menuDetails);  
-                
+                this.loginService.setLoggedInUser(this.loginData.name);
                 this.loginService.setToken(this.loginData.token);
                 this.loginService.curToken.subscribe(d => {                    
                   console.log("cur token value : "+d);

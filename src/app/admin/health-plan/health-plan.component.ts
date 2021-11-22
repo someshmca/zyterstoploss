@@ -433,10 +433,12 @@ dateValue(dateVal){
   return dateVal;
 }
   openViewModal(bool, id:any){
+    document.getElementById("healthPlanModal").scrollTop=0;
     this.isViewModal = true;
     this.openCustomModal(bool, id);
   }
   openCustomModal(open: boolean, elem:any) {
+    document.getElementById("healthPlanModal").scrollTop=0;
     this.isLoading=true;
     this.alertService.clear();
     setTimeout(()=>{

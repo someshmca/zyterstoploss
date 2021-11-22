@@ -361,11 +361,11 @@
              
            </div>
            <div class="row">
-           <div class="col-md-4">              
+           <div class="col-md-8">              
             <div class="form-group">
-              <label>Reason Text
-              </label>
-              <input type="text" maxlength="255" formControlName="slReasonText" class="form-control" [readOnly]="isDWthere"/>
+              <label>Reason Text</label>
+              <!-- <input type="text" maxlength="255" formControlName="slReasonText" class="form-control" [readOnly]="isDWthere"/> -->
+              <textarea maxlength="255" formControlName="slReasonText" class="form-control" rows="3" [readOnly]="isDWthere"> </textarea>
             </div>
           </div> 
         </div>  

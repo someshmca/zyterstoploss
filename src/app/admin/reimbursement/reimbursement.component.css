@@ -41,7 +41,7 @@
     max-width: calc(100vw - 300px);
 }
 .reimbursement-results-grid-wrap table{
-    width: 2200px;
+    min-width: 2200px;
 }
 .reimbursement-results-grid-wrap table tr th:last-child,
 .reimbursement-results-grid-wrap table tr td:last-child{

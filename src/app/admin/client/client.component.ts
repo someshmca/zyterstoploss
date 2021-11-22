@@ -324,11 +324,13 @@ checkYear(event:any, fieldName:string){
 
 }
 openViewModal(bool, id:any){
+  document.getElementById("clientModal").scrollTop=0;
   this.isViewModal = true;
   
   this.openCustomModal(bool, id);
 }
   openCustomModal(open: boolean, id:any) {
+    document.getElementById("clientModal").scrollTop=0;
     this.isLoading=true;
     setTimeout(()=>{
       this.focusTag.nativeElement.focus()
@@ -661,6 +663,8 @@ openViewModal(bool, id:any){
   private addClient() {
     this.isLoading=false;
     this.clientForm.patchValue({
+      startDate: (this.f.startDate.value=='' || this.f.startDate.value==null)?null:this.datePipe.transform(this.f.startDate.value,'yyyy-MM-dd'),
+      endDate: (this.f.endDate.value=='' || this.f.endDate.value==null)?null:this.datePipe.transform(this.f.endDate.value,'yyyy-MM-dd'),
       userId:this.loginService.currentUserValue.name,
       status:this.clientForm.get('status').value==true?1:1,
       //parentID:this.clientForm.get('parentID').value,
@@ -702,8 +706,8 @@ openViewModal(bool, id:any){
     private updateClient() {
       this.isLoading=false;
       this.clientForm.patchValue({
-        startDate: this.f.startDate.value==''?null:this.f.startDate.value,
-        endDate: this.f.endDate.value==''?null:this.f.endDate.value,
+        startDate: this.f.startDate.value==''?null:this.datePipe.transform(this.f.startDate.value,'yyyy-MM-dd'),
+        endDate: this.f.endDate.value==''?null:this.datePipe.transform(this.f.endDate.value,'yyyy-MM-dd'),
         userId:this.loginService.currentUserValue.name,
         status:Boolean(this.clientForm.get('status').value)==true?1:0
         //parentID:String(this.clientForm.get('parentID').value)

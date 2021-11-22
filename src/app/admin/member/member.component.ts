@@ -586,6 +586,7 @@ export class MemberComponent implements OnInit {
 
   // }
   openViewModal(bool, id: any) {
+    document.getElementById("memberFormWrap").scrollTop=0;
     this.isViewModal = true;
     this.openCustomModal(bool, id);
   }

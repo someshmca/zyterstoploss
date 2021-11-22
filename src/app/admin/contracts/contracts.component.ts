@@ -323,10 +323,12 @@ clearErrorMessages(){
   this.updateNoChange= {flag: false, message: ''}
 }
 openViewModal(bool, id:any){
+  document.getElementById("contractModal").scrollTop=0;
   this.isViewModal = true;
   this.openCustomModal(bool, id);
 }
   openCustomModal(open: boolean, id:any) {
+    document.getElementById("contractModal").scrollTop=0;
     setTimeout(()=>{
       this.focusTag.nativeElement.focus();
     }, 100);

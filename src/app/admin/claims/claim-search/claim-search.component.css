@@ -36,15 +36,14 @@
     min-width: 140px;
 }
 .claim-results-grid-wrap{
-    width: 100%;
     position: relative;
     overflow-x: auto;
     max-height: 500px;
     overflow-y: auto;
-    max-width: 1064px;
+    width: calc(100vw - 300px);
 }
 .claim-results-grid-wrap table{
-    width: 2700px;
+    min-width: 2700px;
 }
 .claim-results-grid-wrap table tr th:last-child,
 .claim-results-grid-wrap table tr td:last-child{

@@ -261,6 +261,7 @@ initClaimForm(){
   });
 }
 openViewModal(bool, id:any){
+  document.getElementById("claimFormWrap").scrollTop=0;
   this.isViewModal = true;
   this.openCustomModal(bool, id);
 }
