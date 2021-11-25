@@ -33,7 +33,11 @@ export class UserSecurityService {
   const headerOptions = new HttpHeaders({ 'Content-Type': 'application/json' });  
    return this.http.put<IUserUpdate>(Paths.userTerminate, body,{headers: headerOptions} ).pipe(catchError(this.handleError.bind(this)));
  }
-     handleError(errorResponse: HttpErrorResponse) {
+ checkDuplicateUser(userName: string){
+   console.log(Paths.userDuplicate+userName);
+   return this.http.get(Paths.userDuplicate+userName).pipe(catchError(this.handleError.bind(this)));
+ }
+  handleError(errorResponse: HttpErrorResponse) {
     if (errorResponse.error instanceof ErrorEvent) {
       console.error('Client Side Error :', errorResponse.error.message);
     } else {

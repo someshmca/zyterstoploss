@@ -71,6 +71,7 @@ export const Paths = {
   userAdd:apiPath+"UserAdministration/AddUsers",
   userTerminate:apiPath+"UserAdministration/TerminateUsers",
   userChange:apiPath+"UserAdministration/ChangeUsers",
+  userDuplicate: apiPath+"UserAdministration/DuplicateUser?userName=",
   
   GetReimbursementdetail:apiPath+"Reimbursement/GetReimbursementdetail?",
   updateReimbursement:apiPath+"Reimbursement/UpdateReimbursement",

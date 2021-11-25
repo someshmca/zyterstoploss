@@ -44,8 +44,9 @@ export class UsersSecurityComponent implements OnInit {
   userFnameErr = {isValid: false, errMsg: ''}; // Start by Venkatesh Enigonda
   userMnameErr = {isValid: false, errMsg: ''};
   userLnameErr = {isValid: false, errMsg: ''};// End by Venkatesh Enigonda
-
-
+  duplicateUser = {flag: false, msg: ''};
+  prevEmailId: string = '';
+  curEmailId: string = '';
   @ViewChild("focusElem") focusTag: ElementRef;
 
   displayedColumns: string[] = ['userId', 'userName', 'status', 'updatedId'];
@@ -98,6 +99,9 @@ export class UsersSecurityComponent implements OnInit {
     this.userMnameErr.errMsg='';
     this.userLnameErr.isValid=false;
     this.userLnameErr.errMsg='';  // End by Venkatesh Enigonda
+    this.duplicateUser = {flag: false, msg: ''};
+    // this.prevEmailId = '';
+    // this.curEmailId='';
   }
 
   getAllUsersList(){    
@@ -134,7 +138,6 @@ export class UsersSecurityComponent implements OnInit {
     }
     // till here
 }
-
 
 // starts here added by Venkatesh Enigonda
 public doFilter = (value: string) => {
@@ -197,6 +200,7 @@ openViewModal(bool, id:any){
        }
        this.isCustomModalOpen = open;
        if (!open && id==null) {
+         
         this.getAllUsersList();
          this.securityForm.reset();
          this.isAddMode = false;
@@ -227,7 +231,10 @@ openViewModal(bool, id:any){
                 createdOn: "2020-10-01",
                 lastupdate: "2021-10-10"
               });          
+              this.prevEmailId = x[0].emailAddress;
+              
             });
+            console.log()
             if(this.isViewModal){
               this.securityForm.disable();
             }
@@ -238,24 +245,23 @@ openViewModal(bool, id:any){
      }
      
      onSubmit() {
-
+       this.curEmailId = this.f.emailAddress.value;
+       
       this.clearErrorMessages();
-
+      
        this.submitted = true;
-       let nam1 = /^([a-zA-Z]+)$/; // Start by Venkatesh Enigonda
-       console.log(nam1.test(this.f.firstName.value));;
+       let nam1 = /^([a-zA-Z]+)$/; 
        let a1=nam1.test(this.f.firstName.value);
 
-       console.log(nam1.test(this.f.middleName.value));
        let a2=nam1.test(this.f.middleName.value);
 
-       console.log(nam1.test(this.f.lastName.value));
-       let a3=nam1.test(this.f.lastName.value);  // End by Venkatesh Enigonda
+       let a3=nam1.test(this.f.lastName.value);  
        
-       // added by masool irfan  
        let effectiveFrom = this.datePipe.transform(this.securityForm.get('effectiveFrom').value, 'yyyy-MM-dd');
        let effectiveTo = this.datePipe.transform(this.securityForm.get('effectiveTo').value, 'yyyy-MM-dd');
        let maxDate = this.datePipe.transform(new Date(Date.now()), 'yyyy-MM-dd');
+       
+       
        if(effectiveFrom!=null && effectiveFrom!='' && effectiveTo!=null && effectiveTo!=''){
          if(effectiveFrom>effectiveTo){
          this.effectiveFrom.isValid=true;
@@ -277,7 +283,6 @@ openViewModal(bool, id:any){
          return;
          }
        }
- 
        // till here
       if(!a1 && this.f.firstName.value!=''){  // Start by Venkatesh Enigonda
         this.userFnameErr.isValid=true;
@@ -301,15 +306,36 @@ openViewModal(bool, id:any){
        if (this.securityForm.invalid) {
            return;
        }
-
-       this.loading = true;
-       if (this.isAddMode) {
-           
-           this.addUser();
-       } else {
-           this.updateUser();
-           
-       }
+       this.loading = true;         
+       if(this.isAddMode){
+        this.userSecurityService.checkDuplicateUser(this.f.emailAddress.value).subscribe((res)=>{
+          if(res>0){
+            this.duplicateUser.flag=true;
+            this.duplicateUser.msg="Email Address already exists";
+            return;
+          }
+          else{
+            this.addUser();
+          }
+        });        
+       } 
+       else{
+         if(this.prevEmailId==this.curEmailId) this.updateUser();
+         else{
+          this.userSecurityService.checkDuplicateUser(this.f.emailAddress.value).subscribe((res)=>{
+            if(res>0){
+              this.duplicateUser.flag=true;
+              this.duplicateUser.msg="Email Address already exists";
+              this.loading = false;  
+              return;
+            }
+            else{
+              this.updateUser(); 
+            }
+          });   
+         }
+       }      
+    
    }
    
    private addUser() {

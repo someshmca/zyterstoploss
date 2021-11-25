@@ -34,6 +34,7 @@ export class BatchSettingsComponent implements OnInit {
 
   isStartDemandModalOpen: boolean = false;
   locLastRunStatus: string;
+  isLoading:boolean=true;
   
   id: string;
   isAddMode: boolean;
@@ -49,7 +50,12 @@ export class BatchSettingsComponent implements OnInit {
   uCreatedOn: any;
   batchIdStatus; //(V.E 27-Jul-2021 )
   batchIdErr={isValid: false, errMsg:''};//(V.E 27-Jul-2021 )
+  historyStatus='';
+  allBatchFailedDetails:any[]=[];
+  batchRow:any;
+  isFailedNotPresent:boolean;
 
+ 
   @ViewChild("focusElem") focusTag: ElementRef;
   show: boolean=true;
   noRecsFoundBatchDetails: boolean = false;
@@ -81,13 +87,11 @@ export class BatchSettingsComponent implements OnInit {
   selectedRow : Number; 
   isViewModal: boolean;
   isAdmin: boolean;
-  isLoading: boolean=true;
-  //setClickedRow : Function;
   fetchBatchDetailsOld: any;
-
   fetchBatchDetailsNew: any;
-
   updateNoChange= {flag: false, message: ''}
+  
+  //setClickedRow : Function;
   constructor(private batchSettingService: BatchSettingService,public loaderService: LoaderService, private fb: FormBuilder, private alertService: AlertService, private datePipe: DatePipe, private loginService: LoginService) { 
     
     
@@ -110,29 +114,67 @@ export class BatchSettingsComponent implements OnInit {
       }
     );
   }
+  
 
   //(V.E 27-Jul-2021 starts)
   clearErrorMessages(){
     this.batchIdErr.isValid=false;
     this.batchIdErr.errMsg='';
-    this.updateNoChange= {flag: false, message: ''};
+    this.updateNoChange= {flag: false, message: ''}
+    this.isFailedNotPresent=false;
   }
+ 
   showRowHistory(row, index){
+    this.clearErrorMessages();
+   
+    
     this.selectedRow = index;
+    this.batchRow=row;
     console.log("row : "+row.batchProcessId); 
     this.isHistoryPresent = false;
-    this.isHistoryNotPresent = false;  
+    this.isHistoryNotPresent = false; 
+    
+
       this.batchSettingService.getBatchHistoryProcessDetails(row.batchProcessId).subscribe(
         (data:IBatchHistoryDetails[]) => { 
           console.log(data.length);
+          this.allBatchHistroyDetails = data; 
           if(data.length>0){
               this.allBatchHistroyDetails = data; 
-              this.isHistoryPresent = true;    
+              console.log(this.allBatchHistroyDetails);
+             
+              this.isHistoryPresent = true;  
+            
+              // if(this.historyStatus=="Failed")  
+              // {
+              //   for (let i = 0; i <= data.length - 1; i++) {
+              //     if(data[i].failed != null)
+              //     {
+              //       this.allBatchFailedDetails.push(data[i]);
+              //     }
+               
+                  //this.pageCount = this.names.length;
+                 
+              // }
+              console.log(this.historyStatus);
+             
               setTimeout(() =>{  
-              this.historyGridSource = new MatTableDataSource(this.allBatchHistroyDetails);
-                this.historyGridSource.paginator = this.historyGridPaginator;
-                this.historyGridSource.sort = this.historyGridSort; 
-              }, 500);
+                this.historyGridSource = new MatTableDataSource(this.allBatchHistroyDetails);
+                  this.historyGridSource.paginator = this.historyGridPaginator;
+                  this.historyGridSource.sort = this.historyGridSort; 
+                }, 500);
+              
+            // }
+            // else 
+            // {
+            //   setTimeout(() =>{  
+            //     this.historyGridSource = new MatTableDataSource(this.allBatchHistroyDetails);
+            //       this.historyGridSource.paginator = this.historyGridPaginator;
+            //       this.historyGridSource.sort = this.historyGridSort; 
+            //     }, 500);
+
+            // }
+             
             }
             else{              
               this.isHistoryNotPresent=true;
@@ -143,6 +185,81 @@ export class BatchSettingsComponent implements OnInit {
         }
       ); 
   }
+  changeHistorySelect(event){
+    this.clearErrorMessages()
+    this.allBatchFailedDetails.length=0;
+    this.locBatchProcessID = this.batchRow.batchProcessId;
+
+    this.historyStatus=event.target.value;
+    console.log(this.historyStatus)
+    console.log(this.selectedRow);
+    console.log(this.batchRow)
+    
+    if(this.allBatchHistroyDetails.length>0){
+      
+      console.log(this.allBatchHistroyDetails);
+     
+      this.isHistoryPresent = true;  
+
+      if(this.historyStatus=="Failed")  
+      {
+       
+        for (let i = 0; i <= this.allBatchHistroyDetails.length - 1; i++) {
+          if(this.allBatchHistroyDetails[i].failed != null)
+          {
+
+            this.allBatchFailedDetails.push(this.allBatchHistroyDetails[i]);
+            this.isFailedNotPresent=false;
+           
+          }
+          
+
+          // else if(this.allBatchHistroyDetails[i].failed != null)
+          // {
+          //   this.isFailedNotPresent=true;
+          // }
+       
+          //this.pageCount = this.names.length;
+         
+      }
+      if(this.allBatchFailedDetails.length >=1)
+      {
+        this.isFailedNotPresent=false;
+      }
+      else{
+        this.isFailedNotPresent=true;
+
+      }
+      setTimeout(() =>{  
+        this.historyGridSource = new MatTableDataSource(this.allBatchFailedDetails);
+          this.historyGridSource.paginator = this.historyGridPaginator;
+          this.historyGridSource.sort = this.historyGridSort; 
+      
+        }, 500);
+    }
+    else
+    {
+    
+      setTimeout(() =>{  
+        this.historyGridSource = new MatTableDataSource(this.allBatchHistroyDetails);
+          this.historyGridSource.paginator = this.historyGridPaginator;
+          this.historyGridSource.sort = this.historyGridSort; 
+     
+        }, 500);
+
+    }
+   
+     
+    }
+    else{              
+      this.isHistoryNotPresent=true;
+      this.locBatchProcessID = this.batchRow.batchProcessId;
+    }
+
+    
+
+  }
+ 
   listBatchProcessGrid(){    
     this.batchSettingService.getBatchProcessDetails('All').subscribe(
       (data: IBatchDetails[]) => {               
@@ -196,10 +313,12 @@ export class BatchSettingsComponent implements OnInit {
       createDate: '',
       updateId: '',
       lastUpdateDate: '',
-      batchType:"ASL"
+      batchType:"ASL",
+      statusFail:'',
     });
   }
-  getBatchDetails(statusVal){   
+  getBatchDetails(statusVal){  
+    this.isFailedNotPresent=false; 
     let status: string = this.batchStatusList[statusVal-1].batchStatus;   
     console.log(status);
     console.log(this.batchStatusList[statusVal]);
@@ -222,7 +341,7 @@ export class BatchSettingsComponent implements OnInit {
             
          this.allBatchIDDetails = data;    
          this.batchProcessGridSource = new MatTableDataSource(this.allBatchIDDetails);
-         this.batchProcessGridSource.paginator = this.batchProcessPaginator;
+          this.batchProcessGridSource.paginator = this.batchProcessPaginator;
          this.batchProcessGridSource.sort = this.batchProcessGridSort;            
       }
     ); 
@@ -235,7 +354,7 @@ export class BatchSettingsComponent implements OnInit {
     this.openCustomModal(bool, id);
   }
   openCustomModal(open: boolean, id:string) {
-    this.isLoading=true;
+
    setTimeout(()=>{
      this.focusTag.nativeElement.focus()
    }, 100);
@@ -261,7 +380,6 @@ export class BatchSettingsComponent implements OnInit {
       this.batchProcessForm.reset();
       this.isAddMode = false;
       this.isViewModal=false;
-      this.clearErrorMessages();
     }
     console.log("id inside modal: "+id);
     
@@ -283,7 +401,7 @@ export class BatchSettingsComponent implements OnInit {
         frequency: elem.frequency,
         batchType:elem.batchType
       });      
-      this.fetchBatchDetailsOld=this.batchProcessForm.value;
+      
       // this.batchProcessForm.patchValue({        
       //   lastRunStatus: this.f.lastRunStatus.value==''?'Completed':this.f.lastRunStatus.value,
       //   frequency: this.f.frequency.value==''?'Daily':this.f.frequency.value,
@@ -297,9 +415,10 @@ export class BatchSettingsComponent implements OnInit {
       }
       console.log(this.batchProcessForm.value);
       
-      //(V.E 27-Jul-2021 starts)
+      //(V.E 27-Jul-2021 starts).
       this.uBatchProcess=this.f.batchProcess.value;
       console.log(this.uBatchProcess);
+      this.fetchBatchDetailsOld=this.batchProcessForm.value;
       //(V.E 27-Jul-2021 Ends)
     }
   }
@@ -374,7 +493,6 @@ export class BatchSettingsComponent implements OnInit {
 //(V.E 27-Jul-2021 Ends )
 private addBatchProcess() {
   this.isDisabled=true;
-  this.isLoading=false;
   this.isHistoryPresent = false; // Modified by Venkatesh Enigonda
   this.isHistoryNotPresent=false; // Modified by Venkatesh Enigonda
   
@@ -420,7 +538,7 @@ private addBatchProcess() {
   }
 
   private updateBatchProcess() {
-    this.isLoading=false;
+  
     this.isHistoryPresent = false; // Modified by Venkatesh Enigonda
     this.isHistoryNotPresent=false; // Modified by Venkatesh Enigonda
     
@@ -442,20 +560,15 @@ private addBatchProcess() {
       lastUpdateDate: this.datePipe.transform(new Date(Date.now()), 'yyyy-MM-dd'),
       batchType: this.f.batchType.value
     }
-    console.log(this.updateBatchObj);
     this.fetchBatchDetailsNew = this.batchProcessForm.value;
-
-    if(JSON.stringify(this.fetchBatchDetailsOld) == JSON.stringify(this.fetchBatchDetailsNew) ){
-
-     
-
-      this.updateNoChange.flag=true;
-
-      this.updateNoChange.message="No Values updated. Update atleast one value to update";
-
-      return;
-
-    }
+        if(JSON.stringify(this.fetchBatchDetailsOld) == JSON.stringify(this.fetchBatchDetailsNew) ){
+          
+          this.updateNoChange.flag=true;
+          this.updateNoChange.message="No Values updated. Update atleast one value to update";
+          return;
+        }
+    console.log(this.updateBatchObj);
+    
       this.batchSettingService.updateBatchProcess(this.updateBatchObj)
           .pipe(first())
           .subscribe({
@@ -466,8 +579,8 @@ private addBatchProcess() {
                   this.listBatchProcessGrid();
                   this.alertService.success('Batch Process updated', { 
                     keepAfterRouteChange: true });
-                    this.isDisabled=true;
                  // this.router.navigate(['../../'], { relativeTo: this.route });
+                 this.isDisabled=true;
                   
               },
               error: error => {

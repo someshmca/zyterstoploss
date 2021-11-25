@@ -503,11 +503,11 @@ openViewModal(bool, id:any){
         this.accountIdErr.errMsg='Invalid Account ID. Special Characters not Allowed';
         return;
       }
-      if(!AccountNameCheck && this.f.clientName.value!=''){
-        this.accountNameErr.isValid=true;
-        this.accountNameErr.errMsg='Invalid Account Name. Special Characters not Allowed';
-        return;
-      } // End by Venkatesh Enigonda
+      // if(!AccountNameCheck && this.f.clientName.value!=''){
+      //   this.accountNameErr.isValid=true;
+      //   this.accountNameErr.errMsg='Invalid Account Name. Special Characters not Allowed';
+      //   return;
+      // } // End by Venkatesh Enigonda
 
 
       let alphaNum = /^([A-Za-z0-9]+)$/; //From line number 336 to 341 Modified by Venkatesh Enigonda

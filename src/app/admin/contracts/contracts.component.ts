@@ -795,6 +795,7 @@ openViewModal(bool, id:any){
                 next: () => {
                     //this.openCustomModal(false,null); 
                     //this.contractForm.reset();
+                    this.getContract(this.f.contractId.value);
                     this.getContractAudits(this.uContractId);
                     this.getAllContracts();
                     this.updateNoChange.flag=false;

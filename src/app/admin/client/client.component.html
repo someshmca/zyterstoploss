@@ -154,7 +154,7 @@
                 <div class="col-md-6">
                  <div class="form-group">
                    <label>Medica Account Name<small *ngIf="isAddMode" class="starmark">*</small></label>
-             <input type="text" formControlName="clientName" class="form-control" [readonly]="!isAddMode" [ngClass]="{ 'is-invalid': submitted && f.clientName.errors || accountNameErr.isValid}" /><!--Modified by Venkatesh Enigonda-->
+             <input type="text" formControlName="clientName" class="form-control" [readonly]="!isAddMode" [ngClass]="{ 'is-invalid': submitted && f.clientName.errors || accountNameErr.isValid}" onkeypress="return ((event.charCode > 64 && event.charCode < 91) || (event.charCode > 96 && event.charCode < 123) || event.charCode == 8 || event.charCode == 32 || event.charCode == 39 || event.charCode == 44 || event.charCode == 45 || event.charCode == 95 || event.charCode == 46 )" /><!--Modified by Venkatesh Enigonda-->
                  </div>
                 </div>
               </div>
